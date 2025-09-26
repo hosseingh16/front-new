@@ -1,0 +1,11 @@
+@import "./tailwind.css";
+@import "./daisyui.css";
+
+body {
+  font-family: "dana-medium", sans-serif;
+}
+
+* {
+  letter-spacing: normal !important;
+  line-height: 35px;
+}

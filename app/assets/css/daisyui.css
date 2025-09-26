@@ -1,0 +1,17 @@
+@plugin "daisyui/theme" {
+  name: "light";
+  default: true;
+  --color-primary: #4864e1;
+}
+
+@plugin "daisyui" {
+  themes: light --default;
+}
+
+@utility btn {
+  @apply rounded-[8px] font-medium text-[16px] px-[24px] py-[8px] h-[45px];
+}
+
+@utility btn-primary {
+  @apply text-white;
+}
