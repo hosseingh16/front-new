@@ -23,6 +23,7 @@
         <div class="flex flex-col lg:flex-row justify-center gap-x-6 gap-y-2 mt-5">
           <m-select
             placeholder="انتخاب مسیر شغلی"
+            class="w-80"
             icon="user-search"
             :options="[
               { title: 'مسیر1', value: 1 },
@@ -32,6 +33,7 @@
           />
           <m-select
             placeholder="همه شهرها"
+            class="w-80"
             icon="location"
             :options="[{ title: 'شهر1', value: 1 }]"
           />

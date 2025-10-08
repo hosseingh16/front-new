@@ -3,7 +3,7 @@
     class="py-5 px-5 min-1130:px-20 shadow-[0_5px_18px_0_rgba(0,0,0,0.07)] flex justify-between items-center text-14"
   >
     <div class="flex min-1130:gap-7 items-center text-14">
-      <button>
+      <button class="min-1130:hidden">
         <Icon name="svg:menu" class="mt-4" />
       </button>
       <NuxtImg src="/images/logo.png" class="max-[400px]:hidden"/>

@@ -3,7 +3,7 @@ import { defineFontProvider } from 'unifont';
 const resolvableFonts = new Set<string>();
 export default defineFontProvider('custom', () => {
   // Do some stuff
-  resolvableFonts.add('dana-medium');
+  resolvableFonts.add('yekanBakh-regular');
   return {
     async resolveFont(fontFamily) {
       if (!resolvableFonts.has(fontFamily)) {
@@ -12,7 +12,7 @@ export default defineFontProvider('custom', () => {
       return {
         fonts: [
           {
-            src: [{ url: '/fonts/DanaFaNum-Medium.woff2', format: 'woff2' }],
+            src: [{ url: '/fonts/YekanBakhFaNum-Regular.woff2', format: 'woff2' }],
             weight: 500,
           },
         ],

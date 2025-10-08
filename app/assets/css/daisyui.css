@@ -1,5 +1,5 @@
 @plugin "daisyui/theme" {
-  name: "light";
+  name: 'light';
   default: true;
   --color-primary: #4864e1;
 }
@@ -9,9 +9,17 @@
 }
 
 @utility btn {
-  @apply rounded-[8px] font-medium text-[16px] px-[24px] py-[8px] h-[45px];
+  @apply rounded-[8px] font-medium text-[16px] px-[24px] py-[8px] h-[45px] shadow-none;
 }
 
 @utility btn-primary {
-  @apply text-white;
+  @apply text-white bg-primary-900 border-0 hover:bg-[rgba(58,84,201,1)] active:bg-[rgba(47,63,170,1)];
+}
+
+@utility btn-outline {
+  @apply hover:bg-white hover:border-[rgba(58,84,201,1)] active:border-[rgba(47,63,170,1)] hover:text-[rgba(58,84,201,1)] active:text-[rgba(47,63,170,1)];
+}
+
+@utility btn-ghost {
+  @apply hover:bg-white;
 }

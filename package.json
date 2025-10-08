@@ -14,9 +14,11 @@
     "@nuxt/icon": "^2.0.0",
     "@nuxt/image": "^1.11.0",
     "@tailwindcss/vite": "^4.1.12",
+    "axios": "^1.12.2",
     "daisyui": "^5.0.51",
     "nuxt": "^4.0.3",
     "tailwindcss": "^4.1.12",
+    "unifont": "^0.6.0",
     "vue": "^3.5.20",
     "vue-router": "^4.5.1"
   }

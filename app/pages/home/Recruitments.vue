@@ -6,7 +6,7 @@
         <span class="text-gray-500 max-md:text-14">استخدام‌های مهم امروز</span>
       </div>
       <button
-        class="px-2 btn btn-primary btn-outline text-primary-900 hover:bg-white h-10 max-md:text-14"
+        class="px-2 btn btn-outline text-primary-900 hover:bg-white h-10 max-md:text-14"
       >
         مشاهده همه
         <Icon name="svg:chevron-left" />

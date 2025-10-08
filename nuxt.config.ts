@@ -10,8 +10,7 @@ export default defineNuxtConfig({
 
   fonts: {
     providers: {
-      custom: "./app/assets/font-providers/custom",
-      customLegacy: "./app/assets/font-providers/custom-legacy",
+      custom: "./app/assets/font-providers/custom"
     },
   },
 
