@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div>
     <div class="bg-white p-6 rounded-lg">
       <div class="flex flex-wrap gap-2 justify-between items-center">
         <div class="flex items-center gap-4">
@@ -14,7 +14,15 @@
             </NuxtLink>
           </div>
         </div>
-        <button class="btn btn-success px-12" onclick="modal_1.showModal()">
+        <div
+          class="lg:hidden bg-gray-100 flex justify-center items-center text-xs text-gray-800 h-6 rounded-lg px-4"
+        >
+          6 روز پیش
+        </div>
+        <button
+          class="max-lg:hidden z-[900] btn btn-success px-12"
+          onclick="modal_1.showModal()"
+        >
           ارسال رزومه
         </button>
         <dialog1 id="modal_1" :title type="warning" :width="420">
@@ -47,7 +55,7 @@
           <Icon name="svg:location-2" />
           <span class="text-14 font-normal text-secondary-900">تهران</span>
         </div>
-        <div class="flex items-center gap-2">
+        <div class="flex flex-wrap items-center gap-2">
           <Icon name="svg:user-octagon" />
           <span class="text-14 font-normal text-gray-800">نوع همکاری : پاره وقت</span>
           <span class="text-gray-300">|</span>
@@ -62,13 +70,11 @@
           <span class="text-14 font-normal text-gray-800">حقوق : توافقی</span>
         </div>
         <div class="flex items-center gap-2">
-          <icons-bag color="rgba(123,130,144,1)" :size="14" />
-          <span class="text-14 font-normal text-gray-800"
-            >آدرس :تهران - خیابان ولی‌عصر-ساختمان کیان، پلاک ۲۵۵۱</span
-          >
+          <Icon name="svg:setting" />
+          <span class="text-14 font-normal text-gray-800">نرم‌افزار مجموعه: سپیدار</span>
         </div>
       </div>
-      <div class="mt-6 flex items-center flex-wrap gap-2 justify-between">
+      <div class="max-lg:hidden mt-6 flex items-center flex-wrap gap-2 justify-between">
         <div
           class="bg-gray-100 flex justify-center items-center text-xs text-gray-800 h-6 rounded-lg px-4"
         >
@@ -76,47 +82,42 @@
         </div>
         <div class="flex gap-2 flex-wrap">
           <button class="btn text-gray-600 border-0 bg-gray-200 px-3">
-            <Icon name="svg:send-2" />
+            <icons-send />
             <span class="text-14 font-semibold">اشتراک‌گذاری</span>
           </button>
-          <button class="btn text-gray-600 border-0 bg-gray-200 px-3">
-            <Icon name="svg:star" />
+          <button
+            class="btn text-gray-600 border-0 bg-gray-200 px-3"
+            @click="showBookmarkModal"
+          >
+            <icons-star />
             <span class="text-14 font-semibold">نشان کردن</span>
           </button>
+          <bookmark />
         </div>
       </div>
     </div>
-    <div class="mt-8 grid lg:grid-cols-3 gap-8">
-      <div class="lg:col-span-2 py-2 px-4 bg-white rounded-2xl h-fit pb-20">
-        <!-- <m-tabs
+    <div class="mt-8">
+      <div class="py-2 px-4 bg-white rounded-2xl pb-20">
+        <m-tabs
           :tabs="[
-            { label: 'توضیحات شغل', component: Tab1 },
-            { label: 'درباره شرکت', component: Tab2 },
+            { label: 'توضیحات شغل', component: SelectedJobTab1 },
+            { label: 'درباره شرکت', component: SelectedJobTab2 },
           ]"
-        /> -->
-      </div>
-      <div>
-        <p class="font-yb-bold text-gray-800 mb-4">فرصت های شغلی فعال در مجموعه</p>
-        <div class="grid gap-4">
-          <job-box v-for="n in 2" go-to-page />
-        </div>
-        <div class="w-full h-[2px] bg-gray-300 mt-8 mb-4"></div>
-        <div class="p-4 bg-[rgba(228,235,252,1)] rounded-lg">
-          <p class="font-yb-bold text-gray-800">کارفرما هستید ؟</p>
-          <div class="mt-2 grid grid-cols-2 gap-3 [&>.btn]:font-semibold">
-            <button class="btn btn-outline">بخش کارفرمایان</button>
-            <button class="btn bg-gray-700 text-white">ایجاد آگهی</button>
-          </div>
-        </div>
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-// import Tab1 from './components/Tab1.vue';
-// import Tab2 from './components/Tab2.vue';
+import SelectedJobTab1 from './SelectedJobTab1.vue';
+import SelectedJobTab2 from './SelectedJobTab2.vue';
 
 // Variables
 const title = ref('استخدام مدیر مالی (آقا)');
+
+// Functions
+function showBookmarkModal() {
+  (document.getElementById('bookmarkModal') as HTMLDialogElement).showModal();
+}
 </script>

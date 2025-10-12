@@ -60,12 +60,13 @@
     <div class="mt-4 px-6 lg:px-28 lg:grid lg:grid-cols-12 gap-8">
       <div class="lg:col-span-5">
         <div class="grid gap-4">
-          <job-box v-for="n in 7" @click="showJob = true" />
+          <job-box v-for="n in 7" @click="showJobFunc" />
+          <selected-job-dialog class="lg:hidden" />
         </div>
       </div>
-      <transition name="fade" mode="out-in">
-        <div class="col-span-7">
-          <div v-if="!showJob" class="max-lg:hidden">
+      <div class="col-span-7 max-lg:hidden">
+        <transition name="fade" mode="out-in">
+          <div v-if="!showJob">
             <div
               class="border border-[rgba(200,205,212,1)] px-2 py-24 rounded-lg flex flex-col justify-center items-center text-[rgba(27,33,60,1)]"
             >
@@ -81,8 +82,8 @@
             </div>
           </div>
           <selected-job v-else />
-        </div>
-      </transition>
+        </transition>
+      </div>
     </div>
   </div>
 </template>
@@ -90,8 +91,28 @@
 <script setup lang="ts">
 import Filters from './components/Filters.vue';
 import SelectedJob from './components/SelectedJob.vue';
+import SelectedJobDialog from './components/SelectedJobDialog.vue';
 
 // Variables
 const sort = ref('جدیدترین');
 const showJob = ref(false);
+
+// Watches
+watch(
+  () => window.innerWidth,
+  () => {
+    if (window.innerWidth >= 1024) {
+      console.log(44);
+      (document.getElementById('selectedJobModal') as HTMLDialogElement)?.close();
+    }
+  }
+);
+
+// Functions
+function showJobFunc() {
+  showJob.value = true;
+  if (window.innerWidth < 1024) {
+    (document.getElementById('selectedJobModal') as HTMLDialogElement)?.showModal();
+  }
+}
 </script>

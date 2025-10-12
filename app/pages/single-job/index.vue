@@ -85,11 +85,14 @@
         </div>
         <div class="flex gap-2 flex-wrap">
           <button class="btn text-gray-600 border-0 bg-gray-200 px-3">
-            <Icon name="svg:send-2" />
+            <icons-send />
             <span class="text-14 font-semibold">اشتراک‌گذاری</span>
           </button>
-          <button class="btn text-gray-600 border-0 bg-gray-200 px-3">
-            <Icon name="svg:star" />
+          <button
+            class="btn text-gray-600 border-0 bg-gray-200 px-3"
+            @click="showBookmarkModal"
+          >
+            <icons-star />
             <span class="text-14 font-semibold">نشان کردن</span>
           </button>
         </div>
@@ -107,7 +110,7 @@
       <div>
         <p class="font-yb-bold text-gray-800 mb-4">فرصت های شغلی فعال در مجموعه</p>
         <div class="grid gap-4">
-          <job-box v-for="n in 2" go-to-page/>
+          <job-box v-for="n in 2" go-to-page />
         </div>
         <div class="w-full h-[2px] bg-gray-300 mt-8 mb-4"></div>
         <div class="p-4 bg-[rgba(228,235,252,1)] rounded-lg">
@@ -128,4 +131,9 @@ import Tab2 from './components/Tab2.vue';
 
 // Variables
 const title = ref('استخدام مدیر مالی (آقا)');
+
+// Functions
+function showBookmarkModal() {
+  (document.getElementById('bookmarkModal') as HTMLDialogElement).showModal();
+}
 </script>

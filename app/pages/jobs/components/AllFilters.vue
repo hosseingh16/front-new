@@ -1,8 +1,7 @@
 <template>
-  <dialog id="my_modal_10" class="modal">
+  <dialog id="allFiltersModal" class="modal">
     <div
-      class="modal-box w-screen max-w-screen h-full rounded-none overflow-x-hidden flex flex-col justify-between gap-12"
-    >
+      class="modal-box w-screen max-w-screen h-full rounded-none overflow-x-hidden flex flex-col justify-between gap-12">
       <div>
         <div class="text-left flex justify-end">
           <form v-if="options.length === 0" method="dialog">
@@ -79,6 +78,7 @@ import DeleteFilters from './DeleteFilters.vue';
 const props = defineProps({
   filtersData: { type: Object as () => any, required: true },
   show: Boolean,
+  jobTitles: { type: Array as () => IFilterData[] },
   programs: { type: Array as () => IFilterData[] },
   salaries: { type: Array as () => IFilterData[] },
   history: { type: Array as () => IFilterData[] },
@@ -158,6 +158,7 @@ watch(
 );
 watch(
   () => [
+    props.jobTitles,
     props.programs,
     props.salaries,
     props.history,
@@ -165,6 +166,7 @@ watch(
     props.benefits,
   ],
   () => {
+    selectedOptions.value['jobTitles'] = props.jobTitles!;
     selectedOptions.value['programs'] = props.programs!;
     selectedOptions.value['salaries'] = props.salaries!;
     selectedOptions.value['history'] = props.history!;
@@ -191,6 +193,6 @@ function clearFilters() {
 
 function search() {
   emits('setFilters', selectedOptions.value);
-  (document.getElementById('my_modal_10') as any).close();
+  (document.getElementById('allFiltersModal') as any).close();
 }
 </script>

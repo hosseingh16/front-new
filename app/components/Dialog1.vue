@@ -23,7 +23,7 @@
 // Props
 defineProps({
   id: { type: String, required: true },
-  type: Object as () => 'success' | 'warning',
+  type: { type: String as PropType<'success' | 'warning'>, required: true },
   title: String,
   width: { type: Number, default: 500 },
 });

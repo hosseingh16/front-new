@@ -3,10 +3,10 @@
     <div
       ref="trigger"
       tabindex="0"
-      class="cursor-pointer h-10 w-52 rounded-lg border border-gray-200 lg:border-gray-300 flex justify-between items-center gap-12 pr-2 bg-white"
+      class="cursor-pointer h-10 w-fit rounded-lg border border-gray-200 lg:border-gray-300 flex justify-between items-center gap-12 pr-2 bg-white"
       @click="toggleDropdown"
     >
-      <span class="text-gray-700 text-sm font-semibold">{{ title }}</span>
+      <span class="text-gray-700 text-sm font-semibold whitespace-nowrap">{{ title }}</span>
       <icons-chevron-down />
     </div>
 

@@ -10,7 +10,7 @@
       </button>
       <button
         class="md:hidden btn btn-link no-underline px-0 text-[rgba(85,116,255,1)] text-xs font-normal h-10"
-        onclick="my_modal_10.showModal()"
+        onclick="allFiltersModal.showModal()"
         @click="show = true"
       >
         همه فیلترها
@@ -19,11 +19,19 @@
         :filters-data
         @set-filters="setFilters($event)"
         :show
+        :job-titles
         :programs
         :salaries
         :history
         :contract-types
         :benefits
+      />
+      <filter-item-single-choice
+        v-model="jobTitles"
+        class="lg:hidden"
+        title="عنوان شغلی"
+        :items="filtersData?.jobTitles"
+        @update:model-value="jobTitles = $event"
       />
       <filter-item-single-choice
         v-model="programs"
@@ -70,6 +78,7 @@ import AllFilters from './AllFilters.vue';
 
 // Variables
 const filtersData = ref<any>(null);
+const jobTitles = ref<IFilterData[]>([]);
 const programs = ref<IFilterData[]>([]);
 const salaries = ref<IFilterData[]>([]);
 const history = ref<IFilterData[]>([]);
@@ -80,6 +89,7 @@ const show = ref(false);
 // Computeds
 const showDeleteFilters = computed(
   () =>
+    jobTitles.value.length > 0 ||
     programs.value.length > 0 ||
     salaries.value.length > 0 ||
     history.value.length > 0 ||
@@ -90,6 +100,7 @@ const showDeleteFilters = computed(
 // Functions
 function setFilters(e: any) {
   show.value = false;
+  jobTitles.value = e['jobTitles'];
   programs.value = e['programs'];
   salaries.value = e['salaries'];
   history.value = e['history'];
@@ -98,6 +109,7 @@ function setFilters(e: any) {
 }
 
 function clearFilters() {
+  jobTitles.value = [];
   programs.value = [];
   salaries.value = [];
   history.value = [];
