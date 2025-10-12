@@ -1,12 +1,30 @@
 <template>
   <div>
     <div class="flex items-center gap-2">
-      <!-- <delete-filters /> -->
       <button
-        class="btn btn-link no-underline px-0 ml-8 text-[#dd4a48] text-14 font-bold h-10"
+        v-if="showDeleteFilters"
+        class="max-md:hidden btn btn-link no-underline px-0 ml-8 text-[#dd4a48] text-14 font-bold h-10"
+        @click="clearFilters"
       >
         <delete-filters />
       </button>
+      <button
+        class="md:hidden btn btn-link no-underline px-0 text-[rgba(85,116,255,1)] text-xs font-normal h-10"
+        onclick="my_modal_10.showModal()"
+        @click="show = true"
+      >
+        همه فیلترها
+      </button>
+      <all-filters
+        :filters-data
+        @set-filters="setFilters($event)"
+        :show
+        :programs
+        :salaries
+        :history
+        :contract-types
+        :benefits
+      />
       <filter-item-single-choice
         v-model="programs"
         title="نرم‌افزار حسابداری"
@@ -48,6 +66,7 @@ import FilterItemMultipleChoice from './FilterItemMultipleChoice.vue';
 import FilterItemSingleChoice from './FilterItemSingleChoice.vue';
 import type { IFilterData } from '~/interfaces/IFilterData';
 import DeleteFilters from './DeleteFilters.vue';
+import AllFilters from './AllFilters.vue';
 
 // Variables
 const filtersData = ref<any>(null);
@@ -56,6 +75,35 @@ const salaries = ref<IFilterData[]>([]);
 const history = ref<IFilterData[]>([]);
 const contractTypes = ref<IFilterData[]>([]);
 const benefits = ref<IFilterData[]>([]);
+const show = ref(false);
+
+// Computeds
+const showDeleteFilters = computed(
+  () =>
+    programs.value.length > 0 ||
+    salaries.value.length > 0 ||
+    history.value.length > 0 ||
+    contractTypes.value.length > 0 ||
+    benefits.value.length > 0
+);
+
+// Functions
+function setFilters(e: any) {
+  show.value = false;
+  programs.value = e['programs'];
+  salaries.value = e['salaries'];
+  history.value = e['history'];
+  contractTypes.value = e['contractTypes'];
+  benefits.value = e['benefits'];
+}
+
+function clearFilters() {
+  programs.value = [];
+  salaries.value = [];
+  history.value = [];
+  contractTypes.value = [];
+  benefits.value = [];
+}
 
 //
 onBeforeMount(async () => {

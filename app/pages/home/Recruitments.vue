@@ -25,8 +25,8 @@
             </p>
             <div class="flex items-center gap-2 mt-1">
               <Icon name="svg:location-2" />
-              <span class="text-[#36B37E] text-xs">تهران</span>
-              <Icon name="svg:bag" />
+              <span class="text-secondary-900 text-xs">تهران</span>
+              <icons-bag />
               <span class="text-gray-500 text-xs">تمام وقت</span>
             </div>
           </div>
@@ -54,8 +54,8 @@
             </p>
             <div class="flex items-center gap-2 mt-1">
               <Icon name="svg:location-3" />
-              <span class="text-[#36B37E] text-xs">تهران</span>
-              <Icon name="svg:bag" />
+              <span class="text-secondary-900 text-xs">تهران</span>
+               <icons-bag />
               <span class="text-gray-500 text-xs">تمام وقت</span>
             </div>
           </div>

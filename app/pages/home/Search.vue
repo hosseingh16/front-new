@@ -21,7 +21,7 @@
         </h1>
         <p class="mt-5 text-gray-500 max-md:text-14">های‌حساب : اولین و بزرگترین مرجع استخدام حسابدار</p>
         <div class="flex flex-col lg:flex-row justify-center gap-x-6 gap-y-2 mt-5">
-          <m-select
+          <m-select3
             placeholder="انتخاب مسیر شغلی"
             class="w-80"
             icon="user-search"
@@ -31,7 +31,7 @@
               { title: 'مسیر3', value: 3 },
             ]"
           />
-          <m-select
+          <m-select3
             placeholder="همه شهرها"
             class="w-80"
             icon="location"

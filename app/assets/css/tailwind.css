@@ -8,11 +8,25 @@
 
   --text-14: 14px;
 
+  --font-yb-bold: 'yekanBakh-bold';
+  --font-yb-extraBold: 'yekanBakh-extraBold';
+
   --color-primary-900: #4864e1;
+  --color-secondary-900: rgba(54, 179, 126, 1);
   --color-gray-soft: #f6f6f6;
   --color-gray-100: rgba(245, 246, 248, 1);
+  --color-gray-200: rgba(241, 241, 241, 1);
   --color-gray-300: rgba(200, 205, 212, 1);
   --color-gray-600: rgba(123, 130, 144, 1);
   --color-gray-700: rgba(72, 75, 91, 1);
   --color-gray-800: rgba(47, 50, 65, 1);
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  @apply transition-opacity duration-200;
+}
+.fade-enter-from,
+.fade-leave-to {
+  @apply opacity-0;
 }

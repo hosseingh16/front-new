@@ -9,7 +9,7 @@
 }
 
 @utility btn {
-  @apply rounded-[8px] font-medium text-[16px] px-[24px] py-[8px] h-[45px] shadow-none;
+  @apply rounded-[8px] font-medium px-[24px] py-[8px] h-[45px] shadow-none;
 }
 
 @utility btn-primary {
@@ -22,4 +22,8 @@
 
 @utility btn-ghost {
   @apply hover:bg-white;
+}
+
+@utility btn-success {
+  @apply text-white bg-secondary-900 border-0 hover:bg-[rgba(47,158,108,1)] active:bg-[rgba(30,127,83,1)];
 }

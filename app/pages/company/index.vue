@@ -8,7 +8,9 @@
         <div class="max-lg:flex max-lg:justify-center">
           <NuxtImg src="/images/company-logo-2.png" class="w-[75px] h-[75px]" />
         </div>
-        <div class="flex gap-2 max-lg:justify-center items-center mt-2 text-[rgba(47,50,65,1)]">
+        <div
+          class="flex gap-2 max-lg:justify-center items-center mt-2 text-[rgba(47,50,65,1)]"
+        >
           <p class="font-bold text-2xl">خانومی</p>
           <div class="bg-gray-300 w-[2px] h-5"></div>
           <p class="font-bold text-2xl">khanoumi</p>
@@ -20,45 +22,13 @@
           فروشگاه اینترنتی خانومی عنوان اولین فروشگاه اینترنتی تخصصی آرایشی بهداشتی در
           ایران در سال 1393 راه اندازی شد
         </p>
-        <div
-          class="bg-gray-100 rounded-b-sm p-2 mt-4 grid grid-cols-3 font-bold [&>div]:cursor-pointer"
-        >
-          <div
-            class="text-gray-600 text-center text-14"
-            :class="{
-              'border border-primary-900 rounded-sm font-bold text-primary-900 bg-white':
-                tab === 1,
-            }"
-            @click="tab = 1"
-          >
-            در یک نگاه
-          </div>
-          <div
-            class="text-gray-600 text-center text-14"
-            :class="{
-              'border border-primary-900 rounded-sm font-bold text-primary-900 bg-white':
-                tab === 2,
-            }"
-            @click="tab = 2"
-          >
-            درباره خانومی
-          </div>
-          <div
-            class="text-gray-600 text-center text-14"
-            :class="{
-              'border border-primary-900 rounded-sm font-bold text-primary-900 bg-white':
-                tab === 3,
-            }"
-            @click="tab = 3"
-          >
-            فرصت‌های شغلی
-          </div>
-        </div>
-        <div class="mt-6 relative">
-          <transition name="fade" mode="out-in">
-            <component :is="activeTab" />
-          </transition>
-        </div>
+        <m-tabs
+          :tabs="[
+            { label: 'در یک نگاه', component: Tab1 },
+            { label: 'درباره خانومی', component: Tab2 },
+            { label: 'فرصت‌های شغلی', component: Tab3 },
+          ]"
+        />
       </div>
       <div class="max-lg:hidden">
         <div class="flex flex-col justify-between relative">
@@ -112,7 +82,6 @@ import Tab2 from './components/Tab2.vue';
 import Tab3 from './components/Tab3.vue';
 
 // Variables
-const tab = ref(1);
 const peoples = [
   {
     name: 'مسعود شاه‌مرادی',
@@ -127,22 +96,4 @@ const peoples = [
     img: 'person-5.png',
   },
 ];
-
-// Computeds
-const activeTab = computed(() => {
-  if (tab.value === 1) return Tab1;
-  if (tab.value === 2) return Tab2;
-  if (tab.value === 3) return Tab3;
-});
 </script>
-
-<style scoped>
-.fade-enter-active,
-.fade-leave-active {
-  @apply transition-opacity duration-200;
-}
-.fade-enter-from,
-.fade-leave-to {
-  @apply opacity-0;
-}
-</style>

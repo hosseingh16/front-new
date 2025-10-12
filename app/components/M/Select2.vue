@@ -1,11 +1,11 @@
 <template>
-  <div v-if="isClient" class="relative inline-block w-full">
+  <div v-if="isClient" class="relative inline-block">
     <div
-      class="bg-white cursor-pointer h-10 rounded-lg flex justify-between items-center gap-2 pr-2 pl-2"
+      class="bg-white cursor-pointer h-10 w-36 rounded-lg border border-gray-300 flex justify-between items-center gap-2 pr-2 pl-2"
       @click="toggleDropdown"
     >
-      <span class="text-gray-600 lg:text-gray-700 text-xs md:text-14 font-semibold line-clamp-1">
-        {{ model || label }}
+      <span class="text-gray-700 text-14 font-normal line-clamp-1">
+        {{ model || 'انتخاب کنید' }}
       </span>
       <icons-chevron-down
         class="transition-transform duration-200"
@@ -15,7 +15,7 @@
 
     <div
       v-if="open"
-      class="absolute mt-2 menu bg-white rounded-lg z-50 w-full p-0 shadow-sm border border-gray-200"
+      class="absolute mt-2 menu bg-white rounded-lg z-10 min-w-52 p-0 shadow-sm border border-gray-200"
     >
       <div class="max-h-[200px] overflow-y-auto cursor-pointer">
         <p
@@ -40,7 +40,6 @@ const model = defineModel<string>();
 
 // Props
 defineProps({
-  label: String,
   options: { type: Array as () => string[], required: true },
 });
 
