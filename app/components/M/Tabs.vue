@@ -5,7 +5,7 @@
       <div
         v-for="(tab, index) in tabs"
         :key="index"
-        class="flex-1 text-gray-600 text-center text-14"
+        class="flex-1 text-gray-600 text-center text-sm"
         :class="{
           'border border-primary-900 rounded-sm font-bold text-primary-900 bg-white':
             activeIndex === index,

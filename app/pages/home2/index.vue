@@ -13,7 +13,7 @@
           ، آماده برای استخدام!
         </h1>
         <div
-          class="mt-2 600:mt-5 font-medium text-14 600:text-2xl px-5 600:px-10 inline-flex items-center flex-wrap justify-center"
+          class="mt-2 600:mt-5 font-medium text-sm 600:text-2xl px-5 600:px-10 inline-flex items-center flex-wrap justify-center"
         >
           <i class="icon-search ml-3 text-3xl"
             ><span class="path1"></span><span class="path2"></span

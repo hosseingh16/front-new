@@ -1,5 +1,6 @@
 @import './tailwind.css';
 @import './daisyui.css';
+@import './icomoon/style.css';
 
 body {
   font-family: 'yekanBakh-regular', sans-serif;
@@ -12,7 +13,7 @@ html {
 
 * {
   letter-spacing: normal !important;
-  line-height: 35px;
+  /* line-height: 35px; */
 }
 
 button {

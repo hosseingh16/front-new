@@ -6,7 +6,7 @@
         class="max-md:px-1 py-2 rounded-2xl border border-gray-300 bg-gray-100 flex flex-col items-center"
       >
         <Icon :name="`svg:${item.icon}`" class="mt-4" size="40" />
-        <p class="text-xs md:text-14 text-gray-700 font-semibold">{{ item.title }}</p>
+        <p class="text-xs md:text-sm text-gray-700 font-semibold">{{ item.title }}</p>
       </div>
     </div>
 
@@ -19,13 +19,13 @@
         class="absolute bottom-0 w-full bg-[rgba(245,246,248,1)] rounded-b-2xl p-5 border-2 border-[rgba(200,205,212,1)] border-t-0"
       >
         <div class="flex gap-2 items-start">
-          <Icon name="svg:location-4" size="20" class="mt-1" />
+          <Icon name="svg:location-4" class="mt-1" />
           <div>
             <p class="font-bold text-gray-800">موقعیت مکانی</p>
-            <p class="font-semibold text-14 text-[rgba(219,39,119,1)]">
+            <p class="font-semibold text-sm text-[rgba(219,39,119,1)]">
               دفتر مرکزی خانومی
             </p>
-            <p class="text-gray-700 text-14 font-normal">
+            <p class="text-gray-700 text-sm font-normal">
               تهران - خیابان ولی‌عصر-ساختمان کیان، پلاک ۲۵۵۱
             </p>
           </div>
@@ -47,14 +47,14 @@
     />
     
     <divider title="شرایط احراز" />
-    <p v-for="item in conditions" class="text-14 font-semibold text-gray-800">
+    <p v-for="item in conditions" class="text-sm font-semibold text-gray-800">
       {{ item }}
     </p>
 
     <divider title="مزایای سازمانی" class="mt-6" />
     <div
       v-for="item in benefits"
-      class="text-14 font-semibold text-gray-800 flex items-center gap-2"
+      class="text-sm font-semibold text-gray-800 flex items-center gap-2"
     >
       <div
         class="p-1 w-4 h-4 bg-[rgba(109,215,168,0.4)] rounded flex justify-center items-center"
@@ -66,7 +66,7 @@
 
     <divider title="مهارت‌های فنی مورد نیاز" class="mt-6" />
     <div class="grid md:grid-cols-2 gap-12 pl-8">
-      <div v-for="item in skils" class="text-14 font-semibold text-gray-800 leading-0!">
+      <div v-for="item in skils" class="text-sm font-semibold text-gray-800 leading-0!">
         <p class="p-0">{{ item.title }}</p>
         <progress
           class="progress progress-primary h-[5px] bg-gray-200"
@@ -81,7 +81,7 @@
 <script setup lang="ts">
 import Divider from './Divider.vue';
 
-// Variables
+// Parameters
 const items = ref<any[]>([
   { title: 'نرم‌فزار: سپیدار', icon: 'single-job-1' },
   { title: 'حقوق: 25 میلیون تومان', icon: 'single-job-1' },

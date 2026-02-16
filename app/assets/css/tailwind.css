@@ -6,7 +6,8 @@
   --breakpoint-1130: 1130px;
   --breakpoint-hd: 75rem;
 
-  --text-14: 14px;
+  --text-caption: 13px;
+  --text-h1: 28px;
 
   --font-yb-bold: 'yekanBakh-bold';
   --font-yb-extraBold: 'yekanBakh-extraBold';
@@ -14,6 +15,8 @@
   --color-primary-900: #4864e1;
   --color-secondary-900: rgba(54, 179, 126, 1);
   --color-gray-soft: #f6f6f6;
+  --color-gray-default: #e8e8e8;
+
   --color-gray-100: rgba(245, 246, 248, 1);
   --color-gray-200: rgba(241, 241, 241, 1);
   --color-gray-300: rgba(200, 205, 212, 1);

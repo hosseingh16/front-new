@@ -15,7 +15,7 @@
         v-if="open"
         dir="rtl"
         ref="dropdown"
-        class="absolute z-[9999] bg-white border border-gray-200 rounded-lg shadow-md p-4"
+        class="w-60! absolute z-[9999] bg-white border border-gray-200 rounded-lg shadow-md p-4"
         :style="dropdownStyle"
       >
         <input
@@ -45,7 +45,7 @@
   </div>
   <div
     v-else
-    class="bg-[#e4ebfc] border border-[#3a54c9] px-2 rounded-lg flex gap-4 items-center justify-between text-14 w-52 flex-shrink-0"
+    class="bg-[#e4ebfc] border border-[#3a54c9] px-2 rounded-lg flex gap-4 items-center justify-between text-sm w-52 flex-shrink-0"
   >
     <span class="truncate">{{ model[0]?.title }}</span>
     <div

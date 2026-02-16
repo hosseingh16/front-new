@@ -3,10 +3,10 @@
     <div class="flex justify-between items-center">
       <div class="flex items-center gap-1">
         <m-circles :colors="['#CDE9D7', '#91CFA7', '#38A95E']" />
-        <span class="text-gray-500 max-md:text-14">استخدام‌های مهم امروز</span>
+        <span class="text-gray-500 max-md:text-sm">استخدام‌های مهم امروز</span>
       </div>
       <button
-        class="px-2 btn btn-outline text-primary-900 hover:bg-white h-10 max-md:text-14"
+        class="px-2 btn btn-outline text-primary-900 hover:bg-white h-10 max-md:text-sm"
       >
         مشاهده همه
         <Icon name="svg:chevron-left" />
@@ -19,7 +19,7 @@
             <NuxtImg src="/images/img-11.png" />
           </div>
           <div>
-            <p class="font-semibold text-14">
+            <p class="font-semibold text-sm">
               مدیر مالی
               <span class="font-normal text-gray-500 mr-1">روغن فوکوس ایرانیان</span>
             </p>
@@ -41,14 +41,14 @@
     </div>
     <div class="flex items-center gap-1 mt-8">
       <m-circles :colors="['#FFDFCB', '#FFB98D', '#FF8030']" />
-      <span class="text-gray-500 max-md:text-14">استخدام‌های پاره وقت</span>
+      <span class="text-gray-500 max-md:text-sm">استخدام‌های پاره وقت</span>
     </div>
     <div class="grid md:grid-cols-2 hd:grid-cols-3 gap-x-6 gap-y-4 mt-4">
       <div v-for="n in 6" class="border border-gray-400 rounded-lg p-2">
         <div class="flex items-baseline gap-4 border-b border-gray-400 pb-4">
-          <Icon name="svg:user-search-2" size="20" />
+          <Icon name="svg:user-search-2" />
           <div>
-            <p class="font-semibold text-14">
+            <p class="font-semibold text-sm">
               ناظر اجرای حسابداری
               <span class="font-normal text-gray-500 mr-1">روغن فوکوس ایرانیان</span>
             </p>
@@ -70,7 +70,7 @@
     </div>
     <div class="text-center">
       <button
-        class="hd:hidden mt-5 px-2 btn btn-primary btn-outline text-primary-900 hover:bg-white h-10 max-md:text-14"
+        class="hd:hidden mt-5 px-2 btn btn-primary btn-outline text-primary-900 hover:bg-white h-10 max-md:text-sm"
       >
         مشاهده همه
         <Icon name="svg:chevron-left" />

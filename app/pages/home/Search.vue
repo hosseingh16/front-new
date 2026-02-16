@@ -19,7 +19,7 @@
           بیش از
           <span class="text-primary-900">+1000 فرصت شغلی</span>
         </h1>
-        <p class="mt-5 text-gray-500 max-md:text-14">های‌حساب : اولین و بزرگترین مرجع استخدام حسابدار</p>
+        <p class="mt-5 text-gray-500 max-md:text-sm">های‌حساب : اولین و بزرگترین مرجع استخدام حسابدار</p>
         <div class="flex flex-col lg:flex-row justify-center gap-x-6 gap-y-2 mt-5">
           <m-select3
             placeholder="انتخاب مسیر شغلی"

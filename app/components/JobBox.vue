@@ -17,11 +17,11 @@
         </p>
         <div class="flex gap-2 items-center">
           <Icon name="svg:buildings-3" />
-          <p class="text-14 text-gray-600">روغن فوکس ایرانیان</p>
+          <p class="text-sm text-gray-600">روغن فوکس ایرانیان</p>
         </div>
         <div class="flex gap-2 items-center">
           <Icon name="svg:location-2" />
-          <p class="text-14 text-[rgba(16,185,129,1)]">تهران</p>
+          <p class="text-sm text-[rgba(16,185,129,1)]">تهران</p>
         </div>
       </div>
       <div class="border border-gray-300 p-2 rounded-[10px]">
@@ -31,7 +31,7 @@
     <div class="flex flex-wrap gap-2 items-start">
       <Icon name="svg:timer" class="mt-2" />
       <div class="flex flex-wrap items-center gap-1">
-        <p class="text-14 text-gray-600">تمام وقت | 15-20 میلیون تومان |</p>
+        <p class="text-sm text-gray-600">تمام وقت | 15-20 میلیون تومان |</p>
         <div
           class="px-2 h-6 flex justify-center items-center font-normal text-xs text-[rgba(25,118,210,1)] bg-[rgba(227,243,255,1)] w-fit"
         >
@@ -55,8 +55,8 @@
         </button>
         <NuxtLink :to="goToPage ? '/single-job' : ''">
           <button class="btn btn-outline h-8 text-primary-900 px-2">
-            <span class="text-14">مشاهده و ارسال رزومه</span>
-            <Icon name="svg:arrow-left-circle" size="20" />
+            <span class="text-sm">مشاهده و ارسال رزومه</span>
+            <Icon name="svg:arrow-left-circle" />
           </button>
         </NuxtLink>
       </div>

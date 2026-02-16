@@ -6,7 +6,7 @@
         class="max-md:px-1 py-2 rounded-2xl border border-gray-300 bg-gray-100 flex flex-col items-center"
       >
         <Icon :name="`svg:${item.icon}`" class="mt-4" size="40" />
-        <p class="text-xs md:text-14 text-gray-700">{{ item.title }}</p>
+        <p class="text-xs md:text-sm text-gray-700">{{ item.title }}</p>
         <p class="font-bold text-gray-800 -mt-1">{{ item.value }}</p>
       </div>
     </div>
@@ -20,13 +20,13 @@
         class="absolute bottom-0 w-full bg-[rgba(245,246,248,1)] rounded-b-2xl p-5 border-2 border-[rgba(200,205,212,1)] border-t-0"
       >
         <div class="flex gap-2 items-start">
-          <Icon name="svg:location-4" size="20" class="mt-1" />
+          <Icon name="svg:location-4" class="mt-1" />
           <div>
             <p class="font-bold text-gray-800">موقعیت مکانی</p>
-            <p class="font-semibold text-14 text-[rgba(219,39,119,1)]">
+            <p class="font-semibold text-sm text-[rgba(219,39,119,1)]">
               دفتر مرکزی خانومی
             </p>
-            <p class="text-gray-700 text-14 font-normal">
+            <p class="text-gray-700 text-sm font-normal">
               تهران - خیابان ولی‌عصر-ساختمان کیان، پلاک ۲۵۵۱
             </p>
           </div>
@@ -54,7 +54,7 @@
 <script setup lang="ts">
 import Divider from './Divider.vue';
 
-// Variables
+// Parameters
 const items = [
   { title: 'تعداد پرسنل خانومی', value: '250 نفر', icon: 'people' },
   { title: 'سال تأسیس', value: '1368', icon: 'award' },

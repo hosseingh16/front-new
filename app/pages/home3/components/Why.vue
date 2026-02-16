@@ -14,7 +14,7 @@
           </div>
           <div>
             <p class="font-semibold">{{ item.title }}</p>
-            <p class="text-14">
+            <p class="text-sm">
               {{ item.description }}
             </p>
           </div>
@@ -26,7 +26,7 @@
 </template>
 
 <script setup lang="ts">
-// Variables
+// Parameters
 const items = [
   {
     title: 'رزومه‌ای متناسب با نیاز بازار حسابداری',

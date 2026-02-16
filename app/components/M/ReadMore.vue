@@ -17,7 +17,7 @@
 
     <div class="text-center mt-2">
       <button
-        class="btn btn-ghost text-14 text-primary-900 h-10"
+        class="btn btn-ghost text-sm text-primary-900 h-10"
         @click="showLess = !showLess"
       >
         <span>مشاهده {{ showLess ? 'بیشتر' : 'کمتر' }}</span>

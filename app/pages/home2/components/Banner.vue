@@ -12,7 +12,7 @@
             <th></th>
           </tr>
         </thead>
-        <tbody class="text-14">
+        <tbody class="text-sm">
           <tr class="h-2"></tr>
           <tr class="[&>td]:p-3 bg-[#EDF0FC]">
             <td class="flex items-start gap-3 w-[250px]">
@@ -146,7 +146,7 @@
 </template>
 
 <script setup lang="ts">
-// Variables
+// Parameters
 const topItems = [
   { title: 'ناظر مالیاتی', duration: 5 },
   { title: 'مشاور مالی', duration: 3 },

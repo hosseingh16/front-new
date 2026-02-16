@@ -22,10 +22,10 @@
             >
               {{ item.title1 }}
             </div>
-            <p class="font-semibold text-14 text-gray-700 z-10 relative">
+            <p class="font-semibold text-sm text-gray-700 z-10 relative">
               {{ item.title2 }}
             </p>
-            <p class="mt-3 text-14 text-gray-600 z-10 relative">{{ item.description }}</p>
+            <p class="mt-3 text-sm text-gray-600 z-10 relative">{{ item.description }}</p>
           </div>
         </div>
         <div
@@ -44,15 +44,15 @@
         >
           {{ item.title1 }}
         </div>
-        <p class="font-semibold text-14 text-gray-700">{{ item.title2 }}</p>
-        <p class="mt-3 text-14 text-gray-600">{{ item.description }}</p>
+        <p class="font-semibold text-sm text-gray-700">{{ item.title2 }}</p>
+        <p class="mt-3 text-sm text-gray-600">{{ item.description }}</p>
       </div>
     </div> -->
   </div>
 </template>
 
 <script setup lang="ts">
-// Variables
+// Parameters
 const items = [
   {
     title1: 'مسیر شغلی',

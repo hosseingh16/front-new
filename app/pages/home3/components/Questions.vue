@@ -11,7 +11,7 @@
         tabindex="0"
         class="collapse bg-base-100 border-base-300 border"
       >
-        <div class="text-14 collapse-title font-semibold flex justify-between items-center px-5">
+        <div class="text-sm collapse-title font-semibold flex justify-between items-center px-5">
           {{ item.question }}
           <Icon name="svg:chevron-down" size="16" />
         </div>
@@ -26,7 +26,7 @@
 </template>
 
 <script setup lang="ts">
-// Variables
+// Parameters
 const items = [
   {
     question: '1 : استفاده از امکانات استخدامی سایت برای حسابدار ها هزینه دارد ؟',

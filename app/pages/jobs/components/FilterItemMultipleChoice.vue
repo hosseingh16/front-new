@@ -35,9 +35,9 @@
         </div>
       </div>
       <div
-        class="flex items-center gap-2 mt-4 [&>.btn]:font-bold [&>.btn]:text-14 [&>.btn]:h-8"
+        class="flex items-center gap-2 mt-4 [&>.btn]:font-bold [&>.btn]:text-sm [&>.btn]:h-8"
       >
-        <button class="btn btn-ghost text-[#dd4a48] text-14 font-bold h-10">
+        <button class="btn btn-ghost text-[#dd4a48] text-sm font-bold h-10">
           <delete-filters />
         </button>
         <button class="btn btn-primary">مشاهده نتایج</button>
@@ -62,7 +62,7 @@ const props = defineProps({
 });
 const emits = defineEmits(['update:modelValue']);
 
-// Variables
+// Parameters
 const allOptions = ref<IFilterData[]>([]);
 const options = ref<IFilterData[]>([]);
 const keyword = ref('');
@@ -125,9 +125,9 @@ function search() {
           </div>
         </div>
         <div
-          class="flex items-center gap-2 mt-4 [&>.btn]:font-bold [&>.btn]:text-14 [&>.btn]:h-8"
+          class="flex items-center gap-2 mt-4 [&>.btn]:font-bold [&>.btn]:text-sm [&>.btn]:h-8"
         >
-          <button class="btn btn-ghost text-[#dd4a48] text-14 font-bold h-10">
+          <button class="btn btn-ghost text-[#dd4a48] text-sm font-bold h-10">
             <delete-filters />
           </button>
           <button class="btn btn-primary">مشاهده نتایج</button>
@@ -150,7 +150,7 @@ const props = defineProps({
   items: { type: Array as () => any[], required: true },
 });
 
-// Variables
+// Parameters
 const allOptions = ref<IFilterData[]>([]);
 const options = ref<IFilterData[]>([]);
 const keyword = ref('');

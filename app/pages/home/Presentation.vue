@@ -11,7 +11,7 @@
         >
           <p class="font-semibold text-gray-700">{{ item.title }}</p>
           <button
-            class="btn btn-ghost text-14 font-semibold text-primary-900 max-lg:underline max-lg:underline-offset-8"
+            class="btn btn-ghost text-sm font-semibold text-primary-900 max-lg:underline max-lg:underline-offset-8"
           >
             {{ item.btn }}
             <Icon name="svg:arrow-left-2" size="10" class="max-lg:hidden" />
@@ -26,11 +26,11 @@
         <m-titr class="mt-4">
           چرا <span class="text-[#FF8030]">رزومه حرفه‌ای</span> مهم است؟
         </m-titr>
-        <p class="font-semibold text-gray-700 mt-3">
+        <p class="font-semibold text-gray-700 mt-3 leading-9">
           رزومه شما اولین برخورد کارفرمایان با شماست. یک رزومه حرفه‌ای و منظم می‌تواند
           شانس شما را برای دعوت به مصاحبه و کسب شغل مورد نظرتان به طرز چشمگیری افزایش دهد.
         </p>
-        <button class="btn btn-outline mt-12 border-[#AEB5BE] max-md:text-14">
+        <button class="btn btn-outline mt-12 border-[#AEB5BE] max-md:text-sm">
           ساخت رزومه رایگان
           <Icon name="svg:arrow-left-3" size="10" />
         </button>
@@ -42,8 +42,8 @@
           <Icon :name="`svg:${item.icon}`" size="50" />
           <p class="font-bold">{{ item.title }}</p>
         </div>
-        <p class="text-14 text-gray-500 leading-[30px]">{{ item.description }}</p>
-        <button class="text-14 text-primary-900 mt-4">
+        <p class="text-sm text-gray-500 leading-[30px]">{{ item.description }}</p>
+        <button class="text-sm text-primary-900 mt-4">
           {{ item.btn }}
           <Icon name="svg:arrow-left-2" size="10" class="mr-2"/>
         </button>
@@ -53,7 +53,7 @@
 </template>
 
 <script setup lang="ts">
-// Variables
+// Parameters
 const items1 = [
   { title: 'رزومه حرفه‌ای حسابداری', btn: 'ایجاد رزومه' },
   { title: 'جستجوی تخصصی حسابداری', btn: 'فرصت های شغلی' },

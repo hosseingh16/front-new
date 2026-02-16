@@ -6,12 +6,12 @@
         <div class="text-left flex justify-end">
           <form v-if="options.length === 0" method="dialog">
             <button class="flex items-center gap-2">
-              <span class="font-semibold text-gray-800 text-14">بازگشت</span>
+              <span class="font-semibold text-gray-800 text-sm">بازگشت</span>
               <Icon name="svg:chevron-down" class="rotate-90" size="12" />
             </button>
           </form>
           <button v-else class="flex items-center gap-2" @click="goBack">
-            <span class="font-semibold text-gray-800 text-14">بازگشت</span>
+            <span class="font-semibold text-gray-800 text-sm">بازگشت</span>
             <Icon name="svg:chevron-down" class="rotate-90" size="12" />
           </button>
         </div>
@@ -24,7 +24,7 @@
           </form>
           <button
             v-if="options.length === 0"
-            class="btn btn-ghost text-[#dd4a48] text-14 font-bold h-10"
+            class="btn btn-ghost text-[#dd4a48] text-sm font-bold h-10"
             @click="clearFilters"
           >
             <delete-filters />
@@ -62,7 +62,7 @@
       </div>
 
       <div>
-        <button class="btn btn-primary h-10 text-14 w-full font-yb-bold" @click="search">
+        <button class="btn btn-primary h-10 text-sm w-full font-yb-bold" @click="search">
           مشاهده نتایج
         </button>
       </div>
@@ -87,7 +87,7 @@ const props = defineProps({
 });
 const emits = defineEmits(['setFilters']);
 
-// Variables
+// Parameters
 const items = ref<any[]>([]);
 const options = ref<IFilterData[]>([]);
 const selectedOptions = ref<Record<string, IFilterData[]>>({});

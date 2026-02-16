@@ -7,7 +7,7 @@
         برای انتخاب شدن اول باید دیده بشی !
       </h1>
       <div
-        class="mt-2 font-medium text-14 md:text-2xl px-5 md:px-10 text-center"
+        class="mt-2 font-medium text-sm md:text-2xl px-5 md:px-10 text-center"
       >
         اولین قدم برای شغلی بهتر در حسابداری، یک رزومه‌ی حرفه‌ایه. ما کنارت
         هستیم!

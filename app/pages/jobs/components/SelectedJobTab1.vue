@@ -7,7 +7,7 @@
         class="max-md:px-1 py-2 rounded-2xl border border-gray-300 bg-gray-100 flex flex-col items-center"
       >
         <Icon :name="`svg:${item.icon}`" class="mt-4" size="40" />
-        <p class="text-center text-xs md:text-14 text-gray-700 font-semibold">{{ item.title }}</p>
+        <p class="text-center text-xs md:text-sm text-gray-700 font-semibold">{{ item.title }}</p>
       </div>
     </div>
 
@@ -27,7 +27,7 @@
     <p class="font-yb-bold text-gray-800 mt-4">مزایای سازمانی</p>
     <div
       v-for="item in benefits"
-      class="text-14 font-semibold text-gray-800 flex items-center gap-2"
+      class="text-sm font-semibold text-gray-800 flex items-center gap-2"
     >
       <div
         class="p-1 w-4 h-4 bg-[rgba(109,215,168,0.4)] rounded flex justify-center items-center"
@@ -40,7 +40,7 @@
 </template>
 
 <script setup lang="ts">
-// Variables
+// Parameters
 const items = ref<any[]>([
   { title: 'نرم‌فزار: سپیدار', icon: 'single-job-1' },
   { title: 'حقوق: 25 میلیون تومان', icon: 'single-job-1' },

@@ -3,10 +3,10 @@
     <divider title="ارزش های برند خانومی" icon="medal-star" />
     <div v-for="item in items" class="mt-4">
       <div class="flex items-center gap-2">
-        <Icon name="svg:heart-tick" size="20" />
+        <Icon name="svg:heart-tick" />
         <p class="font-bold text-gray-800">{{ item.title }}</p>
       </div>
-      <p class="text-14 text-gray-700 -mt-2">{{ item.text }}</p>
+      <p class="text-sm text-gray-700 -mt-2">{{ item.text }}</p>
     </div>
     <divider title="تصاویر گالری برند خانومی" icon="medal-star" class="mt-10" />
     <div class="grid grid-cols-2 gap-4 [&>img]:w-full [&>img]:h-full">
@@ -21,7 +21,7 @@
 <script setup lang="ts">
 import Divider from './Divider.vue';
 
-// Variables
+// Parameters
 const items = [
   {
     title: 'احترام',

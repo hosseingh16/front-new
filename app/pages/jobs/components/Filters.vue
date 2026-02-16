@@ -3,7 +3,7 @@
     <div class="flex items-center gap-2">
       <button
         v-if="showDeleteFilters"
-        class="max-md:hidden btn btn-link no-underline px-0 ml-8 text-[#dd4a48] text-14 font-bold h-10"
+        class="max-md:hidden btn btn-link no-underline px-0 ml-8 text-[#dd4a48] text-sm font-bold h-10"
         @click="clearFilters"
       >
         <delete-filters />
@@ -76,7 +76,7 @@ import type { IFilterData } from '~/interfaces/IFilterData';
 import DeleteFilters from './DeleteFilters.vue';
 import AllFilters from './AllFilters.vue';
 
-// Variables
+// Parameters
 const filtersData = ref<any>(null);
 const jobTitles = ref<IFilterData[]>([]);
 const programs = ref<IFilterData[]>([]);

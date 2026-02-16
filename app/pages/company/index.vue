@@ -18,7 +18,7 @@
         <p class="font-semibold text-base text-gray-700 max-lg:text-center">
           کامپیوتر، فناوری اطلاعات و اینترنت
         </p>
-        <p class="mt-4 text-gray-800 text-14 max-lg:text-center">
+        <p class="mt-4 text-gray-800 text-sm max-lg:text-center">
           فروشگاه اینترنتی خانومی عنوان اولین فروشگاه اینترنتی تخصصی آرایشی بهداشتی در
           ایران در سال 1393 راه اندازی شد
         </p>
@@ -35,13 +35,13 @@
           <NuxtImg src="/images/map.png" class="w-full h-full rounded-2xl" />
           <div class="absolute bottom-2 left-2 right-2 bg-white rounded-lg p-5">
             <div class="flex gap-2 items-start">
-              <Icon name="svg:location-4" size="20" class="mt-1" />
+              <Icon name="svg:location-4" class="mt-1" />
               <div>
                 <p class="font-bold text-gray-800">موقعیت مکانی</p>
-                <p class="font-semibold text-14 text-[rgba(219,39,119,1)]">
+                <p class="font-semibold text-sm text-[rgba(219,39,119,1)]">
                   دفتر مرکزی خانومی
                 </p>
-                <p class="text-gray-700 text-14 font-normal">
+                <p class="text-gray-700 text-sm font-normal">
                   تهران - خیابان ولی‌عصر-ساختمان کیان، پلاک ۲۵۵۱
                 </p>
               </div>
@@ -50,7 +50,7 @@
         </div>
         <div class="mt-4 border border-gray-300 rounded-2xl p-4 text-gray-800">
           <div class="flex items-center gap-2">
-            <Icon name="svg:user-tick" size="20" />
+            <Icon name="svg:user-tick" />
             <p class="font-semibold">اعضای بنیان‌گذار</p>
           </div>
           <div v-for="item in peoples" class="bg-white p-4 rounded-2xl mt-4">
@@ -65,10 +65,10 @@
               </div>
               <div>
                 <p class="font-bold">{{ item.name }}</p>
-                <p class="text-14 font-normal">{{ item.title }}</p>
+                <p class="text-sm font-normal">{{ item.title }}</p>
               </div>
             </div>
-            <p class="mt-4 text-14 font-semibold text-gray-800">{{ item.text }}</p>
+            <p class="mt-4 text-sm font-semibold text-gray-800">{{ item.text }}</p>
           </div>
         </div>
       </div>
@@ -81,7 +81,7 @@ import Tab1 from './components/Tab1.vue';
 import Tab2 from './components/Tab2.vue';
 import Tab3 from './components/Tab3.vue';
 
-// Variables
+// Parameters
 const peoples = [
   {
     name: 'مسعود شاه‌مرادی',

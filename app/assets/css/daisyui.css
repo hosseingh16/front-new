@@ -1,7 +1,6 @@
 @plugin "daisyui/theme" {
   name: 'light';
   default: true;
-  --color-primary: #4864e1;
 }
 
 @plugin "daisyui" {
@@ -9,11 +8,11 @@
 }
 
 @utility btn {
-  @apply rounded-[8px] font-medium px-[24px] py-[8px] h-[45px] shadow-none;
+  @apply border-none text-base rounded-lg font-semibold px-4 py-2 h-[45px] shadow-none ;
 }
 
 @utility btn-primary {
-  @apply text-white bg-primary-900 border-0 hover:bg-[rgba(58,84,201,1)] active:bg-[rgba(47,63,170,1)];
+  @apply text-white bg-primary-900 hover:bg-[rgba(58,84,201,1)] active:bg-[rgba(47,63,170,1)];
 }
 
 @utility btn-outline {
@@ -25,5 +24,13 @@
 }
 
 @utility btn-success {
-  @apply text-white bg-secondary-900 border-0 hover:bg-[rgba(47,158,108,1)] active:bg-[rgba(30,127,83,1)];
+  @apply text-white bg-secondary-900 hover:bg-[rgba(47,158,108,1)] active:bg-[rgba(30,127,83,1)];
+}
+
+@utility btn-disabled {
+  @apply bg-[#F2F2F2]! text-[#D1D1D1];
+}
+
+@utility btn-soft {
+  @apply text-primary-900 bg-[#F0F3FD];
 }

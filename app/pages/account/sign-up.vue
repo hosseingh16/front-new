@@ -1,0 +1,109 @@
+<template>
+  <DaisyCard
+    class="transition-all duration-300 mx-auto w-full"
+    :class="step < 3 ? 'max-w-[560px]' : 'max-w-[1052px]'"
+  >
+    <div class="flex justify-between items-center">
+      <Icon name="svg:chevron-right" class="cursor-pointer" @click="goBack" />
+      <img :src="`/images/${step < 3 ? step : '3'}-3.png`" width="54" />
+    </div>
+
+    <Transition
+      :name="direction === 'forward' ? 'slide-next' : 'slide-prev'"
+      mode="out-in"
+    >
+      <SignUp1 v-if="step === 1" v-model="code" />
+      <SignUp2
+        v-else-if="step === 2"
+        v-model="step2Data"
+        @password-strength="passwordStrength = $event"
+      />
+      <SignUp3 v-else-if="step === 3" @on-change-step="step = $event" />
+      <SignUp4 v-else-if="step === 4" />
+    </Transition>
+
+    <button
+      v-if="step < 3"
+      class="mt-4 btn flex justify-center gap-2 h-10 max-sm:w-full"
+      :class="!buttonEnabled ? 'btn-disabled' : 'btn-primary'"
+      @click="onSubmit"
+    >
+      <Icon v-if="!buttonEnabled" name="svg:user-plus" size="24" />
+      <Icon v-else name="svg:user-plus-white" size="24" />
+      <span>ثبت‌نام</span>
+    </button>
+  </DaisyCard>
+</template>
+
+<script setup lang="ts">
+import SignUp1 from '~/features/account/components/SignUp1.vue';
+import SignUp2 from '~/features/account/components/SignUp2.vue';
+import SignUp3 from '~/features/account/components/SignUp3.vue';
+import SignUp4 from '~/features/account/components/SignUp4.vue';
+import { paths } from '~/routes';
+
+definePageMeta({
+  layout: 'auth',
+});
+
+// Parameters
+const router = useRouter();
+const direction = ref<'forward' | 'back'>('forward');
+const step = ref(1);
+const code = ref('');
+const step2Data = reactive({
+  profile: null as File | null,
+  fullName: '',
+  password: '',
+});
+const passwordStrength = ref(0);
+
+// Computeds
+const buttonEnabled = computed(() => {
+  switch (step.value) {
+    case 1:
+      return code.value !== '' && code.value.length === 6;
+    case 2:
+      return step2Data.fullName && step2Data.password && passwordStrength.value === 4;
+  }
+});
+
+// Functions
+function goBack() {
+  direction.value = 'back';
+  if (step.value === 1) router.replace(paths.account.root);
+  else step.value--;
+}
+
+function onSubmit() {
+  direction.value = 'forward';
+  step.value++;
+}
+</script>
+
+<style>
+.slide-next-enter-from {
+  transform: translateX(40px);
+  opacity: 0;
+}
+.slide-next-leave-to {
+  transform: translateX(-40px);
+  opacity: 0;
+}
+
+.slide-prev-enter-from {
+  transform: translateX(-40px);
+  opacity: 0;
+}
+.slide-prev-leave-to {
+  transform: translateX(40px);
+  opacity: 0;
+}
+
+.slide-next-enter-active,
+.slide-next-leave-active,
+.slide-prev-enter-active,
+.slide-prev-leave-active {
+  transition: all 0.3s ease;
+}
+</style>

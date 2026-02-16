@@ -7,7 +7,7 @@
         <div class="text-left flex justify-end bg-white p-6">
           <form method="dialog">
             <button class="flex items-center gap-2">
-              <span class="font-semibold text-gray-800 text-14">بازگشت</span>
+              <span class="font-semibold text-gray-800 text-sm">بازگشت</span>
               <Icon name="svg:chevron-down" class="rotate-90" size="12" />
             </button>
           </form>

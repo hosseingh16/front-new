@@ -9,7 +9,7 @@
         <div class="flex flex-col items-center max-[850px]:hidden">
           <NuxtImg src="/images/comment-1.png" />
           <p class="font-semibold mt-2">اوراش</p>
-          <p class="text-14 text-center">یک دژ مالی مستحکم قابل اتکا</p>
+          <p class="text-sm text-center">یک دژ مالی مستحکم قابل اتکا</p>
         </div>
         <div
           class="w-[480px] flex flex-col md:flex-row gap-3 md:gap-5 max-[850px]:hidden relative"
@@ -34,7 +34,7 @@
           />
           <NuxtImg src="/images/comment-1.png" />
           <p class="font-semibold mt-2">اوراش</p>
-          <p class="text-14 text-center">یک دژ مالی مستحکم قابل اتکا</p>
+          <p class="text-sm text-center">یک دژ مالی مستحکم قابل اتکا</p>
           <div class="flex flex-col md:gap-5">
             <Icon name="svg:quote-1" />
             <p class="max-md:text-center">

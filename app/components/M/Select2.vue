@@ -4,7 +4,7 @@
       class="bg-white cursor-pointer h-10 w-36 rounded-lg border border-gray-300 flex justify-between items-center gap-2 pr-2 pl-2"
       @click="toggleDropdown"
     >
-      <span class="text-gray-700 text-14 font-normal line-clamp-1">
+      <span class="text-gray-700 text-sm font-normal line-clamp-1">
         {{ model || 'انتخاب کنید' }}
       </span>
       <icons-chevron-down
@@ -43,7 +43,7 @@ defineProps({
   options: { type: Array as () => string[], required: true },
 });
 
-// Variables
+// Parameters
 const open = ref(false);
 const isClient = ref(false);
 

@@ -4,7 +4,7 @@
       class="bg-white cursor-pointer h-10 rounded-lg flex justify-between items-center gap-2 pr-2 pl-2"
       @click="toggleDropdown"
     >
-      <span class="text-gray-600 lg:text-gray-700 text-xs md:text-14 font-semibold line-clamp-1">
+      <span class="text-gray-600 lg:text-gray-700 text-xs md:text-sm font-semibold line-clamp-1">
         {{ model || label }}
       </span>
       <icons-chevron-down
@@ -44,7 +44,7 @@ defineProps({
   options: { type: Array as () => string[], required: true },
 });
 
-// Variables
+// Parameters
 const open = ref(false);
 const isClient = ref(false);
 

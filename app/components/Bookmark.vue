@@ -8,10 +8,10 @@
     <div class="text-right">
       <div>
         <p class="font-semibold">ورود | ثبت نام</p>
-        <p class="mt-4 text-14 text-gray-700 font-normal">شماره موبایل</p>
+        <p class="mt-4 text-sm text-gray-700 font-normal">شماره موبایل</p>
         <input
           placeholder="لطفا شماره موبایل خود را وارد کنید"
-          class="placeholder:text-14 placeholder:text-gray-500 w-full p-2 bg-gray-100 rounded-lg focus:outline-0"
+          class="placeholder:text-sm placeholder:text-gray-500 w-full p-2 bg-gray-100 rounded-lg focus:outline-0"
         />
         <span class="text-gray-500 text-xs font-font-regular">مثال :*** **** 0912 </span>
       </div>

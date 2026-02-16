@@ -14,7 +14,7 @@
             <input
               type="text"
               placeholder="کلید واژه (عنوان شغلی و ...)"
-              class="text-gray-700 text-14 font-semibold input border-0 outline-0 shadow-none focus:outline-0 focus:shadow-none placeholder:text-gray-600 placeholder:lg:text-gray-700 placeholder:text-xs placeholder:md:text-14 placeholder:lg:font-semibold"
+              class="text-gray-700 text-sm font-semibold input border-0 outline-0 shadow-none focus:outline-0 focus:shadow-none placeholder:text-gray-600 placeholder:lg:text-gray-700 placeholder:text-xs placeholder:md:text-sm placeholder:lg:font-semibold"
             />
           </div>
           <div class="flex items-center border-l-2 border-gray-300 max-lg:hidden">
@@ -45,12 +45,12 @@
     <div
       class="mt-8 px-6 lg:px-28 flex flex-wrap items-center max-md:justify-between gap-x-8 gap-y-2"
     >
-      <p class="text-14 font-semibold text-gray-800">
+      <p class="text-sm font-semibold text-gray-800">
         مشاغل پیشنهادی:
         <span class="font-normal max-md:text-[rgba(255,150,67,1)]">41,245</span>
       </p>
       <div class="flex gap-1 items-center">
-        <p class="max-md:hidden text-14 font-semibold text-gray-800">
+        <p class="max-md:hidden text-sm font-semibold text-gray-800">
           مرتب سازی بر اساس:
         </p>
         <m-select2 v-model="sort" :options="['جدیدترین', 'بیشترین حقوق']" />
@@ -93,7 +93,7 @@ import Filters from './components/Filters.vue';
 import SelectedJob from './components/SelectedJob.vue';
 import SelectedJobDialog from './components/SelectedJobDialog.vue';
 
-// Variables
+// Parameters
 const sort = ref('جدیدترین');
 const showJob = ref(false);
 
@@ -102,7 +102,6 @@ watch(
   () => window.innerWidth,
   () => {
     if (window.innerWidth >= 1024) {
-      console.log(44);
       (document.getElementById('selectedJobModal') as HTMLDialogElement)?.close();
     }
   }

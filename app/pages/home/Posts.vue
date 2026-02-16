@@ -9,14 +9,14 @@
     <div class="mt-10 grid md:grid-cols-3 gap-10">
       <div v-for="post in posts" class="bg-gray-200 p-4 rounded-2xl">
         <NuxtImg :src="`/images/${post.img}`" class="w-full" />
-        <h1 class="text-14 font-semibold mt-1">{{ post.title }}</h1>
+        <h1 class="text-sm font-semibold mt-1">{{ post.title }}</h1>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-// Variables
+// Parameters
 const posts = [
   { title: "آینده حسابداری در ایران ; فرصت ها و چالش ها", img: "blog-1.png" },
   { title: "همه چیز درباره حد نصاب معاملات در حسابداری", img: "blog-2.png" },

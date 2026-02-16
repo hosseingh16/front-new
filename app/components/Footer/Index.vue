@@ -33,9 +33,9 @@
         :tabindex="index"
         class="collapse bg-[#191D33] rounded-lg"
       >
-        <div class="text-14 collapse-title flex justify-between items-center px-6">
+        <div class="text-sm collapse-title flex justify-between items-center px-6">
           {{ item.title }}
-          <Icon name="mdi:chevron-down" size="20" />
+          <Icon name="mdi:chevron-down" />
         </div>
         <div class="collapse-content text-sm leading-8">
           <component :is="item.comp" />
@@ -56,7 +56,7 @@
 <script setup lang="ts">
 import { FooterAbout, FooterLinks, FooterPhone, FooterSocials } from '#components';
 
-// Variables
+// Parameters
 const items = [
   { title: 'لینک‌های مفید', comp: FooterLinks },
   { title: 'درباره های‌حساب', comp: FooterAbout },

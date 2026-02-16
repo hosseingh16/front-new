@@ -14,7 +14,7 @@
             <div class="flex items-center gap-2">
               <NuxtLink
                 to="/company"
-                class="text-[rgba(85,116,255,1)] underline underline-offset-8 text-14 font-normal"
+                class="text-[rgba(85,116,255,1)] underline underline-offset-8 text-sm font-normal"
               >
                 <Icon name="svg:link" />
                 خانومی
@@ -27,7 +27,7 @@
           ارسال رزومه
         </button>
         <dialog1 id="modal_1" :title type="warning" :width="420">
-          <p class="text-14 font-normal text-gray-600 px-8">
+          <p class="text-sm font-normal text-gray-600 px-8">
             لطفا برای ارسال رزومه از طریق دکمه زیر وارد حساب کاربری خود شوید
           </p>
           <form method="dialog">
@@ -41,7 +41,7 @@
           title="رزومه شما برای موقعیت شغلی استخدام مدیر مالی (آقا) با موفقیت ارسال شد"
           type="success"
         >
-          <p class="text-14 font-normal text-gray-600 px-8 leading-6!">
+          <p class="text-sm font-normal text-gray-600 px-8 leading-6!">
             در صورت تایید یا رد رزومه شما توسط کارفرما از طریق پیامک به شما اطلاع داده
             خواهد شد . همچنین می توانید نتیجه را در بخش “ درخواست من ” در پنل کاربری خود
             مشاهده نمایید.
@@ -54,11 +54,11 @@
       <div class="mt-4">
         <div class="flex items-center gap-2">
           <Icon name="svg:location-2" />
-          <span class="text-14 font-normal text-secondary-900">تهران</span>
+          <span class="text-sm font-normal text-secondary-900">تهران</span>
         </div>
         <div class="flex items-center gap-2">
           <Icon name="svg:user-octagon" />
-          <span class="text-14 font-normal text-gray-800">نوع همکاری : پاره وقت</span>
+          <span class="text-sm font-normal text-gray-800">نوع همکاری : پاره وقت</span>
           <span class="text-gray-300">|</span>
           <div
             class="px-[2px] h-6 flex justify-center items-center font-normal text-xs text-[rgba(25,118,210,1)] bg-[rgba(227,243,255,1)] w-fit"
@@ -68,11 +68,11 @@
         </div>
         <div class="flex items-center gap-2">
           <Icon name="svg:money-4" />
-          <span class="text-14 font-normal text-gray-800">حقوق : توافقی</span>
+          <span class="text-sm font-normal text-gray-800">حقوق : توافقی</span>
         </div>
         <div class="flex items-center gap-2">
           <icons-bag color="rgba(123,130,144,1)" :size="14" />
-          <span class="text-14 font-normal text-gray-800"
+          <span class="text-sm font-normal text-gray-800"
             >آدرس :تهران - خیابان ولی‌عصر-ساختمان کیان، پلاک ۲۵۵۱</span
           >
         </div>
@@ -86,14 +86,14 @@
         <div class="flex gap-2 flex-wrap">
           <button class="btn text-gray-600 border-0 bg-gray-200 px-3">
             <icons-send />
-            <span class="text-14 font-semibold">اشتراک‌گذاری</span>
+            <span class="text-sm font-semibold">اشتراک‌گذاری</span>
           </button>
           <button
             class="btn text-gray-600 border-0 bg-gray-200 px-3"
             @click="showBookmarkModal"
           >
             <icons-star />
-            <span class="text-14 font-semibold">نشان کردن</span>
+            <span class="text-sm font-semibold">نشان کردن</span>
           </button>
         </div>
       </div>
@@ -129,7 +129,7 @@
 import Tab1 from './components/Tab1.vue';
 import Tab2 from './components/Tab2.vue';
 
-// Variables
+// Parameters
 const title = ref('استخدام مدیر مالی (آقا)');
 
 // Functions
