@@ -1,5 +1,10 @@
 import tailwindcss from "@tailwindcss/vite";
 export default defineNuxtConfig({
+  runtimeConfig: {
+    public: {
+      baseUrl: "https://api.hihesab.local", // Laravel API
+    },
+  },
   devServer: {
     host: "0.0.0.0",
     port: 3000,
@@ -7,7 +12,18 @@ export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
   devtools: { enabled: true },
   css: ["~/assets/css/main.css"],
-  modules: ["@nuxt/image", "@nuxt/icon", "@nuxt/fonts"],
+  modules: ["@nuxt/image", "@nuxt/icon", "@nuxt/fonts", "nuxt-auth-sanctum"],
+  sanctum: {
+    baseUrl: "https://api.hihesab.local", // Laravel API
+    endpoints: {
+      login: "/api/login",
+      logout: "/api/logout",
+    },
+    redirect: {
+      onLogin: "/",
+      onLogout: "/login",
+    },
+  },
   vite: {
     plugins: [tailwindcss()],
   },
