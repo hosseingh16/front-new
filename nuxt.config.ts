@@ -3,7 +3,29 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
   css: ['~/assets/css/main.css'],
-  modules: ['@nuxt/image', '@nuxt/icon', '@nuxt/fonts'],
+  runtimeConfig: {
+    public: {
+      baseUrl: 'https://api.hihesab.local', // Laravel API
+    },
+  },
+  devServer: {
+    host: '0.0.0.0',
+    port: 3000,
+  },
+  modules: ['@nuxt/image', '@nuxt/icon', '@nuxt/fonts', 'nuxt-auth-sanctum'],
+  // @ts-ignore
+  sanctum: {
+    baseUrl: 'https://api.hihesab.local', // Laravel API
+    endpoints: {
+      login: '/api/login',
+      logout: '/api/logout',
+    },
+    redirect: {
+      onLogin: '/',
+      onLogout: '/login',
+    },
+  },
+
   vite: {
     plugins: [tailwindcss()],
   },
