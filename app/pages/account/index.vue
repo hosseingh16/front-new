@@ -1,49 +1,96 @@
 <template>
   <div>
-    <DaisyCard class="w-full min-[560px]:w-[560px]">
-      <div class="flex flex-col items-center">
-        <NuxtImg src="/images/logo.png" class="w-10 h-10" />
-        <p class="font-semibold text-caption">های‌حساب</p>
-        <p>خانه حسابداران با تجربه</p>
-      </div>
-      <p class="mt-12 text-2xl sm:text-h1 font-yb-bold">ورود یا ثبت نام</p>
-      <p class="mt-2 text-base">
-        برای ورود یا ثبت نام، لطفا شماره تلفن همراه را وارد کنید:
-      </p>
-
-      <m-text-field v-model="mobile" placeholder="شماره تلفن همراه را وارد کنید">
-        <template #prefix><Icon name="svg:mobile" /></template>
-      </m-text-field>
-
-      <div class="flex items-center mt-2">
-        <Icon name="svg:hint" />
-        <p class="mr-1">
-          با ورود یا ثبت نام در های‌حساب،
-          <span class="text-primary-900">شرایط و قوانین</span> را می پذیرم.
-        </p>
-      </div>
-
-      <button
-        class="mt-2 btn flex justify-center gap-2 h-10"
-        :class="{ 'btn-disabled': !isMobile(mobile), 'btn-primary': isMobile(mobile) }"
-        @click="router.push(paths.account.signUp)"
-      >
-        <Icon name="svg:user-1" size="24" />
-        <span>ورود یا ثبت‌نام</span>
-      </button>
-    </DaisyCard>
+    <Transition
+      :name="direction === 'forward' ? 'slide-next' : 'slide-prev'"
+      mode="out-in"
+    >
+      <Account
+        v-if="step === 1"
+        v-model="mobile"
+        @on-completed="
+          direction = 'forward';
+          step = 3;
+        "
+      />
+      <SignInPassword
+        v-else-if="step === 2"
+        @on-change-step="
+          direction = 'back';
+          step = 1;
+        "
+      />
+      <SignUp1
+        v-else-if="step === 3"
+        v-model="signUp1Data"
+        :step
+        @on-change-step="onChangeStep($event)"
+      />
+      <SignUp2
+        v-else-if="step === 4"
+        v-model="signUp2Data"
+        :step
+        @on-change-step="onChangeStep($event)"
+      />
+      <SignUp3 v-else-if="step === 5" :step @on-change-step="onChangeStep($event)" />
+      <SignUp4 v-else-if="step === 6" :step @on-change-step="onChangeStep($event)" />
+    </Transition>
   </div>
 </template>
 
 <script setup lang="ts">
-import { isMobile } from '~/libs/utils';
-import { paths } from '~/routes';
+import Account from '~/features/account/components/Account.vue';
+import SignInPassword from '~/features/account/components/SignInPassword.vue';
+import SignUp1 from '~/features/account/components/SignUp1.vue';
+import SignUp2 from '~/features/account/components/SignUp2.vue';
+import SignUp3 from '~/features/account/components/SignUp3.vue';
+import SignUp4 from '~/features/account/components/SignUp4.vue';
+import type { DirectionT } from '~/features/account/types';
 
 definePageMeta({
   layout: 'auth',
 });
 
 // Parameters
+const step = ref(1);
+const direction = ref<DirectionT>('forward');
 const mobile = ref('');
-const router = useRouter();
+const signUp1Data = ref('');
+const signUp2Data = reactive({
+  profile: null as File | null,
+  fullName: '',
+  password: '',
+});
+
+// Functions
+function onChangeStep(value: number) {
+  direction.value = step.value < value ? 'forward' : 'back';
+  step.value = value;
+}
 </script>
+
+<style>
+.slide-next-enter-from {
+  transform: translateX(40px);
+  opacity: 0;
+}
+.slide-next-leave-to {
+  transform: translateX(-40px);
+  opacity: 0;
+}
+
+.slide-prev-enter-from {
+  transform: translateX(-40px);
+  opacity: 0;
+}
+.slide-prev-leave-to {
+  transform: translateX(40px);
+  opacity: 0;
+}
+
+.slide-next-enter-active,
+.slide-next-leave-active,
+.slide-prev-enter-active,
+.slide-prev-leave-active {
+  transition: all 0.3s ease;
+}
+</style>

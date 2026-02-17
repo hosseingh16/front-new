@@ -1,5 +1,10 @@
 <template>
-  <div>
+  <DaisyCard class="w-full min-[560px]:w-[560px]">
+    <div class="flex justify-between items-center">
+      <Icon name="svg:chevron-right" class="cursor-pointer" @click="goBack" />
+      <img :src="`/images/2-3.png`" width="54" />
+    </div>
+
     <p class="mt-4 text-2xl sm:text-h1 font-yb-bold">تکیمل حساب کاربری</p>
 
     <p class="mt-4 text-base">تصویر پروفایل:</p>
@@ -73,10 +78,22 @@
         ></div>
       </div>
     </div>
-  </div>
+
+    <button
+      class="mt-4 w-full btn flex justify-center gap-2 h-10 max-sm:w-full"
+      :class="!buttonEnabled ? 'btn-disabled' : 'btn-primary'"
+      @click="onNext"
+    >
+      <Icon v-if="!buttonEnabled" name="svg:user-plus" size="24" />
+      <Icon v-else name="svg:user-plus-white" size="24" />
+      <span>ثبت‌نام</span>
+    </button>
+  </DaisyCard>
 </template>
 
 <script setup lang="ts">
+import type { DirectionT } from '../types';
+
 // Model
 const model = defineModel({
   default: {
@@ -86,23 +103,23 @@ const model = defineModel({
   },
 });
 
-// // Props
-// defineProps<{ defaultValue: any }>();
+// Props
+const props = defineProps<{
+  step: number;
+}>();
 
 // Emits
 const emits = defineEmits<{
   (e: 'passwordStrength', value: number): void;
+  (e: 'onChangeStep', step: number): void;
+  (e: 'onChangeDirection', step: DirectionT): void;
 }>();
 
 // Parameters
 const showPass = ref(false);
 const imageInputRef = ref<any>(null);
 const imageBase64 = ref<any>(null);
-// const model = reactive({
-//   profile: null as File | null,
-//   fullName: '',
-//   password: '',
-// });
+const passwordStrength = ref(0);
 
 // Computeds
 const strength = computed(() => {
@@ -111,21 +128,56 @@ const strength = computed(() => {
   if (/\d/.test(model.value.password)) score++;
   if (/[!@#$%&*^]/.test(model.value.password)) score++;
   if (/[A-Z]/.test(model.value.password) && /[a-z]/.test(model.value.password)) score++;
-  emits('passwordStrength', score);
+  passwordStrength.value = score;
   return score;
 });
 
+// Computeds
+const buttonEnabled = computed(
+  () => model.value.fullName && model.value.password && passwordStrength.value === 4,
+);
+
+// Watches
+watch(
+  () => model.value,
+  async () => {
+    if (model.value.profile)
+      imageBase64.value = await convertImageToBase64(model.value.profile);
+  },
+  { immediate: true },
+);
+
 // Functions
-function onSelectImage(event: Event) {
+function goBack() {
+  emits('onChangeDirection', 'back');
+  emits('onChangeStep', props.step > 3 ? props.step - 1 : 1);
+}
+
+function onNext() {
+  emits('onChangeDirection', 'forward');
+  emits('onChangeStep', props.step + 1);
+}
+
+async function onSelectImage(event: Event) {
   const target = event.target as HTMLInputElement;
   if (target.files && target.files.length > 0) {
     const file = target.files[0];
     model.value.profile = file!;
+    imageBase64.value = await convertImageToBase64(file!);
+  }
+}
+
+function convertImageToBase64(file: File) {
+  return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = (e) => {
-      imageBase64.value = e.target?.result;
+      resolve(e.target?.result);
     };
-    reader.readAsDataURL(file!);
-  }
+    reader.onerror = (error) => {
+      reject(error);
+    };
+
+    reader.readAsDataURL(file);
+  });
 }
 </script>

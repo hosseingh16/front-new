@@ -1,5 +1,10 @@
 <template>
-  <div>
+  <DaisyCard class="w-full min-[1052px]:w-[1052px]">
+    <div class="flex justify-between items-center">
+      <Icon name="svg:chevron-right" class="cursor-pointer" @click="goBack" />
+      <img :src="`/images/3-3.png`" width="54" />
+    </div>
+
     <p class="mt-4 text-2xl sm:text-h1 font-yb-bold">نوع درخواست جدید:</p>
 
     <div class="grid grid-cols-1 min-[1052px]:grid-cols-3 gap-4 mt-4">
@@ -27,13 +32,21 @@
         </div>
       </div>
     </div>
-  </div>
+  </DaisyCard>
 </template>
 
 <script setup lang="ts">
+import type { DirectionT } from '../types';
+
+// Props
+const props = defineProps<{
+  step: number;
+}>();
+
 // Emits
 const emits = defineEmits<{
   (e: 'onChangeStep', step: number): void;
+  (e: 'onChangeDirection', step: DirectionT): void;
 }>();
 
 // Parameters
@@ -59,7 +72,12 @@ const items = [
 ];
 
 // Functions
+function goBack() {
+  emits('onChangeDirection', 'back');
+  emits('onChangeStep', 4);
+}
+
 function onChangeStep(index: number) {
-  if (index === 0) emits('onChangeStep', 4);
+  if (index === 0) emits('onChangeStep', 6);
 }
 </script>

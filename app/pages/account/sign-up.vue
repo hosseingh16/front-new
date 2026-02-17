@@ -8,19 +8,14 @@
       <img :src="`/images/${step < 3 ? step : '3'}-3.png`" width="54" />
     </div>
 
-    <Transition
-      :name="direction === 'forward' ? 'slide-next' : 'slide-prev'"
-      mode="out-in"
-    >
-      <SignUp1 v-if="step === 1" v-model="code" />
-      <SignUp2
-        v-else-if="step === 2"
-        v-model="step2Data"
-        @password-strength="passwordStrength = $event"
-      />
-      <SignUp3 v-else-if="step === 3" @on-change-step="step = $event" />
-      <SignUp4 v-else-if="step === 4" />
-    </Transition>
+    <SignUp1 v-if="step === 1" v-model="code" />
+    <SignUp2
+      v-else-if="step === 2"
+      v-model="step2Data"
+      @password-strength="passwordStrength = $event"
+    />
+    <SignUp3 v-else-if="step === 3" @on-change-step="step = $event" />
+    <SignUp4 v-else-if="step === 4" />
 
     <button
       v-if="step < 3"
@@ -80,30 +75,3 @@ function onSubmit() {
   step.value++;
 }
 </script>
-
-<style>
-.slide-next-enter-from {
-  transform: translateX(40px);
-  opacity: 0;
-}
-.slide-next-leave-to {
-  transform: translateX(-40px);
-  opacity: 0;
-}
-
-.slide-prev-enter-from {
-  transform: translateX(-40px);
-  opacity: 0;
-}
-.slide-prev-leave-to {
-  transform: translateX(40px);
-  opacity: 0;
-}
-
-.slide-next-enter-active,
-.slide-next-leave-active,
-.slide-prev-enter-active,
-.slide-prev-leave-active {
-  transition: all 0.3s ease;
-}
-</style>

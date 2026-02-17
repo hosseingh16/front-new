@@ -1,5 +1,10 @@
 <template>
-  <div>
+  <DaisyCard class="w-full min-[1052px]:w-[1052px]">
+    <div class="flex justify-between items-center">
+      <Icon name="svg:chevron-right" class="cursor-pointer" @click="goBack" />
+      <img :src="`/images/3-3.png`" width="54" />
+    </div>
+
     <p class="mt-4 text-2xl sm:text-h1 font-yb-bold">نوع آگهی:</p>
     <div class="flex gap-1 items-center mt-2">
       <Icon name="svg:hint" />
@@ -29,10 +34,23 @@
         </div>
       </div>
     </div>
-  </div>
+  </DaisyCard>
 </template>
 
 <script setup lang="ts">
+import type { DirectionT } from '../types';
+
+// Props
+const props = defineProps<{
+  step: number;
+}>();
+
+// Emits
+const emits = defineEmits<{
+  (e: 'onChangeStep', step: number): void;
+  (e: 'onChangeDirection', step: DirectionT): void;
+}>();
+
 // Parameters
 const items = [
   {
@@ -57,4 +75,10 @@ const items = [
     buttonText: 'ایجاد پروژه',
   },
 ];
+
+// Functions
+function goBack() {
+  emits('onChangeDirection', 'back');
+  emits('onChangeStep', 5);
+}
 </script>
