@@ -29,12 +29,12 @@
 </template>
 
 <script setup lang="ts">
-import OtpButton from '~/features/account/components/OtpButton.vue';
-import OtpInput from '~/features/account/components/OtpInput.vue';
-import type { DirectionT } from '../types';
+import OtpButton from "~/features/account/components/OtpButton.vue";
+import OtpInput from "~/features/account/components/OtpInput.vue";
+import type { DirectionT } from "../types";
 
 // Model
-const model = defineModel({ default: '' });
+const model = defineModel({ default: "" });
 
 // Props
 const props = defineProps<{
@@ -42,22 +42,24 @@ const props = defineProps<{
 }>();
 
 // Emits
-const emits = defineEmits<{
-  (e: 'onChangeStep', step: number): void;
-  (e: 'onChangeDirection', step: DirectionT): void;
+const emit = defineEmits<{
+  (e: "onChangeStep", step: number): void;
+  (e: "onChangeDirection", step: DirectionT): void;
 }>();
 
 // Computeds
-const buttonEnabled = computed(() => model.value !== '' && model.value.length === 6);
+const buttonEnabled = computed(
+  () => model.value !== "" && model.value.length === 6,
+);
 
 // Functions
 function goBack() {
-  emits('onChangeDirection', 'back');
-  emits('onChangeStep', props.step > 3 ? props.step - 1 : 1);
+  emit("onChangeDirection", "back");
+  emit("onChangeStep", props.step > 3 ? props.step - 1 : 1);
 }
 
 function onNext() {
-  emits('onChangeDirection', 'forward');
-  emits('onChangeStep', props.step + 1);
+  emit("onChangeDirection", "forward");
+  emit("onChangeStep", props.step + 1);
 }
 </script>

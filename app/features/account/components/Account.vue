@@ -10,7 +10,10 @@
       برای ورود یا ثبت نام، لطفا شماره تلفن همراه را وارد کنید:
     </p>
 
-    <m-text-field v-model="model" placeholder="شماره تلفن همراه را وارد کنید">
+    <m-text-field
+      v-model="mobileNo"
+      placeholder="شماره تلفن همراه را وارد کنید"
+    >
       <template #prefix><Icon name="svg:mobile" /></template>
     </m-text-field>
 
@@ -23,8 +26,12 @@
     </div>
 
     <button
+      id="btnSendMobile"
       class="mt-2 w-full btn flex justify-center gap-2 h-10"
-      :class="{ 'btn-disabled': !isMobile(model), 'btn-primary': isMobile(model) }"
+      :class="{
+        'btn-disabled': !isMobile(mobileNo),
+        'btn-primary': isMobile(mobileNo),
+      }"
       @click="onSubmit"
     >
       <Icon name="svg:user-1" size="24" />
@@ -34,18 +41,50 @@
 </template>
 
 <script setup lang="ts">
-import { isMobile } from '~/libs/utils';
+import { isMobile } from "~/libs/utils";
 
 // Model
-const model = defineModel({ default: '' });
+const mobileNo = defineModel({ default: "" });
 
 // Emits
-const emits = defineEmits<{
-  (e: 'onCompleted'): void;
+const emit = defineEmits<{
+  (e: "onCompleted"): void;
 }>();
 
 // Functions
-function onSubmit() {
-  emits('onCompleted');
+// function onSubmit() {
+
+// }
+
+// ============= Laravel API interaction =============
+const config = useRuntimeConfig();
+const client = useSanctumClient();
+
+async function onSubmit() {
+  const ok = await sendMobile();
+  if (ok) emit("onCompleted");
 }
+
+const sendMobile = async (): Promise<boolean> => {
+  if (!isMobile(mobileNo.value)) {
+    alert("شماره موبایل معتبر نیست");
+    return false;
+  }
+
+  try {
+    const response = await client("/api/test", {
+      method: "POST",
+      credentials: "include",
+      body: {
+        mobile: mobileNo.value,
+      },
+    });
+
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
+
+onMounted(() => {});
 </script>

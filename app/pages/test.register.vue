@@ -36,7 +36,7 @@ const config = useRuntimeConfig();
 const client = useSanctumClient();
 
 const handleRegister = async () => {
-  const { data } = await client(`${config.public.baseUrl}/api/register`, {
+  const { data } = await client(`${config.public.apiBase}/register`, {
     method: "POST",
     body: formData.value, // ✅ بدون stringify
     headers: { Accept: "application/json" },

@@ -9,3 +9,4 @@
   <button class="btn btn-warning">Warning</button>
   <button class="btn btn-error">Error</button>
 </template>
+.

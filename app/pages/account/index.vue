@@ -31,41 +31,51 @@
         :step
         @on-change-step="onChangeStep($event)"
       />
-      <SignUp3 v-else-if="step === 5" :step @on-change-step="onChangeStep($event)" />
-      <SignUp4 v-else-if="step === 6" :step @on-change-step="onChangeStep($event)" />
+      <SignUp3
+        v-else-if="step === 5"
+        :step
+        @on-change-step="onChangeStep($event)"
+      />
+      <SignUp4
+        v-else-if="step === 6"
+        :step
+        @on-change-step="onChangeStep($event)"
+      />
     </Transition>
   </div>
 </template>
 
 <script setup lang="ts">
-import Account from '~/features/account/components/Account.vue';
-import SignInPassword from '~/features/account/components/SignInPassword.vue';
-import SignUp1 from '~/features/account/components/SignUp1.vue';
-import SignUp2 from '~/features/account/components/SignUp2.vue';
-import SignUp3 from '~/features/account/components/SignUp3.vue';
-import SignUp4 from '~/features/account/components/SignUp4.vue';
-import type { DirectionT } from '~/features/account/types';
+import Account from "~/features/account/components/Account.vue";
+import SignInPassword from "~/features/account/components/SignInPassword.vue";
+import SignUp1 from "~/features/account/components/OtpForm.vue";
+import SignUp2 from "~/features/account/components/SignUp2.vue";
+import SignUp3 from "~/features/account/components/SignUp3.vue";
+import SignUp4 from "~/features/account/components/SignUp4.vue";
+import type { DirectionT } from "~/features/account/types";
 
 definePageMeta({
-  layout: 'auth',
+  layout: "auth",
 });
 
 // Parameters
 const step = ref(1);
-const direction = ref<DirectionT>('forward');
-const mobile = ref('');
-const signUp1Data = ref('');
+const direction = ref<DirectionT>("forward");
+const mobile = ref("");
+const signUp1Data = ref("");
 const signUp2Data = reactive({
   profile: null as File | null,
-  fullName: '',
-  password: '',
+  fullName: "",
+  password: "",
 });
 
 // Functions
 function onChangeStep(value: number) {
-  direction.value = step.value < value ? 'forward' : 'back';
+  direction.value = step.value < value ? "forward" : "back";
   step.value = value;
 }
+
+// ============= Laravel API interaction =============
 </script>
 
 <style>
