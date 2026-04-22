@@ -76,7 +76,7 @@ import type { IFilterData } from '~/interfaces/IFilterData';
 import DeleteFilters from './DeleteFilters.vue';
 import AllFilters from './AllFilters.vue';
 
-// Parameters
+// Variables
 const filtersData = ref<any>(null);
 const jobTitles = ref<IFilterData[]>([]);
 const programs = ref<IFilterData[]>([]);

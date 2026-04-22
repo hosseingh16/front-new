@@ -59,7 +59,7 @@
 </template>
 
 <script setup lang="ts">
-// Parameters
+// Variables
 const items = [
   {
     name: 'ستایش ثانی',

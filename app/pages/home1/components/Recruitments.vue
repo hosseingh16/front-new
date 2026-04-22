@@ -6,7 +6,7 @@
         <span class="text-gray-500 max-md:text-sm">استخدام‌های مهم امروز</span>
       </div>
       <button
-        class="px-2 btn btn-outline text-primary-900 hover:bg-white h-10 max-md:text-sm"
+        class="px-2 btn btn-outline text-primary-500 hover:bg-white h-10 max-md:text-sm"
       >
         مشاهده همه
         <Icon name="svg:chevron-left" />
@@ -70,7 +70,7 @@
     </div>
     <div class="text-center">
       <button
-        class="hd:hidden mt-5 px-2 btn btn-primary btn-outline text-primary-900 hover:bg-white h-10 max-md:text-sm"
+        class="hd:hidden mt-5 px-2 btn btn-primary btn-outline text-primary-500 hover:bg-white h-10 max-md:text-sm"
       >
         مشاهده همه
         <Icon name="svg:chevron-left" />

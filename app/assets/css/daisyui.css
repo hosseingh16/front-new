@@ -8,29 +8,33 @@
 }
 
 @utility btn {
-  @apply border-none text-base rounded-lg font-semibold px-4 py-2 h-[45px] shadow-none ;
+  @apply text-base rounded-lg font-semibold px-4 py-2 h-10 shadow-none;
 }
 
 @utility btn-primary {
-  @apply text-white bg-primary-900 hover:bg-[rgba(58,84,201,1)] active:bg-[rgba(47,63,170,1)];
+  @apply border-none text-white bg-primary-500 hover:bg-[rgba(58,84,201,1)] active:bg-[rgba(47,63,170,1)];
 }
 
 @utility btn-outline {
-  @apply hover:bg-white hover:border-[rgba(58,84,201,1)] active:border-[rgba(47,63,170,1)] hover:text-[rgba(58,84,201,1)] active:text-[rgba(47,63,170,1)];
+  @apply border-2 border-gray-200 focus:bg-transparent;
 }
 
 @utility btn-ghost {
-  @apply hover:bg-white;
+  @apply border-none hover:bg-white;
+}
+
+@utility btn-ghost-primary {
+  @apply btn-ghost text-primary-500 bg-[#4864E114];
 }
 
 @utility btn-success {
-  @apply text-white bg-secondary-900 hover:bg-[rgba(47,158,108,1)] active:bg-[rgba(30,127,83,1)];
+  @apply border-none text-white bg-accent-500 hover:bg-[rgba(47,158,108,1)] active:bg-[rgba(30,127,83,1)];
 }
 
 @utility btn-disabled {
-  @apply bg-[#F2F2F2]! text-[#D1D1D1];
+  @apply border-none bg-[#F2F2F2]! text-text-muted;
 }
 
 @utility btn-soft {
-  @apply text-primary-900 bg-[#F0F3FD];
+  @apply border-none text-primary-500 bg-[#F0F3FD];
 }

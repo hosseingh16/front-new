@@ -21,7 +21,7 @@
       <Icon name="svg:hint" />
       <p class="mr-1">
         با ورود یا ثبت نام در های‌حساب،
-        <span class="text-primary-900">شرایط و قوانین</span> را می پذیرم.
+        <span class="text-primary-500">شرایط و قوانین</span> را می پذیرم.
       </p>
     </div>
 

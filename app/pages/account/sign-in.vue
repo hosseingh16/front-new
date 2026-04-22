@@ -55,7 +55,7 @@ definePageMeta({
   layout: 'auth',
 });
 
-// Parameters
+// Variables
 const showPass = ref(false);
 const mode = ref<PasswordButtonT>('fixedPassword');
 const router = useRouter();

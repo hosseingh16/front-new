@@ -1,7 +1,7 @@
 <template>
   <div class="mt-2">
     <div v-if="showResend" class="flex justify-end items-center">
-      <button class="btn btn-info btn-soft text-primary-900 h-8" @click="resendCode">
+      <button class="btn btn-info btn-soft text-primary-500 h-8" @click="resendCode">
         <Icon name="svg:refresh" />
         <span class="mr-1 text-sm">ارسال مجدد کد</span>
       </button>
@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-// Parameters
+// Variables
 const showResend = ref(false);
 const interval = ref<any>(null);
 const time = reactive({

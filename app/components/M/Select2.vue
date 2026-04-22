@@ -43,7 +43,7 @@ defineProps({
   options: { type: Array as () => string[], required: true },
 });
 
-// Parameters
+// Variables
 const open = ref(false);
 const isClient = ref(false);
 

@@ -113,7 +113,7 @@
 import SelectedJobTab1 from './SelectedJobTab1.vue';
 import SelectedJobTab2 from './SelectedJobTab2.vue';
 
-// Parameters
+// Variables
 const title = ref('استخدام مدیر مالی (آقا)');
 
 // Functions

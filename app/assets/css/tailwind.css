@@ -12,11 +12,30 @@
   --font-yb-bold: 'yekanBakh-bold';
   --font-yb-extraBold: 'yekanBakh-extraBold';
 
-  --color-primary-900: #4864e1;
+  --color-primary-900: #292f7f;
+  --color-primary-500: #4864e1;
+  --color-primary-200: #c6d2f7;
+
   --color-secondary-900: rgba(54, 179, 126, 1);
+
+  --color-accent-500: #06c399;
+
+  --color-info-500: #0098e7;
+
+  --color-warning-500: #b95c04;
+
+  --color-surface-50: #fafafa;
+  --color-surface-100: #f2f2f2;
+  --color-surface-200: #e8e8e8;
+
+  --color-text-muted: #d1d1d1;
+  --color-text-tertiary: #1c1c1c;
+  --color-text-passive: #757575;
+  --color-text-primay: #0a0a0a;
+  --color-text-secondary: #121212;
+
   --color-gray-soft: #f6f6f6;
   --color-gray-default: #e8e8e8;
-
   --color-gray-100: rgba(245, 246, 248, 1);
   --color-gray-200: rgba(241, 241, 241, 1);
   --color-gray-300: rgba(200, 205, 212, 1);
@@ -32,4 +51,8 @@
 .fade-enter-from,
 .fade-leave-to {
   @apply opacity-0;
+}
+
+.custom-pad {
+  @apply px-5 min-[850px]:px-[150px];
 }

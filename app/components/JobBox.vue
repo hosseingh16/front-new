@@ -54,7 +54,7 @@
           <icons-star />
         </button>
         <NuxtLink :to="goToPage ? '/single-job' : ''">
-          <button class="btn btn-outline h-8 text-primary-900 px-2">
+          <button class="btn btn-outline h-8 text-primary-500 px-2">
             <span class="text-sm">مشاهده و ارسال رزومه</span>
             <Icon name="svg:arrow-left-circle" />
           </button>

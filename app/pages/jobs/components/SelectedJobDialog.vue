@@ -13,7 +13,7 @@
           </form>
         </div>
         <div
-          class="px-6 py-3 bg-primary-900 rounded-b-lg flex flex-col min-[450px]:flex-row flex-wrap justify-between gap-2 items-center"
+          class="px-6 py-3 bg-primary-500 rounded-b-lg flex flex-col min-[450px]:flex-row flex-wrap justify-between gap-2 items-center"
         >
           <p class="font-yb-bold text-gray-100">استخدام مدیر مالی (آقا)</p>
           <div class="flex justify-end items-center">

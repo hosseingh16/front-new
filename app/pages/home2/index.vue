@@ -29,7 +29,7 @@
           ایجاد اولین آگهی
         </button>
         <banner class="max-md:hidden px-10" />
-        <m-divider class="mt-10" />
+        <m-divider2 class="mt-10" />
       </div>
     </div>
     <data-bank />

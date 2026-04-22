@@ -129,7 +129,7 @@
 import Tab1 from './components/Tab1.vue';
 import Tab2 from './components/Tab2.vue';
 
-// Parameters
+// Variables
 const title = ref('استخدام مدیر مالی (آقا)');
 
 // Functions

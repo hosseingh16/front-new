@@ -146,7 +146,7 @@
 </template>
 
 <script setup lang="ts">
-// Parameters
+// Variables
 const topItems = [
   { title: 'ناظر مالیاتی', duration: 5 },
   { title: 'مشاور مالی', duration: 3 },

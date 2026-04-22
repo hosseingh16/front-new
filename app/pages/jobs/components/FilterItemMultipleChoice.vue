@@ -62,7 +62,7 @@ const props = defineProps({
 });
 const emits = defineEmits(['update:modelValue']);
 
-// Parameters
+// Variables
 const allOptions = ref<IFilterData[]>([]);
 const options = ref<IFilterData[]>([]);
 const keyword = ref('');
@@ -150,7 +150,7 @@ const props = defineProps({
   items: { type: Array as () => any[], required: true },
 });
 
-// Parameters
+// Variables
 const allOptions = ref<IFilterData[]>([]);
 const options = ref<IFilterData[]>([]);
 const keyword = ref('');

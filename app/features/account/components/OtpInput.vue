@@ -25,7 +25,7 @@ const emits = defineEmits<{
   (e: 'code', code: string): void;
 }>();
 
-// Parameters
+// Variables
 const inputs = ref<any[]>([]);
 const model = ref(['', '', '', '', '', '']);
 

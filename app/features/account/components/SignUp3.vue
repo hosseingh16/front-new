@@ -10,7 +10,7 @@
     <div class="grid grid-cols-1 min-[1052px]:grid-cols-3 gap-4 mt-4">
       <div
         v-for="(item, index) in items"
-        class="border border-gray-default hover:border-primary-900 rounded-2xl py-4 min-[1052px]:p-6 flex flex-row min-[1052px]:flex-col items-center group cursor-pointer"
+        class="border border-gray-default hover:border-primary-500 rounded-2xl py-4 min-[1052px]:p-6 flex flex-row min-[1052px]:flex-col items-center group cursor-pointer"
         @click="onChangeStep(index)"
       >
         <NuxtImg
@@ -49,7 +49,7 @@ const emits = defineEmits<{
   (e: 'onChangeDirection', step: DirectionT): void;
 }>();
 
-// Parameters
+// Variables
 const items = [
   {
     image: 'request-type-1.png',

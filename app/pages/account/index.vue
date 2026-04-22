@@ -58,7 +58,7 @@ definePageMeta({
   layout: "auth",
 });
 
-// Parameters
+// Variables
 const step = ref(1);
 const direction = ref<DirectionT>("forward");
 const mobile = ref("");

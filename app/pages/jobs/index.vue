@@ -93,7 +93,7 @@ import Filters from './components/Filters.vue';
 import SelectedJob from './components/SelectedJob.vue';
 import SelectedJobDialog from './components/SelectedJobDialog.vue';
 
-// Parameters
+// Variables
 const sort = ref('جدیدترین');
 const showJob = ref(false);
 

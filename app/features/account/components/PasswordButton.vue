@@ -1,7 +1,7 @@
 <template>
   <buttn class="btn btn-ghost h-10 flex items-center gap-1" @click="changeMode">
     <Icon name="svg:lock-blue" />
-    <span class="text-primary-900">{{
+    <span class="text-primary-500">{{
       mode === 'otp' ? 'رمز ثابت' : 'رمز یک بار مصرف'
     }}</span>
   </buttn>

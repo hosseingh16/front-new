@@ -54,7 +54,7 @@
 <script setup lang="ts">
 import Divider from './Divider.vue';
 
-// Parameters
+// Variables
 const items = [
   { title: 'تعداد پرسنل خانومی', value: '250 نفر', icon: 'people' },
   { title: 'سال تأسیس', value: '1368', icon: 'award' },

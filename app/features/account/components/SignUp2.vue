@@ -26,11 +26,11 @@
       <div>
         <div class="flex items-center gap-1 flex-wrap">
           <Icon name="svg:upload" />
-          <span class="font-semibold text-sm text-primary-900"
+          <span class="font-semibold text-sm text-primary-500"
             >برای آپلود تصویر کلید کنید</span
           >
         </div>
-        <p class="mt-1 text-sm text-[#D1D1D1]">
+        <p class="mt-1 text-sm text-text-muted">
           حداکثر سایز فایل: 10MB، پسوند‌های مجاز: jpg. و png.
         </p>
       </div>
@@ -74,7 +74,7 @@
         <div
           v-for="i in 4"
           class="h-1 rounded-lg"
-          :class="i <= strength ? 'bg-[#0098E7]' : 'bg-[#F2F2F2]'"
+          :class="i <= strength ? 'bg-info-500' : 'bg-[#F2F2F2]'"
         ></div>
       </div>
     </div>
@@ -115,7 +115,7 @@ const emits = defineEmits<{
   (e: 'onChangeDirection', step: DirectionT): void;
 }>();
 
-// Parameters
+// Variables
 const showPass = ref(false);
 const imageInputRef = ref<any>(null);
 const imageBase64 = ref<any>(null);

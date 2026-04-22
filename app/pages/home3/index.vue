@@ -16,15 +16,15 @@
         <Icon name="uil:plus" size="25" />
         ساخت رزومه رایگان
       </button>
-      <m-divider class="mt-10" blue />
+      <m-divider2 class="mt-10" blue />
       <div class="w-full px-5 md:px-40 mt-8">
         <div class="h-[2px] bg-[rgba(213,212,220,1)]"></div>
       </div>
     </div>
     <why />
-    <m-divider class="mt-5" blue />
+    <m-divider2 class="mt-5" blue />
     <ads1 />
-    <m-divider class="mt-10" blue />
+    <m-divider2 class="mt-10" blue />
     <steps />
     <cv />
     <questions class="py-20" />

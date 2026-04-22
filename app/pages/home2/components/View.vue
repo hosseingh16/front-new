@@ -16,5 +16,5 @@
       </div>
     </div>
   </div>
-  <m-divider class="mt-20" />
+  <m-divider2 class="mt-20" />
 </template>

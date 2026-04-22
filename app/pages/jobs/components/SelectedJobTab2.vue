@@ -24,7 +24,7 @@
 
 <script setup lang="ts">
 
-// Parameters
+// Variables
 const items = ref<any[]>([
   { title: 'نرم‌فزار: سپیدار', icon: 'single-job-1' },
   { title: 'حقوق: 25 میلیون تومان', icon: 'single-job-1' },

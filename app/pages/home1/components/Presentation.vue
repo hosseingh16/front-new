@@ -2,7 +2,7 @@
   <div class="mt-2 pb-20">
     <div class="px-5 lg:px-[13%]">
       <m-titr class="text-center">
-        آنچه <span class="text-primary-900">های‌حساب</span> ارائه می‌دهد
+        آنچه <span class="text-primary-500">های‌حساب</span> ارائه می‌دهد
       </m-titr>
       <div class="grid lg:grid-cols-3 gap-4 mt-6">
         <div
@@ -11,7 +11,7 @@
         >
           <p class="font-semibold text-gray-700">{{ item.title }}</p>
           <button
-            class="btn btn-ghost text-sm font-semibold text-primary-900 max-lg:underline max-lg:underline-offset-8"
+            class="btn btn-ghost text-sm font-semibold text-primary-500 max-lg:underline max-lg:underline-offset-8"
           >
             {{ item.btn }}
             <Icon name="svg:arrow-left-2" size="10" class="max-lg:hidden" />
@@ -43,7 +43,7 @@
           <p class="font-bold">{{ item.title }}</p>
         </div>
         <p class="text-sm text-gray-500 leading-[30px]">{{ item.description }}</p>
-        <button class="text-sm text-primary-900 mt-4">
+        <button class="text-sm text-primary-500 mt-4">
           {{ item.btn }}
           <Icon name="svg:arrow-left-2" size="10" class="mr-2"/>
         </button>
@@ -53,7 +53,7 @@
 </template>
 
 <script setup lang="ts">
-// Parameters
+// Variables
 const items1 = [
   { title: 'رزومه حرفه‌ای حسابداری', btn: 'ایجاد رزومه' },
   { title: 'جستجوی تخصصی حسابداری', btn: 'فرصت های شغلی' },

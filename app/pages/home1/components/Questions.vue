@@ -26,7 +26,7 @@
 </template>
 
 <script setup lang="ts">
-// Parameters
+// Variables
 const items = [
   {
     question: '1 : استفاده از امکانات استخدامی سایت برای حسابدار ها هزینه دارد ؟',
