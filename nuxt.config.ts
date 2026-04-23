@@ -13,10 +13,10 @@ export default defineNuxtConfig({
     host: "0.0.0.0",
     port: 3000,
   },
-  modules: ["@nuxt/image", "@nuxt/icon", "@nuxt/fonts", "nuxt-auth-sanctum"],
+  //modules: ["@nuxt/image", "@nuxt/icon", "@nuxt/fonts", "nuxt-auth-sanctum"],
   // @ts-ignore
   sanctum: {
-    baseUrl: "https://api.hihesab.local", // Laravel API
+    baseUrl: "https://api.hihesab.test", // Laravel API
     endpoints: {
       login: "/api/login",
       logout: "/api/logout",
