@@ -58,6 +58,6 @@ withDefaults(
   { hint: () => [] },
 );
 
-// Parameters
+// Variables
 const showTip = ref(false);
 </script>

@@ -26,7 +26,7 @@
 </template>
 
 <script setup lang="ts">
-// Parameters
+// Variables
 const items = [
   {
     title: 'رزومه‌ای متناسب با نیاز بازار حسابداری',

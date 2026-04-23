@@ -54,13 +54,13 @@
 </template>
 
 <script setup lang="ts">
-import { FooterAbout, FooterLinks, FooterPhone, FooterSocials } from '#components';
+import { OldFooterAbout, OldFooterLinks, OldFooterPhone, OldFooterSocials } from '#components';
 
-// Parameters
+// Variables
 const items = [
-  { title: 'لینک‌های مفید', comp: FooterLinks },
-  { title: 'درباره های‌حساب', comp: FooterAbout },
-  { title: 'راه‌های ارتباطی', comp: FooterPhone },
-  { title: 'شبکه‌های اجتماعی', comp: FooterSocials },
+  { title: 'لینک‌های مفید', comp: OldFooterLinks },
+  { title: 'درباره های‌حساب', comp: OldFooterAbout },
+  { title: 'راه‌های ارتباطی', comp: OldFooterPhone },
+  { title: 'شبکه‌های اجتماعی', comp: OldFooterSocials },
 ];
 </script>

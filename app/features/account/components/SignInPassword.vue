@@ -54,7 +54,7 @@ const emits = defineEmits<{
   (e: 'onChangeStep'): void;
 }>();
 
-// Parameters
+// Variables
 const showPass = ref(false);
 const mode = ref<PasswordButtonT>('fixedPassword');
 const password = ref('');

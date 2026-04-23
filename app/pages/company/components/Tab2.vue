@@ -21,7 +21,7 @@
 <script setup lang="ts">
 import Divider from './Divider.vue';
 
-// Parameters
+// Variables
 const items = [
   {
     title: 'احترام',

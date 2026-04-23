@@ -9,7 +9,7 @@
           </div>
         </m-title-box>
         <h1 class="max-md:hidden font-bold text-[32px] mt-6 text-center leading-[52px]">
-          <span class="text-primary-900">های‌حساب</span>
+          <span class="text-primary-500">های‌حساب</span>
           بیش از +1000 فرصت شغلی
           <br />
           برای حسابداران حرفه‌ای
@@ -17,7 +17,7 @@
         <h1 class="md:hidden font-bold text-[30px] mt-6 leading-[52px]">
           جستجو کنید<br>
           بیش از
-          <span class="text-primary-900">+1000 فرصت شغلی</span>
+          <span class="text-primary-500">+1000 فرصت شغلی</span>
         </h1>
         <p class="mt-5 text-gray-500 max-md:text-sm">های‌حساب : اولین و بزرگترین مرجع استخدام حسابدار</p>
         <div class="flex flex-col lg:flex-row justify-center gap-x-6 gap-y-2 mt-5">

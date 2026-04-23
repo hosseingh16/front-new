@@ -8,14 +8,15 @@
       <img :src="`/images/${step < 3 ? step : '3'}-3.png`" width="54" />
     </div>
 
-    <SignUp1 v-if="step === 1" v-model="code" />
+    <SignUp1 v-if="step === 1" v-model="code" :step />
     <SignUp2
       v-else-if="step === 2"
       v-model="step2Data"
+      :step
       @password-strength="passwordStrength = $event"
     />
-    <SignUp3 v-else-if="step === 3" @on-change-step="step = $event" />
-    <SignUp4 v-else-if="step === 4" />
+    <SignUp3 v-else-if="step === 3" :step @on-change-step="step = $event" />
+    <SignUp4 v-else-if="step === 4" :step />
 
     <button
       v-if="step < 3"
@@ -41,7 +42,7 @@ definePageMeta({
   layout: 'auth',
 });
 
-// Parameters
+// Variables
 const router = useRouter();
 const direction = ref<'forward' | 'back'>('forward');
 const step = ref(1);

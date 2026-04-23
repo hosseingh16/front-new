@@ -52,7 +52,7 @@
 </template>
 
 <script setup lang="ts">
-// Parameters
+// Variables
 const items = [
   {
     title1: 'مسیر شغلی',

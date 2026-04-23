@@ -87,7 +87,7 @@ const props = defineProps({
 });
 const emits = defineEmits(['setFilters']);
 
-// Parameters
+// Variables
 const items = ref<any[]>([]);
 const options = ref<IFilterData[]>([]);
 const selectedOptions = ref<Record<string, IFilterData[]>>({});

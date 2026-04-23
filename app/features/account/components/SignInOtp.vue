@@ -21,7 +21,7 @@ definePageMeta({
 // Model
 const model = defineModel({ default: '' });
 
-// Parameters
+// Variables
 const showResend = ref(false);
 const interval = ref<any>(null);
 const time = reactive({

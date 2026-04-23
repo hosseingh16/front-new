@@ -7,7 +7,7 @@
         :key="index"
         class="flex-1 text-gray-600 text-center text-sm"
         :class="{
-          'border border-primary-900 rounded-sm font-bold text-primary-900 bg-white':
+          'border border-primary-500 rounded-sm font-bold text-primary-500 bg-white':
             activeIndex === index,
         }"
         @click="activeIndex = index"
