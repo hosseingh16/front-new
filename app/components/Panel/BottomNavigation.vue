@@ -1,0 +1,32 @@
+<template>
+  <div
+    class="lg:hidden fixed bottom-0 w-full bg-white border-t-2 border-gray-default py-3"
+  >
+    <div class="grid grid-cols-5 gap-2">
+      <div v-for="(item, index) in menus">
+        <div v-if="index !== 2" class="flex flex-col items-center">
+          <Icon :name="`svg:${item.icon}`" size="24" />
+          <span class="text-[11px]">{{ item.title }}</span>
+        </div>
+        <div v-else class="flex justify-center">
+          <div
+            class="w-12 h-12 rounded-full flex justify-center items-center bg-primary-100 -mt-8"
+          >
+            <Icon name="svg:gauge" size="24"/>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+// Variables
+const menus = [
+  { title: 'آگهی‌ها', to: '', icon: 'bag-1' },
+  { title: 'پروژه‌ها', to: '', icon: 'projects' },
+  { title: '', to: '', icon: '' },
+  { title: 'فرصت‌ها', to: '', icon: 'jobs' },
+  { title: 'منو', to: '', icon: 'menu' },
+];
+</script>

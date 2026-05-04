@@ -13,7 +13,7 @@ export default defineNuxtConfig({
     host: "0.0.0.0",
     port: 3000,
   },
-  //modules: ["@nuxt/image", "@nuxt/icon", "@nuxt/fonts", "nuxt-auth-sanctum"],
+  modules: ["@nuxt/image", "@nuxt/icon", "nuxt-auth-sanctum"],
   // @ts-ignore
   sanctum: {
     baseUrl: "https://api.hihesab.test", // Laravel API
@@ -31,11 +31,11 @@ export default defineNuxtConfig({
     plugins: [tailwindcss()],
   },
 
-  fonts: {
-    providers: {
-      custom: "./app/assets/font-providers/custom",
-    },
-  },
+  // fonts: {
+  //   providers: {
+  //     custom: "./app/assets/font-providers/custom",
+  //   },
+  // },
 
   icon: {
     size: "20",

@@ -14,7 +14,9 @@
 
   --color-primary-900: #292f7f;
   --color-primary-500: #4864e1;
+  --color-primary-300: #9eb5f2;
   --color-primary-200: #c6d2f7;
+  --color-primary-100: #dce3f9;
 
   --color-secondary-900: rgba(54, 179, 126, 1);
 
@@ -23,6 +25,8 @@
   --color-info-500: #0098e7;
 
   --color-warning-500: #b95c04;
+
+  --color-danger-500: #ef4035;
 
   --color-surface-50: #fafafa;
   --color-surface-100: #f2f2f2;
@@ -54,5 +58,5 @@
 }
 
 .custom-pad {
-  @apply px-5 min-[850px]:px-[150px];
+  @apply px-5 min-[850px]:px-37.5;
 }

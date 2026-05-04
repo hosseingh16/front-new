@@ -72,9 +72,9 @@
 import axios from 'axios';
 import FilterItemMultipleChoice from './FilterItemMultipleChoice.vue';
 import FilterItemSingleChoice from './FilterItemSingleChoice.vue';
-import type { IFilterData } from '~/interfaces/IFilterData';
 import DeleteFilters from './DeleteFilters.vue';
 import AllFilters from './AllFilters.vue';
+import type { IFilterData } from '~/interfaces/IFilterData';
 
 // Variables
 const filtersData = ref<any>(null);

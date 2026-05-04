@@ -1,5 +1,5 @@
 <template>
-  <DaisyCard class="w-full min-[560px]:w-[560px]">
+  <DaisyCard class="w-full min-[560px]:w-140">
     <div class="flex justify-between items-center">
       <Icon name="svg:chevron-right" class="cursor-pointer" @click="goBack" />
       <img :src="`/images/1-3.png`" width="54" />
@@ -29,12 +29,12 @@
 </template>
 
 <script setup lang="ts">
-import OtpButton from "~/features/account/components/OtpButton.vue";
-import OtpInput from "~/features/account/components/OtpInput.vue";
-import type { DirectionT } from "../types";
+import OtpButton from '~/features/account/components/OtpButton.vue';
+import OtpInput from '~/features/account/components/OtpInput.vue';
+import type { DirectionT } from '../types';
 
 // Model
-const model = defineModel({ default: "" });
+const model = defineModel({ default: '' });
 
 // Props
 const props = defineProps<{
@@ -43,23 +43,21 @@ const props = defineProps<{
 
 // Emits
 const emit = defineEmits<{
-  (e: "onChangeStep", step: number): void;
-  (e: "onChangeDirection", step: DirectionT): void;
+  (e: 'onChangeStep', step: number): void;
+  (e: 'onChangeDirection', step: DirectionT): void;
 }>();
 
 // Computeds
-const buttonEnabled = computed(
-  () => model.value !== "" && model.value.length === 6,
-);
+const buttonEnabled = computed(() => model.value !== '' && model.value.length === 5);
 
 // Functions
 function goBack() {
-  emit("onChangeDirection", "back");
-  emit("onChangeStep", props.step > 3 ? props.step - 1 : 1);
+  emit('onChangeDirection', 'back');
+  emit('onChangeStep', props.step > 3 ? props.step - 1 : 1);
 }
 
 function onNext() {
-  emit("onChangeDirection", "forward");
-  emit("onChangeStep", props.step + 1);
+  emit('onChangeDirection', 'forward');
+  emit('onChangeStep', props.step + 1);
 }
 </script>

@@ -1,0 +1,19 @@
+@font-face {
+  font-family: 'yekanBakh-regular';
+  src:
+    url('../fonts/YekanBakhFaNum-Regular.woff2') fromat('woff2'),
+    url('../fonts/YekanBakhFaNum-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'yekanBakh-bold';
+  src:
+    url('../fonts/YekanBakhFaNum-Bold.woff2') format('woff2'),
+    url('../fonts/YekanBakhFaNum-Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+  font-display: sweap;
+}

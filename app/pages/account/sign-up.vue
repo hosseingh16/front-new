@@ -1,7 +1,7 @@
 <template>
   <DaisyCard
     class="transition-all duration-300 mx-auto w-full"
-    :class="step < 3 ? 'max-w-[560px]' : 'max-w-[1052px]'"
+    :class="step < 3 ? 'max-w-140' : 'max-w-263'"
   >
     <div class="flex justify-between items-center">
       <Icon name="svg:chevron-right" class="cursor-pointer" @click="goBack" />

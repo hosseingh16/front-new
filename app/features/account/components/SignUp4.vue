@@ -1,5 +1,5 @@
 <template>
-  <DaisyCard class="w-full min-[1052px]:w-[1052px]">
+  <DaisyCard class="w-full min-[1052px]:w-263">
     <div class="flex justify-between items-center">
       <Icon name="svg:chevron-right" class="cursor-pointer" @click="goBack" />
       <img :src="`/images/3-3.png`" width="54" />
@@ -8,7 +8,7 @@
     <p class="mt-4 text-2xl sm:text-h1 font-yb-bold">نوع آگهی:</p>
     <div class="flex gap-1 items-center mt-2">
       <Icon name="svg:hint" />
-      <span class="text-sm text-[#757575]"
+      <span class="text-sm text-text-passive"
         >برای ایجاد آگهی، باید سازمان یا نماینده سازمان باشید.</span
       >
     </div>
@@ -20,7 +20,7 @@
       >
         <NuxtImg
           :src="`/images/${item.image}`"
-          class="w-32 h-32 min-[1052px]:w-[200px] min-[1052px]:h-[200px]"
+          class="w-32 h-32 min-[1052px]:w-50 min-[1052px]:h-50"
         />
         <div class="min-[1052px]:text-center">
           <p class="min-[1052px]:-mt-10 text-lg sm:text-xl font-yb-bold">

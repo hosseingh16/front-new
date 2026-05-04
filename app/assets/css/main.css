@@ -1,9 +1,10 @@
 @import './tailwind.css';
 @import './daisyui.css';
 @import './icomoon/style.css';
+@import './fonts.css';
 
 body {
-  font-family: 'yekanBakh-regular', sans-serif;
+  font-family: 'yekanBakh-regular', sans-serif !important;
 }
 
 body,

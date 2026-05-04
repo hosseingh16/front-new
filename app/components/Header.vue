@@ -10,13 +10,15 @@
         </NuxtLink>
         <div class="max-lg:hidden">
           <h1 class="font-semibold">های‌حساب</h1>
-          <h2 class="text-[13px]">خانه حسابداران با تجربه</h2>
+          <h2 class="text-caption">خانه حسابداران با تجربه</h2>
         </div>
       </div>
       <div class="flex items-center gap-12 max-lg:hidden">
         <NuxtLink to="/" class="text-sm hover:opacity-80">خانه</NuxtLink>
         <NuxtLink to="/" class="text-sm hover:opacity-80">کارفرمایان</NuxtLink>
-        <NuxtLink to="/" class="text-sm hover:opacity-80">فرصت‌های شغلی</NuxtLink>
+        <NuxtLink to="/" class="text-sm hover:opacity-80"
+          >فرصت‌های شغلی</NuxtLink
+        >
         <NuxtLink to="/" class="flex text-sm hover:opacity-80"
           >رزومه‌های شغلی
           <icons-chevron />

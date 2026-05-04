@@ -1,6 +1,6 @@
 <template>
   <div class="">
-    <DaisyCard class="max-[560px]:min-w-screen min-[560px]:w-[560px]">
+    <DaisyCard class="max-[560px]:min-w-screen min-[560px]:w-140">
       <Icon
         name="svg:chevron-right"
         class="cursor-pointer"

@@ -1,7 +1,7 @@
 <template>
   <div class="bg-surface-50">
     <section
-      class="bg-[url('/images/bg-6.png')] md:bg-[url('/images/bg-5.png')] bg-no-repeat bg-top md:bg-[center_-150px]"
+      class="bg-[url('/images/bg-6.png')] md:bg-[url('/images/bg-5.png')] bg-no-repeat bg-top md:bg-position-[center_-150px]"
     >
       <div class="custom-pad flex flex-col items-center gap-4">
         <div
@@ -9,7 +9,7 @@
         >
           استخدام سریع و مطمئن
         </div>
-        <h1 class="font-yb-bold text-[23px] lg:text-[28px] text-center">
+        <h1 class="font-yb-bold text-[23px] lg:text-h1 text-center">
           های‌حساب؛ سایت استخدام حسابدار و مرجع فرصت‌های شغلی حسابداری
         </h1>
         <h2 class="font-semibold text-lg text-center">
@@ -227,11 +227,11 @@
     <section
       class="bg-surface-100 flex flex-col min-[1220px]:flex-row justify-center min-[1220px]:justify-between items-center gap-6 min-[1220px]:gap-2 py-12 leading-10"
     >
-      <p class="px-5 min-[1220px]:pr-[150px] font-semibold">
+      <p class="px-5 min-[1220px]:pr-37.5 font-semibold">
         های‌حساب ، مورد اعتماد بهترین سازمان‌ها<br />همراه شما در جذب حرفه ای ترین نیروها
       </p>
       <div
-        class="pr-5 min-[1220px]:pl-[150px] flex gap-12 overflow-x-auto no-scrollbar max-[450px]:w-full"
+        class="pr-5 min-[1220px]:pl-37.5 flex gap-12 overflow-x-auto no-scrollbar max-[450px]:w-full"
       >
         <div v-for="item in banks" class="flex flex-col shrink-0 items-center leading-4">
           <img :src="`/images/${item.image}`" alt="" class="w-12 h-12" />
@@ -243,7 +243,7 @@
     <!-- [END] Customers -->
 
     <!-- [START] Comments -->
-    <section class="px-5 min-[1000px]:px-[150px] flex flex-col items-center">
+    <section class="px-5 1000:px-37.5 flex flex-col items-center">
       <div
         class="text-primary-500 font-semibold text-sm flex justify-center items-center py-2 px-4 bg-[#4864E114] rounded-xl mt-20"
       >
@@ -258,19 +258,16 @@
       <div
         class="mt-8 flex gap-4 max-[1000px]:overflow-x-auto max-[1000px]:w-full no-scrollbar p-2"
       >
-        <div
-          v-for="n in 3"
-          class="shrink-0 w-[80%] min-[600px]:w-1/2 min-[1000px]:w-1/3 relative mt-5"
-        >
+        <div v-for="n in 3" class="shrink-0 w-[80%] 600:w-1/2 1000:w-1/3 relative mt-5">
           <div
-            class="h-10 w-10 rounded-full bg-gradient-to-b from-[#67EEC7] to-primary-500 text-white font-yb-bold text-[22px] flex justify-center items-center absolute -top-5 left-1/2 -translate-x-1/2"
+            class="h-10 w-10 rounded-full bg-linear-to-b from-[#67EEC7] to-primary-500 text-white font-yb-bold text-[22px] flex justify-center items-center absolute -top-5 left-1/2 -translate-x-1/2"
           >
             {{ n }}
           </div>
           <div
             class="rounded-3xl rounded-br-none p-10 shadow-[0px_0px_10px_0px_#00000024]"
           >
-            <p class="text-[13px] text-text-tertiary text-center mb-12">
+            <p class="text-caption text-text-tertiary text-center mb-12">
               «فرآیند ثبت پروژه و دسترسی به نیروهای متخصص برای ما بسیار ساده و سریع بود.
               این پلتفرم کمک کرد در زمان کوتاه‌تری نیروی مناسب تیم مالی‌مان را پیدا کنیم.»
             </p>
@@ -283,7 +280,7 @@
                 class="p-4 rounded-full w-full h-full border-2 border-primary-500 border-dashed"
               >
                 <div
-                  class="rounded-full w-full h-full bg-gradient-to-b from-50% to-100% flex justify-center items-center"
+                  class="rounded-full w-full h-full bg-linear-to-b from-50% to-100% flex justify-center items-center"
                   :class="{
                     'from-[#FFE68C] to-[#FFF5CC] p-0': n === 1,
                     'from-[#AFAAD4] to-[#FFFFFF] p-2 ': n === 2,
@@ -298,7 +295,7 @@
             </div>
             <div class="text-center mt-5 w-full">
               <p class="font-semibold text-sm">فرزاد فرحزاد</p>
-              <p class="text-[13px] text-primary-500 mt-2 w-full">
+              <p class="text-caption text-primary-500 mt-2 w-full">
                 مدیر منابع انسانی موسسه کاسپین
               </p>
             </div>
@@ -384,7 +381,7 @@
             <p class="font-semibold text-sm">
               هوش مصنوعی در حسابداری: انقلابی در شیوه‌های مالی و حسابداری
             </p>
-            <p class="mt-3 text-[13px] text-text-muted">
+            <p class="mt-3 text-caption text-text-muted">
               از آنجا که هوش مصنوعی در حسابداری تنها یک واژه مدرن نیست، شما می‌توانید ...
             </p>
           </div>
@@ -406,7 +403,7 @@
                 <p class="text-sm font-semibold text-text-primay">
                   اصول مدیریت مالی | تکنیک‌های کلیدی برای موفقیت مالی
                 </p>
-                <p class="mt-4 text-[13px] text-text-passive line-clamp-2">
+                <p class="mt-4 text-caption text-text-passive line-clamp-2">
                   اگرچه عده‌ای از افراد اصول مدیریت مالی را تنها یک مفهوم تئوریک یا ...
                 </p>
               </div>
@@ -426,7 +423,7 @@
                 <p class="text-sm font-semibold text-text-primay">
                   اصول مدیریت مالی | تکنیک‌های کلیدی برای موفقیت مالی
                 </p>
-                <p class="mt-4 text-[13px] text-text-passive line-clamp-2">
+                <p class="mt-4 text-caption text-text-passive line-clamp-2">
                   اگرچه عده‌ای از افراد اصول مدیریت مالی را تنها یک مفهوم تئوریک یا ...
                 </p>
               </div>
@@ -444,7 +441,9 @@
 
     <section class="custom-pad mt-16 bg-surface-100">
       <div class="bg-primary-500 p-6 rounded-lg text-white">
-        <p class="text-2xl font-yb-bold max-sm:text-center">اولین پلتفرم تخصصی استخدام حسابدار در ایران</p>
+        <p class="text-2xl font-yb-bold max-sm:text-center">
+          اولین پلتفرم تخصصی استخدام حسابدار در ایران
+        </p>
         <p class="mt-5 text-surface-50 leading-8">
           انتخاب حسابدار، به‌دلیل نقش تأثیرگذار او در ساختار مالی شرکت، فرایندی حساس و
           نیازمند دقت است.<br />های‌حساب با ارائه رزومه‌های تخصصی و جامعه‌ای از حسابداران

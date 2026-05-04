@@ -1,5 +1,5 @@
 <template>
-  <DaisyCard class="w-full min-[560px]:w-[560px]">
+  <DaisyCard class="w-full min-[560px]:w-140">
     <div class="flex justify-between items-center">
       <Icon name="svg:chevron-right" class="cursor-pointer" @click="goBack" />
       <img :src="`/images/2-3.png`" width="54" />
@@ -21,7 +21,7 @@
       @click="imageInputRef.click()"
     >
       <div
-        class="w-[50px] h-[50px] bg-gradient-to-b from-[#3D39FF] to-white rounded-full"
+        class="w-12.5 h-12.5 bg-linear-to-b from-[#3D39FF] to-white rounded-full"
       ></div>
       <div>
         <div class="flex items-center gap-1 flex-wrap">
@@ -92,6 +92,7 @@
 </template>
 
 <script setup lang="ts">
+import { convertImageToBase64 } from '~/libs/utils';
 import type { DirectionT } from '../types';
 
 // Model
@@ -165,19 +166,5 @@ async function onSelectImage(event: Event) {
     model.value.profile = file!;
     imageBase64.value = await convertImageToBase64(file!);
   }
-}
-
-function convertImageToBase64(file: File) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      resolve(e.target?.result);
-    };
-    reader.onerror = (error) => {
-      reject(error);
-    };
-
-    reader.readAsDataURL(file);
-  });
 }
 </script>
