@@ -1,5 +1,5 @@
 <template>
-  <DaisyCard class="w-full min-[560px]:w-[560px]">
+  <DaisyCard class="w-full min-[560px]:w-140">
     <Icon
       name="svg:chevron-right"
       class="cursor-pointer"
@@ -58,7 +58,7 @@ const emits = defineEmits<{
 const showPass = ref(false);
 const mode = ref<PasswordButtonT>('fixedPassword');
 const password = ref('');
-const code = ref('');
+const code = ref(['', '', '', '', '']);
 
 // Computeds
 const buttonEnabled = computed(

@@ -39,61 +39,65 @@
       <img :src="imageBase64" class="w-24 h-24 rounded-full" />
     </div>
 
-    <div class="mt-4">
-      <m-text-field
-        v-model="model.fullName"
-        label="نام کامل:"
-        required
-        placeholder="نام کامل خود را وارد کنید"
-      />
-      <m-text-field
-        v-model="model.password"
-        label="رمز عبور:"
-        required
-        placeholder="رمز عبور را وارد کنید"
-        class="mt-4"
-        :type="showPass ? 'text' : 'password'"
-        :hint="[
-          'شامل عدد',
-          'حداقل ۸ حرف',
-          'شامل علامت (!@#$%&*^)',
-          'شامل یک حرف بزرگ و کوچک',
-        ]"
-      >
-        <template #prefix><Icon name="svg:lock" size="24" /></template>
-        <template #suffix
-          ><Icon
-            name="svg:eye"
-            size="24"
-            class="cursor-pointer"
-            @click="showPass = !showPass"
-        /></template>
-      </m-text-field>
+    <form @submit="onSubmit">
+      <div class="mt-4">
+        <m-form-input
+          name="fullName"
+          label="نام کامل:"
+          placeholder="نام کامل خود را وارد کنید"
+          required
+        ></m-form-input>
+        <m-form-input
+          name="password"
+          label="رمز عبور:"
+          required
+          placeholder="رمز عبور را وارد کنید"
+          class="mt-4"
+          :type="showPass ? 'text' : 'password'"
+          :hint="[
+            'شامل عدد',
+            'حداقل ۸ حرف',
+            'شامل علامت (!@#$%&*^)',
+            'شامل یک حرف بزرگ و کوچک',
+          ]"
+        >
+          <template #prefix><Icon name="svg:lock" size="24" /></template>
+          <template #suffix
+            ><Icon
+              name="svg:eye"
+              size="24"
+              class="cursor-pointer"
+              @click="showPass = !showPass"
+          /></template>
+        </m-form-input>
 
-      <div class="grid grid-cols-4 gap-1 mt-2">
-        <div
-          v-for="i in 4"
-          class="h-1 rounded-lg"
-          :class="i <= strength ? 'bg-info-500' : 'bg-[#F2F2F2]'"
-        ></div>
+        <div class="grid grid-cols-4 gap-1 mt-2">
+          <div
+            v-for="i in 4"
+            class="h-1 rounded-lg"
+            :class="i <= strength ? 'bg-info-500' : 'bg-[#F2F2F2]'"
+          ></div>
+        </div>
       </div>
-    </div>
 
-    <button
-      class="mt-4 w-full btn flex justify-center gap-2 h-10 max-sm:w-full"
-      :class="!buttonEnabled ? 'btn-disabled' : 'btn-primary'"
-      @click="onNext"
-    >
-      <Icon v-if="!buttonEnabled" name="svg:user-plus" size="24" />
-      <Icon v-else name="svg:user-plus-white" size="24" />
-      <span>ثبت‌نام</span>
-    </button>
+      <button
+        class="mt-4 w-full btn flex justify-center gap-2 h-10 max-sm:w-full"
+        :class="!buttonEnabled ? 'btn-disabled' : 'btn-primary'"
+        type="submit"
+      >
+        <Icon v-if="!buttonEnabled" name="svg:user-plus" size="24" />
+        <Icon v-else name="svg:user-plus-white" size="24" />
+        <span>ثبت‌نام</span>
+      </button>
+    </form>
   </DaisyCard>
 </template>
 
 <script setup lang="ts">
 import { convertImageToBase64 } from '~/libs/utils';
 import type { DirectionT } from '../types';
+import { useForm } from 'vee-validate';
+import * as Yup from 'yup';
 
 // Model
 const model = defineModel({
@@ -122,26 +126,35 @@ const imageInputRef = ref<any>(null);
 const imageBase64 = ref<any>(null);
 const passwordStrength = ref(0);
 
-// Computeds
-const strength = computed(() => {
-  let score = 0;
-  if (model.value.password.length >= 8) score++;
-  if (/\d/.test(model.value.password)) score++;
-  if (/[!@#$%&*^]/.test(model.value.password)) score++;
-  if (/[A-Z]/.test(model.value.password) && /[a-z]/.test(model.value.password)) score++;
-  passwordStrength.value = score;
-  return score;
+// Form
+const formSchema = Yup.object({
+  fullName: Yup.string().required('نام وارد نشده است'),
+  password: Yup.string().required('رمز عبور وارد نشده است'),
+});
+const { handleSubmit, values, setValues } = useForm<Yup.InferType<typeof formSchema>>({
+  validationSchema: formSchema,
 });
 
 // Computeds
-const buttonEnabled = computed(
-  () => model.value.fullName && model.value.password && passwordStrength.value === 4,
-);
+const strength = computed(() => {
+  const password = values.password || '';
+  let score = 0;
+  if (password.length >= 8) score++;
+  if (/\d/.test(password)) score++;
+  if (/[!@#$%&*^]/.test(password)) score++;
+  if (/[A-Z]/.test(password) && /[a-z]/.test(password)) score++;
+  passwordStrength.value = score;
+  return score;
+});
+const buttonEnabled = computed(() => {
+  const { fullName, password } = values;
+  return fullName && password && passwordStrength.value === 4;
+});
 
 // Watches
 watch(
   () => model.value,
-  async () => {
+  async (val) => {
     if (model.value.profile)
       imageBase64.value = await convertImageToBase64(model.value.profile);
   },
@@ -154,10 +167,11 @@ function goBack() {
   emits('onChangeStep', props.step > 3 ? props.step - 1 : 1);
 }
 
-function onNext() {
+const onSubmit = handleSubmit(() => {
+  model.value = { ...values, profile: model.value.profile };
   emits('onChangeDirection', 'forward');
   emits('onChangeStep', props.step + 1);
-}
+});
 
 async function onSelectImage(event: Event) {
   const target = event.target as HTMLInputElement;
@@ -167,4 +181,13 @@ async function onSelectImage(event: Event) {
     imageBase64.value = await convertImageToBase64(file!);
   }
 }
+
+//
+onMounted(() => {
+  if (model.value.fullName && model.value.password)
+    setValues({
+      fullName: model.value.fullName,
+      password: model.value.password,
+    });
+});
 </script>

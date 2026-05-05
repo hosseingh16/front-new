@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <DaisyCard class="w-full min-[560px]:w-140">
     <div class="flex justify-between items-center">
       <Icon name="svg:chevron-right" class="cursor-pointer" @click="goBack" />
@@ -34,7 +34,7 @@ import OtpInput from '~/features/account/components/OtpInput.vue';
 import type { DirectionT } from '../types';
 
 // Model
-const model = defineModel({ default: '' });
+const model = defineModel({ default: ['', '', '', '', ''] });
 
 // Props
 const props = defineProps<{
@@ -48,7 +48,7 @@ const emit = defineEmits<{
 }>();
 
 // Computeds
-const buttonEnabled = computed(() => model.value !== '' && model.value.length === 5);
+const buttonEnabled = computed(() => model.value.every((x) => x !== ''));
 
 // Functions
 function goBack() {
@@ -60,4 +60,4 @@ function onNext() {
   emit('onChangeDirection', 'forward');
   emit('onChangeStep', props.step + 1);
 }
-</script>
+</script> -->

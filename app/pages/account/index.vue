@@ -48,7 +48,7 @@
 <script setup lang="ts">
 import Account from "~/features/account/components/Account.vue";
 import SignInPassword from "~/features/account/components/SignInPassword.vue";
-import SignUp1 from "~/features/account/components/OtpForm.vue";
+import SignUp1 from "~/features/account/components/SignUp1.vue";
 import SignUp2 from "~/features/account/components/SignUp2.vue";
 import SignUp3 from "~/features/account/components/SignUp3.vue";
 import SignUp4 from "~/features/account/components/SignUp4.vue";
@@ -62,7 +62,7 @@ definePageMeta({
 const step = ref(1);
 const direction = ref<DirectionT>("forward");
 const mobile = ref("");
-const signUp1Data = ref("");
+const signUp1Data = ref(['', '', '', '', '']);
 const signUp2Data = reactive({
   profile: null as File | null,
   fullName: "",

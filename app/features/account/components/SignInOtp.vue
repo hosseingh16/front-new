@@ -4,7 +4,7 @@
       تایید شماره همراه <span class="font-semibold">09020124020</span>
     </p>
 
-    <OtpInput :code-prop="model" @code="model = $event" />
+    <OtpInput v-model="model" />
 
     <OtpButton />
   </div>
@@ -19,7 +19,7 @@ definePageMeta({
 });
 
 // Model
-const model = defineModel({ default: '' });
+const model = defineModel({ default: ['', '', '', '', ''] });
 
 // Variables
 const showResend = ref(false);

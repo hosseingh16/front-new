@@ -10,61 +10,74 @@
       برای ورود یا ثبت نام، لطفا شماره تلفن همراه را وارد کنید:
     </p>
 
-    <m-text-field v-model="mobileNo" placeholder="شماره تلفن همراه را وارد کنید">
-      <template #prefix><Icon name="svg:mobile" /></template>
-    </m-text-field>
+    <form @submit="onSubmit">
+      <m-form-input name="mobile" placeholder="شماره تلفن همراه را وارد کنید">
+        <template #prefix>
+          <Icon name="svg:mobile" />
+        </template>
+      </m-form-input>
 
-    <div class="flex items-center mt-2">
-      <Icon name="svg:hint" />
-      <p class="mr-1">
-        با ورود یا ثبت نام در های‌حساب،
-        <span class="text-primary-500">شرایط و قوانین</span> را می پذیرم.
-      </p>
-    </div>
+      <div class="flex items-center mt-2">
+        <Icon name="svg:hint" />
+        <p class="mr-1">
+          با ورود یا ثبت نام در های‌حساب،
+          <span class="text-primary-500">شرایط و قوانین</span> را می پذیرم.
+        </p>
+      </div>
 
-    <button
-      id="btnSendMobile"
-      class="mt-2 w-full btn flex justify-center gap-2 h-10"
-      :class="{
-        'btn-disabled': !isMobile(mobileNo),
-        'btn-primary': isMobile(mobileNo),
-      }"
-      @click="onSubmit"
-    >
-      <Icon name="svg:user-1" size="24" />
-      <span>ورود یا ثبت‌نام</span>
-    </button>
+      <button
+        id="btnSendMobile"
+        class="mt-2 w-full btn flex justify-center gap-2 h-10"
+        :class="{
+          'btn-disabled': !meta.valid,
+          'btn-primary': meta.valid,
+        }"
+        type="submit"
+      >
+        <Icon name="svg:user-1" size="24" />
+        <span>ورود یا ثبت‌نام</span>
+      </button>
+    </form>
   </DaisyCard>
 </template>
 
 <script setup lang="ts">
 import { isMobile } from '~/libs/utils';
+import { useForm } from 'vee-validate';
+import * as Yup from 'yup';
 
 // Model
-const mobileNo = defineModel({ default: '' });
+const model = defineModel({ default: '' });
 
 // Emits
 const emit = defineEmits<{
   (e: 'onCompleted'): void;
 }>();
 
-// Functions
-// function onSubmit() {
-
-// }
+// Form
+const formSchema = Yup.object({
+  mobile: Yup.string()
+    .required('شماره همراه وارد نشده است')
+    .matches(RegExp('^09[0-9]\\d{8}$'), { message: 'شماره همراه معتبر نیست' }),
+});
+const { handleSubmit, meta, setValues } = useForm<Yup.InferType<typeof formSchema>>({
+  validationSchema: formSchema,
+});
 
 // ============= Laravel API interaction =============
 const config = useRuntimeConfig();
 // const client = useSanctumClient();
 
-async function onSubmit() {
-  const ok = await sendMobile();
-  if (ok) emit('onCompleted');
-}
+const onSubmit: any = handleSubmit(async (data: Yup.InferType<typeof formSchema>) => {
+  model.value = data.mobile;
+  emit('onCompleted');
+  // const ok = await sendMobile(data.mobile);
+  // if (ok) emit('onCompleted');
+});
 
-const sendMobile = async (): Promise<boolean> => {
-  if (!isMobile(mobileNo.value)) {
-    alert("شماره موبایل معتبر نیست");
+const sendMobile = async (mobile: string): Promise<boolean> => {
+  if (!isMobile(mobile)) {
+    alert('شماره موبایل معتبر نیست');
     return false;
   }
 
@@ -84,5 +97,8 @@ const sendMobile = async (): Promise<boolean> => {
   // }
 };
 
-onMounted(() => {});
+//
+onMounted(() => {
+  if (model.value) setValues({ mobile: model.value });
+});
 </script>

@@ -17,52 +17,29 @@
 </template>
 
 <script setup lang="ts">
-// Props
-const props = defineProps<{ codeProp?: string }>();
-
-// Emits
-const emits = defineEmits<{
-  (e: 'code', code: string): void;
-}>();
+// Model
+const model = defineModel({ default: ['', '', '', '', ''] });
 
 // Variables
 const inputs = ref<any[]>([]);
-const model = ref(['', '', '', '', '']);
-
-// Watches
-watch(
-  () => props.codeProp,
-  (newVal) => {
-    if (newVal && newVal.length === 5) {
-      const chars = newVal.split('');
-      model.value = chars;
-
-      nextTick(() => {
-        chars.forEach((char, index) => {
-          if (inputs.value[index]) inputs.value[index].value = char;
-        });
-      });
-    }
-  },
-  { immediate: true },
-);
 
 // Functions
 function handleInput(event: any, index: number) {
+  console.log(4);
   const value = event.target.value;
 
-  if (!/^\d$/.test(value)) {
+  if (!/^\d$/.test(value) && value !== '') {
     event.target.value = '';
     return;
   }
+
   if (index < inputs.value.length - 1) {
     nextTick(() => {
       inputs.value[index + 1].focus();
     });
   }
-  
+
   model.value[index] = value;
-  emits('code', model.value.join(''));
 }
 
 function handleBackspace(event: any, index: number) {
@@ -74,6 +51,15 @@ function handleBackspace(event: any, index: number) {
     model.value[index] = '';
     model.value[index - 1] = '';
   }
-  emits('code', model.value.join(''));
 }
+
+//
+onMounted(() => {
+  if (model.value.every((x) => x !== '')) {
+    for (let i = 0; i < inputs.value.length; i++) {
+      const element = inputs.value[i];
+      element.value = model.value[i];
+    }
+  }
+});
 </script>
