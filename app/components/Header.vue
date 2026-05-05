@@ -29,7 +29,7 @@
       <button class="btn border-none">
         <icons-search2 color="#4A4A4A" />
       </button>
-      <NuxtLink to="/account/sign-in">
+      <NuxtLink to="/account">
         <button class="btn btn-primary">
           <Icon name="svg:user-plus-white" size="24" />
           ورود | ثبت نام

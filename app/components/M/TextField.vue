@@ -24,15 +24,17 @@
       </div>
     </div>
     <label
-      class="mt-2 input w-full rounded-lg focus-within:outline-none"
-      :class="error ? 'border-danger-200' : 'border-gray-default'"
+      class="input w-full rounded-lg shadow-none hover:border-[#cccccc] focus:border-[#cccccc] focus-within:outline-none focus-within:shadow-[0px_0px_0px_2px_#FFFFFF,0px_0px_0px_4px_#4A4A4A14]"
+      :class="
+        error ? 'border-danger-200' : model ? 'border-[#cccccc]' : 'border-gray-default'
+      "
     >
       <slot name="prefix" />
       <input
         v-model="model"
         :type
         :placeholder
-        class="pr-0 placeholder:text-gray-default focus:border-gray-800"
+        class="pr-0 placeholder:text-gray-default"
       />
       <slot name="suffix" />
     </label>
