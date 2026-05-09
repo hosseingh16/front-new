@@ -1,10 +1,12 @@
 <template>
   <header
-    class="py-4 px-5 shadow-sm flex justify-between items-center bg-surface-50 max-md:border-b-2 max-md:border-gray-default"
+    class="py-4 px-5 flex justify-between items-center bg-surface-50 max-md:border-b-2 max-md:border-gray-default"
   >
     <div class="flex gap-12">
       <div class="flex gap-2 items-center">
-        <icon name="svg:menu" size="20" class="lg:hidden" />
+        <div class="lg:hidden">
+          <Icon name="svg:menu" size="20" />
+        </div>
         <NuxtLink to="/">
           <NuxtImg src="/images/logo.png" alt="Logo" class="lg:w-10 lg:h-12" />
         </NuxtLink>
