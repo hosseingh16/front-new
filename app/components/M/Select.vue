@@ -17,7 +17,7 @@
       v-if="open"
       class="absolute mt-2 menu bg-white rounded-lg z-50 w-full p-0 shadow-sm border border-gray-200"
     >
-      <div class="max-h-[200px] overflow-y-auto cursor-pointer">
+      <div class="max-h-50 overflow-y-auto cursor-pointer">
         <p
           v-for="item in options"
           :key="item"

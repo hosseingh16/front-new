@@ -58,48 +58,16 @@
           class="flex gap-1 bg-surface-100 p-1 rounded-xl [&>.btn]:text-sm [&>.btn]:h-8"
         >
           <button
-            class="btn"
+            v-for="(item, index) in ['همه', 'تمام وقت', 'پاره وقت', 'پروژه']"
+            class="btn btn-ghost"
             :class="
-              jobType === 1
+              jobType === index
                 ? 'bg-white text-text-primay'
                 : 'bg-surface-100 text-text-passive'
             "
-            @click="jobType = 1"
+            @click="jobType = index"
           >
-            همه
-          </button>
-          <button
-            class="btn"
-            :class="
-              jobType === 2
-                ? 'bg-white text-text-primay'
-                : 'bg-surface-100 text-text-passive'
-            "
-            @click="jobType = 2"
-          >
-            تمام وقت
-          </button>
-          <button
-            class="btn"
-            :class="
-              jobType === 3
-                ? 'bg-white text-text-primay'
-                : 'bg-surface-100 text-text-passive'
-            "
-            @click="jobType = 3"
-          >
-            پاره وقت
-          </button>
-          <button
-            class="btn"
-            :class="
-              jobType === 4
-                ? 'bg-white text-text-primay'
-                : 'bg-surface-100 text-text-passive'
-            "
-            @click="jobType = 4"
-          >
-            پروژه
+            {{ item }}
           </button>
         </div>
         <button class="btn btn-outline text-primary-500 max-sm:hidden">
@@ -459,7 +427,7 @@
 <script setup lang="ts">
 // Variables
 const keyword = ref('');
-const jobType = ref(1);
+const jobType = ref(0);
 const banks = [
   { title: 'بانک سامان', subtitle: '5 فرصت شغلی', image: 'bank1.png' },
   { title: 'بانک سامان', subtitle: '5 فرصت شغلی', image: 'bank2.png' },

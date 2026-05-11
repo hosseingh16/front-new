@@ -12,7 +12,7 @@
     </div>
     <div class="flex justify-between items-start">
       <div>
-        <p class="text-[rgba(47,50,65,1)] font-bold">
+        <p class="text-gray-800 font-bold">
           استخدام حسابدار <span class="font-semibold text-gray-600">(خانم)</span>
         </p>
         <div class="flex gap-2 items-center">
@@ -39,7 +39,7 @@
         </div>
       </div>
     </div>
-    <div class="mt-1 h-[1px] bg-gray-300"></div>
+    <div class="mt-1 h-px bg-gray-300"></div>
     <div class="flex flex-wrap justify-between items-center gap-1 mt-2">
       <div
         class="bg-gray-100 flex justify-center items-center text-xs text-gray-800 h-6 rounded-lg px-4"

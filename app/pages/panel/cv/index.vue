@@ -1,5 +1,5 @@
 <template>
-  <div :class="{ 'fixed left-4 right-4': expanded }">
+  <div :class="{ 'fixed left-4 right-4': expandedCvCompletion }">
     <div class="flex justify-between items-center">
       <p class="font-yb-bold text-2xl">رزومه من</p>
       <button class="btn text-sm border-none text-primary-500 bg-[#4864E114]">
@@ -68,30 +68,31 @@
       </div>
 
       <div
-        v-if="expanded"
+        v-if="expandedCvCompletion"
         class="lg:hidden hero-overlay fixed top-0 right-0"
-        @click="expanded = false"
+        @click="expandedCvCompletion = false"
       ></div>
       <div
-        class="lg:hidden fixed bottom-16 right-0 w-full bg-white px-5 py-4 border-t-2 border-gray-default rounded-t-2xl transition-all"
-        :class="expanded ? 'h-125' : 'h-14'"
+        v-if="!showBottomMenu"
+        class="lg:hidden fixed bottom-18 right-0 w-full bg-white px-5 py-4 border-t-2 border-gray-default rounded-t-2xl transition-all"
+        :class="expandedCvCompletion ? 'h-125' : 'h-14'"
       >
-        <div class="flex justify-between items-center" @click="expanded = !expanded">
+        <div class="flex justify-between items-center" @click="expandedCvCompletion = !expandedCvCompletion">
           <div class="flex items-center gap-1">
             <div
-              v-if="!expanded"
+              v-if="!expandedCvCompletion"
               class="flex justify-center items-center bg-[#EF403514] h-6 w-8 text-danger-500 text-caption rounded-lg"
             >
               0%
             </div>
-            <span v-if="!expanded" class="text-text-passive">رزومه تکمیل شده</span>
+            <span v-if="!expandedCvCompletion" class="text-text-passive">رزومه تکمیل شده</span>
             <p v-else class="font-yb-bold">
               <span class="text-primary-500">-</span> میزان تکمیل رزومه
             </p>
           </div>
-          <icons-chevron class="transition-all" :class="{ 'rotate-180': expanded }" />
+          <icons-chevron class="transition-all" :class="{ 'rotate-180': expandedCvCompletion }" />
         </div>
-        <CvCompletion v-if="expanded" />
+        <CvCompletion v-if="expandedCvCompletion" />
       </div>
     </div>
   </div>
@@ -110,7 +111,8 @@ definePageMeta({
 // Variables
 const tab = ref(1);
 const { toClipboard } = useClipboard();
-const expanded = ref(false);
+const expandedCvCompletion = useState('expandedCvCompletion_state', () => false);
+const showBottomMenu = useState('showBottomMenu_state');
 
 // Functions
 async function copy(text: string) {
