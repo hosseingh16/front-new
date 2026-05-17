@@ -53,7 +53,13 @@
         <p class="max-md:hidden text-sm font-semibold text-gray-800">
           مرتب سازی بر اساس:
         </p>
-        <m-select2 v-model="sort" :options="['جدیدترین', 'بیشترین حقوق']" />
+        <div class="w-62">
+          <m-select2
+            v-model="sort"
+            border-color="#c8cdd4"
+            :options="['جدیدترین', 'بیشترین حقوق']"
+          />
+        </div>
       </div>
     </div>
 
@@ -68,14 +74,14 @@
         <transition name="fade" mode="out-in">
           <div v-if="!showJob">
             <div
-              class="border border-[rgba(200,205,212,1)] px-2 py-24 rounded-lg flex flex-col justify-center items-center text-[rgba(27,33,60,1)]"
+              class="border border-gray-300 px-2 py-24 rounded-lg flex flex-col justify-center items-center text-[rgba(27,33,60,1)]"
             >
               <Icon name="svg:jobs-1" size="114" />
               <p class="font-yb-extraBold text-2xl mt-4">
                 هنوز پروفایل حسابداری خودت رو نساختی؟
               </p>
               <p class="font-semibold mt-2">به جمع حسابدارها بپیوندید</p>
-              <button class="btn bg-[rgba(47,50,65,1)] text-white h-10 px-12 mt-2">
+              <button class="btn bg-gray-800 text-white h-10 px-12 mt-2">
                 <Icon name="svg:login" />
                 <span>ورود | ثبت‌نام</span>
               </button>
@@ -104,7 +110,7 @@ watch(
     if (window.innerWidth >= 1024) {
       (document.getElementById('selectedJobModal') as HTMLDialogElement)?.close();
     }
-  }
+  },
 );
 
 // Functions

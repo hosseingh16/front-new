@@ -54,22 +54,15 @@
         </p>
       </div>
       <div class="mt-6 flex items-center justify-between">
-        <div
-          class="flex gap-1 bg-surface-100 p-1 rounded-xl [&>.btn]:text-sm [&>.btn]:h-8"
-        >
-          <button
-            v-for="(item, index) in ['همه', 'تمام وقت', 'پاره وقت', 'پروژه']"
-            class="btn btn-ghost"
-            :class="
-              jobType === index
-                ? 'bg-white text-text-primay'
-                : 'bg-surface-100 text-text-passive'
-            "
-            @click="jobType = index"
-          >
-            {{ item }}
-          </button>
-        </div>
+        <m-toggle
+          v-model="jobType"
+          :items="[
+            { title: 'همه', value: 0 },
+            { title: 'تمام وقت', value: 1 },
+            { title: 'پاره وقت', value: 2 },
+            { title: 'پروژه', value: 3 },
+          ]"
+        />
         <button class="btn btn-outline text-primary-500 max-sm:hidden">
           مشاهده همه
           <icons-arrow color="#4864e1" :size="15" class="mr-1" />

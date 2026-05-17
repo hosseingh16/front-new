@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="flex items-center justify-between">
-      <p class="mt-2 text-base relative">
+      <p class="text-base relative mb-2">
         {{ label }}
         <span v-if="required" class="text-red-400 mb-4 absolute -top-2">*</span>
       </p>
@@ -24,18 +24,31 @@
       </div>
     </div>
     <label
-      class="input w-full rounded-lg shadow-none hover:border-[#cccccc] focus:border-[#cccccc] focus-within:outline-none focus-within:shadow-[0px_0px_0px_2px_#FFFFFF,0px_0px_0px_4px_#4A4A4A14]"
-      :class="
-        error ? 'border-danger-200' : model ? 'border-[#cccccc]' : 'border-gray-default'
-      "
+      class="input"
+      :class="[
+        multiline ? 'textarea py-12' : '',
+        'w-full rounded-lg shadow-none hover:border-[#cccccc] focus:border-[#cccccc] focus-within:outline-none focus-within:shadow-[0px_0px_0px_2px_#FFFFFF,0px_0px_0px_4px_#4A4A4A14]',
+        error ? 'border-danger-200' : model ? 'border-[#cccccc]' : 'border-gray-default',
+      ]"
     >
       <slot name="prefix" />
+
       <input
+        v-if="!multiline"
         v-model="model"
-        :type
-        :placeholder
-        class="pr-0 placeholder:text-gray-default"
+        :type="type"
+        :placeholder="placeholder"
+        class="pr-0 placeholder:text-gray-default w-full"
       />
+
+      <textarea
+        v-else
+        v-model="model"
+        :placeholder="placeholder"
+        class="textarea w-full border-0 shadow-none focus:outline-none p-0 placeholder:text-gray-default"
+        rows="4"
+      />
+
       <slot name="suffix" />
     </label>
   </div>
@@ -55,6 +68,7 @@ const props = withDefaults(
     placeholder?: string;
     hint?: string[];
     error?: boolean;
+    multiline?: boolean;
   }>(),
   { hint: () => [] },
 );

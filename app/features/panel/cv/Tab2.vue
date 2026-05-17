@@ -1,12 +1,7 @@
 <template>
   <div>
     <div class="bg-white p-4 rounded-2xl mt-5">
-      <div class="flex justify-between items-center">
-        <p class="font-yb-bold text-xl">
-          <span class="text-primary-500">-</span> اطلاعات تحصیلی
-        </p>
-        <Icon name="svg:info" />
-      </div>
+      <Titr>اطلاعات تحصیلی</Titr>
       <div class="flex flex-col items-center justify-center gap-4 py-10">
         <div class="text-center">
           <img src="/images/no-details.png" alt="" class="w-41" />
@@ -26,12 +21,7 @@
     </div>
 
     <div class="bg-white p-4 rounded-2xl mt-8">
-      <div class="flex justify-between items-center">
-        <p class="font-yb-bold text-xl">
-          <span class="text-primary-500">-</span> سوابق کاری
-        </p>
-        <Icon name="svg:info" />
-      </div>
+      <Titr>سوابق کاری</Titr>
       <div class="flex flex-col items-center justify-center gap-4 py-10">
         <div class="text-center">
           <img src="/images/no-details.png" alt="" class="w-41" />
@@ -51,12 +41,7 @@
     </div>
 
     <div class="bg-white p-4 rounded-2xl mt-8">
-      <div class="flex justify-between items-center">
-        <p class="font-yb-bold text-xl">
-          <span class="text-primary-500">-</span> نرم‌افزار حسابداری
-        </p>
-        <Icon name="svg:info" />
-      </div>
+      <Titr>نرم‌افزار حسابداری</Titr>
       <div class="flex flex-col items-center justify-center gap-4 py-10">
         <div class="text-center">
           <img src="/images/no-details.png" alt="" class="w-41" />
@@ -76,12 +61,7 @@
     </div>
 
     <div class="bg-white p-4 rounded-2xl mt-8">
-      <div class="flex justify-between items-center">
-        <p class="font-yb-bold text-xl">
-          <span class="text-primary-500">-</span> مهارت‌ها
-        </p>
-        <Icon name="svg:info" />
-      </div>
+      <Titr>مهارت‌ها</Titr>
       <div class="mt-4 grid lg:grid-cols-2 gap-x-4 gap-y-8">
         <div>
           <p>میزان آشنایی به نرم افزار اکسل:</p>
@@ -113,12 +93,7 @@
     </div>
 
     <div class="bg-white p-4 rounded-2xl mt-8">
-      <div class="flex justify-between items-center">
-        <p class="font-yb-bold text-xl">
-          <span class="text-primary-500">-</span> ارزیابی بیمه ای و مالیاتی
-        </p>
-        <Icon name="svg:info" />
-      </div>
+      <Titr>ارزیابی بیمه ای و مالیاتی</Titr>
       <div class="mt-4 grid lg:grid-cols-2 gap-x-4 gap-y-8">
         <div>
           <p>میزان آشنایی با مالیات ارزش افزوده:</p>
@@ -150,12 +125,7 @@
     </div>
 
     <div class="bg-white p-4 rounded-2xl mt-8">
-      <div class="flex justify-between items-center">
-        <p class="font-yb-bold text-xl">
-          <span class="text-primary-500">-</span> فایل ضمیمه
-        </p>
-        <Icon name="svg:info" />
-      </div>
+      <Titr>فایل ضمیمه</Titr>>
       <div class="mt-5 flex gap-1 items-center">
         <icons-check color="#009F65" />
         <span class="text-text-passive text-sm"
@@ -186,9 +156,7 @@
     </div>
 
     <div class="bg-white p-4 rounded-2xl mt-8">
-      <p class="font-yb-bold text-xl">
-        <span class="text-primary-500">-</span> قابل رویت برای همه
-      </p>
+      <Titr :with-icon="false">قابل رویت برای همه</Titr>
       <div class="mt-4 flex items-center gap-2">
         <div
           class="shrink-0 bg-primary-500 p-1 w-14 h-8 rounded-full cursor-pointer relative"
@@ -209,4 +177,5 @@
 
 <script setup lang="ts">
 import Slider from './Slider.vue';
+import Titr from './Titr.vue';
 </script>

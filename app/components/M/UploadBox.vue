@@ -1,6 +1,12 @@
 <template>
   <div>
-    <input type="file" class="hidden" ref="imageInputRef" @change="onSelect($event)" />
+    <input
+      type="file"
+      class="hidden"
+      ref="imageInputRef"
+      :accept="accept.map((x) => `.${x}`).join(',')"
+      @change="onSelect($event)"
+    />
     <div
       v-if="!imageBase64"
       class="mt-2 rounded-lg border-2 border-dashed border-gray-default bg-[repeating-linear-gradient(60deg,#FCFCFC_0px,#FCFCFC_35px,white_6px,white_70px)] flex items-center gap-3 p-6 cursor-pointer"
@@ -31,7 +37,7 @@
     >
       <img :src="imageBase64" class="w-24 h-24 rounded-full" />
     </div>
-    <div class="mt-3" v-if="model && !isImage">
+    <div v-if="model && !isImage" class="mt-3">
       <p>{{ model.name }}</p>
     </div>
   </div>
@@ -51,7 +57,7 @@ const props = defineProps({
   subtitle: { type: String },
   svgIconName: { type: String },
   maxSize: Number,
-  accept: { type: Array, default: ['jpg, png'] },
+  accept: { type: Array as () => string[], default: ['jpg, png'] },
   isImage: { type: Boolean, default: true },
 });
 
@@ -67,7 +73,7 @@ async function onSelect(event: Event) {
 
     if (file) {
       const ext = file.name.split('.')[file.name.split('.').length - 1];
-      if (!props.accept.includes(ext)) {
+      if (ext && !props.accept.includes(ext)) {
         alert('پسوند غیر مجاز');
       } else {
         model.value = file!;

@@ -1,7 +1,7 @@
 <template>
   <div>
     <Field :name="name" v-slot="{ field, errorMessage }">
-      <m-text-field
+      <m-select2
         v-bind="{ ...$props, ...field }"
         :default-value="field.value"
         :error="!!errorMessage"
@@ -13,7 +13,7 @@
         <template v-if="$slots.suffix" #suffix>
           <slot name="suffix" />
         </template>
-      </m-text-field>
+      </m-select2>
 
       <ErrorMessage :name="name" v-slot="{ message }">
         <div class="mt-1 text-xs text-text-passive flex items-center">
@@ -32,13 +32,13 @@ import { Field, ErrorMessage } from 'vee-validate';
 const props = withDefaults(
   defineProps<{
     name: string;
+    options: string[];
     placeholder?: string;
     label?: string;
-    type?: 'text' | 'password';
     required?: boolean;
     multiline?: boolean;
     hint?: string[];
   }>(),
-  { hint: () => [] },
+  { options: () => [], hint: () => [] },
 );
 </script>

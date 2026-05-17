@@ -1,7 +1,6 @@
 <template>
   <div
-    class="mt-3 flex justify-center gap-1 bg-surface-100 p-1 mx-3 rounded-xl [&>.btn]:text-sm [&>.btn]:h-8"
-  >
+    class="mt-3 flex justify-center gap-1 bg-surface-100 p-1 mx-3 rounded-xl [&>.btn]:text-sm [&>.btn]:h-8">
     <button
       v-for="item in themes"
       class="btn btn-ghost text-caption"
