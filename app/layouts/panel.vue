@@ -1,16 +1,16 @@
 <template>
   <div dir="rtl">
-    <div class="bg-surface-50 flex flex-col justify-between fixed inset-0">
-      <div class="flex-1 overflow-y-auto">
+    <div>
+      <div
+        class="bg-surface-50 flex flex-col justify-between fixed inset-0 max-w-384 w-full m-auto"
+      >
         <panel-header />
-        <div class="flex max-lg:pb-28">
-          <panel-sidebar />
-          <div class="px-4 py-6 w-full">
-            <slot />
-          </div>
+        <panel-sidebar />
+        <div class="flex-1 overflow-y-auto max-lg:pb-28 pl-4 pr-4 lg:pr-76 py-6">
+          <slot />
         </div>
+        <panel-bottom-navigation />
       </div>
-      <panel-bottom-navigation />
     </div>
   </div>
 </template>

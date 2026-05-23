@@ -22,9 +22,15 @@
       </button>
     </div>
 
-    <div v-if="errorMessage" class="text-xs text-red-500 mt-1">
+    <!-- <div v-if="errorMessage" class="text-xs text-red-500 mt-1">
       {{ errorMessage }}
-    </div>
+    </div> -->
+    <ErrorMessage :name="name" v-slot="{ message }">
+      <div class="mt-1 text-xs text-text-passive flex items-center">
+        <icons-close color="#EF4035" />
+        <span>{{ message }}</span>
+      </div>
+    </ErrorMessage>
   </Field>
 
   <!-- STANDALONE MODE -->
@@ -53,7 +59,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { Field } from 'vee-validate';
+import { ErrorMessage, Field } from 'vee-validate';
 
 const model = defineModel<string | number>();
 

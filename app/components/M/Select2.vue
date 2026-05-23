@@ -14,7 +14,9 @@
           class="text-sm font-normal line-clamp-1"
           :class="model ? 'text-gray-700' : 'text-text-muted'"
         >
-          {{ model || placeholder || 'انتخاب کنید' }}
+          {{
+            options.find((x) => x.value === model)?.label || placeholder || 'انتخاب کنید'
+          }}
         </span>
         <icons-chevron-down
           color="#4864E1"
@@ -31,12 +33,11 @@
           <div v-if="options.length > 0">
             <p
               v-for="item in options"
-              :key="item"
               @click="selectItem(item)"
               class="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg"
-              :class="{ 'bg-gray-200 font-semibold': item === model }"
+              :class="{ 'bg-gray-200 font-semibold': item.value === model }"
             >
-              {{ item }}
+              {{ item.label }}
             </p>
           </div>
           <p
@@ -53,15 +54,20 @@
 </template>
 
 <script setup lang="ts">
+import type { ISelectItem } from '~/types/ISelectItem';
+
 // Model
-const model = defineModel<string>();
+const model = defineModel<string | number>();
 
 // Props
 defineProps({
   label: { type: String },
   placeholder: { type: String },
   required: Boolean,
-  options: { type: Array as () => string[], default: [] },
+  options: {
+    type: Array as () => ISelectItem[],
+    default: [],
+  },
   borderColor: { type: String, default: '#E8E8E8' },
   error: { type: Boolean },
 });
@@ -75,8 +81,8 @@ const toggleDropdown = () => {
   open.value = !open.value;
 };
 
-const selectItem = (item: string) => {
-  model.value = item;
+const selectItem = (item: ISelectItem) => {
+  model.value = item.value;
   open.value = false;
 };
 

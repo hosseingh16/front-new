@@ -1,170 +1,293 @@
 <template>
   <div class="bg-white p-4 rounded-2xl mt-5">
-    <Titr :with-icon="editMode">اطلاعات پایه</Titr>
-    <p class="relative mt-6 mb-2">
-      تصویر پروفایل:
-      <span class="text-red-400 mb-4 absolute -top-2">*</span>
-    </p>
+    <Titr :with-icon="editMode" class="mb-8">اطلاعات پایه</Titr>
+    <form @submit="onSubmit">
+      <div v-show="editMode" class="grid lg:grid-cols-2 gap-x-4 gap-y-8">
+        <div class="lg:col-span-2">
+          <div>
+            <p class="relative">
+              تصویر پروفایل:
+              <span class="text-red-400 mb-4 absolute -top-2">*</span>
+            </p>
+            <Field name="profileImage">
+              <m-upload-box
+                subtitle="یا تصویر را بکشید و در این محل رها کنید"
+                :max-size="10"
+                :accept="['png', 'jpg']"
+                @update:model-value="(v: any) => setFieldValue('profileImage', v)"
+                @update:base64="(v) => (imageBase64 = v)"
+              />
+            </Field>
+          </div>
+          <ErrorMessage name="profileImage" v-slot="{ message }">
+            <div class="mt-1 text-xs text-text-passive flex items-center">
+              <icons-close color="#EF4035" />
+              <span>{{ message }}</span>
+            </div>
+          </ErrorMessage>
+        </div>
 
-    <m-upload-box
-      subtitle="یا تصویر را بکشید و در این محل رها کنید"
-      :max-size="10"
-      :accept="['png', 'jpg']"
-    />
-
-    <form class="mt-8 grid lg:grid-cols-2 gap-x-4 gap-y-8" @submit="onSubmit">
-      <m-form-input
-        name="fullName"
-        label="نام کامل"
-        placeholder="نام کامل خود را وارد کنید"
-        required
-      ></m-form-input>
-
-      <m-form-select2
-        name="jobTitle"
-        label="عنوان شغلی"
-        required
-        :options="['حسابدار ارشد']"
-      />
-
-      <div>
-        <p class="text-base relative mb-2">
-          وضعیت اشتغال
-          <span class="text-red-400 mb-4 absolute -top-2">*</span>
-        </p>
-        <m-toggle
-          name="jobStatus"
-          :items="[
-            { title: 'جویای کار', value: 1 },
-            { title: 'شاغل', value: 2 },
-          ]"
-          same-width
-        />
-      </div>
-
-      <m-select2
-        label="سابقه کار"
-        placeholder="میزان سابقه کار را انتخاب کنید"
-        required
-        :options="['1 سال', '2 سال']"
-      />
-
-      <m-select2
-        label="حقوق درخواستی"
-        placeholder="میزان حقوق درخواستی را انتخاب کنید"
-        required
-        :options="['10،000،000']"
-      />
-
-      <m-select2
-        label="سال تولد"
-        placeholder="سال تولد را انتخاب کنید"
-        required
-        :options="['1400']"
-      />
-
-      <m-radio-group name="gender" inline label="جنسیت">
-        <template #default="{ modelValue, setValue }">
-          <m-radio :value="'male'" :model-value="modelValue" :set-value="setValue">
-            آقا
-          </m-radio>
-          <m-radio :value="'female'" :model-value="modelValue" :set-value="setValue">
-            خانم
-          </m-radio>
-        </template>
-      </m-radio-group>
-
-      <m-select2
-        label="وضعیت خدمت سربازی"
-        placeholder="وضعیت خدمت سربازی را انتخاب کنید"
-        required
-        :options="['1400']"
-      />
-
-      <m-radio-group name="mariage" inline label="وضعیت تأهل">
-        <template #default="{ modelValue, setValue }">
-          <m-radio :value="'1'" :model-value="modelValue" :set-value="setValue">
-            مجرد
-          </m-radio>
-          <m-radio :value="'2'" :model-value="modelValue" :set-value="setValue">
-            متأهل
-          </m-radio>
-        </template>
-      </m-radio-group>
-
-      <m-select2
-        label="استان محل سکونت"
-        placeholder="استان محل سکونت را انتخاب کنید"
-        required
-      />
-
-      <m-select2
-        label="شهر محل سکونت"
-        placeholder="شهر محل سکونت را انتخاب کنید"
-        required
-      />
-
-      <m-select2
-        label="منطقه محل سکونت"
-        placeholder="منطقه محل سکونت را انتخاب کنید"
-        required
-      />
-
-      <div class="lg:col-span-2">
         <m-form-input
-          v-model="model.description"
-          name="description"
-          multiline
-          label="درباره من:"
-          placeholder="شرح مختصری درباره خودتان، توانایی‌های شما، علاقه مندی‌ها، سرگرمی‌ها و ... در اینجا بیان کنید."
+          name="fullName"
+          label="نام کامل"
+          placeholder="نام کامل خود را وارد کنید"
+          required
         ></m-form-input>
-      </div>
 
-      <div class="lg:col-span-2 flex justify-end">
-        <button class="btn btn-ghost" type="button">
-          <Icon name="svg:close" />
-          انصراف
-        </button>
-        <button class="btn btn-primary" type="submit">
-          <Icon name="svg:check-check" />
-          ذخیره
-        </button>
+        <m-form-select2
+          name="jobTitle"
+          label="عنوان شغلی"
+          required
+          :options="jobTitles"
+        />
+
+        <div>
+          <p class="text-base relative mb-2">
+            وضعیت اشتغال
+            <span class="text-red-400 mb-4 absolute -top-2">*</span>
+          </p>
+          <m-toggle
+            name="jobStatus"
+            :items="[
+              { title: 'جویای کار', value: '1' },
+              { title: 'شاغل', value: '2' },
+            ]"
+            same-width
+          />
+        </div>
+
+        <m-form-select2
+          name="experience"
+          label="سابقه کار"
+          placeholder="میزان سابقه کار را انتخاب کنید"
+          required
+          :options="experiences"
+        />
+
+        <m-form-select2
+          name="salary"
+          label="حقوق درخواستی"
+          placeholder="میزان حقوق درخواستی را انتخاب کنید"
+          required
+          :options="salaries"
+        />
+
+        <m-form-select2
+          name="birthYear"
+          label="سال تولد"
+          placeholder="سال تولد را انتخاب کنید"
+          required
+          :options="years"
+        />
+
+        <m-radio-group name="gender" inline label="جنسیت">
+          <template #default="{ modelValue, setValue }">
+            <m-radio value="1" :model-value="modelValue" :set-value="setValue">
+              آقا
+            </m-radio>
+            <m-radio value="2" :model-value="modelValue" :set-value="setValue">
+              خانم
+            </m-radio>
+          </template>
+        </m-radio-group>
+
+        <m-form-select2
+          name="militaryStatus"
+          label="وضعیت خدمت سربازی"
+          placeholder="وضعیت خدمت سربازی را انتخاب کنید"
+          required
+          :options="militaryStatuses"
+        />
+
+        <m-radio-group name="mariage" inline label="وضعیت تأهل">
+          <template #default="{ modelValue, setValue }">
+            <m-radio value="1" :model-value="modelValue" :set-value="setValue">
+              مجرد
+            </m-radio>
+            <m-radio value="2" :model-value="modelValue" :set-value="setValue">
+              متأهل
+            </m-radio>
+          </template>
+        </m-radio-group>
+
+        <m-form-select2
+          name="province"
+          label="استان محل سکونت"
+          placeholder="استان محل سکونت را انتخاب کنید"
+          required
+          :options="provinces"
+        />
+
+        <m-form-select2
+          name="city"
+          label="شهر محل سکونت"
+          placeholder="شهر محل سکونت را انتخاب کنید"
+          required
+          :options="cities"
+        />
+
+        <m-form-select2
+          name="region"
+          label="منطقه محل سکونت"
+          placeholder="منطقه محل سکونت را انتخاب کنید"
+          required
+          :options="regions"
+        />
+
+        <div class="lg:col-span-2">
+          <m-form-input
+            name="description"
+            multiline
+            label="درباره من:"
+            placeholder="شرح مختصری درباره خودتان، توانایی‌های شما، علاقه مندی‌ها، سرگرمی‌ها و ... در اینجا بیان کنید."
+          ></m-form-input>
+        </div>
+
+        <div class="lg:col-span-2 flex justify-end">
+          <button class="btn btn-ghost" type="button" @click="editMode = false">
+            <Icon name="svg:close" />
+            انصراف
+          </button>
+          <button class="btn btn-primary" type="submit">
+            <Icon name="svg:check-check" />
+            ذخیره
+          </button>
+        </div>
+      </div>
+      <div v-show="!editMode" class="grid lg:grid-cols-2 gap-x-4 gap-y-8">
+        <div v-if="imageBase64" class="lg:col-span-2">
+          <p>تصویر پروفایل:</p>
+          <div class="mt-6 flex justify-center">
+            <img :src="imageBase64" class="w-24 h-24 rounded-full" />
+          </div>
+        </div>
+        <InfoItem title="نام کامل:" :value="values.fullName" />
+        <InfoItem
+          title="عنوان شغلی:"
+          :value="jobTitles.find((x) => x.value === values.jobTitle)?.label"
+        />
+        <InfoItem
+          title="وضعیت اشتغال:"
+          :value="
+            values.jobStatus === '1'
+              ? 'جویای کار'
+              : values.jobStatus === '2'
+                ? 'شاغل'
+                : undefined
+          "
+        />
+        <InfoItem
+          title="سابقه کار:"
+          :value="experiences.find((x) => x.value === values.experience)?.label"
+        />
+        <InfoItem
+          title="حقوق درخواستی:"
+          :value="salaries.find((x) => x.value === values.salary)?.label"
+        />
+        <InfoItem
+          title="سال تولد:"
+          :value="years.find((x) => x.value === values.birthYear)?.label"
+        />
+        <InfoItem
+          title="جنسیت:"
+          :value="
+            values.gender === '1' ? 'آقا' : values.gender === '2' ? 'خانم' : undefined
+          "
+        />
+        <InfoItem
+          title="وضعیت خدمت سربازی:"
+          :value="militaryStatuses.find((x) => x.value === values.militaryStatus)?.label"
+        />
+        <InfoItem
+          title="وضعیت تأهل:"
+          :value="
+            values.mariage === '1' ? 'مجرد' : values.mariage === '2' ? 'متأهل' : undefined
+          "
+        />
+        <InfoItem
+          title="استان محل سکونت:"
+          :value="provinces.find((x) => x.value === values.province)?.label"
+        />
+        <InfoItem
+          title="شهر محل سکونت:"
+          :value="cities.find((x) => x.value === values.city)?.label"
+        />
+        <InfoItem
+          title="منطقه محل سکونت:"
+          :value="regions.find((x) => x.value === values.region)?.label"
+        />
+        <InfoItem title="درباره من:" :value="values.description" class="lg:col-span-2" />
+        <div class="lg:col-span-2 text-left mt-2">
+          <button
+            class="btn text-sm border-none text-primary-500 bg-[#4864E114] max-md:btn-block"
+            type="button"
+            @click="editMode = true"
+          >
+            <Icon name="svg:edit" size="24" />
+            ویرایش
+          </button>
+        </div>
       </div>
     </form>
   </div>
 </template>
 
 <script setup lang="ts">
-import { useForm } from 'vee-validate';
+import { ErrorMessage, Field, useForm } from 'vee-validate';
 import Titr from './Titr.vue';
 import * as Yup from 'yup';
+import InfoItem from './InfoItem.vue';
+import type { ISelectItem } from '~/types/ISelectItem';
 
 // Variables
-const editMode = ref(true);
-const model = reactive({
-  fullName: '',
-  jobTitle: '',
-  jobStatus: 0,
-  gender: null,
-  mariage: null,
-  description: '',
-});
+const editMode = ref(false);
+const imageBase64 = ref<string | null>(null);
+const jobTitles = ref<ISelectItem[]>([{ label: 'حسابدار ارشد', value: '1' }]);
+const experiences = ref<ISelectItem[]>([{ label: '1 سال', value: '1' }]);
+const salaries = ref<ISelectItem[]>([{ label: '10،000،000 تومان', value: '1' }]);
+const years = ref<ISelectItem[]>([{ label: '1400', value: '1' }]);
+const militaryStatuses = ref<ISelectItem[]>([{ label: 'پایان خدمت', value: '1' }]);
+const provinces = ref<ISelectItem[]>([{ label: 'فارس', value: '1' }]);
+const cities = ref<ISelectItem[]>([{ label: 'شیراز', value: '1' }]);
+const regions = ref<ISelectItem[]>([{ label: 'منطقه 1', value: '1' }]);
 
 // Form
 const formSchema = Yup.object({
+  profileImage: Yup.mixed()
+    .test('required', 'تصویر انتخاب نشده است', (v) => v !== null && v !== undefined)
+    .test('is-file', 'فقط فایل مجاز است', (v) => v instanceof File)
+    .test('file-type', 'فقط پسوندهای png و jpg مجاز است', (v) => {
+      if (!(v instanceof File)) return false;
+      return v.type.startsWith('image/png') || v.type.startsWith('image/jpeg');
+    })
+    .test('file-size', 'حجم تصویر نباید بیشتر از 10MB باشد', (v) => {
+      if (!v) return false;
+      return v instanceof File && v.size <= 10 * 1024 * 1024;
+    }),
   fullName: Yup.string().required('نام وارد نشده است'),
   jobTitle: Yup.string().required('عنوان شغلی انتخاب نشده است'),
-  jobStatus: Yup.number(),
+  jobStatus: Yup.string().required('وضعیت شغلی انتخاب نشده است'),
+  experience: Yup.string().required('سابقه کار انتخاب نشده است'),
+  salary: Yup.string().required('حقوق درخواستی انتخاب نشده است'),
+  birthYear: Yup.string().required('سال تولد انتخاب نشده است'),
   gender: Yup.string().required('جنسیت انتخاب نشده است'),
-  mariage: Yup.number().required('وضعیت تأهل انتخاب نشده است'),
+  militaryStatus: Yup.string().required('وضعیت خدمت سربازی انتخاب نشده است'),
+  mariage: Yup.string().required('وضعیت تأهل انتخاب نشده است'),
+  province: Yup.string().required('استان انتخاب نشده است'),
+  city: Yup.string().required('شهر انتخاب نشده است'),
+  region: Yup.string().required('نطقه انتخاب نشده است'),
+  description: Yup.string(),
 });
-const { handleSubmit } = useForm({
-  initialValues: { jobStatus: 1 },
-  validationSchema: formSchema,
-});
+const { handleSubmit, setFieldValue, values } = useForm<Yup.InferType<typeof formSchema>>(
+  {
+    initialValues: {},
+    validationSchema: formSchema,
+  },
+);
 
 // Functions
 const onSubmit = handleSubmit((data: any) => {
   console.log(data);
+  editMode.value = false;
 });
 </script>

@@ -1,44 +1,8 @@
 <template>
   <div>
-    <div class="bg-white p-4 rounded-2xl mt-5">
-      <Titr>اطلاعات تحصیلی</Titr>
-      <div class="flex flex-col items-center justify-center gap-4 py-10">
-        <div class="text-center">
-          <img src="/images/no-details.png" alt="" class="w-41" />
-          <p class="font-yb-bold -mt-14">اطلاعات تحصیلی</p>
-        </div>
-        <p class="text-text-passive text-sm">
-          شما هنوز اطلاعات تحصیلی خود را تکمیل نکرده‌اید.
-        </p>
-        <p class="text-text-passive text-sm">
-          با افزودن حداقل یک سابقه تحصیلی، شانس شما برای استخدام افزایش پیدا می‌کند.
-        </p>
-        <button class="btn btn-primary">
-          <Icon name="svg:plus-white" size="16" />
-          افزودن اطلاعات تحصیلی
-        </button>
-      </div>
-    </div>
+    <EducationSection />
 
-    <div class="bg-white p-4 rounded-2xl mt-8">
-      <Titr>سوابق کاری</Titr>
-      <div class="flex flex-col items-center justify-center gap-4 py-10">
-        <div class="text-center">
-          <img src="/images/no-details.png" alt="" class="w-41" />
-          <p class="font-yb-bold -mt-14">سوابق کاری</p>
-        </div>
-        <p class="text-text-passive text-sm">
-          شما هنوز اطلاعات تحصیلی خود را تکمیل نکرده‌اید.
-        </p>
-        <p class="text-text-passive text-sm">
-          با افزودن حداقل یک سابقه تحصیلی، شانس شما برای استخدام افزایش پیدا می‌کند.
-        </p>
-        <button class="btn btn-primary">
-          <Icon name="svg:plus-white" size="16" />
-          افزودن سوابق کاری
-        </button>
-      </div>
-    </div>
+    <ExperienceSection />
 
     <div class="bg-white p-4 rounded-2xl mt-8">
       <Titr>نرم‌افزار حسابداری</Titr>
@@ -176,6 +140,15 @@
 </template>
 
 <script setup lang="ts">
+import type { ISelectItem } from '~/types/ISelectItem';
+import EducationModal from './Tab2/EducationModal.vue';
 import Slider from './Slider.vue';
 import Titr from './Titr.vue';
+import EducationSection from './Tab2/EducationSection.vue';
+import ExperienceSection from './Tab2/ExperienceSection.vue';
+
+// Variabels
+const levels = ref<ISelectItem[]>([{ label: 'کارشناسی', value: '1' }]);
+const years = ref<ISelectItem[]>([{ label: '1400', value: '1' }]);
+const educationItems = ref<any[]>([]);
 </script>

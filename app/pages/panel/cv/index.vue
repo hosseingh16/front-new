@@ -7,8 +7,8 @@
         از دید کارفرما
       </button>
     </div>
-    <div class="grid lg:grid-cols-7 gap-5 mt-5">
-      <div class="lg:col-span-5">
+    <div class="grid lg:grid-cols-8 gap-4 mt-5">
+      <div class="lg:col-span-6">
         <div class="flex items-center border-b-2 border-gray-default">
           <button
             class="btn text-sm border-0 rounded-none border-primary-500 font-normal"
@@ -41,13 +41,13 @@
         <Tab2 v-if="tab === 2" />
       </div>
       <div class="lg:col-span-2">
-        <div class="bg-white p-4 rounded-2xl border-2 border-gray-default max-lg:hidden">
+        <div class="bg-white p-3 rounded-2xl border-2 border-gray-default max-lg:hidden">
           <p class="font-yb-bold text-xl">
             <span class="text-primary-500">-</span> میزان تکمیل رزومه
           </p>
           <CvCompletion />
         </div>
-        <div class="bg-white p-4 rounded-2xl border-2 border-gray-default mt-4">
+        <div class="bg-white p-3 rounded-2xl border-2 border-gray-default mt-4">
           <p class="font-yb-bold text-xl">
             <span class="text-primary-500">-</span> آدرس رزومه‌ی شما
           </p>

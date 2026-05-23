@@ -1,10 +1,11 @@
 <template>
   <div>
-    <Field :name="name" v-slot="{ field, errorMessage }">
+    <Field :name="name" v-slot="{ field, value, errorMessage }">
       <m-select2
         v-bind="{ ...$props, ...field }"
         :default-value="field.value"
         :error="!!errorMessage"
+        :model-value="value"
       >
         <template v-if="$slots.prefix" #prefix>
           <slot name="prefix" />
@@ -27,12 +28,13 @@
 
 <script setup lang="ts">
 import { Field, ErrorMessage } from 'vee-validate';
+import type { ISelectItem } from '~/types/ISelectItem';
 
 // Props
 const props = withDefaults(
   defineProps<{
     name: string;
-    options: string[];
+    options: ISelectItem[];
     placeholder?: string;
     label?: string;
     required?: boolean;

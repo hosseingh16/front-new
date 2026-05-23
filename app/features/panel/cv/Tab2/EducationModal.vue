@@ -1,0 +1,156 @@
+<template>
+  <div>
+    <button
+      class="btn"
+      :class="
+        editMode
+          ? 'btn bg-white h-8 w-8 p-0 border-2 rounded-lg border-text-muted'
+          : 'btn-primary'
+      "
+      @click="showModal"
+    >
+      <div v-if="!editMode" class="flex items-center gap-2">
+        <Icon name="svg:plus-white" size="16" />
+        {{ label }}
+      </div>
+      <icons-edit v-else color="#4A4A4A" />
+    </button>
+
+    <m-dialog ref="modalRef" :width="850">
+      <Titr>افزودن سابقه تحصیلی</Titr>
+      <form @submit="onSubmit" class="mt-6">
+        <div class="grid md:grid-cols-2 gap-4">
+          <m-form-select2
+            name="level"
+            label="مقطع تحصیلی:"
+            required
+            :options="levels"
+            placeholder="مقطع تحصیلی را انتخاب کنید"
+          ></m-form-select2>
+          <m-form-input
+            name="field"
+            label="رشته تحصیلی:"
+            placeholder="رشته تحصیلی را وارد کنید"
+            required
+          ></m-form-input>
+          <m-form-input
+            name="school"
+            label="نام آمورشگاه / موسسه آموزشی:"
+            placeholder="نام آمورشگاه / موسسه آموزشی را وارد کنید"
+            required
+          ></m-form-input>
+          <div>
+            <m-form-select2
+              name="date"
+              label="تاریخ فارغ‌التحصیلی:"
+              required
+              :options="years"
+              placeholder="تاریخ فارق التحصیلی را انتخاب کنید"
+            ></m-form-select2>
+            <label class="label mt-2 text-sm text-text-primay">
+              <input
+                name="inStudy"
+                type="checkbox"
+                class="checkbox"
+                :checked="values.inStudy"
+                @click="setFieldValue('inStudy', !values.inStudy)"
+              />
+              مشغول به تحصیل هستم.
+            </label>
+          </div>
+          <div class="lg:col-span-2">
+            <m-form-input
+              name="description"
+              multiline
+              label="توضیحات:"
+              placeholder="هرگونه توضیحات مربوط به سوابق درسی و تحصیلی را در اینجا بیان کنید."
+            ></m-form-input>
+          </div>
+        </div>
+        <div>
+          <div class="flex justify-end mt-4">
+            <button class="btn btn-ghost" type="button" @click="modalRef?.closeModal()">
+              <Icon name="svg:close" />
+              انصراف
+            </button>
+            <button class="btn btn-primary">
+              <Icon name="svg:plus-white" />
+              افزودن
+            </button>
+          </div>
+        </div>
+      </form>
+    </m-dialog>
+  </div>
+</template>
+
+<script setup lang="ts">
+import type Dialog from '~/components/M/Dialog.vue';
+import { useForm } from 'vee-validate';
+import * as Yup from 'yup';
+import type { ISelectItem } from '~/types/ISelectItem';
+import Titr from '../Titr.vue';
+
+// Props
+const props = withDefaults(
+  defineProps<{
+    label?: string;
+    levels: ISelectItem[];
+    years: ISelectItem[];
+    editMode?: boolean;
+    itemToEdit?: any;
+  }>(),
+  { editMode: false },
+);
+
+// Emits
+const emits = defineEmits<{
+  (e: 'item', value: any): void;
+}>();
+
+// Variables
+const modalRef = ref<InstanceType<typeof Dialog> | null>(null);
+
+// Form
+const formSchema = Yup.object({
+  level: Yup.string().required('مقطع تحصیلی انتخاب نشده است'),
+  field: Yup.string().required('رشته تحصیلی وارد نشده است'),
+  school: Yup.string().required('آموزشگاه وارد نشده است'),
+  inStudy: Yup.bool(),
+  date: Yup.string().when('inStudy', {
+    is: false,
+    then: (schema) => schema.required('تاریخ فارغ‌التحصیلی انتخاب نشده است'),
+    otherwise: (schema) => schema.optional(),
+  }),
+  description: Yup.string(),
+});
+const { handleSubmit, values, setFieldValue, resetForm, setValues } = useForm<
+  Yup.InferType<typeof formSchema>
+>({
+  validationSchema: formSchema,
+  initialValues: {
+    level: '',
+    field: '',
+    school: '',
+    date: '',
+    description: '',
+    inStudy: false,
+  },
+});
+
+// Functions
+async function showModal() {
+  resetForm();
+  await nextTick();
+  if (props.itemToEdit) {
+    setValues(props.itemToEdit);
+  }
+  modalRef.value?.showModal();
+}
+
+const onSubmit = handleSubmit((data: Yup.InferType<typeof formSchema>) => {
+  console.log(data);
+  emits('item', data);
+  modalRef.value?.closeModal();
+});
+</script>

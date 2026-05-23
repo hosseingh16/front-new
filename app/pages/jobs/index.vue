@@ -57,7 +57,10 @@
           <m-select2
             v-model="sort"
             border-color="#c8cdd4"
-            :options="['جدیدترین', 'بیشترین حقوق']"
+            :options="[
+              { label: 'جدیدترین', value: '1' },
+              { label: 'بیشترین حقوق', value: '2' },
+            ]"
           />
         </div>
       </div>
