@@ -6,7 +6,7 @@
       >
         <panel-header />
         <panel-sidebar />
-        <div class="flex-1 overflow-y-auto max-lg:pb-28 pl-4 pr-4 lg:pr-76 py-6">
+        <div class="no-scrollbar flex-1 overflow-y-auto max-lg:pb-28 pl-4 pr-4 lg:pr-76 py-6">
           <slot />
         </div>
         <panel-bottom-navigation />
