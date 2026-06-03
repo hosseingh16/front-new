@@ -85,7 +85,7 @@
             <m-radio value="1" :model-value="modelValue" :set-value="setValue">
               آقا
             </m-radio>
-            <m-radio value="2" :model-value="modelValue" :set-value="setValue">
+            <m-radio value="0" :model-value="modelValue" :set-value="setValue">
               خانم
             </m-radio>
           </template>
@@ -95,7 +95,8 @@
           name="militaryStatus"
           label="وضعیت خدمت سربازی"
           placeholder="وضعیت خدمت سربازی را انتخاب کنید"
-          required
+          :required="isMale"
+          :disabled="!isMale"           
           :options="militaryStatuses"
         />
 
@@ -264,14 +265,22 @@ const formSchema = Yup.object({
       if (!v) return false;
       return v instanceof File && v.size <= 10 * 1024 * 1024;
     }),
-  fullName: Yup.string().required('نام وارد نشده است'),
+  fullName: Yup.string().matches(
+    /^[\u0600-\u06FF\s]+$/,
+    'نام فقط باید شامل حروف فارسی باشد'
+  ).min(6, 'نام باید حداقل ۶ کاراکتر باشد').required('نام وارد نشده است'),
   jobTitle: Yup.string().required('عنوان شغلی انتخاب نشده است'),
   jobStatus: Yup.string().required('وضعیت شغلی انتخاب نشده است'),
   experience: Yup.string().required('سابقه کار انتخاب نشده است'),
   salary: Yup.string().required('حقوق درخواستی انتخاب نشده است'),
   birthYear: Yup.string().required('سال تولد انتخاب نشده است'),
   gender: Yup.string().required('جنسیت انتخاب نشده است'),
-  militaryStatus: Yup.string().required('وضعیت خدمت سربازی انتخاب نشده است'),
+militaryStatus: Yup.string().when('gender', {
+  is: '1',
+  then: (schema) =>
+    schema.required('وضعیت خدمت سربازی انتخاب نشده است'),
+  otherwise: (schema) => schema.notRequired(),
+}),
   mariage: Yup.string().required('وضعیت تأهل انتخاب نشده است'),
   province: Yup.string().required('استان انتخاب نشده است'),
   city: Yup.string().required('شهر انتخاب نشده است'),
@@ -281,9 +290,12 @@ const formSchema = Yup.object({
 const { handleSubmit, setFieldValue, values } = useForm<Yup.InferType<typeof formSchema>>(
   {
     initialValues: {},
+    
     validationSchema: formSchema,
   },
 );
+
+const isMale = computed(() => values.gender === '1');
 
 // Functions
 const onSubmit = handleSubmit((data: any) => {

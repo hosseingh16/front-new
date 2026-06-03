@@ -418,6 +418,7 @@
 </template>
 
 <script setup lang="ts">
+import type { InitData, User } from '~/types';
 // Variables
 const keyword = ref('');
 const jobType = ref(0);
@@ -501,4 +502,17 @@ function toggleQuestion(index: number) {
   if (expandedItem.value === index) expandedItem.value = null;
   else expandedItem.value = index;
 }
+
+onMounted(() => {
+  
+  const init = useState<InitData>('init');
+
+
+init.value?.lookup_data?.salary_ranges?.forEach((item) => {
+  console.log(item);
+});
+
+});
+
+
 </script>

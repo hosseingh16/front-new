@@ -21,7 +21,7 @@
 
 <script setup>
 definePageMeta({
-  middleware: "sanctum:guest",
+  //middleware: "sanctum:guest",
 });
 
 const formData = ref({

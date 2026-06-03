@@ -5,18 +5,19 @@ export default defineNuxtConfig({
   css: ["~/assets/css/main.css"],
   runtimeConfig: {
     public: {
-      baseUrl: process.env.NUXT_PUBLIC_BASE_URL,
-      apiBase: process.env.NUXT_PUBLIC_API_BASE,
+     // baseUrl: process.env.NUXT_PUBLIC_BASE_URL,
+      baseUrl: 'http://api.hihesab.test',
+      apiBase: 'http://api.hihesab.test/api',
     },
   },
   devServer: {
-    host: "0.0.0.0",
+     host: 'hihesab.test',
     port: 3000,
   },
   modules: ["@nuxt/image", "@nuxt/icon", "nuxt-auth-sanctum"],
   // @ts-ignore
   sanctum: {
-    baseUrl: "https://api.hihesab.test", // Laravel API
+    baseUrl: "http://api.hihesab.test", // Laravel API
     endpoints: {
       login: "/api/login",
       logout: "/api/logout",

@@ -7,7 +7,7 @@
 
 <script setup>
 definePageMeta({
-  middleware: "sanctum:auth",
+ // middleware: "sanctum:auth",
 });
 </script>
 
