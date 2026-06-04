@@ -133,6 +133,7 @@
           placeholder="منطقه محل سکونت را انتخاب کنید"
           required
           :options="regions"
+           :disabled="!hasRegions"
         />
 
         <div class="lg:col-span-2">
@@ -240,6 +241,16 @@ import * as Yup from 'yup';
 import InfoItem from './InfoItem.vue';
 import type { ISelectItem } from '~/types/ISelectItem';
 
+//Import Feeders
+import { provinces } from '~/feeders/provinces';
+
+//Import Validation Rules
+import { fullNameValidation } from '~/validations/fullName';
+import { profileImageValidation } from '~/validations/profileImage';
+
+const api = useApi()
+const hasRegions = ref(false);
+
 // Variables
 const editMode = ref(false);
 const imageBase64 = ref<string | null>(null);
@@ -248,27 +259,13 @@ const experiences = ref<ISelectItem[]>([{ label: '1 سال', value: '1' }]);
 const salaries = ref<ISelectItem[]>([{ label: '10،000،000 تومان', value: '1' }]);
 const years = ref<ISelectItem[]>([{ label: '1400', value: '1' }]);
 const militaryStatuses = ref<ISelectItem[]>([{ label: 'پایان خدمت', value: '1' }]);
-const provinces = ref<ISelectItem[]>([{ label: 'فارس', value: '1' }]);
-const cities = ref<ISelectItem[]>([{ label: 'شیراز', value: '1' }]);
-const regions = ref<ISelectItem[]>([{ label: 'منطقه 1', value: '1' }]);
+const cities = ref<ISelectItem[]>([]);
+const regions = ref<ISelectItem[]>([]);
 
 // Form
 const formSchema = Yup.object({
-  profileImage: Yup.mixed()
-    .test('required', 'تصویر انتخاب نشده است', (v) => v !== null && v !== undefined)
-    .test('is-file', 'فقط فایل مجاز است', (v) => v instanceof File)
-    .test('file-type', 'فقط پسوندهای png و jpg مجاز است', (v) => {
-      if (!(v instanceof File)) return false;
-      return v.type.startsWith('image/png') || v.type.startsWith('image/jpeg');
-    })
-    .test('file-size', 'حجم تصویر نباید بیشتر از 10MB باشد', (v) => {
-      if (!v) return false;
-      return v instanceof File && v.size <= 10 * 1024 * 1024;
-    }),
-  fullName: Yup.string().matches(
-    /^[\u0600-\u06FF\s]+$/,
-    'نام فقط باید شامل حروف فارسی باشد'
-  ).min(6, 'نام باید حداقل ۶ کاراکتر باشد').required('نام وارد نشده است'),
+  profileImage: profileImageValidation,
+  fullName: fullNameValidation,
   jobTitle: Yup.string().required('عنوان شغلی انتخاب نشده است'),
   jobStatus: Yup.string().required('وضعیت شغلی انتخاب نشده است'),
   experience: Yup.string().required('سابقه کار انتخاب نشده است'),
@@ -284,7 +281,11 @@ militaryStatus: Yup.string().when('gender', {
   mariage: Yup.string().required('وضعیت تأهل انتخاب نشده است'),
   province: Yup.string().required('استان انتخاب نشده است'),
   city: Yup.string().required('شهر انتخاب نشده است'),
-  region: Yup.string().required('نطقه انتخاب نشده است'),
+  region: Yup.string().when('city', {
+  is: () => hasRegions.value === true,
+  then: (schema) => schema.required('منطقه انتخاب نشده است'),
+  otherwise: (schema) => schema.notRequired(),
+}),
   description: Yup.string(),
 });
 const { handleSubmit, setFieldValue, values } = useForm<Yup.InferType<typeof formSchema>>(
@@ -296,6 +297,35 @@ const { handleSubmit, setFieldValue, values } = useForm<Yup.InferType<typeof for
 );
 
 const isMale = computed(() => values.gender === '1');
+
+watch(() => values.province, async (provinceId) => {
+  if (!provinceId) {
+    cities.value = [];
+    setFieldValue('city', ''); // ✔ مهم
+    return;
+  }
+
+  cities.value = await api.get(`/cities/${provinceId}`);
+
+  setFieldValue('city', ''); // ✔ مهم‌ترین خط
+});
+
+watch(() => values.city, async (cityId) => {
+  if (!cityId) {
+    regions.value = [];
+    hasRegions.value = false;
+    setFieldValue('region', ''); 
+    return;
+  }
+
+  const res = await api.get<ISelectItem[]>(`/regions/${cityId}`);
+
+  regions.value = res;
+
+  hasRegions.value = res.length > 0;
+
+  setFieldValue('region', '');
+});
 
 // Functions
 const onSubmit = handleSubmit((data: any) => {
