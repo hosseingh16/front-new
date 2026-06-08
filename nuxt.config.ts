@@ -7,7 +7,7 @@ export default defineNuxtConfig({
     public: {
      // baseUrl: process.env.NUXT_PUBLIC_BASE_URL,
       baseUrl: 'http://api.hihesab.test',
-      apiBase: 'http://api.hihesab.test/api',
+      apiBase: 'http://api.hihesab.test/api/v1',
     },
   },
   devServer: {

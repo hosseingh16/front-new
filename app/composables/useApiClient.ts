@@ -4,6 +4,8 @@ export function useApiClient() {
   const config = useRuntimeConfig()
   const baseURL = config.public.apiBase
 
+  const client = useSanctumClient()
+
   const user = useState<any | null>('user', () => null)
 
   const request = async <T>(
@@ -11,12 +13,11 @@ export function useApiClient() {
     options: any = {}
   ): Promise<T> => {
     try {
-      return await $fetch<T>(url, {
-        baseURL,
-        credentials: 'include',
+      return await client<T>(url, {
+        baseURL, // 👈 اینجا استفاده می‌شود
         headers: {
           Accept: 'application/json',
-          ...(options.headers || {}),
+          ...(options.headers ?? {}),
         },
         ...options,
       })
@@ -24,15 +25,15 @@ export function useApiClient() {
       const status = err?.response?.status
       const data = err?.response?._data
 
-      const error: ApiError = {
-        status,
-        message: data?.message,
-        errors: data?.errors,
-      }
-
       if (status === 401) {
         user.value = null
         await navigateTo('/login')
+      }
+
+      const error: ApiError = {
+        status,
+        message: data?.message ?? err?.message,
+        errors: data?.errors,
       }
 
       throw error

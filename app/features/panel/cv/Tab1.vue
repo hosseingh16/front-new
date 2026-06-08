@@ -28,7 +28,7 @@
         </div>
 
         <m-form-input
-          name="fullName"
+          name="name"
           label="نام کامل"
           placeholder="نام کامل خود را وارد کنید"
           required
@@ -57,7 +57,7 @@
         </div>
 
         <m-form-select2
-          name="experience"
+          name="workExperience"
           label="سابقه کار"
           placeholder="میزان سابقه کار را انتخاب کنید"
           required
@@ -65,7 +65,7 @@
         />
 
         <m-form-select2
-          name="salary"
+          name="desiredSalary"
           label="حقوق درخواستی"
           placeholder="میزان حقوق درخواستی را انتخاب کنید"
           required
@@ -73,7 +73,7 @@
         />
 
         <m-form-select2
-          name="birthYear"
+          name="birthDate"
           label="سال تولد"
           placeholder="سال تولد را انتخاب کنید"
           required
@@ -92,7 +92,7 @@
         </m-radio-group>
 
         <m-form-select2
-          name="militaryStatus"
+          name="militaryServiceStatus"
           label="وضعیت خدمت سربازی"
           placeholder="وضعیت خدمت سربازی را انتخاب کنید"
           :required="isMale"
@@ -100,7 +100,7 @@
           :options="militaryStatuses"
         />
 
-        <m-radio-group name="mariage" inline label="وضعیت تأهل">
+        <m-radio-group name="mariageStatus" inline label="وضعیت تأهل">
           <template #default="{ modelValue, setValue }">
             <m-radio value="1" :model-value="modelValue" :set-value="setValue">
               مجرد
@@ -138,7 +138,7 @@
 
         <div class="lg:col-span-2">
           <m-form-input
-            name="description"
+            name="about"
             multiline
             label="درباره من:"
             placeholder="شرح مختصری درباره خودتان، توانایی‌های شما، علاقه مندی‌ها، سرگرمی‌ها و ... در اینجا بیان کنید."
@@ -163,7 +163,7 @@
             <img :src="imageBase64" class="w-24 h-24 rounded-full" />
           </div>
         </div>
-        <InfoItem title="نام کامل:" :value="values.fullName" />
+        <InfoItem title="نام کامل:" :value="values.name" />
         <InfoItem
           title="عنوان شغلی:"
           :value="jobTitles.find((x) => x.value === values.jobTitle)?.label"
@@ -180,15 +180,15 @@
         />
         <InfoItem
           title="سابقه کار:"
-          :value="experiences.find((x) => x.value === values.experience)?.label"
+          :value="experiences.find((x) => x.value === values.workExperience)?.label"
         />
         <InfoItem
           title="حقوق درخواستی:"
-          :value="salaries.find((x) => x.value === values.salary)?.label"
+          :value="salaries.find((x) => x.value === values.desiredSalary)?.label"
         />
         <InfoItem
           title="سال تولد:"
-          :value="years.find((x) => x.value === values.birthYear)?.label"
+          :value="years.find((x) => x.value === values.birthDate)?.label"
         />
         <InfoItem
           title="جنسیت:"
@@ -198,12 +198,12 @@
         />
         <InfoItem
           title="وضعیت خدمت سربازی:"
-          :value="militaryStatuses.find((x) => x.value === values.militaryStatus)?.label"
+          :value="militaryStatuses.find((x) => x.value === values.militaryServiceStatus)?.label"
         />
         <InfoItem
           title="وضعیت تأهل:"
           :value="
-            values.mariage === '1' ? 'مجرد' : values.mariage === '2' ? 'متأهل' : undefined
+            values.mariageStatus === '1' ? 'مجرد' : values.mariageStatus === '2' ? 'متأهل' : undefined
           "
         />
         <InfoItem
@@ -218,7 +218,7 @@
           title="منطقه محل سکونت:"
           :value="regions.find((x) => x.value === values.region)?.label"
         />
-        <InfoItem title="درباره من:" :value="values.description" class="lg:col-span-2" />
+        <InfoItem title="درباره من:" :value="values.about" class="lg:col-span-2" />
         <div class="lg:col-span-2 text-left mt-2">
           <button
             class="btn text-sm border-none text-primary-500 bg-[#4864E114] max-md:btn-block"
@@ -251,6 +251,7 @@ import { profileImageValidation } from '~/validations/profileImage';
 const api = useApi()
 const hasRegions = ref(false);
 
+
 // Variables
 const editMode = ref(false);
 const imageBase64 = ref<string | null>(null);
@@ -265,20 +266,20 @@ const regions = ref<ISelectItem[]>([]);
 // Form
 const formSchema = Yup.object({
   profileImage: profileImageValidation,
-  fullName: fullNameValidation,
+  name: fullNameValidation,
   jobTitle: Yup.string().required('عنوان شغلی انتخاب نشده است'),
   jobStatus: Yup.string().required('وضعیت شغلی انتخاب نشده است'),
-  experience: Yup.string().required('سابقه کار انتخاب نشده است'),
-  salary: Yup.string().required('حقوق درخواستی انتخاب نشده است'),
-  birthYear: Yup.string().required('سال تولد انتخاب نشده است'),
+  workExperience: Yup.string().required('سابقه کار انتخاب نشده است'),
+  desiredSalary: Yup.string().required('حقوق درخواستی انتخاب نشده است'),
+  birthDate: Yup.string().required('سال تولد انتخاب نشده است'),
   gender: Yup.string().required('جنسیت انتخاب نشده است'),
-militaryStatus: Yup.string().when('gender', {
+militaryServiceStatus: Yup.string().when('gender', {
   is: '1',
   then: (schema) =>
     schema.required('وضعیت خدمت سربازی انتخاب نشده است'),
   otherwise: (schema) => schema.notRequired(),
 }),
-  mariage: Yup.string().required('وضعیت تأهل انتخاب نشده است'),
+  mariageStatus: Yup.string().required('وضعیت تأهل انتخاب نشده است'),
   province: Yup.string().required('استان انتخاب نشده است'),
   city: Yup.string().required('شهر انتخاب نشده است'),
   region: Yup.string().when('city', {
@@ -286,7 +287,7 @@ militaryStatus: Yup.string().when('gender', {
   then: (schema) => schema.required('منطقه انتخاب نشده است'),
   otherwise: (schema) => schema.notRequired(),
 }),
-  description: Yup.string(),
+  about: Yup.string(),
 });
 const { handleSubmit, setFieldValue, values } = useForm<Yup.InferType<typeof formSchema>>(
   {
@@ -328,8 +329,25 @@ watch(() => values.city, async (cityId) => {
 });
 
 // Functions
-const onSubmit = handleSubmit((data: any) => {
-  console.log(data);
-  editMode.value = false;
-});
+const onSubmit = handleSubmit(async (data) => {
+  
+  console.log(data)
+
+  try {
+   
+    await api.post('/cv/save-basics', data)
+    editMode.value = false
+  } catch (e) {
+    console.error(e)
+  }
+
+
+//   await useSanctumFetch("/api/v1/cv/save-basics", {
+//   method: "POST",
+//   body: { data },
+// })
+
+
+
+})
 </script>
