@@ -14,7 +14,10 @@
                 subtitle="یا تصویر را بکشید و در این محل رها کنید"
                 :max-size="10"
                 :accept="['png', 'jpg']"
-                @update:model-value="(v: any) => setFieldValue('profileImage', v)"
+                @update:model-value="(v: any) => {
+                  console.log(12, v);
+                  setFieldValue('profileImage', v)
+                }"
                 @update:base64="(v) => (imageBase64 = v)"
               />
             </Field>
@@ -96,7 +99,7 @@
           label="وضعیت خدمت سربازی"
           placeholder="وضعیت خدمت سربازی را انتخاب کنید"
           :required="isMale"
-          :disabled="!isMale"           
+          :disabled="!isMale"
           :options="militaryStatuses"
         />
 
@@ -133,7 +136,7 @@
           placeholder="منطقه محل سکونت را انتخاب کنید"
           required
           :options="regions"
-           :disabled="!hasRegions"
+          :disabled="!hasRegions"
         />
 
         <div class="lg:col-span-2">
@@ -146,7 +149,7 @@
         </div>
 
         <div class="lg:col-span-2 flex justify-end">
-          <button class="btn btn-ghost" type="button" @click="editMode = false">
+          <button class="btn btn-ghost" type="button" @click="changeEditMode(false)">
             <Icon name="svg:close" />
             انصراف
           </button>
@@ -174,8 +177,8 @@
             values.jobStatus === '1'
               ? 'جویای کار'
               : values.jobStatus === '2'
-                ? 'شاغل'
-                : undefined
+              ? 'شاغل'
+              : undefined
           "
         />
         <InfoItem
@@ -198,12 +201,18 @@
         />
         <InfoItem
           title="وضعیت خدمت سربازی:"
-          :value="militaryStatuses.find((x) => x.value === values.militaryServiceStatus)?.label"
+          :value="
+            militaryStatuses.find((x) => x.value === values.militaryServiceStatus)?.label
+          "
         />
         <InfoItem
           title="وضعیت تأهل:"
           :value="
-            values.mariageStatus === '1' ? 'مجرد' : values.mariageStatus === '2' ? 'متأهل' : undefined
+            values.mariageStatus === '1'
+              ? 'مجرد'
+              : values.mariageStatus === '2'
+              ? 'متأهل'
+              : undefined
           "
         />
         <InfoItem
@@ -223,7 +232,7 @@
           <button
             class="btn text-sm border-none text-primary-500 bg-[#4864E114] max-md:btn-block"
             type="button"
-            @click="editMode = true"
+            @click="changeEditMode(true)"
           >
             <Icon name="svg:edit" size="24" />
             ویرایش
@@ -248,9 +257,8 @@ import { provinces } from '~/feeders/provinces';
 import { fullNameValidation } from '~/validations/fullName';
 import { profileImageValidation } from '~/validations/profileImage';
 
-const api = useApi()
+const api = useApi();
 const hasRegions = ref(false);
-
 
 // Variables
 const editMode = ref(false);
@@ -273,81 +281,86 @@ const formSchema = Yup.object({
   desiredSalary: Yup.string().required('حقوق درخواستی انتخاب نشده است'),
   birthDate: Yup.string().required('سال تولد انتخاب نشده است'),
   gender: Yup.string().required('جنسیت انتخاب نشده است'),
-militaryServiceStatus: Yup.string().when('gender', {
-  is: '1',
-  then: (schema) =>
-    schema.required('وضعیت خدمت سربازی انتخاب نشده است'),
-  otherwise: (schema) => schema.notRequired(),
-}),
+  militaryServiceStatus: Yup.string().when('gender', {
+    is: '1',
+    then: (schema) => schema.required('وضعیت خدمت سربازی انتخاب نشده است'),
+    otherwise: (schema) => schema.notRequired(),
+  }),
   mariageStatus: Yup.string().required('وضعیت تأهل انتخاب نشده است'),
   province: Yup.string().required('استان انتخاب نشده است'),
   city: Yup.string().required('شهر انتخاب نشده است'),
   region: Yup.string().when('city', {
-  is: () => hasRegions.value === true,
-  then: (schema) => schema.required('منطقه انتخاب نشده است'),
-  otherwise: (schema) => schema.notRequired(),
-}),
+    is: () => hasRegions.value === true,
+    then: (schema) => schema.required('منطقه انتخاب نشده است'),
+    otherwise: (schema) => schema.notRequired(),
+  }),
   about: Yup.string(),
 });
 const { handleSubmit, setFieldValue, values } = useForm<Yup.InferType<typeof formSchema>>(
   {
     initialValues: {},
-    
+
     validationSchema: formSchema,
   },
 );
 
 const isMale = computed(() => values.gender === '1');
 
-watch(() => values.province, async (provinceId) => {
-  if (!provinceId) {
-    cities.value = [];
-    setFieldValue('city', ''); // ✔ مهم
-    return;
-  }
+watch(
+  () => values.province,
+  async (provinceId) => {
+    if (!provinceId) {
+      cities.value = [];
+      setFieldValue('city', ''); // ✔ مهم
+      return;
+    }
 
-  cities.value = await api.get(`/cities/${provinceId}`);
+    cities.value = await api.get(`/cities/${provinceId}`);
 
-  setFieldValue('city', ''); // ✔ مهم‌ترین خط
-});
+    setFieldValue('city', ''); // ✔ مهم‌ترین خط
+  },
+);
 
-watch(() => values.city, async (cityId) => {
-  if (!cityId) {
-    regions.value = [];
-    hasRegions.value = false;
-    setFieldValue('region', ''); 
-    return;
-  }
+watch(
+  () => values.city,
+  async (cityId) => {
+    if (!cityId) {
+      regions.value = [];
+      hasRegions.value = false;
+      setFieldValue('region', '');
+      return;
+    }
 
-  const res = await api.get<ISelectItem[]>(`/regions/${cityId}`);
+    const res = await api.get<ISelectItem[]>(`/regions/${cityId}`);
 
-  regions.value = res;
+    regions.value = res;
 
-  hasRegions.value = res.length > 0;
+    hasRegions.value = res.length > 0;
 
-  setFieldValue('region', '');
-});
+    setFieldValue('region', '');
+  },
+);
 
 // Functions
+const changeEditMode = async (value: boolean) => {
+  editMode.value = value;
+  window.scrollTo({ top: 0 });
+};
+
 const onSubmit = handleSubmit(async (data) => {
-  
-  console.log(data)
+  // خارج کردن تصویر پروفایل از فرم
+  const { profileImage, ...payload } = data;
 
   try {
-   
-    await api.post('/cv/save-basics', data)
-    editMode.value = false
+    await api.post('/cv/save-basics', payload);
+    editMode.value = false;
   } catch (e) {
-    console.error(e)
+    console.error(e);
   }
 
-
-//   await useSanctumFetch("/api/v1/cv/save-basics", {
-//   method: "POST",
-//   body: { data },
-// })
-
-
-
-})
+  //   await useSanctumFetch("/api/v1/cv/save-basics", {
+  //   method: "POST",
+  //   body: { data },
+  // })
+});
 </script>

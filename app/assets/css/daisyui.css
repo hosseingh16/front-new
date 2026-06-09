@@ -38,3 +38,7 @@
 @utility btn-soft {
   @apply border-none text-primary-500 bg-[#F0F3FD];
 }
+
+@utility btn-error {
+  @apply hover:bg-red-100 active:bg-red-200;
+}

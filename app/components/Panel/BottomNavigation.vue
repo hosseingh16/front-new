@@ -1,5 +1,5 @@
 <template>
-  <div class="lg:hidden w-full h-18 bg-white border-t-2 border-gray-default py-3 z-1000">
+  <div class="fixed bottom-0 lg:hidden w-full h-18 bg-white border-t-2 border-gray-default py-3 z-1000">
     <div class="grid grid-cols-5 gap-2">
       <div v-for="(item, index) in menus">
         <div v-if="index !== 2" class="flex flex-col items-center">

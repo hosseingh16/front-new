@@ -29,3 +29,9 @@ button {
 .no-scrollbar::webkit-scrollbar {
   display: none;
 }
+
+/* دایره‌ای کردن محدوده کراپ در آپلود تصویر */
+.cropper-view-box,
+.cropper-face {
+  border-radius: 50%;
+}

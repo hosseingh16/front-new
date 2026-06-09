@@ -14,7 +14,7 @@ export default defineNuxtPlugin(async () => {
 
   if (init.value) return;
 
-  init.value = await $fetch<InitData>(
-    `${config.public.baseUrl}/init`
-  );
+  // init.value = await $fetch<InitData>(
+  //   `${config.public.baseUrl}/init`
+  // );
 });
