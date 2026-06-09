@@ -4,7 +4,9 @@
 
     <ExperienceSection />
 
-    <div class="bg-white p-4 rounded-2xl mt-8">
+    <ProgramSection />
+
+    <!-- <div class="bg-white p-4 rounded-2xl mt-8">
       <Titr>نرم‌افزار حسابداری</Titr>
       <div class="flex flex-col items-center justify-center gap-4 py-10">
         <div class="text-center">
@@ -22,27 +24,15 @@
           افزودن نرم‌افزار حسابداری
         </button>
       </div>
-    </div>
+    </div> -->
 
     <div class="bg-white p-4 rounded-2xl mt-8">
       <Titr>مهارت‌ها</Titr>
-      <div class="mt-4 grid lg:grid-cols-2 gap-x-4 gap-y-8">
-        <div>
-          <p>میزان آشنایی به نرم افزار اکسل:</p>
-          <Slider color="#FFA726" />
-        </div>
-        <div>
-          <p>میزان آشنایی به حسابداری بهای تمام شده:</p>
-          <Slider color="#2E7D32" />
-        </div>
-        <div>
-          <p>میزان تجربه شما در حوزه حسابداری پیمان:</p>
-          <Slider color="#2E7D32" />
-        </div>
-        <div>
-          <p>میزان آشنایی با تهیه صورت مالی استاندارد:</p>
-          <Slider color="#2E7D32" />
-        </div>
+      <div class="mt-4 grid lg:grid-cols-2 gap-x-4 gap-y-12">
+        <Slider color="#FFA726" label="میزان آشنایی به نرم افزار اکسل:" />
+        <Slider color="#2E7D32" label="میزان آشنایی به حسابداری بهای تمام شده:" />
+        <Slider color="#2E7D32" label="میزان تجربه شما در حوزه حسابداری پیمان:" />
+        <Slider color="#2E7D32" label="میزان آشنایی با تهیه صورت مالی استاندارد:" />
       </div>
       <div class="flex justify-end mt-9">
         <button class="btn btn-ghost">
@@ -58,23 +48,14 @@
 
     <div class="bg-white p-4 rounded-2xl mt-8">
       <Titr>ارزیابی بیمه ای و مالیاتی</Titr>
-      <div class="mt-4 grid lg:grid-cols-2 gap-x-4 gap-y-8">
-        <div>
-          <p>میزان آشنایی با مالیات ارزش افزوده:</p>
-          <Slider color="#FFA726" />
-        </div>
-        <div>
-          <p>میزان آشنایی به مالیات عملکرد:</p>
-          <Slider color="#2E7D32" />
-        </div>
-        <div>
-          <p>میزان آشنایی به بیمه های پرسنلی و قرارادادی:</p>
-          <Slider color="#2E7D32" />
-        </div>
-        <div>
-          <p>میزان آشنایی به سامانه مودیان و پایانه های فروشگاهی:</p>
-          <Slider color="#2E7D32" />
-        </div>
+      <div class="mt-4 grid lg:grid-cols-2 gap-x-4 gap-y-12">
+        <Slider color="#FFA726" label="میزان آشنایی با مالیات ارزش افزوده:" />
+        <Slider color="#2E7D32" label="میزان آشنایی به مالیات عملکرد:" />
+        <Slider color="#2E7D32" label="میزان آشنایی به بیمه های پرسنلی و قراردادی:" />
+        <Slider
+          color="#2E7D32"
+          label="میزان آشنایی به سامانه مودیان و پایانه های فروشگاهی:"
+        />
       </div>
       <div class="flex justify-end mt-9">
         <button class="btn btn-ghost">
@@ -146,6 +127,7 @@ import Slider from './Slider.vue';
 import Titr from './Titr.vue';
 import EducationSection from './Tab2/EducationSection.vue';
 import ExperienceSection from './Tab2/ExperienceSection.vue';
+import ProgramSection from './Tab2/ProgramSection.vue';
 
 // Variabels
 const levels = ref<ISelectItem[]>([{ label: 'کارشناسی', value: '1' }]);

@@ -37,8 +37,7 @@
     <div v-else class="mt-4 space-y-4">
       <div
         v-for="(item, index) in educationItems"
-        class="p-4 border-2 border-dashed border-gray-default rounded-lg flex justify-between"
-      >
+        class="p-4 border-2 border-dashed border-gray-default rounded-lg flex justify-between">
         <div class="flex items-start gap-4">
           <Icon name="svg:edu-item" size="28" />
           <div class="space-y-3">
