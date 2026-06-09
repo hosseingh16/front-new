@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :class="{ 'opacity-50 pointer-events-none': disabled }">
     <p class="text-base relative mb-2">
       {{ label }}
       <span v-if="required" class="text-red-400 mb-4 absolute -top-2">*</span>
@@ -60,7 +60,7 @@ import type { ISelectItem } from '~/types/ISelectItem';
 const model = defineModel<string | number>();
 
 // Props
-defineProps({
+const props = defineProps({
   label: { type: String },
   placeholder: { type: String },
   required: Boolean,
@@ -70,6 +70,7 @@ defineProps({
   },
   borderColor: { type: String, default: '#E8E8E8' },
   error: { type: Boolean },
+  disabled: { type: Boolean },
 });
 
 // Variables
@@ -78,10 +79,12 @@ const isClient = ref(false);
 
 // Methods
 const toggleDropdown = () => {
+  if (props.disabled) return;
   open.value = !open.value;
 };
 
 const selectItem = (item: ISelectItem) => {
+  if (props.disabled) return;
   model.value = item.value;
   open.value = false;
 };

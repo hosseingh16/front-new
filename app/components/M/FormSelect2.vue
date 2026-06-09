@@ -39,6 +39,7 @@ const props = withDefaults(
     label?: string;
     required?: boolean;
     multiline?: boolean;
+    disabled?: boolean;
     hint?: string[];
   }>(),
   { options: () => [], hint: () => [] },
