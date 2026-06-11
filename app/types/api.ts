@@ -16,3 +16,8 @@ export interface ApiError {
   message?: string
   errors?: Record<string, any> | string
 }
+
+export interface ApiRequestOptions {
+  headers?: Record<string, string>
+  query?: Record<string, unknown>
+}

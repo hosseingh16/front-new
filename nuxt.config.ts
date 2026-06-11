@@ -1,23 +1,41 @@
 import tailwindcss from "@tailwindcss/vite";
+import fs from 'node:fs'
+
+const certKey = './docker/certs/hihesab.test-key.pem'
+const certCert = './docker/certs/hihesab.test.pem'
+
 export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
   devtools: { enabled: true },
   css: ["~/assets/css/main.css"],
   runtimeConfig: {
     public: {
-     // baseUrl: process.env.NUXT_PUBLIC_BASE_URL,
-      baseUrl: 'http://api.hihesab.test',
-      apiBase: 'http://api.hihesab.test/api/v1',
+      // baseUrl: process.env.NUXT_PUBLIC_BASE_URL,
+      baseUrl: process.env.NUXT_PUBLIC_BASE_URL || 'http://api.hihesab.test',
+      apiBase: process.env.NUXT_PUBLIC_API_BASE || 'http://api.hihesab.test/api/v1',
     },
   },
-  // devServer: {
-  //    host: 'hihesab.test',
-  //   port: 3000,
-  // },
+  ...(fs.existsSync(certKey) && fs.existsSync(certCert)
+    ? {
+      devServer: {
+        https: {
+          key: fs.readFileSync(certKey, 'utf8'),
+          cert: fs.readFileSync(certCert, 'utf8'),
+        },
+        host: 'hihesab.test',
+        port: 3000,
+      },
+    }
+    : {
+      devServer: {
+        host: 'hihesab.test',
+        port: 3000,
+      },
+    }),
   modules: ["@nuxt/image", "@nuxt/icon", "nuxt-auth-sanctum"],
   // @ts-ignore
   sanctum: {
-    baseUrl: "http://api.hihesab.test", // Laravel API
+    baseUrl: process.env.NUXT_PUBLIC_BASE_URL || 'http://api.hihesab.test',
     endpoints: {
       login: "/api/login",
       logout: "/api/logout",
