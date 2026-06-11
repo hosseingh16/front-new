@@ -1,30 +1,30 @@
-import tailwindcss from '@tailwindcss/vite';
+import tailwindcss from "@tailwindcss/vite";
 export default defineNuxtConfig({
-  compatibilityDate: '2025-07-15',
+  compatibilityDate: "2025-07-15",
   devtools: { enabled: true },
-  css: ['~/assets/css/main.css'],
+  css: ["~/assets/css/main.css"],
   runtimeConfig: {
     public: {
-      // baseUrl: process.env.NUXT_PUBLIC_BASE_URL,
+     // baseUrl: process.env.NUXT_PUBLIC_BASE_URL,
       baseUrl: 'http://api.hihesab.test',
       apiBase: 'http://api.hihesab.test/api/v1',
     },
   },
   // devServer: {
-  //   host: 'hihesab.test',
+  //    host: 'hihesab.test',
   //   port: 3000,
   // },
-  modules: ['@nuxt/image', '@nuxt/icon', 'nuxt-auth-sanctum'],
+  modules: ["@nuxt/image", "@nuxt/icon", "nuxt-auth-sanctum"],
   // @ts-ignore
   sanctum: {
-    baseUrl: 'http://api.hihesab.test', // Laravel API
+    baseUrl: "http://api.hihesab.test", // Laravel API
     endpoints: {
-      login: '/api/login',
-      logout: '/api/logout',
+      login: "/api/login",
+      logout: "/api/logout",
     },
     redirect: {
-      onLogin: '/',
-      onLogout: '/login',
+      onLogin: "/",
+      onLogout: "/login",
     },
   },
 
@@ -39,11 +39,11 @@ export default defineNuxtConfig({
   // },
 
   icon: {
-    size: '20',
+    size: "20",
     customCollections: [
       {
-        prefix: 'svg',
-        dir: './app/assets/vectors',
+        prefix: "svg",
+        dir: "./app/assets/vectors",
       },
     ],
   },
