@@ -6,26 +6,6 @@
 
     <ProgramSection />
 
-    <!-- <div class="bg-white p-4 rounded-2xl mt-8">
-      <Titr>نرم‌افزار حسابداری</Titr>
-      <div class="flex flex-col items-center justify-center gap-4 py-10">
-        <div class="text-center">
-          <img src="/images/no-details.png" alt="" class="w-41" />
-          <p class="font-yb-bold -mt-14">نرم‌افزار حسابداری</p>
-        </div>
-        <p class="text-text-passive text-sm">
-          شما هنوز نرم افزار حسابداری خود را تکمیل نکرده‌اید.
-        </p>
-        <p class="text-text-passive text-sm">
-          با افزودن حداقل یک نرم افزار حسابداری، شانس شما برای استخدام افزایش پیدا می‌کند.
-        </p>
-        <button class="btn btn-primary">
-          <Icon name="svg:plus-white" size="16" />
-          افزودن نرم‌افزار حسابداری
-        </button>
-      </div>
-    </div> -->
-
     <div class="bg-white p-4 rounded-2xl mt-8">
       <Titr>مهارت‌ها</Titr>
       <div class="mt-4 grid lg:grid-cols-2 gap-x-4 gap-y-12">
@@ -39,10 +19,10 @@
           <Icon name="svg:close" />
           انصراف
         </button>
-        <button class="btn btn-primary">
+        <m-button class="btn-primary">
           <Icon name="svg:check-check" />
           ذخیره
-        </button>
+        </m-button>
       </div>
     </div>
 
@@ -62,10 +42,10 @@
           <Icon name="svg:close" />
           انصراف
         </button>
-        <button class="btn btn-primary">
+        <m-button class="btn-primary">
           <Icon name="svg:check-check" />
           ذخیره
-        </button>
+        </m-button>
       </div>
     </div>
 
@@ -93,10 +73,10 @@
           <Icon name="svg:close" />
           انصراف
         </button>
-        <button class="btn btn-primary">
+        <m-button class="btn-primary">
           <Icon name="svg:check-check" />
           ذخیره
-        </button>
+        </m-button>
       </div>
     </div>
 
@@ -122,7 +102,6 @@
 
 <script setup lang="ts">
 import type { ISelectItem } from '~/types/ISelectItem';
-import EducationModal from './Tab2/EducationModal.vue';
 import Slider from './Slider.vue';
 import Titr from './Titr.vue';
 import EducationSection from './Tab2/EducationSection.vue';

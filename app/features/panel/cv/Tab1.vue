@@ -153,10 +153,10 @@
             <Icon name="svg:close" />
             انصراف
           </button>
-          <button class="btn btn-primary" type="submit">
+          <m-button class="btn-primary" type="submit" :loading>
             <Icon name="svg:check-check" />
             ذخیره
-          </button>
+          </m-button>
         </div>
       </div>
       <div v-show="!editMode" class="grid lg:grid-cols-2 gap-x-4 gap-y-8">
@@ -257,10 +257,10 @@ import { provinces } from '~/feeders/provinces';
 import { fullNameValidation } from '~/validations/fullName';
 import { profileImageValidation } from '~/validations/profileImage';
 
-const api = useApi();
-const hasRegions = ref(false);
-
 // Variables
+const api = useApi();
+const loading = api.loading;
+const hasRegions = ref(false);
 const editMode = ref(false);
 const imageBase64 = ref<string | null>(null);
 const jobTitles = ref<ISelectItem[]>([{ label: 'حسابدار ارشد', value: '1' }]);
@@ -350,6 +350,7 @@ const changeEditMode = async (value: boolean) => {
 const onSubmit = handleSubmit(async (data) => {
   // خارج کردن تصویر پروفایل از فرم
   const { profileImage, ...payload } = data;
+  //
 
   try {
     await api.post('/cv/save-basics', payload);

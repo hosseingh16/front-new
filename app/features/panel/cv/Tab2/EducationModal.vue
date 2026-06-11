@@ -73,10 +73,10 @@
               <Icon name="svg:close" />
               انصراف
             </button>
-            <button class="btn btn-primary">
+            <m-button class="btn-primary" :loading>
               <Icon name="svg:plus-white" />
               افزودن
-            </button>
+            </m-button>
           </div>
         </div>
       </form>
@@ -110,6 +110,8 @@ const emits = defineEmits<{
 
 // Variables
 const modalRef = ref<InstanceType<typeof Dialog> | null>(null);
+const api = useApi();
+const loading = api.loading;
 
 // Form
 const formSchema = Yup.object({

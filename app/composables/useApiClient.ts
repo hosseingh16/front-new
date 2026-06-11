@@ -1,17 +1,17 @@
-import type { ApiError } from '~/types/api'
+import type { ApiError } from '~/types/api';
 
 export function useApiClient() {
-  const config = useRuntimeConfig()
-  const baseURL = config.public.apiBase
+  const config = useRuntimeConfig();
+  const baseURL = config.public.apiBase;
 
-  const client = useSanctumClient()
+  const client = useSanctumClient();
 
-  const user = useState<any | null>('user', () => null)
+  const user = useState<any | null>('user', () => null);
 
-  const request = async <T>(
-    url: string,
-    options: any = {}
-  ): Promise<T> => {
+  const loading = useState<boolean>('api-loading', () => false);
+
+  const request = async <T>(url: string, options: any = {}): Promise<T> => {
+    loading.value = true;
     try {
       return await client<T>(url, {
         baseURL, // 👈 اینجا استفاده می‌شود
@@ -20,25 +20,27 @@ export function useApiClient() {
           ...(options.headers ?? {}),
         },
         ...options,
-      })
+      });
     } catch (err: any) {
-      const status = err?.response?.status
-      const data = err?.response?._data
+      const status = err?.response?.status;
+      const data = err?.response?._data;
 
       if (status === 401) {
-        user.value = null
-        await navigateTo('/login')
+        user.value = null;
+        await navigateTo('/login');
       }
 
       const error: ApiError = {
         status,
         message: data?.message ?? err?.message,
         errors: data?.errors,
-      }
+      };
 
-      throw error
+      throw error;
+    } finally {
+      loading.value = false;
     }
-  }
+  };
 
-  return { request }
+  return { request, loading };
 }
