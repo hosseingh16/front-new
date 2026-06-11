@@ -18,5 +18,7 @@ export function useApi() {
 
     delete: <T>(url: string, options?: ApiRequestOptions) =>
       request<T>(url, { method: 'DELETE', ...options }),
+
+    loading
   }
 }
