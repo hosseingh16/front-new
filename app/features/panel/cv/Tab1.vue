@@ -351,10 +351,26 @@ const onSubmit = handleSubmit(async (data) => {
   // خارج کردن تصویر پروفایل از فرم
   const { profileImage, ...payload } = data;
   //
+  
+    // پیدا کردن نام استان و شهر
+  const selectedProvince = provinces.find(p => p.value === data.province);
+  const selectedCity = cities.value.find(c => c.value === data.city);
+
+  // اضافه کردن cityName به داده‌ها
+  // const payload = {
+  //   ...data,
+  //   cityName: selectedCity?.label || null,
+  //   cityId: selectedCity?.value || null,
+  //   provinceName: selectedProvince?.label || null,
+  //   provinceId: selectedProvince?.value || null,
+  // };
+
+  console.log(payload);
 
   try {
-    await api.post('/cv/save-basics', payload);
-    editMode.value = false;
+   
+    await api.post('/cv/save-basics', payload)
+    editMode.value = false
   } catch (e) {
     console.error(e);
   }

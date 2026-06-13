@@ -28,8 +28,9 @@ const client = useSanctumClient();
 const api = useApi()
 
 const getPing = async () => {
- const result = await api.get<string>('/ping')
+ //const result = await api.get<string>('/ping')
   //console.log(text)
+  await $fetch('https://api.hihesab.test/api/user')
 };
 
 
