@@ -18,5 +18,5 @@
   // init.value = await $fetch<InitData>(
   //   `${config.public.baseUrl}/init`
   // );
-});
+//});
 
