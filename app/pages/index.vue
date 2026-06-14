@@ -96,7 +96,7 @@
                 </div>
               </div>
               <div class="text-center">
-                <Icon name="svg:bookmark" />
+                <Icon name="svg:bookmark" @click="toggleBookmark(ad.id,'Ad')"/>
                 <p v-if="ad.publish_date" class="text-xs text-text-passive">{{ formatRelativeDate(ad.publish_date) }}</p>
               </div>
             </div>
@@ -524,6 +524,13 @@ const api = useApi()
 const getPosts = async () => {
   const result = await api.get<ApiResponse>('/posts');
     posts.value = result.data;
+};
+const toggleBookmark = async (id: string|number, type: string) => {
+  const result = await api.post<ApiResponse>('/bookmarks/toggle/'+id,{
+    query: {
+      type: type,
+    },
+  });
 };
 const getAds = async (jobType: string) => {
   const result = await api.get<ApiResponse>('/ads', {
