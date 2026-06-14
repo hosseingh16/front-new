@@ -523,8 +523,7 @@ function toggleQuestion(index: number) {
 const api = useApi()
 const getPosts = async () => {
   const result = await api.get<ApiResponse>('/posts');
-    posts.value = result.data
-    console.log(posts.value);
+    posts.value = result.data;
 };
 const getAds = async (jobType: string) => {
   const result = await api.get<ApiResponse>('/ads', {
@@ -532,7 +531,7 @@ const getAds = async (jobType: string) => {
       employment_type: jobType == 'همه' ? undefined : jobType,
     },
   });
-  ads.value = result.data
+  ads.value = result.data;
 };
 onMounted(() => {
   getAds(jobType.value);
