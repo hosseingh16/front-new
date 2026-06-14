@@ -57,68 +57,83 @@
         <m-toggle
           v-model="jobType"
           :items="[
-            { title: 'همه', value: 0 },
-            { title: 'تمام وقت', value: 1 },
-            { title: 'پاره وقت', value: 2 },
-            { title: 'پروژه', value: 3 },
+            { title: 'همه', value:'همه' },
+            { title: 'تمام وقت', value:'تمام وقت' },
+            { title: 'پاره وقت', value:'پاره وقت' },
+            { title: 'پروژه', value:'پروژه' },
           ]"
         />
-        <button class="btn btn-outline text-primary-500 max-sm:hidden">
+        <button class="btn btn-outline text-primary-500 max-sm:hidden"
+          @click="navigateTo('/jobs')"
+        >
           مشاهده همه
           <icons-arrow color="#4864e1" :size="15" class="mr-1" />
         </button>
       </div>
       <div class="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <div v-for="n in 9" class="bg-white p-1 rounded-lg">
+        
+        <div v-for="ad in ads" :key="ad.id" class="bg-white p-1 rounded-lg">
           <div class="bg-[#F6F8FE] rounded-lg p-3">
             <div class="flex justify-between items-center">
               <div class="flex items-center gap-2">
                 <div class="flex justify-center items-center bg-[#ECF4D9] rounded-2xl">
-                  <img src="/images/img-14.png" alt="" />
+                  <img :src="ad.company_logo || ''" alt="" />
                 </div>
                 <div class="text-sm">
-                  <p class="font-semibold">استخدام حسابدار</p>
+                  <p class="font-semibold">{{ ad.title }}</p>
                   <div class="flex flex-wrap items-center mt-2">
                     <Icon name="svg:buildings-4" />
                     <p class="text-text-passive">نام شرکت:</p>
-                    <p class="mr-1">بازرگانی سپهر</p>
+                    <p
+                      class="mr-1"
+                      :title="ad.company_name?.length > 24 ? ad.company_name : undefined"
+                    >
+                      {{ ad.company_name?.length > 24 ? ad.company_name.slice(0, 24) + '…' : ad.company_name }}
+                    </p>
+             
+            
                   </div>
                 </div>
               </div>
               <div class="text-center">
                 <Icon name="svg:bookmark" />
-                <p class="text-xs text-text-passive">3 روز قبل</p>
+                <p v-if="ad.publish_date" class="text-xs text-text-passive">{{ formatRelativeDate(ad.publish_date) }}</p>
               </div>
             </div>
             <div class="flex gap-1 text-sm mt-3 overflow-x-auto no-scrollbar">
               <div
+                v-if="ad.category"
                 class="shrink-0 border border-gray-default rounded-full bg-white py-1 px-3"
               >
-                فروش آهن‌آلات
+                {{ ad.category }}
               </div>
               <div
+                v-if="ad.province_name || ad.city_name"
                 class="shrink-0 border border-gray-default rounded-full bg-white py-1 px-3"
               >
-                مشهد، وکیل آباد
+                {{ad.province_name}}، {{ ad.city_name }}
               </div>
               <div
+                v-if="ad.gender"
                 class="shrink-0 border border-gray-default rounded-full bg-white py-1 px-3"
               >
-                خانم
+                {{ ad.gender }}
               </div>
             </div>
           </div>
           <div class="flex items-center justify-between mt-2 px-2">
             <div>
-              <p class="text-sm text-text-secondary">تمام وقت</p>
-              <p class="font-semibold">20 تا 25 میلیون تومان</p>
+              <p class="text-sm text-text-secondary">{{ ad.employment_type }}</p>
+              <p class="font-semibold">{{ ad.salary ? ad.salary : '-' }}</p>
             </div>
-            <button
+            <NuxtLink
+              :to="`/ad/${ad.id}`"
               class="btn border-none px-2 h-8 text-sm text-primary-500 bg-[#4864E114]"
             >
               <icons-chevron class="rotate-90" color="#4864e1" />
               مشاهده
-            </button>
+            </NuxtLink>
+    
           </div>
         </div>
         <button class="btn btn-outline text-primary-500 sm:hidden">
@@ -336,63 +351,49 @@
       </p>
       <div class="mt-4 grid grid-cols-2 gap-4">
         <div
+          v-if="posts[0]"
           class="rounded-lg bg-primary-900 text-white p-6 flex flex-col justify-between"
         >
           <div>
             <p class="font-semibold text-sm">
-              هوش مصنوعی در حسابداری: انقلابی در شیوه‌های مالی و حسابداری
+             {{ posts[0].title }}
             </p>
-            <p class="mt-3 text-caption text-text-muted">
-              از آنجا که هوش مصنوعی در حسابداری تنها یک واژه مدرن نیست، شما می‌توانید ...
+            <p class="mt-3 text-caption text-text-muted" v-html="posts[0].excerpt">
             </p>
           </div>
           <div class="mt-3">
-            <NuxtImg src="/images/img-15.png" alt="" class="w-full" />
+            <NuxtImg :src="posts[0].image" :alt="posts[0].alt_text" class="w-full" />
             <div class="text-left mt-2">
-              <button class="btn btn-success text-text-secondary h-8 px-6">
-                ادامه مطلب
-                <icons-arrow color="#121212" :size="16" class="mr-1 rotate-45" />
-              </button>
+              <NuxtLink :to="posts[0].link" target="_blank">
+                <button class="btn btn-success text-text-secondary h-8 px-6">
+                  ادامه مطلب
+                  <icons-arrow color="#121212" :size="16" class="mr-1 rotate-45" />
+                </button>
+              </NuxtLink>
             </div>
           </div>
         </div>
         <div class="flex flex-col justify-between">
-          <div class="bg-white rounded-lg p-6 flex gap-4">
-            <NuxtImg src="/images/img-16.png" alt="" />
+          <div
+            v-for="(post, i) in posts.slice(1, 3)"
+            :key="i"
+            class="bg-white rounded-lg p-6 flex gap-4 mb-4 last:mb-0"
+          >
+            <NuxtImg :src="post.image || '/images/img-16.png'" class="max-w-[140px] aspect-2/1" :alt="post.alt_text || ''" />
             <div class="flex flex-col justify-between">
               <div>
                 <p class="text-sm font-semibold text-text-primay">
-                  اصول مدیریت مالی | تکنیک‌های کلیدی برای موفقیت مالی
+                  {{ post.title }}
                 </p>
-                <p class="mt-4 text-caption text-text-passive line-clamp-2">
-                  اگرچه عده‌ای از افراد اصول مدیریت مالی را تنها یک مفهوم تئوریک یا ...
-                </p>
+                <p class="mt-4 text-caption text-text-passive line-clamp-2" v-html="post.excerpt"></p>
               </div>
               <div class="text-left mt-2">
-                <button class="btn btn-success text-text-secondary h-8 px-6">
-                  ادامه مطلب
-                  <icons-arrow color="#121212" :size="16" class="mr-1 rotate-45" />
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div class="bg-white rounded-lg p-6 flex gap-4">
-            <NuxtImg src="/images/img-16.png" alt="" />
-            <div class="flex flex-col justify-between">
-              <div>
-                <p class="text-sm font-semibold text-text-primay">
-                  اصول مدیریت مالی | تکنیک‌های کلیدی برای موفقیت مالی
-                </p>
-                <p class="mt-4 text-caption text-text-passive line-clamp-2">
-                  اگرچه عده‌ای از افراد اصول مدیریت مالی را تنها یک مفهوم تئوریک یا ...
-                </p>
-              </div>
-              <div class="text-left mt-2">
-                <button class="btn btn-success text-text-secondary h-8 px-6">
-                  ادامه مطلب
-                  <icons-arrow color="#121212" :size="16" class="mr-1 rotate-45" />
-                </button>
+                <NuxtLink :to="post.link" target="_blank" v-if="post.link">
+                  <button class="btn btn-success text-text-secondary h-8 px-6">
+                    ادامه مطلب
+                    <icons-arrow color="#121212" :size="16" class="mr-1 rotate-45" />
+                  </button>
+                </NuxtLink>
               </div>
             </div>
           </div>
@@ -418,10 +419,26 @@
 </template>
 
 <script setup lang="ts">
-import type { InitData, User } from '~/types';
+import moment from 'moment-jalaali'
+import 'moment/locale/fa'
+import type { AdList, InitData, User } from '~/types';
+import type { ApiResponse } from '~/types/api';
+
+moment.locale('fa')
+
+function formatRelativeDate(date: string) {
+  const parsed = /^\d{8}$/.test(date)
+    ? moment(date, 'YYYYMMDD')
+    : moment(date)
+
+  return parsed.isValid() ? parsed.fromNow() : ''
+}
+
 // Variables
 const keyword = ref('');
-const jobType = ref(0);
+const ads = ref<AdList[]>([]);
+const posts = ref<any[]>([]);
+const jobType = ref('همه');
 const banks = [
   { title: 'بانک سامان', subtitle: '5 فرصت شغلی', image: 'bank1.png' },
   { title: 'بانک سامان', subtitle: '5 فرصت شغلی', image: 'bank2.png' },
@@ -503,15 +520,32 @@ function toggleQuestion(index: number) {
   else expandedItem.value = index;
 }
 
+const api = useApi()
+const getPosts = async () => {
+  const result = await api.get<ApiResponse>('/posts');
+    posts.value = result.data
+    console.log(posts.value);
+};
+const getAds = async (jobType: string) => {
+  const result = await api.get<ApiResponse>('/ads', {
+    query: {
+      employment_type: jobType == 'همه' ? undefined : jobType,
+    },
+  });
+  ads.value = result.data
+};
 onMounted(() => {
-  
+  getAds(jobType.value);
+  getPosts();
   const init = useState<InitData>('init');
 
+  init.value?.lookup_data?.salary_ranges?.forEach((item) => {
+    console.log(item);
+  });
 
-init.value?.lookup_data?.salary_ranges?.forEach((item) => {
-  console.log(item);
 });
-
+watch(jobType, () => {
+  getAds(jobType.value);
 });
 
 
