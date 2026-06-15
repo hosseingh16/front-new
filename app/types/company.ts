@@ -31,4 +31,5 @@ export interface CompanyList {
     logo: string | null;
     province_name: string;
     city_name: string;
+    activity: string;
 }

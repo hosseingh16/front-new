@@ -71,71 +71,24 @@
         </button>
       </div>
       <div class="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        
-        <div v-for="ad in ads" :key="ad.id" class="bg-white p-1 rounded-lg">
-          <div class="bg-[#F6F8FE] rounded-lg p-3">
-            <div class="flex justify-between items-center">
-              <div class="flex items-center gap-2">
-                <div class="flex justify-center items-center bg-[#ECF4D9] rounded-2xl">
-                  <img :src="ad.company_logo || ''" alt="" />
-                </div>
-                <div class="text-sm">
-                  <p class="font-semibold">{{ ad.title }}</p>
-                  <div class="flex flex-wrap items-center mt-2">
-                    <Icon name="svg:buildings-4" />
-                    <p class="text-text-passive">نام شرکت:</p>
-                    <p
-                      class="mr-1"
-                      :title="ad.company_name?.length > 24 ? ad.company_name : undefined"
-                    >
-                      {{ ad.company_name?.length > 24 ? ad.company_name.slice(0, 24) + '…' : ad.company_name }}
-                    </p>
-             
-            
-                  </div>
-                </div>
-              </div>
-              <div class="text-center">
-                <Icon name="svg:bookmark" @click="toggleBookmark(ad.id,'Ad')"/>
-                <p v-if="ad.publish_date" class="text-xs text-text-passive">{{ formatRelativeDate(ad.publish_date) }}</p>
-              </div>
-            </div>
-            <div class="flex gap-1 text-sm mt-3 overflow-x-auto no-scrollbar">
-              <div
-                v-if="ad.category"
-                class="shrink-0 border border-gray-default rounded-full bg-white py-1 px-3"
-              >
-                {{ ad.category }}
-              </div>
-              <div
-                v-if="ad.province_name || ad.city_name"
-                class="shrink-0 border border-gray-default rounded-full bg-white py-1 px-3"
-              >
-                {{ad.province_name}}، {{ ad.city_name }}
-              </div>
-              <div
-                v-if="ad.gender"
-                class="shrink-0 border border-gray-default rounded-full bg-white py-1 px-3"
-              >
-                {{ ad.gender }}
-              </div>
-            </div>
-          </div>
-          <div class="flex items-center justify-between mt-2 px-2">
-            <div>
-              <p class="text-sm text-text-secondary">{{ ad.employment_type }}</p>
-              <p class="font-semibold">{{ ad.salary ? ad.salary : '-' }}</p>
-            </div>
-            <NuxtLink
-              :to="`/ad/${ad.id}`"
-              class="btn border-none px-2 h-8 text-sm text-primary-500 bg-[#4864E114]"
-            >
-              <icons-chevron class="rotate-90" color="#4864e1" />
-              مشاهده
-            </NuxtLink>
-    
-          </div>
-        </div>
+        <template v-if="jobType === 'پروژه'">
+          <ItemBox
+            v-for="project in projects"
+            :key="project.id"
+            variant="project"
+            :item="project"
+            @bookmark="toggleBookmark"
+          />
+        </template>
+        <template v-else>
+          <ItemBox
+            v-for="ad in ads"
+            :key="ad.id"
+            variant="ad"
+            :item="ad"
+            @bookmark="toggleBookmark"
+          />
+        </template>
         <button class="btn btn-outline text-primary-500 sm:hidden">
           مشاهده همه
           <icons-arrow color="#4864e1" :size="15" class="mr-1" />
@@ -419,24 +372,15 @@
 </template>
 
 <script setup lang="ts">
-import moment from 'moment-jalaali'
-import 'moment/locale/fa'
+import ItemBox from '~/components/Elements/item-box.vue'
 import type { AdList, InitData, User } from '~/types';
 import type { ApiResponse } from '~/types/api';
-
-moment.locale('fa')
-
-function formatRelativeDate(date: string) {
-  const parsed = /^\d{8}$/.test(date)
-    ? moment(date, 'YYYYMMDD')
-    : moment(date)
-
-  return parsed.isValid() ? parsed.fromNow() : ''
-}
+import type { ProjectList } from '~/types/project';
 
 // Variables
 const keyword = ref('');
 const ads = ref<AdList[]>([]);
+const projects = ref<ProjectList[]>([]);
 const posts = ref<any[]>([]);
 const jobType = ref('همه');
 const banks = [
@@ -533,12 +477,17 @@ const toggleBookmark = async (id: string|number, type: string) => {
   });
 };
 const getAds = async (jobType: string) => {
-  const result = await api.get<ApiResponse>('/ads', {
-    query: {
-      employment_type: jobType == 'همه' ? undefined : jobType,
-    },
-  });
-  ads.value = result.data;
+  if(jobType == 'پروژه') {
+    const result = await api.get<ApiResponse>('/projects');
+    projects.value = result.data;
+  }else{
+    const result = await api.get<ApiResponse>('/ads', {
+      query: {
+        employment_type: jobType == 'همه' ? undefined : jobType,
+      },
+    });
+    ads.value = result.data;
+  }
 };
 onMounted(() => {
   getAds(jobType.value);
