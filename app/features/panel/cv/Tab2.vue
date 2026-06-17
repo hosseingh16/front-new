@@ -101,7 +101,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ISelectItem } from '~/types/ISelectItem';
+import type { ISelectItem } from '~/types/select-item.js';
 import Slider from './Slider.vue';
 import Titr from './Titr.vue';
 import EducationSection from './Tab2/EducationSection.vue';

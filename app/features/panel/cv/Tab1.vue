@@ -248,7 +248,7 @@ import { ErrorMessage, Field, useForm } from 'vee-validate';
 import Titr from './Titr.vue';
 import * as Yup from 'yup';
 import InfoItem from './InfoItem.vue';
-import type { ISelectItem } from '~/types/ISelectItem';
+import type { ISelectItem } from '~/types/select-item.js';
 
 //Import Feeders
 import { provinces } from '~/feeders/provinces';

@@ -75,7 +75,7 @@
 import type Dialog from '~/components/M/Dialog.vue';
 import { Field, useForm } from 'vee-validate';
 import * as Yup from 'yup';
-import type { ISelectItem } from '~/types/ISelectItem';
+import type { ISelectItem } from '~/types/select-item.js';
 import Titr from '../Titr.vue';
 import Slider from '../Slider.vue';
 

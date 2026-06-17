@@ -28,7 +28,7 @@
 
 <script setup lang="ts">
 import { Field, ErrorMessage } from 'vee-validate';
-import type { ISelectItem } from '~/types/ISelectItem';
+import type { ISelectItem } from '~/types/select-item';
 
 // Props
 const props = withDefaults(

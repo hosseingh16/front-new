@@ -28,7 +28,7 @@ export default defineNuxtConfig({
     }
     : {
       devServer: {
-        host: 'hihesab.test',
+        host: 'localhost',
         port: 3000,
       },
     }),

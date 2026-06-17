@@ -74,7 +74,7 @@
         </div>
       </div>
       <div class="col-span-7 max-lg:hidden">
-        <transition name="fade" mode="out-in">
+        <Transition name="fade" mode="out-in">
           <div v-if="!showJob">
             <div
               class="border border-gray-300 px-2 py-24 rounded-lg flex flex-col justify-center items-center text-[rgba(27,33,60,1)]"
@@ -91,7 +91,7 @@
             </div>
           </div>
           <selected-job v-else />
-        </transition>
+        </Transition>
       </div>
     </div>
   </div>

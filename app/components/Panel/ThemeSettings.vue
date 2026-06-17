@@ -21,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ThemeType } from '~/types/ThemeType';
+import type { ThemeType } from '~/types/theme';
 
 // Props
 defineProps({

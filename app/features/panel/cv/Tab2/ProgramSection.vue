@@ -83,7 +83,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ISelectItem } from '~/types/ISelectItem';
+import type { ISelectItem } from '~/types/select-item.js';
 import ProgramModal from './ProgramModal.vue';
 
 // Variabels

@@ -57,13 +57,14 @@
         <m-toggle
           v-model="jobType"
           :items="[
-            { title: 'همه', value:'همه' },
-            { title: 'تمام وقت', value:'تمام وقت' },
-            { title: 'پاره وقت', value:'پاره وقت' },
-            { title: 'پروژه', value:'پروژه' },
+            { title: 'همه', value: 'همه' },
+            { title: 'تمام وقت', value: 'تمام وقت' },
+            { title: 'پاره وقت', value: 'پاره وقت' },
+            { title: 'پروژه', value: 'پروژه' },
           ]"
         />
-        <button class="btn btn-outline text-primary-500 max-sm:hidden"
+        <button
+          class="btn btn-outline text-primary-500 max-sm:hidden"
           @click="navigateTo('/jobs')"
         >
           مشاهده همه
@@ -309,10 +310,9 @@
         >
           <div>
             <p class="font-semibold text-sm">
-             {{ posts[0].title }}
+              {{ posts[0].title }}
             </p>
-            <p class="mt-3 text-caption text-text-muted" v-html="posts[0].excerpt">
-            </p>
+            <p class="mt-3 text-caption text-text-muted" v-html="posts[0].excerpt"></p>
           </div>
           <div class="mt-3">
             <NuxtImg :src="posts[0].image" :alt="posts[0].alt_text" class="w-full" />
@@ -332,13 +332,20 @@
             :key="i"
             class="bg-white rounded-lg p-6 flex gap-4 mb-4 last:mb-0"
           >
-            <NuxtImg :src="post.image || '/images/img-16.png'" class="max-w-[140px] aspect-2/1" :alt="post.alt_text || ''" />
+            <NuxtImg
+              :src="post.image || '/images/img-16.png'"
+              class="max-w-35 aspect-2/1"
+              :alt="post.alt_text || ''"
+            />
             <div class="flex flex-col justify-between">
               <div>
                 <p class="text-sm font-semibold text-text-primay">
                   {{ post.title }}
                 </p>
-                <p class="mt-4 text-caption text-text-passive line-clamp-2" v-html="post.excerpt"></p>
+                <p
+                  class="mt-4 text-caption text-text-passive line-clamp-2"
+                  v-html="post.excerpt"
+                ></p>
               </div>
               <div class="text-left mt-2">
                 <NuxtLink :to="post.link" target="_blank" v-if="post.link">
@@ -372,9 +379,10 @@
 </template>
 
 <script setup lang="ts">
-import ItemBox from '~/components/Elements/item-box.vue'
-import type { AdList, InitData, User } from '~/types';
+import ItemBox from '~/components/Elements/item-box.vue';
+import type { AdList } from '~/types';
 import type { ApiResponse } from '~/types/api';
+import type { InitData } from '~/types/init';
 import type { ProjectList } from '~/types/project';
 
 // Variables
@@ -464,23 +472,23 @@ function toggleQuestion(index: number) {
   else expandedItem.value = index;
 }
 
-const api = useApi()
+const api = useApi();
 const getPosts = async () => {
   const result = await api.get<ApiResponse>('/posts');
-    posts.value = result.data;
+  posts.value = result.data;
 };
-const toggleBookmark = async (id: string|number, type: string) => {
-  const result = await api.post<ApiResponse>('/bookmarks/toggle/'+id,{
+const toggleBookmark = async (id: string | number, type: string) => {
+  const result = await api.post<ApiResponse>('/bookmarks/toggle/' + id, {
     query: {
       type: type,
     },
   });
 };
 const getAds = async (jobType: string) => {
-  if(jobType == 'پروژه') {
+  if (jobType == 'پروژه') {
     const result = await api.get<ApiResponse>('/projects');
     projects.value = result.data;
-  }else{
+  } else {
     const result = await api.get<ApiResponse>('/ads', {
       query: {
         employment_type: jobType == 'همه' ? undefined : jobType,
@@ -494,14 +502,11 @@ onMounted(() => {
   getPosts();
   const init = useState<InitData>('init');
 
-  init.value?.lookup_data?.salary_ranges?.forEach((item) => {
+  init.value?.lookup_data?.salary_ranges?.forEach((item: any) => {
     console.log(item);
   });
-
 });
 watch(jobType, () => {
   getAds(jobType.value);
 });
-
-
 </script>

@@ -2,6 +2,7 @@
 @import './daisyui.css';
 @import './icomoon/style.css';
 @import './fonts.css';
+@import './transitions.css';
 
 body {
   font-family: 'yekanBakh-regular', sans-serif !important;

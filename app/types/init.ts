@@ -1,7 +1,8 @@
 export interface InitData {
   enums: InitEnums;
-//   referenceData: ReferenceData;
-//   config: AppConfig;
+  lookup_data: any;
+  //   referenceData: ReferenceData;
+  //   config: AppConfig;
 }
 
 /**

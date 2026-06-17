@@ -105,7 +105,7 @@ import Tab1 from '~/features/panel/cv/Tab1.vue';
 import Tab2 from '~/features/panel/cv/Tab2.vue';
 
 definePageMeta({
-  layout: 'panel',
+  layout: 'dashboard',
 });
 
 // Variables

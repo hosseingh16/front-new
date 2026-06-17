@@ -101,7 +101,7 @@
 
 <script setup lang="ts">
 import moment from 'moment-jalaali'
-import 'moment/locale/fa'
+// import 'moment/locale/fa'
 import type { AdList } from '~/types/ad'
 import type { ProjectList } from '~/types/project'
 

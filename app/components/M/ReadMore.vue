@@ -7,12 +7,12 @@
         v-html="text"
       ></div>
 
-      <transition name="fade" mode="out-in">
+      <Transition name="fade" mode="out-in">
         <div
           v-if="showLess"
-          class="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white to-transparent pointer-events-none"
+          class="absolute bottom-0 left-0 right-0 h-32 bg-linear-to-t from-white to-transparent pointer-events-none"
         ></div>
-      </transition>
+      </Transition>
     </div>
 
     <div class="text-center mt-2">

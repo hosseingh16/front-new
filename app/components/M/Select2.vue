@@ -54,7 +54,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ISelectItem } from '~/types/ISelectItem';
+import type { ISelectItem } from '~/types/select-item';
 
 // Model
 const model = defineModel<string | number>();

@@ -1,4 +1,4 @@
-import type { ISelectItem } from '~/types/ISelectItem';
+import type { ISelectItem } from '~/types/select-item';
 
 export const provinces: ISelectItem[] = [
   { label: 'آذربایجان شرقی', value: 1 },

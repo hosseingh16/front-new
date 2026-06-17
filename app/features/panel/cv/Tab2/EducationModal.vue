@@ -88,7 +88,7 @@
 import type Dialog from '~/components/M/Dialog.vue';
 import { useForm } from 'vee-validate';
 import * as Yup from 'yup';
-import type { ISelectItem } from '~/types/ISelectItem';
+import type { ISelectItem } from '~/types/select-item.js';
 import Titr from '../Titr.vue';
 
 // Props

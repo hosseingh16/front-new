@@ -18,9 +18,9 @@
 
     <!-- محتوای تب فعال -->
     <div class="mt-6 relative">
-      <transition name="fade" mode="out-in">
+      <Transition name="fade" mode="out-in">
         <component :is="tabs[activeIndex]?.component" />
-      </transition>
+      </Transition>
     </div>
   </div>
 </template>

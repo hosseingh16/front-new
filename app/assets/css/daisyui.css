@@ -36,7 +36,7 @@
 }
 
 @utility btn-soft {
-  @apply border-none text-primary-500 bg-[#F0F3FD];
+  @apply border-none text-primary-500 bg-primary-50;
 }
 
 @utility btn-error {
