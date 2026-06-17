@@ -23,6 +23,7 @@ button {
   transition: all 0.2s linear;
 }
 
+/* مخفی کردن اسکرول‌بار */
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -35,4 +36,9 @@ button {
 .cropper-view-box,
 .cropper-face {
   border-radius: 50%;
+}
+
+/* toast شخصی‌سازی */
+.toast-custom {
+  font-family: 'yekanBakh-regular', sans-serif !important;
 }

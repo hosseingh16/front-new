@@ -24,11 +24,12 @@
     "vue-clipboard3": "^2.0.0",
     "vue-cropperjs": "^5.0.0",
     "vue-router": "^5.0.4",
+    "vue3-toastify": "^0.2.9",
     "yup": "^1.7.1"
   },
   "devDependencies": {
+    "@types/moment-jalaali": "^0.7.9",
     "@types/node": "^25.6.0",
-    "@types/vue-cropperjs": "^4.1.6",
-    "@types/moment-jalaali": "^0.7.9"
+    "@types/vue-cropperjs": "^4.1.6"
   }
 }

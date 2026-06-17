@@ -7,7 +7,7 @@
             <img
               :src="item.company_logo || ''"
               alt=""
-              class="w-[64px] h-[64px] object-cover rounded-2xl"
+              class="w-16 h-16 object-cover rounded-2xl"
             />
           </div>
           <div class="text-sm">
