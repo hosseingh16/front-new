@@ -180,7 +180,7 @@ function toggleQuestion(index: number) {
 }
 
 useSeoMeta({
-  title: 'سوالات متداول | های‌حساب',
+  title: 'سوالات متداول',
   description:
     'پاسخ به رایج‌ترین سوالات درباره خدمات های‌حساب — استخدام حسابدار، رزومه‌ساز و مشاور مالی',
 })

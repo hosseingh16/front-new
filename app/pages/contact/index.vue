@@ -156,7 +156,7 @@ async function submitForm() {
 }
 
 useSeoMeta({
-  title: 'تماس با ما | های‌حساب',
+  title: 'تماس با ما',
   description:
     'با تیم پشتیبانی های‌حساب تماس بگیرید — شماره تماس، ایمیل و آدرس دفتر مرکزی',
 })
