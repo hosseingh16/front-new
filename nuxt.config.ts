@@ -32,7 +32,7 @@ export default defineNuxtConfig({
         port: 3000,
       },
     }),
-  modules: ["@nuxt/image", "@nuxt/icon", "nuxt-auth-sanctum"],
+  modules: ["@nuxt/image", "@nuxt/icon", "nuxt-auth-sanctum", "@nuxtjs/seo"],
   // @ts-ignore
   sanctum: {
     baseUrl: process.env.NUXT_PUBLIC_BASE_URL || 'http://api.hihesab.test',
