@@ -7,19 +7,19 @@
       <NuxtLink to="/">رزومه‌ساز</NuxtLink>
       <NuxtLink to="/">جست‌وجوی فرصت‌های‌ شغلی</NuxtLink>
       <NuxtLink to="/">ایجاد پروژه حسابداری</NuxtLink>
-      <NuxtLink to="/">سوالات متداول</NuxtLink>
+      <NuxtLink to="/faq">سوالات متداول</NuxtLink>
     </div>
 
     <div class="flex flex-col gap-4 max-md:hidden">
       <NuxtLink to="/">کسب و کار</NuxtLink>
       <NuxtLink to="/">ایجاد آگهی استخدام</NuxtLink>
       <NuxtLink to="/">ایجاد پروژه حسابداری</NuxtLink>
-      <NuxtLink to="/">سوالات متداول</NuxtLink>
+      <NuxtLink to="/faq">سوالات متداول</NuxtLink>
     </div>
 
     <div class="flex flex-col gap-4 max-md:hidden">
       <NuxtLink to="/">درباره ما</NuxtLink>
-      <NuxtLink to="/">سوالات متداول</NuxtLink>
+      <NuxtLink to="/faq">سوالات متداول</NuxtLink>
       <NuxtLink to="/">قوانین و مقررات</NuxtLink>
       <NuxtLink to="/">درباره ما</NuxtLink>
       <NuxtLink to="/">تماس ما</NuxtLink>
