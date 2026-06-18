@@ -4,7 +4,7 @@
       {{ label }}
       <span v-if="required" class="text-red-400 mb-4 absolute -top-2">*</span>
     </p>
-    <div v-if="isClient" class="relative inline-block w-full">
+    <div v-if="isClient" ref="dropDownRef" class="relative inline-block w-full">
       <div
         class="bg-white cursor-pointer h-10 w-full rounded-lg border border-gray-300 flex justify-between items-center gap-2 pr-2 pl-2"
         :style="`border-color:${error ? '#f7a09a' : borderColor}`"
@@ -30,9 +30,17 @@
         class="absolute mt-2 menu bg-white rounded-lg z-10 w-full p-0 shadow-sm border border-gray-200"
       >
         <div class="max-h-50 overflow-y-auto cursor-pointer">
-          <div v-if="options.length > 0">
+          <div v-if="search && allOptions.length > 0" class="mb-4 mx-2">
+            <m-text-field
+              v-model="keyword"
+              placeholder="جستجو"
+              class="pr-0 placeholder:text-gray-default"
+              clearable
+            />
+          </div>
+          <div v-if="options2.length > 0" class="mx-2">
             <p
-              v-for="item in options"
+              v-for="item in options2"
               @click="selectItem(item)"
               class="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg"
               :class="{ 'bg-gray-200 font-semibold': item.value === model }"
@@ -40,13 +48,13 @@
               {{ item.label }}
             </p>
           </div>
-          <p
+          <div
             v-else
-            class="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg"
+            class="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg min-h-20 flex justify-center items-center"
             @click="open = false"
           >
             موردی برای نمایش وجود ندارد
-          </p>
+          </div>
         </div>
       </div>
     </div>
@@ -71,13 +79,34 @@ const props = defineProps({
   borderColor: { type: String, default: '#E8E8E8' },
   error: { type: Boolean },
   disabled: { type: Boolean },
+  search: { type: Boolean },
 });
 
 // Variables
 const open = ref(false);
 const isClient = ref(false);
+const options2 = ref<ISelectItem[]>([]);
+const allOptions = ref<ISelectItem[]>([]);
+const keyword = ref('');
+const dropDownRef = ref<HTMLElement | null>(null);
 
-// Methods
+// Watches
+watch(
+  () => props.options,
+  () => {
+    options2.value = props.options;
+    allOptions.value = props.options;
+  },
+  { immediate: true },
+);
+watch(
+  () => keyword.value,
+  (val) => {
+    options2.value = [...allOptions.value].filter((x) => x.label.includes(val));
+  },
+);
+
+// Functions
 const toggleDropdown = () => {
   if (props.disabled) return;
   open.value = !open.value;
@@ -87,6 +116,7 @@ const selectItem = (item: ISelectItem) => {
   if (props.disabled) return;
   model.value = item.value;
   open.value = false;
+  keyword.value = '';
 };
 
 onMounted(() => {
@@ -98,8 +128,9 @@ onBeforeUnmount(() => {
 });
 const handleClickOutside = (e: MouseEvent) => {
   const target = e.target as HTMLElement;
-  if (!target.closest('.relative.inline-block')) {
+  if (dropDownRef.value && !dropDownRef.value.contains(target)) {
     open.value = false;
+    keyword.value = '';
   }
 };
 </script>

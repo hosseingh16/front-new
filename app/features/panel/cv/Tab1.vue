@@ -37,6 +37,10 @@
           required
         ></m-form-input>
 
+        <!-- <m-form-field name="jobTitle">
+          <m-select2 label="عنوان شغلی" required :options="jobTitles"></m-select2>
+        </m-form-field> -->
+
         <m-form-select2
           name="jobTitle"
           label="عنوان شغلی"
@@ -119,6 +123,7 @@
           label="استان محل سکونت"
           placeholder="استان محل سکونت را انتخاب کنید"
           required
+          search
           :options="provinces"
         />
 
@@ -127,6 +132,7 @@
           label="شهر محل سکونت"
           placeholder="شهر محل سکونت را انتخاب کنید"
           required
+          search
           :options="cities"
         />
 
@@ -135,6 +141,7 @@
           label="منطقه محل سکونت"
           placeholder="منطقه محل سکونت را انتخاب کنید"
           required
+          search
           :options="regions"
           :disabled="!hasRegions"
         />
@@ -348,13 +355,15 @@ const changeEditMode = async (value: boolean) => {
 };
 
 const onSubmit = handleSubmit(async (data) => {
+  console.log(333, data);
+
   // خارج کردن تصویر پروفایل از فرم
   const { profileImage, ...payload } = data;
   //
-  
-    // پیدا کردن نام استان و شهر
-  const selectedProvince = provinces.find(p => p.value === data.province);
-  const selectedCity = cities.value.find(c => c.value === data.city);
+
+  // پیدا کردن نام استان و شهر
+  const selectedProvince = provinces.find((p) => p.value === data.province);
+  const selectedCity = cities.value.find((c) => c.value === data.city);
 
   // اضافه کردن cityName به داده‌ها
   // const payload = {
@@ -368,9 +377,8 @@ const onSubmit = handleSubmit(async (data) => {
   console.log(payload);
 
   try {
-   
-    await api.post('/cv/save-basics', payload)
-    editMode.value = false
+    await api.post('/cv/save-basics', payload);
+    editMode.value = false;
   } catch (e) {
     console.error(e);
   }
