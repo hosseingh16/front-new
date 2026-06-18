@@ -49,6 +49,13 @@
         rows="4"
       />
 
+      <Icon
+        v-if="clearable && model !== ''"
+        name="svg:close"
+        class="cursor-pointer"
+        @click.stop="model = ''"
+      />
+
       <slot name="suffix" />
     </label>
   </div>
@@ -69,6 +76,7 @@ const props = withDefaults(
     hint?: string[];
     error?: boolean;
     multiline?: boolean;
+    clearable?: boolean;
   }>(),
   { hint: () => [] },
 );
