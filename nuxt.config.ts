@@ -45,10 +45,13 @@ export default defineNuxtConfig({
       onLogout: "/login",
     },
   },
-
+  site: {
+    url: process.env.NUXT_PUBLIC_BASE_URL || 'http://hihesab.test', // your real domain
+    name: 'های‌حساب',
+  },
   vite: {
     plugins: [tailwindcss()],
-     optimizeDeps: {
+    optimizeDeps: {
       include: [
         '@vue/devtools-core',
         '@vue/devtools-kit',
