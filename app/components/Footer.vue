@@ -21,6 +21,7 @@
       <NuxtLink to="/">درباره ما</NuxtLink>
       <NuxtLink to="/faq">سوالات متداول</NuxtLink>
       <NuxtLink to="/terms">قوانین و مقررات</NuxtLink>
+      <NuxtLink to="/privacy">حریم خصوصی</NuxtLink>
       <NuxtLink to="/">درباره ما</NuxtLink>
       <NuxtLink to="/contact">تماس ما</NuxtLink>
     </div>
