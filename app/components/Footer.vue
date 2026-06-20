@@ -20,7 +20,7 @@
     <div class="flex flex-col gap-4 max-md:hidden">
       <NuxtLink to="/">درباره ما</NuxtLink>
       <NuxtLink to="/faq">سوالات متداول</NuxtLink>
-      <NuxtLink to="/">قوانین و مقررات</NuxtLink>
+      <NuxtLink to="/terms">قوانین و مقررات</NuxtLink>
       <NuxtLink to="/">درباره ما</NuxtLink>
       <NuxtLink to="/contact">تماس ما</NuxtLink>
     </div>

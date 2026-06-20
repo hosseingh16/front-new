@@ -10,7 +10,8 @@ body {
 
 body,
 html {
-  overflow-x: hidden;
+ /* overflow-x: hidden created some issue in sticky aside sections in terms page */
+  overflow-x: clip; 
   background-color: #fafafa;
 }
 
