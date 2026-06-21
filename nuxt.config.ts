@@ -11,8 +11,8 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       // baseUrl: process.env.NUXT_PUBLIC_BASE_URL,
-      baseUrl: process.env.NUXT_PUBLIC_BASE_URL || 'http://api.hihesab.test',
-      apiBase: process.env.NUXT_PUBLIC_API_BASE || 'http://api.hihesab.test/api/v1',
+      baseUrl: process.env.NUXT_PUBLIC_BASE_URL || 'https://api.hihesab.test',
+      apiBase: process.env.NUXT_PUBLIC_API_BASE || 'https://api.hihesab.test/api/v1',
     },
   },
   ...(fs.existsSync(certKey) && fs.existsSync(certCert)
