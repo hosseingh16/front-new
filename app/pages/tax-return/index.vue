@@ -247,7 +247,7 @@
         </button>
       </div>
 
-      <div class="mx-auto mt-6 max-w-3xl space-y-2">
+      <div class="mx-auto mt-6 space-y-2">
         <div
           v-for="(item, index) in filteredFaqs"
           :key="item.question"

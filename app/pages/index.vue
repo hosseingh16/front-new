@@ -22,7 +22,7 @@
           </button>
           <button class="btn btn-primary">
             <Icon name="svg:user-plus-white" size="24" />
-            استخدام مشاور
+            مشاهده فرصت های شغلی
           </button>
         </div>
         <div
