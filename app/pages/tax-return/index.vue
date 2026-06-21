@@ -1,25 +1,26 @@
 <template>
   <div>
-    Breadcrumb
-    <section class="custom-pad pt-6">
+    <!-- Hero -->
+    <section
+      class="bg-[url('/images/bg-5.png')] bg-no-repeat bg-top pb-10 md:pb-16"
+    >
+    <div class="custom-pad pt-6">
       <nav class="text-sm text-text-passive">
-        <NuxtLink to="/" class="hover:text-primary-500 transition-colors">خانه</NuxtLink>
+        <NuxtLink to="/" class="hover:text-primary-500 transition-colors">
+          <Icon name="svg:home" size="16" />
+        </NuxtLink>
         <span class="mx-2">/</span>
         <span>خدمات</span>
         <span class="mx-2">/</span>
         <span class="text-text-tertiary">اظهارنامه عملکرد</span>
       </nav>
-    </section>
+    </div>
 
-    <!-- Hero -->
-    <section
-      class="bg-[url('/images/bg-6.png')] bg-no-repeat bg-top pb-10 md:pb-16"
-    >
       <div class="custom-pad flex flex-col items-center pt-8 md:pt-12">
         <span
-          class="inline-flex items-center rounded-xl bg-[#4864E114] px-4 py-2 text-sm font-semibold text-primary-500"
+          class="inline-flex items-center rounded-xl bg-accent-300 px-4 py-2 text-sm font-semibold text-accent-500"
         >
-          خدمات مالیاتی
+          خدمات های‌حساب
         </span>
         <h1
           class="mt-6 max-w-4xl text-center font-yb-bold text-2xl leading-10 text-text-tertiary md:text-h1"
@@ -27,14 +28,15 @@
           اظهارنامه عملکرد خود را به حسابداران تاییدشده بسپارید
         </h1>
         <p
-          class="mt-4 max-w-2xl text-center text-base font-semibold leading-8 text-text-tertiary md:text-lg"
+          class="mt-4 max-w-3xl text-center text-base font-semibold leading-8 text-text-tertiary md:text-lg"
         >
           درخواست خود را ثبت کنید تا حسابدار متخصص، انجام اظهارنامه مالیاتی شما را
           پیگیری کند.
         </p>
         <button class="btn btn-primary mt-8 gap-2 px-6">
-          <Icon name="svg:new-notepad-text" size="22" />
-          ثبت درخواست اظهارنامه
+          <Icon name="lucide:pen-line" size="18" class="text-white" />
+          <span>ثبت درخواست اظهارنامه</span>
+   
         </button>
 
         <img
@@ -51,79 +53,55 @@
     </section>
 
     <!-- Target Audience -->
-    <section class="custom-pad py-10 md:py-14">
-      <h2 class="text-center font-yb-bold text-xl text-text-tertiary md:text-2xl">
-        چه کسانی می‌توانند ثبت درخواست کنند؟
-      </h2>
+    <section class="custom-pad py-3 md:py-3">
+      <div class="flex justify-center">
+        <h2 class="flex items-center justify-center gap-3 text-center font-yb-bold text-xl md:text-xl bg-white text-text-tertiary py-2 px-6 rounded-full shadow-lg w-fit mx-auto">
+          چه کسانی می‌توانند ثبت درخواست کنند؟
+        </h2>
+
+      </div>
       <div
-        class="mt-8 flex flex-col items-stretch gap-4 sm:flex-row sm:flex-wrap sm:justify-center md:gap-8"
+        class="mt-2 flex flex-col items-stretch sm:flex-row sm:flex-wrap sm:justify-center"
       >
         <div
           v-for="item in audienceItems"
           :key="item.label"
-          class="flex items-center justify-center gap-3 rounded-xl bg-white px-6 py-4 shadow-[0_2px_12px_rgba(0,0,0,0.06)] sm:min-w-[220px]"
+          class="flex items-center justify-center gap-3 px-2 rounded-xl py-4 text-shadow-lg"
         >
-          <div
-            class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary-50"
-          >
-            <Icon :name="item.icon" size="22" class="text-primary-500" />
-          </div>
           <p class="font-semibold text-sm text-text-tertiary md:text-base">
             {{ item.label }}
           </p>
+          <img
+            v-if="item !== audienceItems[audienceItems.length - 1]"
+            :src="seprator"
+            alt="separator"
+            class="w-4 h-4"
+          />
+  
         </div>
       </div>
     </section>
 
     <!-- Pain Points -->
-    <section class="custom-pad pb-12 md:pb-16">
-      <div
-        class="overflow-hidden rounded-3xl bg-[#161929] px-6 py-10 md:px-12 md:py-14"
-      >
-        <div class="grid gap-10 lg:grid-cols-2 lg:items-center lg:gap-16">
-          <div class="order-2 lg:order-1">
-            <h2 class="font-yb-bold text-xl leading-10 text-white md:text-2xl">
-              های‌حساب این مسیر را ساده کرده است
-            </h2>
-            <p class="mt-4 text-sm leading-8 text-white/70 md:text-base">
-              برای اطلاعات بیشتر با کارشناسان ما تماس بگیرید و از مشاوره رایگان بهره‌مند
-              شوید.
-            </p>
-            <NuxtLink to="/contact">
-              <button
-                class="btn mt-8 border-2 border-white bg-transparent text-white hover:bg-white/10"
-              >
-                مشاوره رایگان
-              </button>
-            </NuxtLink>
-          </div>
-
-          <div class="order-1 lg:order-2">
-            <h3 class="font-yb-bold text-lg text-white md:text-xl">
-              این مشکلات برای شما آشناست؟
-            </h3>
-            <ul class="mt-6 space-y-4">
-              <li
-                v-for="item in painPoints"
-                :key="item"
-                class="flex items-start gap-3 text-sm leading-7 text-white/90 md:text-base"
-              >
-                <span
-                  class="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#FF803033]"
-                >
-                  <Icon name="svg:warning" size="16" class="text-[#FF8030]" />
-                </span>
-                {{ item }}
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
+    <section class="custom-pad pb-12 md:pb-16 text-center flex flex-col items-center">
+      <img
+        :src="bannerMobile"
+        alt=""
+        class="mt-10 w-full md:hidden mx-auto"
+      />
+      <img
+        :src="banner"
+        alt=""
+        class="mt-12 hidden w-full md:block mx-auto"
+      />
     </section>
 
     <!-- How It Works -->
-    <section class="custom-pad py-10 md:py-16">
-      <div class="flex flex-col items-center">
+    <section class="relative py-10 md:py-16">
+      <BackgroundPattern position="left" side="-3.75rem" top="25%" />
+      <BackgroundPattern position="right" side="-3.75rem" top="66.666667%" />
+
+      <div class="custom-pad relative z-10 flex flex-col items-center">
         <span
           class="inline-flex items-center rounded-xl bg-[#4864E114] px-4 py-2 text-sm font-semibold text-primary-500"
         >
@@ -134,46 +112,19 @@
         </h2>
       </div>
 
-      <div class="mt-10 grid gap-8 lg:grid-cols-2 lg:items-center lg:gap-16">
-        <div class="hidden justify-center lg:flex">
-          <div class="relative flex flex-col items-center gap-8 py-8">
-            <div
-              class="absolute inset-y-8 right-1/2 w-px translate-x-1/2 border-r-2 border-dashed border-gray-300"
-            />
-            <div
-              v-for="(step, index) in processSteps"
-              :key="step.title"
-              class="relative z-10 flex w-64 items-center gap-4 rounded-2xl bg-surface-100 p-4"
-            >
-              <div
-                class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white shadow-sm"
-              >
-                <Icon :name="step.icon" size="24" class="text-primary-500" />
-              </div>
-              <div>
-                <p class="text-xs text-text-passive">{{ index + 1 }}.</p>
-                <p class="font-semibold text-sm text-text-tertiary">{{ step.title }}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="space-y-3">
+      <div class="custom-pad relative z-10 mt-10 grid gap-8 lg:grid-cols-2 lg:items-center lg:gap-16">
+        <div class="space-y-2">
           <div
             v-for="(step, index) in processSteps"
             :key="step.title"
-            class="cursor-pointer rounded-xl border border-gray-default bg-white px-4 py-4"
+            class="cursor-pointer rounded-lg border-gray-default bg-white px-4 py-4"
             @click="toggleProcessStep(index)"
           >
             <div class="flex items-center justify-between gap-4">
               <div class="flex items-center gap-3">
-                <span
-                  class="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-50 text-sm font-yb-bold text-primary-500"
-                >
-                  {{ index + 1 }}
-                </span>
+                <Icon name="svg:plus" size="16" />
                 <p class="font-semibold text-sm text-text-tertiary md:text-base">
-                  {{ step.title }}
+                  {{ index + 1 }} : {{ step.title }}
                 </p>
               </div>
               <icons-chevron
@@ -190,32 +141,56 @@
             </div>
           </div>
         </div>
+
+        <div class="flex justify-center align-middle">
+          <div class="relative">
+            <Transition name="process-step">
+              <img
+                :key="activeProcessIllustration"
+                :src="activeProcessIllustration"
+                alt=""
+                class="object-contain flex justify-center"
+              />
+            </Transition>
+          </div>
+        </div>
       </div>
     </section>
 
     <!-- Benefits -->
-    <section
-      class="bg-linear-to-b from-[#E5F9F2] to-white py-12 md:py-16"
-    >
-      <div class="custom-pad">
-        <h2 class="text-center font-yb-bold text-xl text-text-tertiary md:text-2xl">
-          چرا به های‌حساب اعتماد کنیم؟
+    <section class="custom-pad py-12 md:py-16">
+      <div
+        class="relative rounded-lg bg-[radial-gradient(50%_50%_at_50%_50%,#FFFFFF_0%,#AADFCC_100%)] p-6 pt-14"
+      >
+        <h2
+          class="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded-full bg-white shadow-lg px-6 py-2.5 text-center font-yb-bold text-sm text-text-tertiary md:px-8 md:text-base"
+        >
+          چرا به های‌حساب اعتماد کنم؟
         </h2>
-        <div class="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:gap-8">
+
+        <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
           <div
             v-for="item in benefits"
             :key="item.title"
-            class="relative rounded-2xl border-2 border-accent-500 bg-white px-6 pb-6 pt-12 text-center"
+            class="relative rounded-2xl bg-white px-4 pb-6 pt-14 text-center mt-14"
           >
             <div
-              class="absolute -top-6 left-1/2 flex h-12 w-12 -translate-x-1/2 items-center justify-center rounded-full bg-accent-500 text-white"
+              class="absolute -top-12 left-1/2 -translate-x-1/2 rounded-full p-1"
             >
-              <Icon :name="item.icon" size="22" />
+              <div
+                class="rounded-full border-2 border-dashed border-primary-500 p-2.5"
+              >
+                <div
+                  class="flex h-14 w-14 items-center justify-center rounded-full bg-[radial-gradient(circle_at_50%_25%,#a1efd4_0%,#fff5cc_100%)] [&_svg_path]:fill-primary-900"
+                >
+                  <Icon name="svg:user-tick" size="24" />
+                </div>
+              </div>
             </div>
-            <h3 class="font-yb-bold text-base text-text-tertiary md:text-lg">
+            <h3 class="font-yb-bold text-sm text-primary-500 md:text-base">
               {{ item.title }}
             </h3>
-            <p class="mt-3 text-sm leading-7 text-text-passive">
+            <p class="mt-3 text-sm leading-7 text-text-tertiary">
               {{ item.description }}
             </p>
           </div>
@@ -225,6 +200,7 @@
 
     <!-- Secondary CTA -->
     <section class="custom-pad pb-12 md:pb-16">
+      <m-calc-divider class="mb-6" />
       <div
         class="flex flex-col items-center justify-between gap-6 rounded-2xl bg-[#161929] px-6 py-8 md:flex-row md:px-10 md:py-10"
       >
@@ -232,16 +208,19 @@
           همین حالا درخواست اظهارنامه خود را ثبت کنید
         </p>
         <button class="btn btn-primary shrink-0 gap-2 px-6">
-          <Icon name="svg:new-notepad-text" size="22" />
+
+          <Icon name="lucide:pen-line" size="18" class="text-white" />
           ثبت درخواست اظهارنامه
         </button>
       </div>
     </section>
 
     <!-- FAQ -->
-    <section class="custom-pad pb-12">
+    <section class="custom-pad pb-12 relative">
+      <BackgroundPattern position="left" side="-3.75rem" top="25%" />
+      <BackgroundPattern position="right" side="-3.75rem" top="66.666667%" />
+
       <div class="flex flex-col items-center">
-        <m-faq-divider class="mb-6" />
         <h2 class="text-center font-yb-bold text-xl text-text-tertiary md:text-2xl">
           سوالی دارید؟ ما پاسخگو هستیم
         </h2>
@@ -278,7 +257,7 @@
           <div class="flex items-center justify-between gap-4">
             <div class="flex items-center gap-3">
               <Icon name="svg:plus" size="16" />
-              <p class="font-semibold text-text-tertiary">{{ item.question }}</p>
+              <p class="font-light text-text-tertiary">{{ item.question }}</p>
             </div>
             <icons-chevron
               color="black"
@@ -317,6 +296,13 @@
 <script setup lang="ts">
 import heroDesktop from '~/assets/vectors/pages/tax-return/hero-image.svg'
 import heroMobile from '~/assets/vectors/pages/tax-return/hero-image-mobile.svg'
+import seprator from '~/assets/vectors/pages/tax-return/seprator.svg'
+import step0 from '~/assets/vectors/pages/tax-return/step0.webp'
+import step1 from '~/assets/vectors/pages/tax-return/step1.webp'
+import step2 from '~/assets/vectors/pages/tax-return/step2.webp'
+import step3 from '~/assets/vectors/pages/tax-return/step3.webp'
+import bannerMobile from '~/assets/vectors/pages/tax-return/banner-mobile.webp'
+import banner from '~/assets/vectors/pages/tax-return/banner.webp'
 
 const audienceItems = [
   { label: 'کسب‌وکارهای تولیدی', icon: 'svg:buildings-3' },
@@ -337,46 +323,41 @@ const processSteps = [
     title: 'فرم را تکمیل کنید',
     description:
       'اطلاعات کسب‌وکار و جزئیات مورد نیاز برای اظهارنامه عملکرد را در فرم آنلاین وارد کنید.',
-    icon: 'svg:new-notepad-text',
   },
   {
     title: 'درخواست شما بررسی می‌شود',
     description:
       'تیم های‌حساب درخواست شما را بررسی کرده و مناسب‌ترین حسابدار متخصص را معرفی می‌کند.',
-    icon: 'svg:search-normal',
   },
   {
     title: 'حسابدار با شما تماس می‌گیرد',
     description:
       'حسابدار تاییدشده با شما هماهنگ کرده و فرآیند تنظیم و ارسال اظهارنامه را آغاز می‌کند.',
-    icon: 'svg:call',
   },
 ]
+
+const processIllustrations = [step0, step1, step2, step3]
 
 const benefits = [
   {
     title: 'حسابداران تایید شده',
     description:
-      'همکاری با حسابدارانی که صلاحیت و سوابق حرفه‌ای آن‌ها توسط های‌حساب بررسی شده است.',
-    icon: 'svg:user-tick',
+      'پروژه‌های اظهارنامه در های‌حساب تنها توسط حسابداران و مشاوران مالیاتی بررسی‌شده انجام می‌شوند تا با اطمینان بیشتری همکاری کنید.',
   },
   {
     title: 'همکاری با متخصصان مالیاتی',
     description:
-      'دسترسی به متخصصانی که با قوانین مالیاتی و فرآیندهای سامانه مودیان آشنایی دارند.',
-    icon: 'svg:tax',
+      'درخواست شما به افرادی ارجاع داده می‌شود که تجربه انجام پروژه‌های مالیاتی و اظهارنامه را به‌صورت تخصصی دارند.',
   },
   {
     title: 'حفظ محرمانگی اطلاعات',
     description:
-      'اطلاعات مالی و تجاری شما با رعایت کامل اصول محرمانگی نگهداری و پردازش می‌شود.',
-    icon: 'svg:lock',
+      'اطلاعات مالی و اسناد شما با رعایت اصول محرمانگی بررسی شده و تنها در اختیار متخصص مربوط به پروژه قرار می‌گیرد.',
   },
   {
     title: 'پشتیبانی در فرآیند انجام کار',
     description:
-      'تیم پشتیبانی های‌حساب در تمام مراحل ثبت درخواست تا تحویل اظهارنامه همراه شماست.',
-    icon: 'svg:heart-tick',
+      'از زمان ثبت درخواست تا انجام نهایی اظهارنامه، تیم‌های های‌حساب در کنار شماست تا فرآیند همکاری سریع‌تر و شفاف‌تر پیش برود.',
   },
 ]
 
@@ -426,7 +407,12 @@ const faqs = [
 
 const faqType = ref(1)
 const expandedFaq = ref<number | null>(null)
-const expandedProcessStep = ref(0)
+const expandedProcessStep = ref(-1)
+
+const activeProcessIllustration = computed(() => {
+  if (expandedProcessStep.value < 0) return step0
+  return processIllustrations[expandedProcessStep.value + 1] ?? step0
+})
 
 const filteredFaqs = computed(() => faqs.filter((item) => item.type === faqType.value))
 

@@ -7,6 +7,20 @@
   @apply opacity-0;
 }
 
+.process-step-enter-active,
+.process-step-leave-active {
+  @apply transition-opacity duration-300 ease-in-out;
+}
+
+.process-step-leave-active {
+  @apply absolute inset-x-0 top-0;
+}
+
+.process-step-enter-from,
+.process-step-leave-to {
+  @apply opacity-0;
+}
+
 .accordion-enter-active,
 .accordion-leave-active {
   @apply transition-all duration-300 ease-in overflow-hidden;
