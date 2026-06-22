@@ -53,5 +53,5 @@
 }
 
 .custom-pad {
-  @apply px-5 min-[850px]:px-37.5;
+  @apply px-5 lg:px-37.5;
 }

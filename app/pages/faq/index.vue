@@ -13,7 +13,7 @@
           برای یافتن پاسخ، می‌توانید از دسته‌بندی‌های زیر استفاده کنید
         </p>
         <div
-          class="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-6 w-full max-w-3xl [&>.btn]:h-10 [&>.btn]:text-sm [&>.btn]:rounded-[8px]"
+          class="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-6 w-full max-w-3xl [&>.btn]:h-10 [&>.btn]:text-sm [&>.btn]:rounded-lg"
         >
           <button
             v-for="category in categories"

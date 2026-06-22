@@ -15,15 +15,17 @@
         <h2 class="font-semibold text-lg text-center">
           پلی میان کارفرمایان و حسابداران برای استخدام و همکاری حرفه‌ای
         </h2>
-        <div class="flex gap-2 mt-5">
+        <div class="flex flex-wrap gap-2 mt-5">
           <button class="btn btn-success">
             <Icon name="svg:user-plus-white" size="24" />
             استخدام حسابدار
           </button>
-          <button class="btn btn-primary">
+          <NuxtLink to="/opportunities-jobs">
+            <button class="btn btn-primary">
             <Icon name="svg:user-plus-white" size="24" />
             مشاهده فرصت های شغلی
           </button>
+          </NuxtLink>
         </div>
         <div
           class="mt-6 p-2 border-4 border-surface-100 bg-white rounded-lg w-full h-16 flex items-center"
@@ -238,60 +240,7 @@
     <m-divider class="mt-12" />
 
     <!-- [START] Questions -->
-    <section class="custom-pad mt-12">
-      <p class="text-2xl text-text-tertiary font-yb-bold text-center">
-        پاسخ به رایج‌ترین سوالات درباره خدمات های‌حساب
-      </p>
-      <p class="mt-4 text-[18px] text-text-tertiary font-semibold text-center">
-        نظرات کارفرمایان و حسابدارانی که بابرای یافتن پاسخ، می‌توانید از دسته‌بندی‌های زیر
-        استفاده کنید
-      </p>
-      <div
-        class="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-6 [&>.btn]:h-8 [&>.btn]:text-sm"
-      >
-        <button
-          v-for="n in 4"
-          class="btn"
-          :class="
-            questionType === n
-              ? 'btn-primary'
-              : 'btn-outline border-primary-200 text-primary-500'
-          "
-          @click="questionType = n"
-        >
-          <span v-if="n === 1">عمومی</span>
-          <span v-else-if="n === 2">استخدام حسابدار</span>
-          <span v-else-if="n === 3">رزومه ساز</span>
-          <span v-else>مشاور</span>
-        </button>
-      </div>
-
-      <div class="space-y-2 mt-5">
-        <div
-          v-for="(item, index) in questions.filter((x) => x.type === questionType)"
-          class="bg-surface-200 px-3 py-4 rounded-lg cursor-pointer text-sm"
-          @click="toggleQuestion(index)"
-        >
-          <div class="flex justify-between items-center">
-            <div class="flex gap-4 items-center">
-              <Icon name="svg:plus" size="16" />
-              <p>{{ item.title }}</p>
-            </div>
-            <icons-chevron
-              color="black"
-              class="transition-all"
-              :class="expandedItem === index ? 'rotate-180' : ''"
-            />
-          </div>
-          <div
-            class="leading-6 transition-all"
-            :class="expandedItem === index ? 'pt-4 h-fit' : 'h-0 overflow-hidden'"
-          >
-            {{ item.answer }}
-          </div>
-        </div>
-      </div>
-    </section>
+    <Questions />
     <!-- [END] Questions -->
 
     <m-divider class="mt-12" />
@@ -360,26 +309,12 @@
         </div>
       </div>
     </section>
-
-    <section class="custom-pad mt-16 bg-surface-100">
-      <div class="bg-primary-500 p-6 rounded-lg text-white">
-        <p class="text-2xl font-yb-bold max-sm:text-center">
-          اولین پلتفرم تخصصی استخدام حسابدار در ایران
-        </p>
-        <p class="mt-5 text-surface-50 leading-8">
-          انتخاب حسابدار، به‌دلیل نقش تأثیرگذار او در ساختار مالی شرکت، فرایندی حساس و
-          نیازمند دقت است.<br />های‌حساب با ارائه رزومه‌های تخصصی و جامعه‌ای از حسابداران
-          حرفه‌ای، این مسیر را برای کارفرمایان مطمئن‌تر می‌کند.هم‌زمان، حسابداران نیز
-          می‌توانند با رزومه استاندارد و فرصت‌های شغلی متنوع، مسیر رشد شغلی و افزایش درآمد
-          خود را هموارتر سازند.
-        </p>
-      </div>
-    </section>
   </div>
 </template>
 
 <script setup lang="ts">
 import ItemBox from '~/components/Elements/item-box.vue';
+import Questions from '~/features/home/Questions.vue';
 import type { AdList } from '~/types';
 import type { ApiResponse } from '~/types/api';
 import type { InitData } from '~/types/init';
@@ -399,46 +334,6 @@ const banks = [
   { title: 'بانک سامان', subtitle: '5 فرصت شغلی', image: 'bank5.png' },
   { title: 'بانک سامان', subtitle: '5 فرصت شغلی', image: 'bank6.png' },
 ];
-const questionType = ref(1);
-const questions = [
-  {
-    type: 1,
-    title: 'های‌حساب چیست ؟',
-    answer:
-      'لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز',
-  },
-  {
-    type: 1,
-    title: 'چگونه می‌توانم به آگهی های شغلی مناسب دسترسی پیدا کنم ؟',
-    answer:
-      'لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز',
-  },
-  {
-    type: 1,
-    title: 'آیا می‌توانم رزومه خود را برای چندین آگهی مختلف ارسال کنم ؟',
-    answer:
-      'لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز',
-  },
-  {
-    type: 1,
-    title: 'چگونه می توانم وضعیت رزومه های ارسال شده را پیگیری کنم ؟',
-    answer:
-      'لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز',
-  },
-  {
-    type: 1,
-    title: 'آیا ارسال رزومه به چندین کارفرما تأثیر مثبتی دارد؟',
-    answer:
-      'لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز',
-  },
-  {
-    type: 1,
-    title: 'چگونه می‌توانم رزومه‌ام را برای هر آگهی سفارشی کنم؟',
-    answer:
-      'لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز',
-  },
-];
-const expandedItem = ref<number | null>(null);
 const services = [
   {
     title1: 'استخدام',
@@ -467,11 +362,6 @@ const services = [
 ];
 
 // Functions
-function toggleQuestion(index: number) {
-  if (expandedItem.value === index) expandedItem.value = null;
-  else expandedItem.value = index;
-}
-
 const api = useApi();
 const getPosts = async () => {
   const result = await api.get<ApiResponse>('/posts');
@@ -487,6 +377,7 @@ const toggleBookmark = async (id: string | number, type: string) => {
 const getAds = async (jobType: string) => {
   if (jobType == 'پروژه') {
     const result = await api.get<ApiResponse>('/projects');
+    console.log(1, result);
     projects.value = result.data;
   } else {
     const result = await api.get<ApiResponse>('/ads', {
@@ -512,7 +403,7 @@ watch(jobType, () => {
 
 useSeoMeta({
   title: 'سایت استخدام حسابدار و خدمات حسابداری',
-  description:'فرصت های شغلی حسابداری، ثبت آگهی استخدام، پروژه های مالی و خدمات اظهارنامه مالیاتی برای کسب وکارها و حسابداران.',
-})
-
+  description:
+    'فرصت های شغلی حسابداری، ثبت آگهی استخدام، پروژه های مالی و خدمات اظهارنامه مالیاتی برای کسب وکارها و حسابداران.',
+});
 </script>

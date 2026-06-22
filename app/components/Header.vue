@@ -1,6 +1,6 @@
 <template>
   <header
-    class="py-4 px-5 flex justify-between items-center bg-surface-50 max-md:border-b-2 max-md:border-gray-default"
+    class="py-4 px-5 flex justify-between items-center bg-transparent max-md:border-b-2 max-md:border-gray-default"
   >
     <div class="flex gap-12">
       <div class="flex gap-2 items-center">
@@ -18,7 +18,7 @@
       <div class="flex items-center gap-12 max-lg:hidden">
         <NuxtLink to="/" class="text-sm hover:opacity-80">خانه</NuxtLink>
         <NuxtLink to="/" class="text-sm hover:opacity-80">کارفرمایان</NuxtLink>
-        <NuxtLink to="/" class="text-sm hover:opacity-80"
+        <NuxtLink to="/opportunities-jobs" class="text-sm hover:opacity-80"
           >فرصت‌های شغلی</NuxtLink
         >
         <NuxtLink to="/" class="flex text-sm hover:opacity-80"

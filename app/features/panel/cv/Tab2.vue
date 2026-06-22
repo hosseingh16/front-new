@@ -112,4 +112,6 @@ import ProgramSection from './Tab2/ProgramSection.vue';
 const levels = ref<ISelectItem[]>([{ label: 'کارشناسی', value: '1' }]);
 const years = ref<ISelectItem[]>([{ label: '1400', value: '1' }]);
 const educationItems = ref<any[]>([]);
+const loading = ref(true);
+const loading2 = ref(false);
 </script>
