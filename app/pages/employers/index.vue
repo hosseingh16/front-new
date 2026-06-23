@@ -254,61 +254,13 @@
     </section>
 
     <!-- Testimonials -->
-    <section class="px-5 1000:px-37.5 flex flex-col items-center pb-12 pt-10">
-      <div
-        class="text-primary-500 font-semibold text-sm flex justify-center items-center py-2 px-4 bg-[#4864E114] rounded-xl"
-      >
-        تجربه کاربران ما
-      </div>
-      <p class="mt-6 text-2xl text-text-tertiary font-yb-bold text-center">
-        آنچه کسانی که از خدمات ما استفاده کرده‌اند می‌گویند
-      </p>
-      <p class="mt-4 text-[18px] text-text-tertiary font-semibold text-center">
-        نظرات کارفرمایانی که با های‌حساب استخدام کرده‌اند
-      </p>
-      <div
-        class="mt-8 flex gap-4 max-[1000px]:overflow-x-auto max-[1000px]:w-full no-scrollbar p-2"
-      >
-        <div
-          v-for="(testimonial, n) in testimonials"
-          :key="testimonial.name"
-          class="relative mt-5 w-[80%] shrink-0 600:w-1/2 1000:w-1/3"
-        >
-          <div
-            class="absolute -top-5 left-1/2 flex h-10 w-10 -translate-x-1/2 items-center justify-center rounded-full bg-linear-to-b from-[#67EEC7] to-primary-500 font-yb-bold text-[22px] text-white"
-          >
-            {{ n + 1 }}
-          </div>
-          <div class="rounded-3xl rounded-br-none p-10 shadow-[0px_0px_10px_0px_#00000024]">
-            <p class="mb-12 text-center text-caption text-text-tertiary">
-              «{{ testimonial.text }}»
-            </p>
-          </div>
-          <div class="-mt-15 flex flex-col items-center">
-            <div
-              class="h-32 w-32 rounded-full bg-surface-50 p-2 shadow-[0px_4px_10px_0px_#0000001A]"
-            >
-              <div
-                class="h-full w-full rounded-full border-2 border-dashed border-primary-500 p-4"
-              >
-                <div
-                  class="flex h-full w-full items-center justify-center rounded-full bg-linear-to-b from-50% to-100%"
-                  :class="testimonial.avatarClass"
-                >
-                  <img :src="`/images/${testimonial.image}`" alt="" />
-                </div>
-              </div>
-            </div>
-            <div class="mt-5 w-full text-center">
-              <p class="text-sm font-semibold">{{ testimonial.name }}</p>
-              <p class="mt-2 w-full text-caption text-primary-500">
-                {{ testimonial.role }}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+    <Testimonials
+      badge="تجربه کاربران ما"
+      title="آنچه کسانی که از خدمات ما استفاده کرده‌اند می‌گویند"
+      subtitle="نظرات کارفرمایانی که با های‌حساب استخدام کرده‌اند"
+      :testimonials="testimonials"
+      class="pt-10 pb-12"
+    />
 
     <!-- FAQ -->
     <section class="custom-pad relative pb-12">
@@ -385,6 +337,9 @@ import step3 from '~/assets/vectors/pages/employers/step3.svg'
 import step4 from '~/assets/vectors/pages/employers/step4.svg'
 import processGraphic from '~/assets/vectors/pages/employers/Group 1142813134.svg'
 import TrustBar from '../../components/Elements/TrustBar.vue'
+import Testimonials from '~/components/Elements/Testimonials.vue';
+import type { Testimonial } from '~/components/Elements/Testimonials.vue';
+
 
 const PROCESS_STEP_OFFSETS = [0, 217, 449, 680]
 const PROCESS_VIEWPORT_HEIGHTS = [217, 232, 241, 220]
@@ -475,7 +430,7 @@ const processSteps = [
   },
 ]
 
-const testimonials = [
+const testimonials: Testimonial[] = [
   {
     text: 'ما دنبال یک حسابدار دقیق و با‌تجربه بودیم. در این سایت خیلی راحت آگهی گذاشتیم. رزومه‌هایی که دریافت کردیم دقیق و فیلترشده بودند و سریع به نتیجه رسیدیم.',
     name: 'فرزاد فرحزاد',
@@ -489,6 +444,7 @@ const testimonials = [
     role: 'مدیر ارشد منابع انسانی',
     image: 'bank1.png',
     avatarClass: 'from-[#AFAAD4] to-[#FFFFFF] p-2',
+    imageClass: 'w-[80%]',
   },
   {
     text: 'با بانک رزومه های‌حساب توانستیم بدون آگهی‌نویسی، حسابدار مناسب شرکت را پیدا کنیم. فیلترهای تخصصی واقعاً در صرفه‌جویی زمان مؤثر بودند.',
@@ -497,7 +453,7 @@ const testimonials = [
     image: 'bank2.png',
     avatarClass: 'from-[#82E8F2] to-[#FFFFFF] p-2',
   },
-]
+];
 
 const faqCategories = [
   { id: 1, label: 'استخدام حسابدار' },

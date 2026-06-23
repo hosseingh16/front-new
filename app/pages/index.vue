@@ -157,68 +157,13 @@
 
     <TrustBar />
 
-    <!-- [START] Comments -->
-    <section class="px-5 1000:px-37.5 flex flex-col items-center">
-      <div
-        class="text-primary-500 font-semibold text-sm flex justify-center items-center py-2 px-4 bg-[#4864E114] rounded-xl mt-20"
-      >
-        تجربه کاربران ما
-      </div>
-      <p class="mt-6 text-2xl text-text-tertiary font-yb-bold text-center">
-        آنچه کاربران درباره های‌حساب می‌گویند
-      </p>
-      <p class="mt-4 text-[18px] text-text-tertiary font-semibold text-center">
-        نظرات کارفرمایان و حسابدارانی که با های‌حساب همکاری داشته‌اند
-      </p>
-      <div
-        class="mt-8 flex gap-4 max-[1000px]:overflow-x-auto max-[1000px]:w-full no-scrollbar p-2"
-      >
-        <div v-for="n in 3" class="shrink-0 w-[80%] 600:w-1/2 1000:w-1/3 relative mt-5">
-          <div
-            class="h-10 w-10 rounded-full bg-linear-to-b from-[#67EEC7] to-primary-500 text-white font-yb-bold text-[22px] flex justify-center items-center absolute -top-5 left-1/2 -translate-x-1/2"
-          >
-            {{ n }}
-          </div>
-          <div
-            class="rounded-3xl rounded-br-none p-10 shadow-[0px_0px_10px_0px_#00000024]"
-          >
-            <p class="text-caption text-text-tertiary text-center mb-12">
-              «فرآیند ثبت پروژه و دسترسی به نیروهای متخصص برای ما بسیار ساده و سریع بود.
-              این پلتفرم کمک کرد در زمان کوتاه‌تری نیروی مناسب تیم مالی‌مان را پیدا کنیم.»
-            </p>
-          </div>
-          <div class="-mt-15 flex flex-col items-center">
-            <div
-              class="p-2 rounded-full w-32 h-32 bg-surface-50 shadow-[0px_4px_10px_0px_#0000001A]"
-            >
-              <div
-                class="p-4 rounded-full w-full h-full border-2 border-primary-500 border-dashed"
-              >
-                <div
-                  class="rounded-full w-full h-full bg-linear-to-b from-50% to-100% flex justify-center items-center"
-                  :class="{
-                    'from-[#FFE68C] to-[#FFF5CC] p-0': n === 1,
-                    'from-[#AFAAD4] to-[#FFFFFF] p-2 ': n === 2,
-                    'from-[#82E8F2] to-[#FFFFFF] p-2 ': n === 3,
-                  }"
-                >
-                  <img v-if="n === 1" src="/images/bank3.png" alt="" />
-                  <img v-if="n === 2" src="/images/bank1.png" alt="" class="w-[80%]" />
-                  <img v-if="n === 3" src="/images/bank2.png" alt="" />
-                </div>
-              </div>
-            </div>
-            <div class="text-center mt-5 w-full">
-              <p class="font-semibold text-sm">فرزاد فرحزاد</p>
-              <p class="text-caption text-primary-500 mt-2 w-full">
-                مدیر منابع انسانی موسسه کاسپین
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-    <!-- [END] Comments -->
+    <Testimonials
+      badge="تجربه کاربران ما"
+      title="آنچه کاربران درباره های‌حساب می‌گویند"
+      subtitle="نظرات کارفرمایان و حسابدارانی که با های‌حساب همکاری داشته‌اند"
+      :testimonials="testimonials"
+      badge-class="mt-20"
+    />
 
     <m-divider class="mt-12" />
 
@@ -298,7 +243,9 @@
 <script setup lang="ts">
 import ItemBox from '~/components/Elements/item-box.vue';
 import Questions from '~/features/home/Questions.vue';
+import Testimonials from '~/components/Elements/Testimonials.vue';
 import TrustBar from '../components/Elements/TrustBar.vue';
+import type { Testimonial } from '~/components/Elements/Testimonials.vue';
 import type { AdList } from '~/types';
 import type { ApiResponse } from '~/types/api';
 import type { InitData } from '~/types/init';
@@ -310,6 +257,30 @@ const ads = ref<AdList[]>([]);
 const projects = ref<ProjectList[]>([]);
 const posts = ref<any[]>([]);
 const jobType = ref('همه');
+const testimonials: Testimonial[] = [
+  {
+    text: 'ما دنبال یک حسابدار دقیق و با‌تجربه بودیم. در این سایت خیلی راحت آگهی گذاشتیم. رزومه‌هایی که دریافت کردیم دقیق و فیلترشده بودند و سریع به نتیجه رسیدیم.',
+    name: 'فرزاد فرحزاد',
+    role: 'مدیر منابع انسانی موسسه کاسپین',
+    image: 'bank3.png',
+    avatarClass: 'from-[#FFE68C] to-[#FFF5CC] p-0',
+  },
+  {
+    text: 'فرآیند ثبت پروژه و دسترسی به نیروهای متخصص برای ما بسیار ساده و سریع بود. این پلتفرم کمک کرد در زمان کوتاه‌تری نیروی مناسب تیم مالی‌مان را پیدا کنیم.',
+    name: 'مریم یاوری',
+    role: 'مدیر ارشد منابع انسانی',
+    image: 'bank1.png',
+    avatarClass: 'from-[#AFAAD4] to-[#FFFFFF] p-2',
+    imageClass: 'w-[80%]',
+  },
+  {
+    text: 'با بانک رزومه های‌حساب توانستیم بدون آگهی‌نویسی، حسابدار مناسب شرکت را پیدا کنیم. فیلترهای تخصصی واقعاً در صرفه‌جویی زمان مؤثر بودند.',
+    name: 'مسعود شاه‌مرادی',
+    role: 'بنیان‌گذار خانومی',
+    image: 'bank2.png',
+    avatarClass: 'from-[#82E8F2] to-[#FFFFFF] p-2',
+  },
+];
 const services = [
   {
     title1: 'استخدام',
