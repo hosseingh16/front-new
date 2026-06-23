@@ -337,8 +337,7 @@ import step3 from '~/assets/vectors/pages/employers/step3.svg'
 import step4 from '~/assets/vectors/pages/employers/step4.svg'
 import processGraphic from '~/assets/vectors/pages/employers/Group 1142813134.svg'
 import TrustBar from '../../components/Elements/TrustBar.vue'
-import Testimonials from '~/components/Elements/Testimonials.vue';
-import type { Testimonial } from '~/components/Elements/Testimonials.vue';
+import Testimonials, { type Testimonial } from '~/components/Elements/Testimonials.vue';
 
 
 const PROCESS_STEP_OFFSETS = [0, 217, 449, 680]
