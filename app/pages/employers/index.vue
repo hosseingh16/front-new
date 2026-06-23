@@ -43,28 +43,7 @@
       </div>
     </section>
 
-    <!-- Trust Bar -->
-    <section
-      class="bg-surface-100 flex flex-col min-[1220px]:flex-row justify-center min-[1220px]:justify-between items-center gap-6 min-[1220px]:gap-2 py-12 leading-10"
-    >
-      <p class="px-5 min-[1220px]:pr-37.5 font-semibold text-center min-[1220px]:text-right">
-        های‌حساب، مورد اعتماد بهترین سازمان‌ها<br />
-        همراه شما در جذب حرفه‌ای‌ترین نیروها
-      </p>
-      <div
-        class="pr-5 min-[1220px]:pl-37.5 flex gap-12 overflow-x-auto no-scrollbar max-[450px]:w-full"
-      >
-        <div
-          v-for="item in banks"
-          :key="item.image"
-          class="flex shrink-0 flex-col items-center leading-4"
-        >
-          <img :src="`/images/${item.image}`" alt="" class="h-12 w-12" />
-          <span class="mt-4 text-[10px] font-semibold">{{ item.title }}</span>
-          <span class="text-[10px] font-semibold text-gray-600">{{ item.subtitle }}</span>
-        </div>
-      </div>
-    </section>
+    <TrustBar />
 
     <!-- Service Cards -->
     <section class="custom-pad bg-surface-100 py-12 md:py-16">
@@ -405,19 +384,11 @@ import step2 from '~/assets/vectors/pages/employers/step2.svg'
 import step3 from '~/assets/vectors/pages/employers/step3.svg'
 import step4 from '~/assets/vectors/pages/employers/step4.svg'
 import processGraphic from '~/assets/vectors/pages/employers/Group 1142813134.svg'
+import TrustBar from './components/TrustBar.vue'
 
 const PROCESS_STEP_OFFSETS = [0, 217, 449, 680]
 const PROCESS_VIEWPORT_HEIGHTS = [217, 232, 241, 220]
 const PROCESS_IMAGE_HEIGHTS = [853, 853, 853, 853, 903]
-
-const banks = [
-  { title: 'بانک سامان', subtitle: '5 فرصت شغلی', image: 'bank1.png' },
-  { title: 'بانک سامان', subtitle: '5 فرصت شغلی', image: 'bank2.png' },
-  { title: 'بانک سامان', subtitle: '5 فرصت شغلی', image: 'bank3.png' },
-  { title: 'بانک سامان', subtitle: '5 فرصت شغلی', image: 'bank4.png' },
-  { title: 'بانک سامان', subtitle: '5 فرصت شغلی', image: 'bank5.png' },
-  { title: 'بانک سامان', subtitle: '5 فرصت شغلی', image: 'bank6.png' },
-]
 
 const servicePoints = [
   'جستجو بر روی بانک رزومه با ۱۴ فیلتر کاربردی مخصوص حسابداران',

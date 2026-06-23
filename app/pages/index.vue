@@ -155,24 +155,7 @@
     </section>
     <!-- [END] Services -->
 
-    <!-- [START] Customers -->
-    <section
-      class="bg-surface-100 flex flex-col min-[1220px]:flex-row justify-center min-[1220px]:justify-between items-center gap-6 min-[1220px]:gap-2 py-12 leading-10"
-    >
-      <p class="px-5 min-[1220px]:pr-37.5 font-semibold">
-        های‌حساب ، مورد اعتماد بهترین سازمان‌ها<br />همراه شما در جذب حرفه ای ترین نیروها
-      </p>
-      <div
-        class="pr-5 min-[1220px]:pl-37.5 flex gap-12 overflow-x-auto no-scrollbar max-[450px]:w-full"
-      >
-        <div v-for="item in banks" class="flex flex-col shrink-0 items-center leading-4">
-          <img :src="`/images/${item.image}`" alt="" class="w-12 h-12" />
-          <span class="font-semibold text-[10px] mt-4">{{ item.title }}</span>
-          <span class="font-semibold text-[10px] text-gray-600">{{ item.subtitle }}</span>
-        </div>
-      </div>
-    </section>
-    <!-- [END] Customers -->
+    <TrustBar />
 
     <!-- [START] Comments -->
     <section class="px-5 1000:px-37.5 flex flex-col items-center">
@@ -315,6 +298,7 @@
 <script setup lang="ts">
 import ItemBox from '~/components/Elements/item-box.vue';
 import Questions from '~/features/home/Questions.vue';
+import TrustBar from './employers/components/TrustBar.vue';
 import type { AdList } from '~/types';
 import type { ApiResponse } from '~/types/api';
 import type { InitData } from '~/types/init';
@@ -326,14 +310,6 @@ const ads = ref<AdList[]>([]);
 const projects = ref<ProjectList[]>([]);
 const posts = ref<any[]>([]);
 const jobType = ref('همه');
-const banks = [
-  { title: 'بانک سامان', subtitle: '5 فرصت شغلی', image: 'bank1.png' },
-  { title: 'بانک سامان', subtitle: '5 فرصت شغلی', image: 'bank2.png' },
-  { title: 'بانک سامان', subtitle: '5 فرصت شغلی', image: 'bank3.png' },
-  { title: 'بانک سامان', subtitle: '5 فرصت شغلی', image: 'bank4.png' },
-  { title: 'بانک سامان', subtitle: '5 فرصت شغلی', image: 'bank5.png' },
-  { title: 'بانک سامان', subtitle: '5 فرصت شغلی', image: 'bank6.png' },
-];
 const services = [
   {
     title1: 'استخدام',
