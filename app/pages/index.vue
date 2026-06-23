@@ -298,7 +298,7 @@
 <script setup lang="ts">
 import ItemBox from '~/components/Elements/item-box.vue';
 import Questions from '~/features/home/Questions.vue';
-import TrustBar from './employers/components/TrustBar.vue';
+import TrustBar from '../components/Elements/TrustBar.vue';
 import type { AdList } from '~/types';
 import type { ApiResponse } from '~/types/api';
 import type { InitData } from '~/types/init';

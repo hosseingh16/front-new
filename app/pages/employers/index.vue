@@ -384,7 +384,7 @@ import step2 from '~/assets/vectors/pages/employers/step2.svg'
 import step3 from '~/assets/vectors/pages/employers/step3.svg'
 import step4 from '~/assets/vectors/pages/employers/step4.svg'
 import processGraphic from '~/assets/vectors/pages/employers/Group 1142813134.svg'
-import TrustBar from './components/TrustBar.vue'
+import TrustBar from '../../components/Elements/TrustBar.vue'
 
 const PROCESS_STEP_OFFSETS = [0, 217, 449, 680]
 const PROCESS_VIEWPORT_HEIGHTS = [217, 232, 241, 220]
