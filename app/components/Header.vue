@@ -17,8 +17,8 @@
       </div>
       <div class="flex items-center gap-12 max-lg:hidden">
         <NuxtLink to="/" class="text-sm hover:opacity-80">خانه</NuxtLink>
-        <NuxtLink to="/" class="text-sm hover:opacity-80">کارفرمایان</NuxtLink>
-        <NuxtLink to="/opportunities-jobs" class="text-sm hover:opacity-80"
+        <NuxtLink to="/employers" class="text-sm hover:opacity-80">کارفرمایان</NuxtLink>
+        <NuxtLink to="/jobs" class="text-sm hover:opacity-80"
           >فرصت‌های شغلی</NuxtLink
         >
         <NuxtLink to="/" class="flex text-sm hover:opacity-80"
