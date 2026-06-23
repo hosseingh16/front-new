@@ -30,6 +30,8 @@
         <NuxtLink to="/">ایجاد آگهی استخدام</NuxtLink>
         <NuxtLink to="/">ایجاد پروژه حسابداری</NuxtLink>
         <NuxtLink to="/faq">سوالات متداول</NuxtLink>
+        <NuxtLink to="/tax-return">اظهارنامه عملکرد</NuxtLink>
+        <NuxtLink to="/projects">پروژه های حسابداری</NuxtLink>
       </div>
 
       <div class="flex flex-col gap-4 max-md:hidden">

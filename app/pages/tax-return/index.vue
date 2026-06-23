@@ -216,80 +216,8 @@
     </section>
 
     <!-- FAQ -->
-    <section class="custom-pad pb-12 relative">
-      <BackgroundPattern position="left" side="-3.75rem" top="25%" />
-      <BackgroundPattern position="right" side="-3.75rem" top="66.666667%" />
+    <FaqSection :categories="faqCategories" :items="faqs" />
 
-      <div class="flex flex-col items-center">
-        <h2 class="text-center font-yb-bold text-xl text-text-tertiary md:text-2xl">
-          سوالی دارید؟ ما پاسخگو هستیم
-        </h2>
-        <p class="mt-3 text-center text-sm text-text-passive md:text-base">
-          برای یافتن پاسخ، می‌توانید از دسته‌بندی‌های زیر استفاده کنید
-        </p>
-      </div>
-
-      <div
-        class="mx-auto mt-8 grid max-w-xl grid-cols-2 gap-2 [&>.btn]:h-10 [&>.btn]:rounded-[8px] [&>.btn]:text-sm"
-      >
-        <button
-          v-for="category in faqCategories"
-          :key="category.id"
-          class="btn"
-          :class="
-            faqType === category.id
-              ? 'btn-primary'
-              : 'btn-outline border-primary-200 bg-white text-primary-500'
-          "
-          @click="selectFaqCategory(category.id)"
-        >
-          {{ category.label }}
-        </button>
-      </div>
-
-      <div class="mx-auto mt-6 space-y-2">
-        <div
-          v-for="(item, index) in filteredFaqs"
-          :key="item.question"
-          class="cursor-pointer rounded-lg bg-surface-200 px-4 py-4 text-sm"
-          @click="toggleFaq(index)"
-        >
-          <div class="flex items-center justify-between gap-4">
-            <div class="flex items-center gap-3">
-              <Icon name="svg:plus" size="16" />
-              <p class="font-light text-text-tertiary">{{ item.question }}</p>
-            </div>
-            <icons-chevron
-              color="black"
-              class="shrink-0 transition-transform"
-              :class="expandedFaq === index ? 'rotate-180' : ''"
-            />
-          </div>
-          <div
-            class="leading-7 text-text-passive transition-all"
-            :class="expandedFaq === index ? 'mt-4 h-fit' : 'h-0 overflow-hidden'"
-          >
-            {{ item.answer }}
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- CTA Banner -->
-    <section class="custom-pad pb-16 bg-surface-100">
-      <div class="rounded-lg bg-primary-500 p-6 text-white">
-        <p class="text-2xl font-yb-bold max-sm:text-center">
-          اولین پلتفرم تخصصی استخدام حسابدار در ایران
-        </p>
-        <p class="mt-5 leading-8 text-surface-50">
-          انتخاب حسابدار، به‌دلیل نقش تأثیرگذار او در ساختار مالی شرکت، فرایندی حساس و
-          نیازمند دقت است.<br />های‌حساب با ارائه رزومه‌های تخصصی و جامعه‌ای از حسابداران
-          حرفه‌ای، این مسیر را برای کارفرمایان مطمئن‌تر می‌کند.هم‌زمان، حسابداران نیز
-          می‌توانند با رزومه استاندارد و فرصت‌های شغلی متنوع، مسیر رشد شغلی و افزایش
-          درآمد خود را هموارتر سازند.
-        </p>
-      </div>
-    </section>
   </div>
 </template>
 
@@ -303,6 +231,7 @@ import step2 from '~/assets/vectors/pages/tax-return/step2.webp'
 import step3 from '~/assets/vectors/pages/tax-return/step3.webp'
 import bannerMobile from '~/assets/vectors/pages/tax-return/banner-mobile.webp'
 import banner from '~/assets/vectors/pages/tax-return/banner.webp'
+import FaqSection from '~/components/Elements/FaqSection.vue'
 
 const audienceItems = [
   { label: 'کسب‌وکارهای تولیدی', icon: 'svg:buildings-3' },
@@ -405,8 +334,6 @@ const faqs = [
   },
 ]
 
-const faqType = ref(1)
-const expandedFaq = ref<number | null>(null)
 const expandedProcessStep = ref(-1)
 
 const activeProcessIllustration = computed(() => {
@@ -414,16 +341,6 @@ const activeProcessIllustration = computed(() => {
   return processIllustrations[expandedProcessStep.value + 1] ?? step0
 })
 
-const filteredFaqs = computed(() => faqs.filter((item) => item.type === faqType.value))
-
-function selectFaqCategory(id: number) {
-  faqType.value = id
-  expandedFaq.value = null
-}
-
-function toggleFaq(index: number) {
-  expandedFaq.value = expandedFaq.value === index ? null : index
-}
 
 function toggleProcessStep(index: number) {
   expandedProcessStep.value = expandedProcessStep.value === index ? -1 : index

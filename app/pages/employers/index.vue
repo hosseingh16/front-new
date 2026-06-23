@@ -262,65 +262,7 @@
       class="pt-10 pb-12"
     />
 
-    <!-- FAQ -->
-    <section class="custom-pad relative pb-12">
-      <BackgroundPattern position="left" side="-3.75rem" top="25%" />
-      <BackgroundPattern position="right" side="-3.75rem" top="66.666667%" />
-
-      <div class="flex flex-col items-center">
-        <h2 class="text-center font-yb-bold text-xl text-text-tertiary md:text-2xl">
-          سوالی دارید؟ ما پاسخگو هستیم
-        </h2>
-        <p class="mt-3 text-center text-sm text-text-passive md:text-base">
-          برای یافتن پاسخ، می‌توانید از دسته‌بندی‌های زیر استفاده کنید
-        </p>
-      </div>
-
-      <div
-        class="mx-auto mt-8 grid max-w-xl grid-cols-2 gap-2 [&>.btn]:h-10 [&>.btn]:rounded-[8px] [&>.btn]:text-sm"
-      >
-        <button
-          v-for="category in faqCategories"
-          :key="category.id"
-          class="btn"
-          :class="
-            faqType === category.id
-              ? 'btn-primary'
-              : 'btn-outline border-primary-200 bg-white text-primary-500'
-          "
-          @click="selectFaqCategory(category.id)"
-        >
-          {{ category.label }}
-        </button>
-      </div>
-
-      <div class="mx-auto mt-6 space-y-2">
-        <div
-          v-for="(item, index) in filteredFaqs"
-          :key="item.question"
-          class="cursor-pointer rounded-lg bg-surface-200 px-4 py-4 text-sm"
-          @click="toggleFaq(index)"
-        >
-          <div class="flex items-center justify-between gap-4">
-            <div class="flex items-center gap-3">
-              <Icon name="svg:plus" size="16" />
-              <p class="font-light text-text-tertiary">{{ item.question }}</p>
-            </div>
-            <icons-chevron
-              color="black"
-              class="shrink-0 transition-transform"
-              :class="expandedFaq === index ? 'rotate-180' : ''"
-            />
-          </div>
-          <div
-            class="leading-7 text-text-passive transition-all"
-            :class="expandedFaq === index ? 'mt-4 h-fit' : 'h-0 overflow-hidden'"
-          >
-            {{ item.answer }}
-          </div>
-        </div>
-      </div>
-    </section>
+    <FaqSection :categories="faqCategories" :items="faqs" />
   </div>
 </template>
 
@@ -337,6 +279,7 @@ import step3 from '~/assets/vectors/pages/employers/step3.svg'
 import step4 from '~/assets/vectors/pages/employers/step4.svg'
 import processGraphic from '~/assets/vectors/pages/employers/Group 1142813134.svg'
 import TrustBar from '../../components/Elements/TrustBar.vue'
+import FaqSection from '~/components/Elements/FaqSection.vue'
 import Testimonials, { type Testimonial } from '~/components/Elements/Testimonials.vue';
 
 
@@ -498,8 +441,6 @@ const faqs = [
   },
 ]
 
-const faqType = ref(1)
-const expandedFaq = ref<number | null>(null)
 const expandedProcessStep = ref(-1)
 
 const processIllustrations = [step0, step1, step2, step3, step4]
@@ -528,17 +469,6 @@ const processImageHeight = computed(
 )
 
 const shouldAnimateProcessScroll = computed(() => expandedProcessStep.value >= 1)
-
-const filteredFaqs = computed(() => faqs.filter((item) => item.type === faqType.value))
-
-function selectFaqCategory(id: number) {
-  faqType.value = id
-  expandedFaq.value = null
-}
-
-function toggleFaq(index: number) {
-  expandedFaq.value = expandedFaq.value === index ? null : index
-}
 
 function toggleProcessStep(index: number) {
   expandedProcessStep.value = expandedProcessStep.value === index ? -1 : index
