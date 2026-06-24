@@ -14,10 +14,8 @@
                 subtitle="یا تصویر را بکشید و در این محل رها کنید"
                 :max-size="10"
                 :accept="['png', 'jpg']"
-                @update:model-value="(v: any) => {
-                  console.log(12, v);
-                  setFieldValue('profileImage', v)
-                }"
+                  @update:model-value="handleProfileImage"
+              
                 @update:base64="(v) => (imageBase64 = v)"
               />
             </Field>
@@ -32,7 +30,7 @@
 
         <m-form-input
           name="name"
-          label="نام کامل"
+          label="نام کامل"        
           placeholder="نام کامل خود را وارد کنید"
           required
         ></m-form-input>
@@ -56,8 +54,8 @@
           <m-toggle
             name="jobStatus"
             :items="[
-              { title: 'جویای کار', value: '1' },
-              { title: 'شاغل', value: '2' },
+              { title: 'جویای کار', value: '0' },
+              { title: 'شاغل', value: '1' },
             ]"
             same-width
           />
@@ -109,10 +107,10 @@
 
         <m-radio-group name="mariageStatus" inline label="وضعیت تأهل">
           <template #default="{ modelValue, setValue }">
-            <m-radio value="1" :model-value="modelValue" :set-value="setValue">
+            <m-radio value="0" :model-value="modelValue" :set-value="setValue">
               مجرد
             </m-radio>
-            <m-radio value="2" :model-value="modelValue" :set-value="setValue">
+            <m-radio value="1" :model-value="modelValue" :set-value="setValue">
               متأهل
             </m-radio>
           </template>
@@ -268,26 +266,29 @@ import { profileImageValidation } from '~/validations/profileImage';
 // Variables
 const api = useApi();
 const loading = api.loading;
-const hasRegions = ref(false);
+const hasRegions = ref(false);  
+const lookups = ref<Record<string, any[]>>({})  
 const editMode = ref(false);
 const imageBase64 = ref<string | null>(null);
-const jobTitles = ref<ISelectItem[]>([{ label: 'حسابدار ارشد', value: '1' }]);
-const experiences = ref<ISelectItem[]>([{ label: '1 سال', value: '1' }]);
-const salaries = ref<ISelectItem[]>([{ label: '10،000،000 تومان', value: '1' }]);
-const years = ref<ISelectItem[]>([{ label: '1400', value: '1' }]);
-const militaryStatuses = ref<ISelectItem[]>([{ label: 'پایان خدمت', value: '1' }]);
+const currentUser = ref<any>(null)
+const jobTitles = ref<ISelectItem[]>([]);
+const experiences = ref<ISelectItem[]>([]);
+const salaries = ref<ISelectItem[]>([]);
+const years = ref<ISelectItem[]>([]);
+const militaryStatuses = ref<ISelectItem[]>([]);
 const cities = ref<ISelectItem[]>([]);
 const regions = ref<ISelectItem[]>([]);
 
 // Form
 const formSchema = Yup.object({
-  profileImage: profileImageValidation,
+  //profileImage: profileImageValidation,
+  profileImage: Yup.string().notRequired(),
   name: fullNameValidation,
   jobTitle: Yup.string().required('عنوان شغلی انتخاب نشده است'),
   jobStatus: Yup.string().required('وضعیت شغلی انتخاب نشده است'),
   workExperience: Yup.string().required('سابقه کار انتخاب نشده است'),
   desiredSalary: Yup.string().required('حقوق درخواستی انتخاب نشده است'),
-  birthDate: Yup.string().required('سال تولد انتخاب نشده است'),
+  birthDate: Yup.number().required('سال تولد انتخاب نشده است'),
   gender: Yup.string().required('جنسیت انتخاب نشده است'),
   militaryServiceStatus: Yup.string().when('gender', {
     is: '1',
@@ -304,7 +305,7 @@ const formSchema = Yup.object({
   }),
   about: Yup.string(),
 });
-const { handleSubmit, setFieldValue, values } = useForm<Yup.InferType<typeof formSchema>>(
+const {handleSubmit,setFieldValue,setFieldError,validateField, setValues, values} = useForm<Yup.InferType<typeof formSchema>>(
   {
     initialValues: {},
 
@@ -357,6 +358,8 @@ const changeEditMode = async (value: boolean) => {
 
 const onSubmit = handleSubmit(async (data) => {
   console.log(333, data);
+   //let result =  await api.get('/lookups?keys=all');
+  
 
   // خارج کردن تصویر پروفایل از فرم
   const { profileImage, ...payload } = data;
@@ -384,9 +387,103 @@ const onSubmit = handleSubmit(async (data) => {
     console.error(e);
   }
 
+
+
   //   await useSanctumFetch("/api/v1/cv/save-basics", {
   //   method: "POST",
   //   body: { data },
   // })
 });
+
+
+const handleProfileImage = async (file: File | null) => {
+  if (!file) return
+
+  // clear previous error
+  setFieldError('profileImage', '')
+
+  // 1. validate type
+  const isValidType =
+    file.type === 'image/png' || file.type === 'image/jpeg'
+
+  if (!isValidType) {
+    setFieldError('profileImage', 'فقط فرمت png و jpg مجاز است')
+    return
+  }
+
+  // 2. validate size (10MB)
+  const maxSize = 10 * 1024 * 1024
+
+  if (file.size > maxSize) {
+    setFieldError('profileImage', 'حجم تصویر نباید بیشتر از 10MB باشد')
+    return
+  }
+
+  try {
+    // 3. upload
+    const formData = new FormData()
+    formData.append('profile_image', file)
+    
+
+    const res = await api.post<any>('cv/upload/profile-image', formData)
+    
+
+    // 4. set uploaded file id into form
+    setFieldValue('profileImage', res.data.id)
+
+    // 5. optional: clear error after success
+    setFieldError('profileImage', '')
+  } catch (error) {
+    console.error(error)
+    setFieldError('profileImage', 'خطا در آپلود تصویر')
+  }
+}
+
+
+
+
+
+onMounted(async () => {
+
+//Get lookups 
+  const response = await api.get(
+    'lookups?keys=job_titles,experience_levels,salary_ranges,birth_years,military_statuses'
+  ) as any
+
+  lookups.value = response.data ?? response 
+  jobTitles.value = lookups.value?.job_titles ?? []
+  experiences.value = lookups.value?.experience_levels ?? []
+  salaries.value = lookups.value?.salary_ranges ?? []
+  years.value = lookups.value?.birth_years ?? []
+  militaryStatuses.value = lookups.value?.military_statuses ?? []
+
+  //Load user data
+  const res = await api.get<any>('/user')
+
+   currentUser.value = res?.user ?? null
+  console.log(currentUser.value.resume_personal?.marital_status);
+
+   setValues({
+    name: currentUser.value.name ?? '',
+     jobTitle: currentUser.value.resume_personal?.job_title ?? '',
+     jobStatus: String(currentUser.value.resume_personal?.job_status ?? '0'),
+     workExperience: currentUser.value.resume_personal?.work_experience ?? '',
+     desiredSalary: currentUser.value.resume_personal?.desired_salary ?? '',
+     birthDate: Number(currentUser.value.resume_personal?.birthdate ?? ''),
+     gender: String(currentUser.value.resume_personal?.gender ?? ''),
+     militaryServiceStatus: currentUser.value.resume_personal?.military_service_status ?? '',
+     mariageStatus: String(currentUser.value.resume_personal?.marital_status ?? ''),
+    // province: user.resume_personal?.province ?? '',
+    // city: user.resume_personal?.city ?? '',
+    // region: user.resume_personal?.region ?? '',
+    // about: user.resume_personal?.about ?? '',
+    // profileImage: user.resume_personal?.profile_image ?? '',
+  })
+})
+  
+
+ 
+
+
+
 </script>
