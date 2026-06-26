@@ -105,7 +105,7 @@
           :options="militaryStatuses"
         />
 
-        <m-radio-group name="mariageStatus" inline label="وضعیت تأهل">
+        <m-radio-group name="maritalStatus" inline label="وضعیت تأهل">
           <template #default="{ modelValue, setValue }">
             <m-radio value="0" :model-value="modelValue" :set-value="setValue">
               مجرد
@@ -180,9 +180,9 @@
         <InfoItem
           title="وضعیت اشتغال:"
           :value="
-            values.jobStatus === '1'
+            values.jobStatus === '0'
               ? 'جویای کار'
-              : values.jobStatus === '2'
+              : values.jobStatus === '1'
               ? 'شاغل'
               : undefined
           "
@@ -214,9 +214,9 @@
         <InfoItem
           title="وضعیت تأهل:"
           :value="
-            values.mariageStatus === '1'
+            values.maritalStatus === '0'
               ? 'مجرد'
-              : values.mariageStatus === '2'
+              : values.maritalStatus === '1'
               ? 'متأهل'
               : undefined
           "
@@ -295,7 +295,7 @@ const formSchema = Yup.object({
     then: (schema) => schema.required('وضعیت خدمت سربازی انتخاب نشده است'),
     otherwise: (schema) => schema.notRequired(),
   }),
-  mariageStatus: Yup.string().required('وضعیت تأهل انتخاب نشده است'),
+  maritalStatus: Yup.string().required('وضعیت تأهل انتخاب نشده است'),
   province: Yup.string().required('استان انتخاب نشده است'),
   city: Yup.string().required('شهر انتخاب نشده است'),
   region: Yup.string().when('city', {
@@ -317,7 +317,7 @@ const isMale = computed(() => values.gender === '1');
 
 watch(
   () => values.province,
-  async (provinceId) => {
+  async (provinceId, oldValue) => {
     if (!provinceId) {
       cities.value = [];
       setFieldValue('city', ''); // ✔ مهم
@@ -326,13 +326,15 @@ watch(
 
     cities.value = await api.get(`/cities/${provinceId}`);
 
+    //If it's first load dont remove user saved city
+    if (oldValue === undefined) return;
     setFieldValue('city', ''); // ✔ مهم‌ترین خط
   },
 );
 
 watch(
   () => values.city,
-  async (cityId) => {
+  async (cityId, oldValue) => {
     if (!cityId) {
       regions.value = [];
       hasRegions.value = false;
@@ -346,6 +348,8 @@ watch(
 
     hasRegions.value = res.length > 0;
 
+     //If it's first load dont remove user saved region
+    if (oldValue === undefined) return;
     setFieldValue('region', '');
   },
 );
@@ -357,13 +361,14 @@ const changeEditMode = async (value: boolean) => {
 };
 
 const onSubmit = handleSubmit(async (data) => {
-  console.log(333, data);
+  
    //let result =  await api.get('/lookups?keys=all');
   
 
   // خارج کردن تصویر پروفایل از فرم
   const { profileImage, ...payload } = data;
   //
+  
 
   // پیدا کردن نام استان و شهر
   const selectedProvince = provinces.find((p) => p.value === data.province);
@@ -378,7 +383,7 @@ const onSubmit = handleSubmit(async (data) => {
   //   provinceId: selectedProvince?.value || null,
   // };
 
-  console.log(payload);
+  
 
   try {
     await api.post('/cv/save-basics', payload);
@@ -445,6 +450,11 @@ const handleProfileImage = async (file: File | null) => {
 
 onMounted(async () => {
 
+  //   const bootstrap = ref()
+  //   bootstrap.value = await api.get('/panel/bootstrap')
+   
+    
+
 //Get lookups 
   const response = await api.get(
     'lookups?keys=job_titles,experience_levels,salary_ranges,birth_years,military_statuses'
@@ -461,7 +471,7 @@ onMounted(async () => {
   const res = await api.get<any>('/user')
 
    currentUser.value = res?.user ?? null
-  console.log(currentUser.value.resume_personal?.marital_status);
+ 
 
    setValues({
     name: currentUser.value.name ?? '',
@@ -472,10 +482,12 @@ onMounted(async () => {
      birthDate: Number(currentUser.value.resume_personal?.birthdate ?? ''),
      gender: String(currentUser.value.resume_personal?.gender ?? ''),
      militaryServiceStatus: currentUser.value.resume_personal?.military_service_status ?? '',
-     mariageStatus: String(currentUser.value.resume_personal?.marital_status ?? ''),
-    // province: user.resume_personal?.province ?? '',
-    // city: user.resume_personal?.city ?? '',
-    // region: user.resume_personal?.region ?? '',
+     maritalStatus: String(currentUser.value.resume_personal?.marital_status ?? ''),
+     province: currentUser.value.resume_personal?.province_id ?? '',
+     city: currentUser.value.resume_personal?.city_id ?? '',
+     region: currentUser.value.resume_personal?.region_id ?? '',
+     about: currentUser.value.resume_personal?.about ?? '',
+    
     // about: user.resume_personal?.about ?? '',
     // profileImage: user.resume_personal?.profile_image ?? '',
   })

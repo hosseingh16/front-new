@@ -16,6 +16,7 @@
 </template>
 
 <script setup lang="ts">
-const { fetchMenu, sidebarMenu } = usePanelConfig();
-await fetchMenu();
+ const { fetchMenu, sidebarMenu } = usePanelConfig();
+ await fetchMenu();
+
 </script>

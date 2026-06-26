@@ -5,13 +5,14 @@ export function useApiClient() {
   const baseURL = config.public.apiBase;
 
   const client = useSanctumClient();
+  const router = useRouter()
 
   const user = useState<any | null>('user', () => null);
 
   const loading = useState<boolean>('api-loading', () => false);
 
   const request = async <T>(url: string, options: any = {}): Promise<T> => {
-    loading.value = true;
+    loading.value = true;    
     try {
       return await client<T>(url, {
         baseURL, // 👈 اینجا استفاده می‌شود
@@ -26,8 +27,8 @@ export function useApiClient() {
       const data = err?.response?._data;
 
       if (status === 401) {
-        user.value = null;
-        await navigateTo('/login');
+        user.value = null;      
+        await router.push('/login')
       }
 
       const error: ApiError = {

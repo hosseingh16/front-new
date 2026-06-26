@@ -102,6 +102,7 @@ function toggleOpenIndex(index: number) {
   openIndex.value = openIndex.value === index ? null : index;
 }
 
+
 // const menus1 = [
 //   { title: 'پیشخوان', to: '#', icon: 'gauge-1' },
 //   { title: 'رزومه‌های شغلی', to: '#', icon: 'search-briefcase', children: [] },

@@ -18,42 +18,43 @@
 
     <m-dialog ref="modalRef" :width="850">
       <Titr>افزودن سابقه تحصیلی</Titr>
-      <form @submit="onSubmit" class="mt-6">
+      <form @submit.prevent="onSubmit" class="mt-6">
         <div class="grid md:grid-cols-2 gap-4">
           <m-form-select2
-            name="level"
+            name="degree"
             label="مقطع تحصیلی:"
             required
             :options="levels"
             placeholder="مقطع تحصیلی را انتخاب کنید"
           ></m-form-select2>
           <m-form-input
-            name="field"
+            name="major"
             label="رشته تحصیلی:"
             placeholder="رشته تحصیلی را وارد کنید"
             required
           ></m-form-input>
           <m-form-input
-            name="school"
+            name="university"
             label="نام آمورشگاه / موسسه آموزشی:"
             placeholder="نام آمورشگاه / موسسه آموزشی را وارد کنید"
             required
           ></m-form-input>
           <div>
             <m-form-select2
-              name="date"
+              name="enddate"
               label="تاریخ فارغ‌التحصیلی:"
               required
               :options="years"
+              :disabled="isGraduationDateDisabled"
               placeholder="تاریخ فارق التحصیلی را انتخاب کنید"
             ></m-form-select2>
             <label class="label mt-2 text-sm text-text-primay">
               <input
-                name="inStudy"
+                name="stillbusy"
                 type="checkbox"
                 class="checkbox"
-                :checked="values.inStudy"
-                @click="setFieldValue('inStudy', !values.inStudy)"
+                :checked="values.stillbusy"
+                @click="setFieldValue('stillbusy', !values.stillbusy)"
               />
               مشغول به تحصیل هستم.
             </label>
@@ -73,7 +74,7 @@
               <Icon name="svg:close" />
               انصراف
             </button>
-            <m-button class="btn-primary" :loading>
+            <m-button  type="submit" class="btn-primary" :loading>
               <Icon name="svg:plus-white" />
               افزودن
             </m-button>
@@ -115,11 +116,11 @@ const loading = api.loading;
 
 // Form
 const formSchema = Yup.object({
-  level: Yup.string().required('مقطع تحصیلی انتخاب نشده است'),
-  field: Yup.string().required('رشته تحصیلی وارد نشده است'),
-  school: Yup.string().required('آموزشگاه وارد نشده است'),
-  inStudy: Yup.bool(),
-  date: Yup.string().when('inStudy', {
+  degree: Yup.string().required('مقطع تحصیلی انتخاب نشده است'),
+  major: Yup.string().required('رشته تحصیلی وارد نشده است'),
+  university: Yup.string().required('آموزشگاه وارد نشده است'),
+  stillbusy: Yup.bool(),
+  enddate: Yup.string().when('stillbusy', {
     is: false,
     then: (schema) => schema.required('تاریخ فارغ‌التحصیلی انتخاب نشده است'),
     otherwise: (schema) => schema.optional(),
@@ -131,12 +132,12 @@ const { handleSubmit, values, setFieldValue, resetForm, setValues } = useForm<
 >({
   validationSchema: formSchema,
   initialValues: {
-    level: '',
-    field: '',
-    school: '',
-    date: '',
+    degree: '',
+    major: '',
+    university: '',
+    enddate: '',
     description: '',
-    inStudy: false,
+    stillbusy: false,
   },
 });
 
@@ -150,8 +151,9 @@ async function showModal() {
   modalRef.value?.showModal();
 }
 
-const onSubmit = handleSubmit((data: Yup.InferType<typeof formSchema>) => {
-  console.log(data);
+const isGraduationDateDisabled = computed(() => values.stillbusy);
+
+const onSubmit = handleSubmit((data: Yup.InferType<typeof formSchema>) => { 
   emits('item', data);
   modalRef.value?.closeModal();
 });

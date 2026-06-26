@@ -10,7 +10,7 @@
         label="افزودن"
         :levels
         :years
-        @item="(v) => educationItems.push(v)"
+       @item="addEducation"
       />
     </div>
     <div
@@ -31,7 +31,7 @@
         label="افزودن اطلاعات تحصیلی"
         :levels
         :years
-        @item="(v) => educationItems.push(v)"
+        @item="addEducation"
       />
     </div>
     <div v-else class="mt-4 space-y-4">
@@ -42,12 +42,12 @@
           <Icon name="svg:edu-item" size="28" />
           <div class="space-y-3">
             <p class="text-text-primay font-semibold">
-              {{ levels.find((x) => x.value === item.level)?.label }} . {{ item.field }}
+              {{ levels.find((x) => x.value === item.degree)?.label }} . {{ item.major }}
             </p>
             <p class="text-text-passive text-sm">
-              {{ item.school }} .
+              {{ item.university }} .
               <span v-if="!item.inStudy">{{
-                years.find((x) => x.value === item.date)?.label
+                years.find((x) => x.value === item.enddate)?.label
               }}</span>
               <span v-if="item.inStudy">مشغول به تحصیل</span>
             </p>
@@ -84,7 +84,53 @@ import type { ISelectItem } from '~/types/select-item.js';
 import EducationModal from './EducationModal.vue';
 
 // Variabels
-const levels = ref<ISelectItem[]>([{ label: 'کارشناسی', value: '1' }]);
-const years = ref<ISelectItem[]>([{ label: '1400', value: '1' }]);
+//const levels = ref<ISelectItem[]>([{ label: 'کارشناسی', value: '1' }]); //Gets From API
+const levels = ref<ISelectItem[]>([]);
+//const years = ref<ISelectItem[]>([{ label: '1400', value: '1' }]); //Gets From API
+const years = ref<ISelectItem[]>([]);
 const educationItems = ref<any[]>([]);
+const lookups = ref<Record<string, any[]>>({})  
+const api = useApi();
+
+async function addEducation(item: any) {
+  educationItems.value.push(item);
+  await syncEducation();
+}
+
+async function updateEducation(index: number, item: any) {
+  educationItems.value[index] = item;
+  await syncEducation();
+}
+
+async function removeEducation(index: number) {
+  educationItems.value.splice(index, 1);
+  await syncEducation();
+}
+
+async function syncEducation() {
+  try {
+    await api.post('cv/sync-education', {
+      education_items: educationItems.value,
+    });
+  } catch (error) {
+    console.error('Sync failed:', error);
+  }
+}
+
+
+
+onMounted(async () => {
+  //Get lookups 
+  const response = await api.get(
+    'lookups?keys=education_levels, graduation_years'
+  ) as any
+
+   lookups.value = response.data ?? response 
+
+  levels.value = lookups.value.education_levels || [];  
+  years.value = lookups.value.graduation_years || [];  
+});
+
+
+
 </script>

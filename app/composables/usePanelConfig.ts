@@ -1,76 +1,128 @@
-import { menuMap } from '~/configs/menu-map';
-import type { MenuItem } from '~/types/panel-config';
+import { menuMap } from '~/configs/menu-map'
+import type { MenuItem } from '~/types/panel-config'
 
 type BackendMenuItem = {
-  key: string;
-  children?: string[];
-};
+  key: string
+  children?: BackendMenuItem[]
+}
 
 type PanelConfig = {
   navigation: {
-    sidebar: BackendMenuItem[];
-  };
-  modules: string[];
-};
+    sidebar: BackendMenuItem[]
+    userMenu: BackendMenuItem[]
+    shortcuts: BackendMenuItem[]
+  }
+  permissions: string[]
+}
 
 export const usePanelConfig = () => {
-  const rawConfig = useState<PanelConfig | null | undefined>('panel-config', () => null);
+  const api = useApi()
 
+  // -----------------------------
+  // SSR-safe state (prevents undefined crash)
+  // -----------------------------
+  const rawConfig = useState<PanelConfig>('panel-config', () => ({
+    navigation: {
+      sidebar: [],
+      userMenu: [],
+      shortcuts: [],
+    },
+    permissions: [],
+  }))
+
+  const initialized = useState('panel-initialized', () => false)
+
+  // -----------------------------
+  // Fetch bootstrap
+  // -----------------------------
   const fetchMenu = async () => {
-    // const { data } = await useFetch<PanelConfig>('/api/panel-config');
-    // rawConfig.value = data.value;
+   
+    initialized.value = false
+    if (initialized.value) return
 
-    rawConfig.value = {
-      navigation: {
-        sidebar: [
-          { key: 'dashboard' },
-          {
-            key: 'job-resumes',
-            children: ['my-resume', 'organization-resume'],
-          },
-          { key: 'jobs', children: ['bookmarked-jobs', 'applied-jobs'] },
-          { key: 'projects' },
-        ],
-      },
-      modules: [],
-    };
-  };
+    const res = await api.get('/panel/bootstrap') as any
 
+  
+
+    rawConfig.value = res.panel
+    initialized.value = true
+  }
+
+  // -----------------------------
+  // Recursive resolver (backend tree → UI tree)
+  // -----------------------------
+  const resolveMenuItem = (item: BackendMenuItem): MenuItem | null => {
+     
+    const meta = menuMap[item.key]
+    if (!meta) return null
+
+    const children = item.children
+      ?.map(resolveMenuItem)
+      .filter(Boolean) as MenuItem[] | undefined
+
+    return {
+      key: item.key,
+      label: meta.label,
+      icon: meta.icon,
+      to: meta.to,
+      children: children?.length ? children : undefined,
+    }
+  }
+
+  // -----------------------------
+  // Sidebar
+  // -----------------------------
   const sidebarMenu = computed<MenuItem[]>(() => {
-    if (!rawConfig.value) return [];
+    const nav = rawConfig.value?.navigation
 
-    return rawConfig.value.navigation.sidebar
-      .map((item) => {
-        const meta = menuMap[item.key];
-        if (!meta) return null;
+    if (!nav?.sidebar) return []
 
-        const children = (item.children ?? [])
-          .map((childKey) => {
-            const childMeta = menuMap[childKey];
-            if (!childMeta) return null;
+    return nav.sidebar
+      .map(resolveMenuItem)
+      .filter(Boolean) as MenuItem[]
+  })
 
-            return {
-              key: childKey,
-              label: childMeta.label,
-              icon: childMeta.icon,
-              to: childMeta.to,
-            };
-          })
-          .filter(Boolean) as MenuItem[];
+  // -----------------------------
+  // User menu
+  // -----------------------------
+  const userMenu = computed<MenuItem[]>(() => {
+    const nav = rawConfig.value?.navigation
 
-        return {
-          key: item.key,
-          label: meta.label,
-          icon: meta.icon,
-          to: meta.to,
-          children: children.length ? children : undefined,
-        };
-      })
-      .filter(Boolean) as MenuItem[];
-  });
+    if (!nav?.userMenu) return []
 
+    return nav.userMenu
+      .map(resolveMenuItem)
+      .filter(Boolean) as MenuItem[]
+  })
+
+  // -----------------------------
+  // Shortcuts
+  // -----------------------------
+  const shortcuts = computed<MenuItem[]>(() => {
+    const nav = rawConfig.value?.navigation
+
+    if (!nav?.shortcuts) return []
+
+    return nav.shortcuts
+      .map(resolveMenuItem)
+      .filter(Boolean) as MenuItem[]
+  })
+
+  // -----------------------------
+  // Permissions
+  // -----------------------------
+  const permissions = computed(() => {
+    return rawConfig.value?.permissions ?? []
+  })
+
+  // -----------------------------
+  // Public API
+  // -----------------------------
   return {
     fetchMenu,
     sidebarMenu,
-  };
-};
+    userMenu,
+    shortcuts,
+    permissions,
+  }
+}
