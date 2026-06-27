@@ -4,7 +4,18 @@
     <section
       class="bg-[url('/images/bg-5.png')] bg-no-repeat bg-top pb-10 md:pb-16"
     >
-      <div class="custom-pad flex flex-col items-center pt-12 md:pt-20">
+    <div class="custom-pad pt-6">
+      <nav class="text-sm text-text-passive">
+        <NuxtLink to="/" class="hover:text-primary-500 transition-colors">
+          <Icon name="svg:home" size="16" />
+        </NuxtLink>
+        <span class="mx-2">/</span>
+        <span>خدمات</span>
+        <span class="mx-2">/</span>
+        <span class="text-text-tertiary">کارفرمایان</span>
+      </nav>
+    </div>
+      <div class="custom-pad flex flex-col items-center pt-8 md:pt-12">
         <span
           class="inline-flex items-center rounded-xl bg-[#4864E114] px-4 py-2 text-sm font-semibold text-primary-500"
         >

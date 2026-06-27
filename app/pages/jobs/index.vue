@@ -3,9 +3,20 @@
     <section
       class="bg-[url('/images/bg-6.png')] md:bg-[url('/images/bg-5.png')] bg-no-repeat bg-top md:bg-position-[center_-150px] pb-10"
     >
-      <div class="custom-pad flex flex-col items-center gap-4">
+    <div class="custom-pad pt-6">
+      <nav class="text-sm text-text-passive">
+        <NuxtLink to="/" class="hover:text-primary-500 transition-colors">
+          <Icon name="svg:home" size="16" />
+        </NuxtLink>
+        <span class="mx-2">/</span>
+        <span>خدمات</span>
+        <span class="mx-2">/</span>
+        <span class="text-text-tertiary">فرصت های شغلی</span>
+      </nav>
+    </div>
+      <div class="custom-pad flex flex-col items-center gap-4 pt-8 md:pt-12">
         <div
-          class="text-primary-500 font-semibold text-sm flex justify-center items-center p-2 bg-[#4864E114] rounded-xl mt-12 md:mt-28"
+          class="text-primary-500 font-semibold text-sm flex justify-center items-center p-2 bg-[#4864E114] rounded-xl"
         >
           فرصت‌های شغلی حسابداری را پیدا کنید
         </div>
