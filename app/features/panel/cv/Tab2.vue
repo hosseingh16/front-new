@@ -10,9 +10,18 @@
       <Titr>مهارت‌ها</Titr>
       <div class="mt-4 grid lg:grid-cols-2 gap-x-4 gap-y-12">
         <Slider color="#FFA726" label="میزان آشنایی به نرم افزار اکسل:" />
-        <Slider color="#2E7D32" label="میزان آشنایی به حسابداری بهای تمام شده:" />
-        <Slider color="#2E7D32" label="میزان تجربه شما در حوزه حسابداری پیمان:" />
-        <Slider color="#2E7D32" label="میزان آشنایی با تهیه صورت مالی استاندارد:" />
+        <Slider
+          color="#2E7D32"
+          label="میزان آشنایی به حسابداری بهای تمام شده:"
+        />
+        <Slider
+          color="#2E7D32"
+          label="میزان تجربه شما در حوزه حسابداری پیمان:"
+        />
+        <Slider
+          color="#2E7D32"
+          label="میزان آشنایی با تهیه صورت مالی استاندارد:"
+        />
       </div>
       <div class="flex justify-end mt-9">
         <button class="btn btn-ghost">
@@ -31,7 +40,10 @@
       <div class="mt-4 grid lg:grid-cols-2 gap-x-4 gap-y-12">
         <Slider color="#FFA726" label="میزان آشنایی با مالیات ارزش افزوده:" />
         <Slider color="#2E7D32" label="میزان آشنایی به مالیات عملکرد:" />
-        <Slider color="#2E7D32" label="میزان آشنایی به بیمه های پرسنلی و قراردادی:" />
+        <Slider
+          color="#2E7D32"
+          label="میزان آشنایی به بیمه های پرسنلی و قراردادی:"
+        />
         <Slider
           color="#2E7D32"
           label="میزان آشنایی به سامانه مودیان و پایانه های فروشگاهی:"
@@ -54,8 +66,8 @@
       <div class="mt-5 flex gap-1 items-center">
         <icons-check color="#009F65" />
         <span class="text-text-passive text-sm"
-          >در صورتی که فایل رزومه یا توضیحات جداگانه دارید میتوانید آن را اپلود کنید. این
-          فایل برای کارفرمایان قابل مشاهده است.</span
+          >در صورتی که فایل رزومه یا توضیحات جداگانه دارید میتوانید آن را اپلود
+          کنید. این فایل برای کارفرمایان قابل مشاهده است.</span
         >
       </div>
       <div class="mt-4">
@@ -93,7 +105,8 @@
           </div>
         </div>
         <p class="text-text-primay leading-8">
-          در صورت فعال بودن، رزومه شما در نتیجه جستجوی کارفرمایان قابل ‌رویت خواهد بود.
+          در صورت فعال بودن، رزومه شما در نتیجه جستجوی کارفرمایان قابل ‌رویت
+          خواهد بود.
         </p>
       </div>
     </div>
@@ -101,17 +114,19 @@
 </template>
 
 <script setup lang="ts">
-import type { ISelectItem } from '~/types/select-item.js';
-import Slider from './Slider.vue';
-import Titr from './Titr.vue';
-import EducationSection from './Tab2/EducationSection.vue';
-import ExperienceSection from './Tab2/ExperienceSection.vue';
-import ProgramSection from './Tab2/ProgramSection.vue';
+import type { ISelectItem } from "~/types/select-item.js";
+import Slider from "./Slider.vue";
+import Titr from "./Titr.vue";
+import EducationSection from "./Tab2/EducationSection.vue";
+import ExperienceSection from "./Tab2/ExperienceSection.vue";
+import ProgramSection from "./Tab2/ProgramSection.vue";
 
 // Variabels
-const levels = ref<ISelectItem[]>([{ label: 'کارشناسی', value: '1' }]);
-const years = ref<ISelectItem[]>([{ label: '1400', value: '1' }]);
+const levels = ref<ISelectItem[]>([]);
+const years = ref<ISelectItem[]>([]);
 const educationItems = ref<any[]>([]);
 const loading = ref(true);
 const loading2 = ref(false);
+
+onMounted(async () => {});
 </script>

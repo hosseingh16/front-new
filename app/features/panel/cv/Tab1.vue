@@ -14,8 +14,7 @@
                 subtitle="یا تصویر را بکشید و در این محل رها کنید"
                 :max-size="10"
                 :accept="['png', 'jpg']"
-                  @update:model-value="handleProfileImage"
-              
+                @update:model-value="handleProfileImage"
                 @update:base64="(v) => (imageBase64 = v)"
               />
             </Field>
@@ -30,7 +29,7 @@
 
         <m-form-input
           name="name"
-          label="نام کامل"        
+          label="نام کامل"
           placeholder="نام کامل خود را وارد کنید"
           required
         ></m-form-input>
@@ -154,7 +153,11 @@
         </div>
 
         <div class="lg:col-span-2 flex justify-end">
-          <button class="btn btn-ghost" type="button" @click="changeEditMode(false)">
+          <button
+            class="btn btn-ghost"
+            type="button"
+            @click="changeEditMode(false)"
+          >
             <Icon name="svg:close" />
             انصراف
           </button>
@@ -162,7 +165,6 @@
             <Icon name="svg:check-check" />
             ذخیره
           </m-button>
-          
         </div>
       </div>
       <div v-show="!editMode" class="grid lg:grid-cols-2 gap-x-4 gap-y-8">
@@ -189,7 +191,9 @@
         />
         <InfoItem
           title="سابقه کار:"
-          :value="experiences.find((x) => x.value === values.workExperience)?.label"
+          :value="
+            experiences.find((x) => x.value === values.workExperience)?.label
+          "
         />
         <InfoItem
           title="حقوق درخواستی:"
@@ -202,13 +206,19 @@
         <InfoItem
           title="جنسیت:"
           :value="
-            values.gender === '1' ? 'آقا' : values.gender === '2' ? 'خانم' : undefined
+            values.gender === '1'
+              ? 'آقا'
+              : values.gender === '2'
+              ? 'خانم'
+              : undefined
           "
         />
         <InfoItem
           title="وضعیت خدمت سربازی:"
           :value="
-            militaryStatuses.find((x) => x.value === values.militaryServiceStatus)?.label
+            militaryStatuses.find(
+              (x) => x.value === values.militaryServiceStatus,
+            )?.label
           "
         />
         <InfoItem
@@ -233,7 +243,11 @@
           title="منطقه محل سکونت:"
           :value="regions.find((x) => x.value === values.region)?.label"
         />
-        <InfoItem title="درباره من:" :value="values.about" class="lg:col-span-2" />
+        <InfoItem
+          title="درباره من:"
+          :value="values.about"
+          class="lg:col-span-2"
+        />
         <div class="lg:col-span-2 text-left mt-2">
           <button
             class="btn text-sm border-none text-primary-500 bg-[#4864E114] max-md:btn-block"
@@ -250,27 +264,27 @@
 </template>
 
 <script setup lang="ts">
-import { ErrorMessage, Field, useForm } from 'vee-validate';
-import Titr from './Titr.vue';
-import * as Yup from 'yup';
-import InfoItem from './InfoItem.vue';
-import type { ISelectItem } from '~/types/select-item.js';
+import { ErrorMessage, Field, useForm } from "vee-validate";
+import Titr from "./Titr.vue";
+import * as Yup from "yup";
+import InfoItem from "./InfoItem.vue";
+import type { ISelectItem } from "~/types/select-item.js";
 
 //Import Feeders
-import { provinces } from '~/feeders/provinces';
+import { provinces } from "~/feeders/provinces";
 
 //Import Validation Rules
-import { fullNameValidation } from '~/validations/fullName';
-import { profileImageValidation } from '~/validations/profileImage';
+import { fullNameValidation } from "~/validations/fullName";
+import { profileImageValidation } from "~/validations/profileImage";
 
 // Variables
 const api = useApi();
 const loading = api.loading;
-const hasRegions = ref(false);  
-const lookups = ref<Record<string, any[]>>({})  
+const hasRegions = ref(false);
+const lookups = ref<Record<string, any[]>>({});
 const editMode = ref(false);
 const imageBase64 = ref<string | null>(null);
-const currentUser = ref<any>(null)
+const currentUser = ref<any>(null);
 const jobTitles = ref<ISelectItem[]>([]);
 const experiences = ref<ISelectItem[]>([]);
 const salaries = ref<ISelectItem[]>([]);
@@ -284,43 +298,48 @@ const formSchema = Yup.object({
   //profileImage: profileImageValidation,
   profileImage: Yup.string().notRequired(),
   name: fullNameValidation,
-  jobTitle: Yup.string().required('عنوان شغلی انتخاب نشده است'),
-  jobStatus: Yup.string().required('وضعیت شغلی انتخاب نشده است'),
-  workExperience: Yup.string().required('سابقه کار انتخاب نشده است'),
-  desiredSalary: Yup.string().required('حقوق درخواستی انتخاب نشده است'),
-  birthDate: Yup.number().required('سال تولد انتخاب نشده است'),
-  gender: Yup.string().required('جنسیت انتخاب نشده است'),
-  militaryServiceStatus: Yup.string().when('gender', {
-    is: '1',
-    then: (schema) => schema.required('وضعیت خدمت سربازی انتخاب نشده است'),
+  jobTitle: Yup.string().required("عنوان شغلی انتخاب نشده است"),
+  jobStatus: Yup.string().required("وضعیت شغلی انتخاب نشده است"),
+  workExperience: Yup.string().required("سابقه کار انتخاب نشده است"),
+  desiredSalary: Yup.string().required("حقوق درخواستی انتخاب نشده است"),
+  birthDate: Yup.number().required("سال تولد انتخاب نشده است"),
+  gender: Yup.string().required("جنسیت انتخاب نشده است"),
+  militaryServiceStatus: Yup.string().when("gender", {
+    is: "1",
+    then: (schema) => schema.required("وضعیت خدمت سربازی انتخاب نشده است"),
     otherwise: (schema) => schema.notRequired(),
   }),
-  maritalStatus: Yup.string().required('وضعیت تأهل انتخاب نشده است'),
-  province: Yup.string().required('استان انتخاب نشده است'),
-  city: Yup.string().required('شهر انتخاب نشده است'),
-  region: Yup.string().when('city', {
+  maritalStatus: Yup.string().required("وضعیت تأهل انتخاب نشده است"),
+  province: Yup.string().required("استان انتخاب نشده است"),
+  city: Yup.string().required("شهر انتخاب نشده است"),
+  region: Yup.string().when("city", {
     is: () => hasRegions.value === true,
-    then: (schema) => schema.required('منطقه انتخاب نشده است'),
+    then: (schema) => schema.required("منطقه انتخاب نشده است"),
     otherwise: (schema) => schema.notRequired(),
   }),
   about: Yup.string(),
 });
-const {handleSubmit,setFieldValue,setFieldError,validateField, setValues, values} = useForm<Yup.InferType<typeof formSchema>>(
-  {
-    initialValues: {},
+const {
+  handleSubmit,
+  setFieldValue,
+  setFieldError,
+  validateField,
+  setValues,
+  values,
+} = useForm<Yup.InferType<typeof formSchema>>({
+  initialValues: {},
 
-    validationSchema: formSchema,
-  },
-);
+  validationSchema: formSchema,
+});
 
-const isMale = computed(() => values.gender === '1');
+const isMale = computed(() => values.gender === "1");
 
 watch(
   () => values.province,
   async (provinceId, oldValue) => {
     if (!provinceId) {
       cities.value = [];
-      setFieldValue('city', ''); // ✔ مهم
+      setFieldValue("city", ""); // ✔ مهم
       return;
     }
 
@@ -328,7 +347,7 @@ watch(
 
     //If it's first load dont remove user saved city
     if (oldValue === undefined) return;
-    setFieldValue('city', ''); // ✔ مهم‌ترین خط
+    setFieldValue("city", ""); // ✔ مهم‌ترین خط
   },
 );
 
@@ -338,7 +357,7 @@ watch(
     if (!cityId) {
       regions.value = [];
       hasRegions.value = false;
-      setFieldValue('region', '');
+      setFieldValue("region", "");
       return;
     }
 
@@ -348,9 +367,9 @@ watch(
 
     hasRegions.value = res.length > 0;
 
-     //If it's first load dont remove user saved region
+    //If it's first load dont remove user saved region
     if (oldValue === undefined) return;
-    setFieldValue('region', '');
+    setFieldValue("region", "");
   },
 );
 
@@ -361,14 +380,11 @@ const changeEditMode = async (value: boolean) => {
 };
 
 const onSubmit = handleSubmit(async (data) => {
-  
-   //let result =  await api.get('/lookups?keys=all');
-  
+  //let result =  await api.get('/lookups?keys=all');
 
   // خارج کردن تصویر پروفایل از فرم
   const { profileImage, ...payload } = data;
   //
-  
 
   // پیدا کردن نام استان و شهر
   const selectedProvince = provinces.find((p) => p.value === data.province);
@@ -383,16 +399,12 @@ const onSubmit = handleSubmit(async (data) => {
   //   provinceId: selectedProvince?.value || null,
   // };
 
-  
-
   try {
-    await api.post('/cv/save-basics', payload);
+    await api.post("/cv/save-basics", payload);
     editMode.value = false;
   } catch (e) {
     console.error(e);
   }
-
-
 
   //   await useSanctumFetch("/api/v1/cv/save-basics", {
   //   method: "POST",
@@ -400,102 +412,90 @@ const onSubmit = handleSubmit(async (data) => {
   // })
 });
 
-
 const handleProfileImage = async (file: File | null) => {
-  if (!file) return
+  if (!file) return;
 
   // clear previous error
-  setFieldError('profileImage', '')
+  setFieldError("profileImage", "");
 
   // 1. validate type
-  const isValidType =
-    file.type === 'image/png' || file.type === 'image/jpeg'
+  const isValidType = file.type === "image/png" || file.type === "image/jpeg";
 
   if (!isValidType) {
-    setFieldError('profileImage', 'فقط فرمت png و jpg مجاز است')
-    return
+    setFieldError("profileImage", "فقط فرمت png و jpg مجاز است");
+    return;
   }
 
   // 2. validate size (10MB)
-  const maxSize = 10 * 1024 * 1024
+  const maxSize = 10 * 1024 * 1024;
 
   if (file.size > maxSize) {
-    setFieldError('profileImage', 'حجم تصویر نباید بیشتر از 10MB باشد')
-    return
+    setFieldError("profileImage", "حجم تصویر نباید بیشتر از 10MB باشد");
+    return;
   }
 
   try {
     // 3. upload
-    const formData = new FormData()
-    formData.append('profile_image', file)
-    
+    const formData = new FormData();
+    formData.append("profile_image", file);
 
-    const res = await api.post<any>('cv/upload/profile-image', formData)
-    
+    const res = await api.post<any>("cv/upload/profile-image", formData);
 
     // 4. set uploaded file id into form
-    setFieldValue('profileImage', res.data.id)
+    setFieldValue("profileImage", res.data.id);
 
     // 5. optional: clear error after success
-    setFieldError('profileImage', '')
+    setFieldError("profileImage", "");
   } catch (error) {
-    console.error(error)
-    setFieldError('profileImage', 'خطا در آپلود تصویر')
+    console.error(error);
+    setFieldError("profileImage", "خطا در آپلود تصویر");
   }
-}
-
-
-
-
+};
 
 onMounted(async () => {
-
   //   const bootstrap = ref()
   //   bootstrap.value = await api.get('/panel/bootstrap')
-   
-    
-
-//Get lookups 
-  const response = await api.get(
-    'lookups?keys=job_titles,experience_levels,salary_ranges,birth_years,military_statuses'
-  ) as any
-
-  lookups.value = response.data ?? response 
-  jobTitles.value = lookups.value?.job_titles ?? []
-  experiences.value = lookups.value?.experience_levels ?? []
-  salaries.value = lookups.value?.salary_ranges ?? []
-  years.value = lookups.value?.birth_years ?? []
-  militaryStatuses.value = lookups.value?.military_statuses ?? []
 
   //Load user data
-  const res = await api.get<any>('/user')
+  const currentUser = useSanctumUser<any>();
+  // const res = await api.get<any>("/user");
+  //currentUser.value = res?.data ?? null;
 
-   currentUser.value = res?.user ?? null
- 
+  //Get lookups
+  const response = (await api.get(
+    "lookups?keys=job_titles,experience_levels,salary_ranges,birth_years,military_statuses",
+  )) as any;
 
-   setValues({
-    name: currentUser.value.name ?? '',
-     jobTitle: currentUser.value.resume_personal?.job_title ?? '',
-     jobStatus: String(currentUser.value.resume_personal?.job_status ?? '0'),
-     workExperience: currentUser.value.resume_personal?.work_experience ?? '',
-     desiredSalary: currentUser.value.resume_personal?.desired_salary ?? '',
-     birthDate: Number(currentUser.value.resume_personal?.birthdate ?? ''),
-     gender: String(currentUser.value.resume_personal?.gender ?? ''),
-     militaryServiceStatus: currentUser.value.resume_personal?.military_service_status ?? '',
-     maritalStatus: String(currentUser.value.resume_personal?.marital_status ?? ''),
-     province: currentUser.value.resume_personal?.province_id ?? '',
-     city: currentUser.value.resume_personal?.city_id ?? '',
-     region: currentUser.value.resume_personal?.region_id ?? '',
-     about: currentUser.value.resume_personal?.about ?? '',
-    
+  lookups.value = response.data ?? response;
+  jobTitles.value = lookups.value?.job_titles ?? [];
+  experiences.value = lookups.value?.experience_levels ?? [];
+  salaries.value = lookups.value?.salary_ranges ?? [];
+  years.value = lookups.value?.birth_years ?? [];
+  militaryStatuses.value = lookups.value?.military_statuses ?? [];
+
+  setValues({
+    name: currentUser.value.data.name ?? "",
+    jobTitle: currentUser.value.data.resume_personal?.job_title ?? "",
+    jobStatus: String(
+      currentUser.value.data.resume_personal?.job_status ?? "0",
+    ),
+    workExperience:
+      currentUser.value.data.resume_personal?.work_experience ?? "",
+    desiredSalary: currentUser.value.data.resume_personal?.desired_salary ?? "",
+    birthDate: Number(currentUser.value.data.resume_personal?.birthdate ?? ""),
+    gender: String(currentUser.value.data.resume_personal?.gender ?? ""),
+    militaryServiceStatus:
+      currentUser.value.data.resume_personal?.military_service_status ?? "",
+    maritalStatus: String(
+      currentUser.value.data.resume_personal?.marital_status ?? "",
+    ),
+    province: currentUser.value.data.resume_personal?.province_id ?? "",
+    city: currentUser.value.data.resume_personal?.city_id ?? "",
+    region: currentUser.value.data.resume_personal?.region_id ?? "",
+    about: currentUser.value.data.resume_personal?.about ?? "",
+
     // about: user.resume_personal?.about ?? '',
     // profileImage: user.resume_personal?.profile_image ?? '',
-  })
-})
-  
-
- 
-
-
-
+  });
+});
 </script>

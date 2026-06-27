@@ -70,11 +70,15 @@
         </div>
         <div>
           <div class="flex justify-end mt-4">
-            <button class="btn btn-ghost" type="button" @click="modalRef?.closeModal()">
+            <button
+              class="btn btn-ghost"
+              type="button"
+              @click="modalRef?.closeModal()"
+            >
               <Icon name="svg:close" />
               انصراف
             </button>
-            <m-button  type="submit" class="btn-primary" :loading>
+            <m-button type="submit" class="btn-primary" :loading>
               <Icon name="svg:plus-white" />
               افزودن
             </m-button>
@@ -86,11 +90,11 @@
 </template>
 
 <script setup lang="ts">
-import type Dialog from '~/components/M/Dialog.vue';
-import { useForm } from 'vee-validate';
-import * as Yup from 'yup';
-import type { ISelectItem } from '~/types/select-item.js';
-import Titr from '../Titr.vue';
+import type Dialog from "~/components/M/Dialog.vue";
+import { useForm } from "vee-validate";
+import * as Yup from "yup";
+import type { ISelectItem } from "~/types/select-item.js";
+import Titr from "../Titr.vue";
 
 // Props
 const props = withDefaults(
@@ -106,7 +110,7 @@ const props = withDefaults(
 
 // Emits
 const emits = defineEmits<{
-  (e: 'item', value: any): void;
+  (e: "item", value: any): void;
 }>();
 
 // Variables
@@ -116,13 +120,17 @@ const loading = api.loading;
 
 // Form
 const formSchema = Yup.object({
-  degree: Yup.string().required('مقطع تحصیلی انتخاب نشده است'),
-  major: Yup.string().required('رشته تحصیلی وارد نشده است'),
-  university: Yup.string().required('آموزشگاه وارد نشده است'),
+  degree: Yup.string().required("مقطع تحصیلی انتخاب نشده است"),
+  major: Yup.string()
+    .max(40, "رشته تحصیلی نباید بیشتر از 40 کاراکتر باشد")
+    .required("رشته تحصیلی وارد نشده است"),
+  university: Yup.string()
+    .max(40, " نام آموزشگاه نباید بیشتر از 40 کاراکتر باشد")
+    .required("آموزشگاه وارد نشده است"),
   stillbusy: Yup.bool(),
-  enddate: Yup.string().when('stillbusy', {
+  enddate: Yup.string().when("stillbusy", {
     is: false,
-    then: (schema) => schema.required('تاریخ فارغ‌التحصیلی انتخاب نشده است'),
+    then: (schema) => schema.required("تاریخ فارغ‌التحصیلی انتخاب نشده است"),
     otherwise: (schema) => schema.optional(),
   }),
   description: Yup.string(),
@@ -132,11 +140,11 @@ const { handleSubmit, values, setFieldValue, resetForm, setValues } = useForm<
 >({
   validationSchema: formSchema,
   initialValues: {
-    degree: '',
-    major: '',
-    university: '',
-    enddate: '',
-    description: '',
+    degree: "",
+    major: "",
+    university: "",
+    enddate: "",
+    description: "",
     stillbusy: false,
   },
 });
@@ -153,8 +161,8 @@ async function showModal() {
 
 const isGraduationDateDisabled = computed(() => values.stillbusy);
 
-const onSubmit = handleSubmit((data: Yup.InferType<typeof formSchema>) => { 
-  emits('item', data);
+const onSubmit = handleSubmit((data: Yup.InferType<typeof formSchema>) => {
+  emits("item", data);
   modalRef.value?.closeModal();
 });
 </script>

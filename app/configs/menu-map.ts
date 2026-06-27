@@ -31,7 +31,7 @@ export const menuMap: Record<string, MenuMeta> = {
 
   resume_edit: {
     label: 'ویرایش رزومه',
-    icon: 'edit',
+    icon: 'eye',
     to: '/dashboard/my-resume/edit',
   },
 
@@ -43,17 +43,17 @@ export const menuMap: Record<string, MenuMeta> = {
    my_requests: {
     label: 'درخواست های من',
     icon: 'eye',
-    to: '/dashboard/my-requests',
+    to: '/dashboard/ads',
   },
    projects: {
     label: 'پروژه ها',
     icon: 'eye',
-    to: '/dashboard/my-requests',
+    to: '/dashboard/ads',
   },
    saved_jobs: {
     label: 'نشان شده ها',
     icon: 'eye',
-    to: '/dashboard/my-requests',
+    to: '/dashboard/ads',
   },
 
   // -------------------------

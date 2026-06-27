@@ -10,7 +10,7 @@
         label="افزودن"
         :levels
         :years
-       @item="addEducation"
+        @item="addEducation"
       />
     </div>
     <div
@@ -25,7 +25,8 @@
         شما هنوز اطلاعات تحصیلی خود را تکمیل نکرده‌اید.
       </p>
       <p class="text-text-passive text-sm">
-        با افزودن حداقل یک سابقه تحصیلی، شانس شما برای استخدام افزایش پیدا می‌کند.
+        با افزودن حداقل یک سابقه تحصیلی، شانس شما برای استخدام افزایش پیدا
+        می‌کند.
       </p>
       <EducationModal
         label="افزودن اطلاعات تحصیلی"
@@ -37,12 +38,14 @@
     <div v-else class="mt-4 space-y-4">
       <div
         v-for="(item, index) in educationItems"
-        class="p-4 border-2 border-dashed border-gray-default rounded-lg flex justify-between">
+        class="p-4 border-2 border-dashed border-gray-default rounded-lg flex justify-between"
+      >
         <div class="flex items-start gap-4">
           <Icon name="svg:edu-item" size="28" />
           <div class="space-y-3">
             <p class="text-text-primay font-semibold">
-              {{ levels.find((x) => x.value === item.degree)?.label }} . {{ item.major }}
+              {{ levels.find((x) => x.value === item.degree)?.label }} .
+              {{ item.major }}
             </p>
             <p class="text-text-passive text-sm">
               {{ item.university }} .
@@ -62,14 +65,16 @@
             :years
             :edit-mode="true"
             :item-to-edit="item"
-            @item="educationItems[index] = $event"
+            @item="updateEducation(index, $event)"
           />
-          <button class="btn bg-white h-8 w-8 p-0 border-2 rounded-lg border-text-muted">
+          <button
+            class="btn bg-white h-8 w-8 p-0 border-2 rounded-lg border-text-muted"
+          >
             <Icon name="svg:dots" />
           </button>
           <button
             class="btn bg-white h-8 w-8 p-0 border-2 rounded-lg border-text-muted"
-            @click="educationItems.splice(index, 1)"
+            @click="removeEducation(index)"
           >
             <Icon name="svg:trash" />
           </button>
@@ -80,8 +85,8 @@
 </template>
 
 <script setup lang="ts">
-import type { ISelectItem } from '~/types/select-item.js';
-import EducationModal from './EducationModal.vue';
+import type { ISelectItem } from "~/types/select-item.js";
+import EducationModal from "./EducationModal.vue";
 
 // Variabels
 //const levels = ref<ISelectItem[]>([{ label: 'کارشناسی', value: '1' }]); //Gets From API
@@ -89,7 +94,7 @@ const levels = ref<ISelectItem[]>([]);
 //const years = ref<ISelectItem[]>([{ label: '1400', value: '1' }]); //Gets From API
 const years = ref<ISelectItem[]>([]);
 const educationItems = ref<any[]>([]);
-const lookups = ref<Record<string, any[]>>({})  
+const lookups = ref<Record<string, any[]>>({});
 const api = useApi();
 
 async function addEducation(item: any) {
@@ -109,28 +114,36 @@ async function removeEducation(index: number) {
 
 async function syncEducation() {
   try {
-    await api.post('cv/sync-education', {
+    await api.post("cv/sync-education", {
       education_items: educationItems.value,
     });
   } catch (error) {
-    console.error('Sync failed:', error);
+    console.error("Sync failed:", error);
   }
 }
 
-
-
 onMounted(async () => {
-  //Get lookups 
-  const response = await api.get(
-    'lookups?keys=education_levels, graduation_years'
-  ) as any
+  //Load user data
+  const currentUser = useSanctumUser<any>();
 
-   lookups.value = response.data ?? response 
+  educationItems.value = (currentUser.value.data?.resume_educations ?? []).map(
+    (item: any) => ({
+      degree: item.degree,
+      major: item.major,
+      university: item.university,
+      enddate: item.enddate,
+      description: item.description,
+    }),
+  );
 
-  levels.value = lookups.value.education_levels || [];  
-  years.value = lookups.value.graduation_years || [];  
+  //Get lookups
+  const response = (await api.get(
+    "lookups?keys=education_levels, graduation_years",
+  )) as any;
+
+  lookups.value = response.data ?? response;
+
+  levels.value = lookups.value.education_levels || [];
+  years.value = lookups.value.graduation_years || [];
 });
-
-
-
 </script>

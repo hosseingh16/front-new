@@ -76,7 +76,7 @@
 import type { ThemeType } from '~/types/theme';
 
 defineProps({
-  theme: { type: Object as () => ThemeType, required: true },
+  theme: { type: String as () => ThemeType, required: true },
   color: { type: String, required: true },
 });
 </script>

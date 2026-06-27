@@ -104,7 +104,7 @@
               <Icon name="svg:close" />
               انصراف
             </button>
-            <m-button class="btn-primary" :loading>
+            <m-button class="btn-primary" type="submit" :loading>
               <Icon name="svg:plus-white" />
               افزودن
             </m-button>
@@ -116,11 +116,11 @@
 </template>
 
 <script setup lang="ts">
-import type Dialog from '~/components/M/Dialog.vue';
-import { useForm } from 'vee-validate';
-import * as Yup from 'yup';
-import type { ISelectItem } from '~/types/select-item.js';
-import Titr from '../Titr.vue';
+import type Dialog from "~/components/M/Dialog.vue";
+import { useForm } from "vee-validate";
+import * as Yup from "yup";
+import type { ISelectItem } from "~/types/select-item.js";
+import Titr from "../Titr.vue";
 
 // Props
 const props = withDefaults(
@@ -140,7 +140,7 @@ const props = withDefaults(
 
 // Emits
 const emits = defineEmits<{
-  (e: 'item', value: any): void;
+  (e: "item", value: any): void;
 }>();
 
 // Variables
@@ -150,19 +150,19 @@ const loading = api.loading;
 
 // Form
 const formSchema = Yup.object({
-  jobTitle: Yup.string().required('عنوان شغلی انتخاب نشده است'),
+  jobTitle: Yup.string().required("عنوان شغلی انتخاب نشده است"),
   contractType: Yup.string(),
-  organization: Yup.string().required('نام سازمان وارد نشده است'),
-  actionType: Yup.string().required('نوع فعالیت انتخاب نشده است'),
-  startYear: Yup.string().required('سال شروع انتخاب نشده است'),
+  organization: Yup.string().required("نام سازمان وارد نشده است"),
+  actionType: Yup.string().required("نوع فعالیت انتخاب نشده است"),
+  startYear: Yup.string().required("سال شروع انتخاب نشده است"),
   busy: Yup.bool(),
-  endYear: Yup.string().when('busy', {
+  endYear: Yup.string().when("busy", {
     is: false,
-    then: (schema) => schema.required('سال پایان انتخاب نشده است'),
+    then: (schema) => schema.required("سال پایان انتخاب نشده است"),
     otherwise: (schema) => schema.optional(),
   }),
   lastSalary: Yup.string(),
-  reason: Yup.string().required('علت ترک کار انتخاب نشده است'),
+  reason: Yup.string().required("علت ترک کار انتخاب نشده است"),
   description: Yup.string(),
 });
 const { handleSubmit, values, setFieldValue, resetForm, setValues } = useForm<
@@ -186,7 +186,7 @@ async function showModal() {
 
 const onSubmit = handleSubmit((data: Yup.InferType<typeof formSchema>) => {
   console.log(data);
-  emits('item', data);
+  emits("item", data);
   experienceModalRef.value?.closeModal();
 });
 </script>

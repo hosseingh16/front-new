@@ -25,7 +25,7 @@ import type { ThemeType } from '~/types/theme';
 
 // Props
 defineProps({
-  theme: { type: Object as () => ThemeType, required: true },
+  theme: { type: String as () => ThemeType, required: true },
 });
 
 // Variables
