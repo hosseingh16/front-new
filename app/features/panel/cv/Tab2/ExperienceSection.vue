@@ -8,13 +8,13 @@
       <ExperienceModal
         v-else
         label="افزودن"
-        :job-titles
-        :contract-types
-        :action-types
+        :job-titles="jobTitles"
+        :employment_types="employment_types"
+        :industries="industries"
         :salaries
         :reasons
         :years
-        @item="(v) => experiencesItems.push(v)"
+        @item="addPrior"
       />
     </div>
     <div
@@ -29,17 +29,18 @@
         شما هنوز اطلاعات تحصیلی خود را تکمیل نکرده‌اید.
       </p>
       <p class="text-text-passive text-sm">
-        با افزودن حداقل یک سابقه تحصیلی، شانس شما برای استخدام افزایش پیدا می‌کند.
+        با افزودن حداقل یک سابقه تحصیلی، شانس شما برای استخدام افزایش پیدا
+        می‌کند.
       </p>
       <ExperienceModal
         label="افزودن سابقه کاری"
-        :job-titles
-        :contract-types
-        :action-types
+        :job-titles="jobTitles"
+        :employment_types="employment_types"
+        :industries="industries"
         :salaries
         :reasons
         :years
-        @item="(v) => experiencesItems.push(v)"
+        @item="addPrior"
       />
     </div>
     <div v-else class="mt-4 space-y-4">
@@ -52,7 +53,10 @@
           <div class="space-y-3">
             <p class="text-text-primay font-semibold">
               {{ jobTitles.find((x) => x.value === item.jobTitle)?.label }} .
-              {{ contractTypes.find((x) => x.value === item.contractType)?.label }}
+              {{
+                employment_types.find((x) => x.value === item.contractType)
+                  ?.label
+              }}
             </p>
             <p class="text-text-passive text-sm">
               {{ item.organization }} . از
@@ -69,9 +73,9 @@
         </div>
         <div class="flex flex-col gap-1">
           <ExperienceModal
-            :job-titles
-            :contract-types
-            :action-types
+            :job-titles="jobTitles"
+            :employment_types="employment_types"
+            :industries="industries"
             :salaries
             :reasons
             :years
@@ -79,7 +83,9 @@
             :item-to-edit="item"
             @item="experiencesItems[index] = $event"
           />
-          <button class="btn bg-white h-8 w-8 p-0 border-2 rounded-lg border-text-muted">
+          <button
+            class="btn bg-white h-8 w-8 p-0 border-2 rounded-lg border-text-muted"
+          >
             <Icon name="svg:dots" />
           </button>
           <button
@@ -95,15 +101,46 @@
 </template>
 
 <script setup lang="ts">
-import type { ISelectItem } from '~/types/select-item.js';
-import ExperienceModal from './ExperienceModal.vue';
+import type { ISelectItem } from "~/types/select-item.js";
+import ExperienceModal from "./ExperienceModal.vue";
+
+const api = useApi();
 
 // Variabels
-const jobTitles = ref<ISelectItem[]>([{ label: 'کارشناسی', value: '1' }]);
-const contractTypes = ref<ISelectItem[]>([{ label: 'کارشناسی', value: '1' }]);
-const actionTypes = ref<ISelectItem[]>([{ label: 'کارشناسی', value: '1' }]);
-const salaries = ref<ISelectItem[]>([{ label: 'کارشناسی', value: '1' }]);
-const reasons = ref<ISelectItem[]>([{ label: 'کارشناسی', value: '1' }]);
-const years = ref<ISelectItem[]>([{ label: '1400', value: '1' }]);
+const jobTitles = ref<ISelectItem[]>([{ label: "کارشناسی", value: "1" }]);
+const employment_types = ref<ISelectItem[]>([
+  { label: "کارشناسی", value: "1" },
+]);
+const industries = ref<ISelectItem[]>([]);
+const salaries = ref<ISelectItem[]>([{ label: "کارشناسی", value: "1" }]);
+const reasons = ref<ISelectItem[]>([{ label: "کارشناسی", value: "1" }]);
+const years = ref<ISelectItem[]>([{ label: "1400", value: "1" }]);
 const experiencesItems = ref<any[]>([]);
+
+const addPrior = (item: any) => {
+  console.log("kk");
+  const exists = experiencesItems.value.some(
+    (x) =>
+      x.jobTitle === item.jobTitle &&
+      x.startYear === item.startYear &&
+      x.organization === item.organization,
+  );
+  if (!exists) {
+    experiencesItems.value.push(item);
+  }
+};
+
+onMounted(async () => {
+  //Get lookups
+  const response = (await api.get(
+    "lookups?keys=job_titles,employment_types,industries, prior_years,salary_ranges,leaving_reasons",
+  )) as any;
+
+  jobTitles.value = response.data?.job_titles ?? [];
+  employment_types.value = response.data?.employment_types ?? [];
+  industries.value = response.data?.industries ?? [];
+  years.value = response.data?.prior_years ?? [];
+  salaries.value = response.data?.salary_ranges ?? [];
+  reasons.value = response.data?.leaving_reasons ?? [];
+});
 </script>

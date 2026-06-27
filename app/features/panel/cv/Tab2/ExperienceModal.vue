@@ -28,9 +28,9 @@
             placeholder="عنوان شغلی را انتخاب کنید"
           ></m-form-select2>
           <m-form-select2
-            name="contractType"
+            name="employment_type"
             label="نوع قرارداد:"
-            :options="contractTypes"
+            :options="employment_types"
             placeholder="نوع قرارداد را انتخاب کنید"
           ></m-form-select2>
           <m-form-input
@@ -42,7 +42,7 @@
           <m-form-select2
             name="actionType"
             label="نوع فعالیت:"
-            :options="actionTypes"
+            :options="industries"
             placeholder="نوع فعالیت را انتخاب کنید"
             required
           ></m-form-select2>
@@ -59,6 +59,7 @@
               label="سال پایان اشتغال:"
               required
               :options="years"
+              :disabled="isEndYearDisabled"
               placeholder="سال پایان اشتغال را انتخاب کنید"
             ></m-form-select2>
             <label class="label mt-2 text-sm text-text-primay">
@@ -75,13 +76,12 @@
           <m-form-select2
             name="lastSalary"
             label="آخرین حقوق:"
-            :options="years"
+            :options="salaries"
             placeholder="آخرین حقوق را انتخاب کنید"
           ></m-form-select2>
           <m-form-select2
             name="reason"
             label="علت ترک کار:"
-            required
             :options="reasons"
             placeholder="علت ترک را انتخاب کنید"
           ></m-form-select2>
@@ -127,8 +127,8 @@ const props = withDefaults(
   defineProps<{
     label?: string;
     jobTitles: ISelectItem[];
-    contractTypes: ISelectItem[];
-    actionTypes: ISelectItem[];
+    employment_types: ISelectItem[];
+    industries: ISelectItem[];
     years: ISelectItem[];
     salaries: ISelectItem[];
     reasons: ISelectItem[];
@@ -151,7 +151,7 @@ const loading = api.loading;
 // Form
 const formSchema = Yup.object({
   jobTitle: Yup.string().required("عنوان شغلی انتخاب نشده است"),
-  contractType: Yup.string(),
+  employment_type: Yup.string(),
   organization: Yup.string().required("نام سازمان وارد نشده است"),
   actionType: Yup.string().required("نوع فعالیت انتخاب نشده است"),
   startYear: Yup.string().required("سال شروع انتخاب نشده است"),
@@ -162,7 +162,7 @@ const formSchema = Yup.object({
     otherwise: (schema) => schema.optional(),
   }),
   lastSalary: Yup.string(),
-  reason: Yup.string().required("علت ترک کار انتخاب نشده است"),
+  reason: Yup.string(),
   description: Yup.string(),
 });
 const { handleSubmit, values, setFieldValue, resetForm, setValues } = useForm<
@@ -183,6 +183,8 @@ async function showModal() {
   }
   experienceModalRef.value?.showModal();
 }
+
+const isEndYearDisabled = computed(() => values.busy);
 
 const onSubmit = handleSubmit((data: Yup.InferType<typeof formSchema>) => {
   console.log(data);
