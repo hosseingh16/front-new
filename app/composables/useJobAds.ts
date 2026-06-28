@@ -8,7 +8,8 @@ export function useJobAds(filters: Ref<JobFiltersModel>) {
   const api = useApi()
 
   const ads = ref<AdList[]>([])
-  const loading = ref(false)
+  const loading = ref(true)
+  const initialized = ref(false)
   const error = ref<string | null>(null)
 
   let debounceTimer: ReturnType<typeof setTimeout> | null = null
@@ -30,6 +31,7 @@ export function useJobAds(filters: Ref<JobFiltersModel>) {
       ads.value = []
     } finally {
       loading.value = false
+      initialized.value = true
     }
   }
 
@@ -46,5 +48,5 @@ export function useJobAds(filters: Ref<JobFiltersModel>) {
     if (debounceTimer) clearTimeout(debounceTimer)
   })
 
-  return { ads, loading, error, fetchAds }
+  return { ads, loading, initialized, error, fetchAds }
 }

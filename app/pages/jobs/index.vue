@@ -48,7 +48,7 @@
           {{ error }}
         </p>
 
-        <NoResult v-else-if="!ads.length" wrapper-class="col-span-full" />
+        <NoResult v-else-if="initialized && !ads.length" wrapper-class="col-span-full" />
 
         <ItemBox
           v-for="ad in ads"
@@ -76,7 +76,7 @@ import { createEmptyJobFilters } from '~/types/job-filters'
 
 const api = useApi()
 const jobFilters = ref(createEmptyJobFilters())
-const { ads, loading, error } = useJobAds(jobFilters)
+const { ads, loading, initialized, error } = useJobAds(jobFilters)
 
 const toggleBookmark = async (id: string | number, type: string) => {
   await api.post<ApiResponse>('/bookmarks/toggle/' + id, {

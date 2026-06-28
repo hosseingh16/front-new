@@ -1,7 +1,7 @@
 <template>
   <div class="py-12 text-center" :class="wrapperClass">
     <Icon name="svg:no-result" :size="iconSize" />
-    <h5 class="font-yb-bold text-lg text-text-tertiary">{{ title }}</h5>
+    <h5 class="font-yb-bold text-lg text-text-tertiary -mt-[70px]">{{ title }}</h5>
     <span class="text-sm text-text-passive">{{ description }}</span>
   </div>
 </template>
