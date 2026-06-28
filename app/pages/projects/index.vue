@@ -89,6 +89,75 @@
     <section class="custom-pad  pb-12 md:pb-16">
       <m-calc-divider class="my-6" />
       
+      <div class="relative overflow-hidden rounded-3xl bg-[#001926] px-4 py-10 md:px-8 md:py-12">
+
+        <img
+          :src="pattern"
+          alt=""
+          class="pointer-events-none absolute -left-10 top-1/2 hidden w-40 -translate-y-1/2 opacity-40 md:block"
+        />
+        <img
+          :src="pattern"
+          alt=""
+          class="pointer-events-none absolute -right-10 top-1/2 hidden w-40 -translate-y-1/2 opacity-40 md:block"
+        />
+
+        <div class="relative z-10 flex flex-col items-center text-center">
+          
+          <h2 class="font-yb-bold text-lg text-white md:text-2xl">
+            <span
+            class="flex h-10 w-10 items-end justify-start text-white"
+          >
+            <Icon name="lucide:message-circle-question-mark" size="24" />
+          </span>
+            چه پروژه‌هایی می‌توانید ثبت کنید؟
+          </h2>
+        </div>
+
+        <div class="relative z-10 mt-8 space-y-3 md:mt-10 md:space-y-4">
+          <div class="flex flex-col gap-3 md:flex-row md:items-stretch md:gap-0">
+            <template v-for="(category, index) in projectCategoriesTop" :key="category">
+              <div
+                v-if="index > 0"
+                class="hidden w-px shrink-0 self-center bg-white/25 md:block md:min-h-[88px]"
+              />
+              <div
+                class="min-h-[88px] flex-1 items-center justify-center rounded-2xl bg-white px-5 py-2 md:min-h-[100px] md:px-6 mx-3"
+              >
+                <span
+                  class="flex h-9 w-9 items-center justify-center rounded-full bg-primary-500 border-2 border-[#2D31A0] text-sm font-semibold text-white my-2"
+                >
+                  {{ index + 1 }}
+                </span>
+                <p class="text-sm font-semibold leading-7 text-text-tertiary md:text-base">
+                  {{ category }}
+                </p>
+              </div>
+            </template>
+          </div>
+
+          <div class="flex flex-col gap-3 md:flex-row md:items-stretch md:gap-0">
+            <template v-for="(category, index) in projectCategoriesBottom" :key="category">
+              <div
+                v-if="index > 0"
+                class="hidden w-px shrink-0 self-center bg-white/25 md:block md:min-h-[88px]"
+              />
+              <div
+                class="min-h-[88px] flex-1 items-center justify-center rounded-2xl bg-white px-5 py-2 md:min-h-[100px] md:px-6 mx-3"
+              >
+                <span
+                  class="flex h-9 w-9 items-center justify-center rounded-full bg-primary-500 border-2 border-[#2D31A0] text-sm font-semibold text-white my-2"
+                >
+                  {{ index + 4 }}
+                </span>
+                <p class="max-w-[180px] text-sm font-semibold leading-7 text-text-tertiary md:text-base">
+                  {{ category }}
+                </p>
+              </div>
+            </template>
+          </div>
+        </div>
+      </div>
 
     </section>
 
@@ -197,6 +266,19 @@ import type { Testimonial } from '~/components/Elements/Testimonials.vue'
 import type { ApiResponse } from '~/types/api'
 import type { ProjectList } from '~/types/project'
 import FaqSection from '~/components/Elements/FaqSection.vue'
+
+const projectCategoriesTop = [
+  'پروژه‌های عملیاتی و روزمره حسابداری',
+  'پروژه‌های مرتبط با حقوق و دستمزد',
+  'پروژه‌های نرم‌افزاری و استقرار سیستم',
+]
+
+const projectCategoriesBottom = [
+  'پروژه‌های انبار و دارایی',
+  'پروژه‌های گزارش دهی',
+  'پروژه بهای تمام شده',
+  'پروژه‌های مالیاتی',
+]
 
 const trustBarStats = [
   { value: 43000, label: 'پروژه اخیر' },
