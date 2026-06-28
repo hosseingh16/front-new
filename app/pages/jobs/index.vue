@@ -31,48 +31,7 @@
     </section>
 
     <div class="custom-pad grid md:grid-cols-7 gap-4 items-start">
-      <div
-        class="md:col-span-2 bg-white rounded-lg border border-b-0 border-gray-default text-text-tertiary text-sm"
-      >
-        <div class="join join-vertical w-full">
-          <filter-collapse v-for="(item, index) in filters" :expand="index === 0">
-            <template #title
-              ><Icon :name="`svg:${item.icon}`" /> {{ item.title }}</template
-            >
-            <template #content>
-              <div v-if="index === 0" class="space-y-2">
-                <div class="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    :checked="true"
-                    class="checkbox checkbox-primary p-1.5"
-                  />
-                  <Icon name="svg:bag-3" />
-                  <span>تمام وقت</span>
-                </div>
-                <div class="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    :checked="true"
-                    class="checkbox checkbox-primary p-1.5"
-                  />
-                  <Icon name="svg:bag-3" />
-                  <span>پاره وقت</span>
-                </div>
-                <div class="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    :checked="true"
-                    class="checkbox checkbox-primary p-1.5"
-                  />
-                  <Icon name="svg:bag-3" />
-                  <span>پروژه</span>
-                </div>
-              </div>
-            </template>
-          </filter-collapse>
-        </div>
-      </div>
+      <JobFiltersSidebar v-model="jobFilters" class="md:col-span-2" />
 
       <div class="md:col-span-5 grid grid-cols-1 md:grid-cols-2 gap-4">
         <div v-for="n in 8" class="bg-white p-1 rounded-lg">
@@ -142,18 +101,9 @@
 </template>
 
 <script setup lang="ts">
-import FilterCollapse from '~/features/home/FilterCollapse.vue';
-import Questions from '~/features/home/Questions.vue';
+import JobFiltersSidebar from '~/components/Elements/JobFiltersSidebar.vue'
+import Questions from '~/features/home/Questions.vue'
+import { createEmptyJobFilters } from '~/types/job-filters'
 
-const filters = [
-  { title: 'نوع آگهی', icon: 'user-search-4' },
-  { title: 'جستجو عنوان', icon: 'search-1' },
-  { title: 'گروه‌های شغلی', icon: 'bag-4' },
-  { title: 'شهر', icon: 'location-6' },
-  { title: 'حقوق', icon: 'wallet' },
-  { title: 'سابقه کار', icon: 'work-history-2' },
-  { title: 'نوع قرارداد', icon: 'text' },
-  { title: 'مزایای سازمانی', icon: 'benefits' },
-];
-
+const jobFilters = ref(createEmptyJobFilters())
 </script>
