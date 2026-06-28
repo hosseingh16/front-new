@@ -34,62 +34,30 @@
       <JobFiltersSidebar v-model="jobFilters" class="md:col-span-2" />
 
       <div class="md:col-span-5 grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div v-for="n in 8" class="bg-white p-1 rounded-lg">
-          <div class="bg-[#F6F8FE] rounded-lg p-3">
-            <div class="flex justify-between items-center">
-              <div class="flex items-center gap-2">
-                <div class="flex justify-center items-center bg-[#ECF4D9] rounded-2xl">
-                  <img src="/images/img-14.png" alt="" />
-                </div>
-                <div class="text-sm">
-                  <p class="font-semibold">استخدام حسابدار</p>
-                  <div class="flex flex-wrap items-center mt-2">
-                    <Icon name="svg:buildings-4" />
-                    <p class="text-text-passive">نام شرکت:</p>
-                    <p class="mr-1">بازرگانی سپهر</p>
-                  </div>
-                </div>
-              </div>
-              <div class="text-center">
-                <Icon name="svg:bookmark" />
-                <p class="text-xs text-text-passive">3 روز قبل</p>
-              </div>
-            </div>
-            <div class="flex gap-1 text-sm mt-3 overflow-x-auto no-scrollbar">
-              <div
-                class="shrink-0 border border-gray-default rounded-full bg-white py-1 px-3"
-              >
-                فروش آهن‌آلات
-              </div>
-              <div
-                class="shrink-0 border border-gray-default rounded-full bg-white py-1 px-3"
-              >
-                مشهد، وکیل آباد
-              </div>
-              <div
-                class="shrink-0 border border-gray-default rounded-full bg-white py-1 px-3"
-              >
-                خانم
-              </div>
-            </div>
-          </div>
-          <div class="flex items-center justify-between mt-2 px-2">
-            <div>
-              <p class="text-sm text-text-secondary">تمام وقت</p>
-              <p class="font-semibold">20 تا 25 میلیون تومان</p>
-            </div>
-            <button
-              class="btn border-none px-2 h-8 text-sm text-primary-500 bg-[#4864E114]"
-            >
-              <icons-chevron class="rotate-90" color="#4864e1" />
-              مشاهده
-            </button>
-          </div>
-        </div>
-        <button class="btn btn-outline text-primary-500 sm:hidden">
-          مشاهده همه
-          <icons-arrow color="#4864e1" :size="15" class="mr-1" />
-        </button>
+        <p
+          v-if="loading && !ads.length"
+          class="col-span-full py-12 text-center text-sm text-text-passive"
+        >
+          در حال بارگذاری آگهی‌ها...
+        </p>
+
+        <p
+          v-else-if="error"
+          class="col-span-full py-12 text-center text-sm text-error"
+        >
+          {{ error }}
+        </p>
+
+        <NoResult v-else-if="!ads.length" wrapper-class="col-span-full" />
+
+        <ItemBox
+          v-for="ad in ads"
+          v-else
+          :key="ad.id"
+          variant="ad"
+          :item="ad"
+          @bookmark="toggleBookmark"
+        />
       </div>
     </div>
     
@@ -99,11 +67,22 @@
 </template>
 
 <script setup lang="ts">
+import ItemBox from '~/components/Elements/item-box.vue'
 import JobFiltersSidebar from '~/components/Elements/JobFiltersSidebar.vue'
+import NoResult from '~/components/Elements/NoResult.vue'
 import FaqSection from '~/components/Elements/FaqSection.vue'
+import type { ApiResponse } from '~/types/api'
 import { createEmptyJobFilters } from '~/types/job-filters'
 
+const api = useApi()
 const jobFilters = ref(createEmptyJobFilters())
+const { ads, loading, error } = useJobAds(jobFilters)
+
+const toggleBookmark = async (id: string | number, type: string) => {
+  await api.post<ApiResponse>('/bookmarks/toggle/' + id, {
+    query: { type },
+  })
+}
 
 const faqCategories = [
   { id: 1, label: 'کارفرمایان' },
