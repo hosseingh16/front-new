@@ -3,7 +3,7 @@
     class="bg-white rounded-lg border border-b-0 border-gray-default text-text-tertiary text-sm"
     :class="props.class"
   >
-    <div class="flex w-full items-center justify-between px-4 py-2">
+    <div class="flex w-full items-center justify-between px-4 py-2 mt-2">
       <span class="text-sm font-semibold text-text-passive">فیلترها</span>
       <button
         type="button"
