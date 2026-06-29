@@ -1,6 +1,6 @@
 <template>
   <div
-    class="max-h-[280px] space-y-2 overflow-y-auto"
+    class="max-h-[280px] space-y-2 overflow-y-auto overflow-x-hidden"
     :class="listClass"
   >
     <div

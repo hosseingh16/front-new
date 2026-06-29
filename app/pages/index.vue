@@ -15,12 +15,12 @@
         <h2 class="font-semibold text-lg text-center">
           پلی میان کارفرمایان و حسابداران برای استخدام و همکاری حرفه‌ای
         </h2>
-        <div class="flex flex-wrap gap-2 mt-5">
+        <div class="flex flex-wrap gap-2 mt-5 justify-center">
           <button class="btn btn-success">
             <Icon name="svg:user-plus-white" size="24" />
             استخدام حسابدار
           </button>
-          <NuxtLink to="/opportunities-jobs">
+          <NuxtLink to="/jobs">
             <button class="btn btn-primary">
             <Icon name="svg:user-plus-white" size="24" />
             مشاهده فرصت های شغلی

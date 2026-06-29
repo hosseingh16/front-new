@@ -28,9 +28,9 @@
     </section>
 
     <div class="custom-pad grid md:grid-cols-7 gap-4 items-start">
-      <JobFiltersSidebar v-model="jobFilters" class="md:col-span-2" />
+      <JobFiltersSidebar v-model="jobFilters" class="col-span-full md:col-span-2" />
 
-      <div id="jobs-results" class="md:col-span-5 grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div id="jobs-results" class="col-span-full md:col-span-5 grid grid-cols-1 md:grid-cols-2 gap-4">
         <template v-if="loading">
           <ItemBox
             v-for="n in 12"
