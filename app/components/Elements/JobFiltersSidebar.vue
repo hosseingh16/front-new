@@ -121,7 +121,7 @@
                   >
                     <input
                       type="checkbox"
-                      :checked="selectedCities.includes(city.value)"
+                      :checked="isCitySelected(city.value)"
                       class="checkbox checkbox-primary p-1.5"
                       @change="toggleCity(city.value, item.province.value as number, $event)"
                     />
@@ -206,5 +206,6 @@ const {
   toggleProvinceExpand,
   toggleProvince,
   toggleCity,
+  isCitySelected,
 } = useJobFilters(model)
 </script>

@@ -6,6 +6,7 @@ import {
   type LocationTreeItem,
   type ProvinceCheckState,
 } from '~/types/job-filters'
+import { normalizeFilterId } from '~/utils/job-filters-query'
 import type { ISelectItem } from '~/types/select-item'
 
 export function useJobFilters(model?: Ref<JobFiltersModel>) {
@@ -110,17 +111,22 @@ export function useJobFilters(model?: Ref<JobFiltersModel>) {
   }))
 
   function applyFiltersModel(value: JobFiltersModel) {
-    selectedJobTypes.value = [...value.jobTypes]
+    selectedJobTypes.value = value.jobTypes.map(normalizeFilterId)
     jobTitleSearch.value = value.titleSearch
     jobGroupSearch.value = ''
-    selectedJobGroups.value = [...value.jobGroups]
+    selectedJobGroups.value = value.jobGroups.map(normalizeFilterId)
     citySearch.value = ''
-    selectedCities.value = [...value.cities]
+    selectedCities.value = value.cities.map(normalizeFilterId)
     selectedProvinces.value = [...value.provinces]
-    selectedSalaries.value = [...value.salaries]
-    selectedWorkHistory.value = [...value.workHistory]
-    selectedContractTypes.value = [...value.contractTypes]
-    selectedBenefits.value = [...value.benefits]
+    selectedSalaries.value = value.salaries.map(normalizeFilterId)
+    selectedWorkHistory.value = value.workHistory.map(normalizeFilterId)
+    selectedContractTypes.value = value.contractTypes.map(normalizeFilterId)
+    selectedBenefits.value = value.benefits.map(normalizeFilterId)
+  }
+
+  function isCitySelected(cityValue: string | number) {
+    const id = normalizeFilterId(cityValue)
+    return selectedCities.value.some((city) => normalizeFilterId(city) === id)
   }
 
   if (model?.value) {
@@ -192,7 +198,7 @@ export function useJobFilters(model?: Ref<JobFiltersModel>) {
     }
 
     const selectedCount = cities.filter((city) =>
-      selectedCities.value.includes(city.value),
+      isCitySelected(city.value),
     ).length
 
     if (selectedCount === 0) return 'none'
@@ -243,15 +249,17 @@ export function useJobFilters(model?: Ref<JobFiltersModel>) {
     const state = provinceCheckState(provinceId)
 
     if (state === 'all') {
-      const cityValues = new Set(cities.map((city) => city.value))
-      selectedCities.value = selectedCities.value.filter((id) => !cityValues.has(id))
+      const cityValues = new Set(cities.map((city) => normalizeFilterId(city.value)))
+      selectedCities.value = selectedCities.value.filter(
+        (id) => !cityValues.has(normalizeFilterId(id)),
+      )
       selectedProvinces.value = selectedProvinces.value.filter((id) => id !== provinceId)
       return
     }
 
-    const nextCities = new Set(selectedCities.value)
+    const nextCities = new Set(selectedCities.value.map(normalizeFilterId))
     for (const city of cities) {
-      nextCities.add(city.value)
+      nextCities.add(normalizeFilterId(city.value))
     }
     selectedCities.value = [...nextCities]
 
@@ -266,10 +274,11 @@ export function useJobFilters(model?: Ref<JobFiltersModel>) {
     event: Event,
   ) {
     const checked = (event.target as HTMLInputElement).checked
+    const id = normalizeFilterId(cityValue)
 
     if (checked) {
-      if (!selectedCities.value.includes(cityValue)) {
-        selectedCities.value = [...selectedCities.value, cityValue]
+      if (!isCitySelected(id)) {
+        selectedCities.value = [...selectedCities.value, id]
       }
       if (!selectedProvinces.value.includes(provinceId)) {
         selectedProvinces.value = [...selectedProvinces.value, provinceId]
@@ -277,9 +286,11 @@ export function useJobFilters(model?: Ref<JobFiltersModel>) {
       return
     }
 
-    selectedCities.value = selectedCities.value.filter((id) => id !== cityValue)
+    selectedCities.value = selectedCities.value.filter(
+      (city) => normalizeFilterId(city) !== id,
+    )
     const hasSelectedCity = (citiesByProvince.value[provinceId] ?? []).some((city) =>
-      selectedCities.value.includes(city.value),
+      isCitySelected(city.value),
     )
 
     if (!hasSelectedCity) {
@@ -321,5 +332,6 @@ export function useJobFilters(model?: Ref<JobFiltersModel>) {
     toggleProvinceExpand,
     toggleProvince,
     toggleCity,
+    isCitySelected,
   }
 }

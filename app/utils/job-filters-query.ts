@@ -4,21 +4,32 @@ import { createEmptyJobFilters } from '~/types/job-filters'
 
 type RouteQuery = LocationQuery | Record<string, string | string[] | undefined>
 
-function queryValue(value: LocationQuery[string]): string | string[] | undefined {
+function queryValue(
+  value: LocationQuery[string] | string | string[] | undefined,
+): string | string[] | undefined {
   if (value === null || value === undefined) return undefined
-  if (Array.isArray(value)) return value.filter((item): item is string => item !== null)
+  if (Array.isArray(value)) {
+    return value.filter((item) => item != null).map(String)
+  }
+  return value
+}
+
+function joinParam(values: Array<string | number>): string | undefined {
+  if (!values.length) return undefined
+  return values.map(String).join(',')
+}
+
+/** URL query values are strings; API option values are often numbers. */
+export function normalizeFilterId(value: string | number): string | number {
+  if (typeof value === 'number') return value
+  if (/^\d+$/.test(value)) return Number(value)
   return value
 }
 
 function splitParam(value: string | string[] | undefined): Array<string | number> {
   if (!value) return []
   const raw = Array.isArray(value) ? value.join(',') : value
-  return raw.split(',').filter(Boolean)
-}
-
-function joinParam(values: Array<string | number>): string | undefined {
-  if (!values.length) return undefined
-  return values.map(String).join(',')
+  return raw.split(',').filter(Boolean).map(normalizeFilterId)
 }
 
 export function jobFiltersToRouteQuery(

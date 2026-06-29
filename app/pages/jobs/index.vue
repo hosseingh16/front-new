@@ -106,9 +106,6 @@ function syncRouteQuery() {
 
   syncingFromRoute = true
   router.replace({ path: route.path, query: nextQuery })
-  nextTick(() => {
-    syncingFromRoute = false
-  })
 }
 
 function onPageChange(nextPage: number) {
@@ -118,7 +115,12 @@ function onPageChange(nextPage: number) {
 watch(page, () => {
   syncRouteQuery()
   nextTick(() => {
-    document.getElementById('jobs-results')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    const el = document.getElementById('jobs-results')
+    if (el) {
+      const yOffset = -100 // scroll 32px above the element (adjust as needed)
+      const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset
+      window.scrollTo({ top: y, behavior: 'smooth' })
+    }
   })
 })
 
@@ -138,7 +140,10 @@ watch(
 watch(
   () => route.query,
   (query) => {
-    if (syncingFromRoute) return
+    if (syncingFromRoute) {
+      syncingFromRoute = false
+      return
+    }
 
     const next = routeQueryToJobFilters(query)
     const filtersJson = JSON.stringify(next.filters)
