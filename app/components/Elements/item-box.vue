@@ -1,11 +1,41 @@
 <template>
   <div class="bg-white p-1 rounded-lg">
-    <div class="bg-[#F6F8FE] rounded-lg p-3">
+    <template v-if="loading">
+      <div class="bg-[#F6F8FE] rounded-lg p-3">
+        <div class="flex justify-between items-center">
+          <div class="flex items-center gap-2">
+            <div class="h-16 w-16 shrink-0 rounded-2xl bg-surface-200 animate-pulse" />
+            <div class="space-y-2">
+              <div class="h-4 w-28 rounded bg-surface-200 animate-pulse" />
+              <div class="h-3 w-36 rounded bg-surface-200 animate-pulse" />
+            </div>
+          </div>
+          <div class="h-4 w-10 rounded bg-surface-200 animate-pulse" />
+        </div>
+
+        <div class="mt-3 flex gap-2 overflow-hidden">
+          <div class="h-8 w-24 shrink-0 rounded-full bg-surface-200 animate-pulse" />
+          <div class="h-8 w-20 shrink-0 rounded-full bg-surface-200 animate-pulse" />
+          <div class="h-8 w-28 shrink-0 rounded-full bg-surface-200 animate-pulse" />
+        </div>
+      </div>
+
+      <div class="mt-2 flex items-center justify-between px-2">
+        <div class="space-y-2">
+          <div class="h-3 w-16 rounded bg-surface-200 animate-pulse" />
+          <div class="h-4 w-24 rounded bg-surface-200 animate-pulse" />
+        </div>
+        <div class="h-8 w-20 rounded bg-surface-200 animate-pulse" />
+      </div>
+    </template>
+
+    <template v-else>
+      <div class="bg-[#F6F8FE] rounded-lg p-3">
       <div class="flex justify-between items-center">
         <div class="flex items-center gap-2">
           <div class="flex justify-center items-center bg-[#ECF4D9] rounded-2xl">
             <img
-              :src="item.company_logo || ''"
+              :src="item!.company_logo || ''"
               alt=""
               class="w-16 h-16 object-cover rounded-2xl"
             />
@@ -27,7 +57,7 @@
           <Icon
             name="svg:bookmark"
             class="cursor-pointer"
-            @click="emit('bookmark', item.id, variant === 'project' ? 'Project' : 'Ad')"
+            @click="emit('bookmark', item!.id, variant === 'project' ? 'Project' : 'Ad')"
           />
           <p
             v-if="variant === 'ad' && ad.publish_date"
@@ -50,11 +80,11 @@
           پروژه حسابداری
         </div>
         <div
-          v-if="item.company?.activity"
+          v-if="item!.company?.activity"
           class="shrink-0 border border-gray-default rounded-full bg-white py-1 px-3 flex items-center gap-2"
         >
           <Icon name="ph:suitcase-simple-light" class="ma-auto" />
-          {{ item.company.activity }}
+          {{ item!.company.activity }}
         </div>
         <template v-if="variant === 'ad'">
           <div
@@ -89,13 +119,14 @@
         <p class="font-semibold">{{ footerValue }}</p>
       </div>
       <NuxtLink
-        :to="`/ad/${item.id}`"
+        :to="`/ad/${item!.id}`"
         class="btn border-none px-2 h-8 text-sm text-primary-500 bg-[#4864E114]"
       >
         <icons-chevron class="rotate-90" color="#4864e1" />
         مشاهده
       </NuxtLink>
     </div>
+    </template>
   </div>
 </template>
 
@@ -112,10 +143,16 @@ moment.updateLocale('fa', {
 })
 moment.locale('fa')
 
-const props = defineProps<{
-  variant: 'ad' | 'project'
-  item: AdList | ProjectList
-}>()
+const props = withDefaults(
+  defineProps<{
+    variant: 'ad' | 'project'
+    item?: AdList | ProjectList
+    loading?: boolean
+  }>(),
+  {
+    loading: false,
+  },
+)
 
 const emit = defineEmits<{
   bookmark: [id: number | string, type: string]
@@ -124,7 +161,7 @@ const emit = defineEmits<{
 const ad = computed(() => props.item as AdList)
 const project = computed(() => props.item as ProjectList)
 
-const companyName = computed(() => props.item.company_name || '')
+const companyName = computed(() => props.item?.company_name || '')
 
 const truncatedCompanyName = computed(() => {
   const limit = props.variant === 'project' ? 24 : 12

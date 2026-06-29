@@ -31,12 +31,14 @@
       <JobFiltersSidebar v-model="jobFilters" class="md:col-span-2" />
 
       <div id="jobs-results" class="md:col-span-5 grid grid-cols-1 md:grid-cols-2 gap-4">
-        <p
-          v-if="loading && !ads.length"
-          class="col-span-full py-12 text-center text-sm text-text-passive"
-        >
-          در حال بارگذاری آگهی‌ها...
-        </p>
+        <template v-if="loading">
+          <ItemBox
+            v-for="n in 12"
+            :key="`skeleton-${n}`"
+            variant="ad"
+            loading
+          />
+        </template>
 
         <p
           v-else-if="error"
