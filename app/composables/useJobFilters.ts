@@ -109,6 +109,37 @@ export function useJobFilters(model?: Ref<JobFiltersModel>) {
     benefits: [...selectedBenefits.value],
   }))
 
+  function applyFiltersModel(value: JobFiltersModel) {
+    selectedJobTypes.value = [...value.jobTypes]
+    jobTitleSearch.value = value.titleSearch
+    jobGroupSearch.value = ''
+    selectedJobGroups.value = [...value.jobGroups]
+    citySearch.value = ''
+    selectedCities.value = [...value.cities]
+    selectedProvinces.value = [...value.provinces]
+    selectedSalaries.value = [...value.salaries]
+    selectedWorkHistory.value = [...value.workHistory]
+    selectedContractTypes.value = [...value.contractTypes]
+    selectedBenefits.value = [...value.benefits]
+  }
+
+  if (model?.value) {
+    applyFiltersModel(model.value)
+  }
+
+  watch(
+    () => model?.value,
+    (value) => {
+      if (!value) return
+      const current = filtersModel.value
+      const unchanged =
+        value.titleSearch === current.titleSearch &&
+        JSON.stringify(value) === JSON.stringify(current)
+      if (!unchanged) applyFiltersModel(value)
+    },
+    { deep: true },
+  )
+
   watch(
     filtersModel,
     (value) => {

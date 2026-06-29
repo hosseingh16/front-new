@@ -17,15 +17,12 @@
       <div class="custom-pad flex flex-col items-center gap-4 pt-8 md:pt-12">
         <div
           class="text-primary-500 font-semibold text-sm flex justify-center items-center p-2 bg-[#4864E114] rounded-xl"
-        >
-          فرصت‌های شغلی حسابداری را پیدا کنید
+        >فرصت های شغلی حسابداری
         </div>
         <h1 class="font-yb-bold text-[23px] lg:text-h1 text-center">
-          مشاهده جدیدترین آگهی‌های استخدام حسابداری
+          جدیدترین فرصت های شغلی حسابداری
         </h1>
-        <h2 class="text-center">
-          از بین فرصت‌های شغلی تمام‌وقت، نیمه‌وقت و پروژه‌ای، موقعیت مناسب خود را پیدا
-          کرده و رزومه خود را برای سازمان‌های معتبر ارسال کنید.
+        <h2 class="text-center">پروژه های مالی و آگهی های استخدام حسابدار را مشاهده کنید و رزومه خود را برای شرکت ها ارسال کنید
         </h2>
       </div>
     </section>
@@ -33,7 +30,7 @@
     <div class="custom-pad grid md:grid-cols-7 gap-4 items-start">
       <JobFiltersSidebar v-model="jobFilters" class="md:col-span-2" />
 
-      <div class="md:col-span-5 grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div id="jobs-results" class="md:col-span-5 grid grid-cols-1 md:grid-cols-2 gap-4">
         <p
           v-if="loading && !ads.length"
           class="col-span-full py-12 text-center text-sm text-text-passive"
@@ -50,14 +47,23 @@
 
         <NoResult v-else-if="initialized && !ads.length" wrapper-class="col-span-full" />
 
-        <ItemBox
-          v-for="ad in ads"
-          v-else
-          :key="ad.id"
-          variant="ad"
-          :item="ad"
-          @bookmark="toggleBookmark"
-        />
+        <template v-else>
+          <ItemBox
+            v-for="ad in ads"
+            :key="ad.id"
+            variant="ad"
+            :item="ad"
+            @bookmark="toggleBookmark"
+          />
+
+          <div class="col-span-full mt-4 flex justify-center">
+            <Pagination
+              :current-page="page"
+              :last-page="lastPage"
+              @update:current-page="onPageChange"
+            />
+          </div>
+        </template>
       </div>
     </div>
     
@@ -70,13 +76,88 @@
 import ItemBox from '~/components/Elements/item-box.vue'
 import JobFiltersSidebar from '~/components/Elements/JobFiltersSidebar.vue'
 import NoResult from '~/components/Elements/NoResult.vue'
+import Pagination from '~/components/Elements/Pagination.vue'
 import FaqSection from '~/components/Elements/FaqSection.vue'
 import type { ApiResponse } from '~/types/api'
-import { createEmptyJobFilters } from '~/types/job-filters'
+import {
+  areRouteQueriesEqual,
+  jobFiltersToRouteQuery,
+  routeQueryToJobFilters,
+} from '~/utils/job-filters-query'
+
+const route = useRoute()
+const router = useRouter()
+
+const initialState = routeQueryToJobFilters(route.query)
+const jobFilters = ref(initialState.filters)
+const page = ref(initialState.page)
+const { ads, lastPage, loading, initialized, error } = useJobAds(jobFilters, page)
+
+let urlSyncTimer: ReturnType<typeof setTimeout> | null = null
+let syncingFromRoute = false
+
+function syncRouteQuery() {
+  if (syncingFromRoute) return
+
+  const nextQuery = jobFiltersToRouteQuery(jobFilters.value, page.value)
+  if (areRouteQueriesEqual(route.query, nextQuery)) return
+
+  syncingFromRoute = true
+  router.replace({ path: route.path, query: nextQuery })
+  nextTick(() => {
+    syncingFromRoute = false
+  })
+}
+
+function onPageChange(nextPage: number) {
+  page.value = nextPage
+}
+
+watch(page, () => {
+  syncRouteQuery()
+  nextTick(() => {
+    document.getElementById('jobs-results')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  })
+})
+
+watch(
+  jobFilters,
+  (value, oldValue) => {
+    if (!syncingFromRoute && JSON.stringify(value) !== JSON.stringify(oldValue) && page.value !== 1) {
+      page.value = 1
+    }
+
+    if (urlSyncTimer) clearTimeout(urlSyncTimer)
+    urlSyncTimer = setTimeout(syncRouteQuery, 300)
+  },
+  { deep: true },
+)
+
+watch(
+  () => route.query,
+  (query) => {
+    if (syncingFromRoute) return
+
+    const next = routeQueryToJobFilters(query)
+    const filtersJson = JSON.stringify(next.filters)
+    const currentJson = JSON.stringify(jobFilters.value)
+
+    if (filtersJson === currentJson && next.page === page.value) return
+
+    syncingFromRoute = true
+    jobFilters.value = next.filters
+    page.value = next.page
+    nextTick(() => {
+      syncingFromRoute = false
+    })
+  },
+)
+
+onUnmounted(() => {
+  if (urlSyncTimer) clearTimeout(urlSyncTimer)
+})
 
 const api = useApi()
-const jobFilters = ref(createEmptyJobFilters())
-const { ads, loading, initialized, error } = useJobAds(jobFilters)
 
 const toggleBookmark = async (id: string | number, type: string) => {
   await api.post<ApiResponse>('/bookmarks/toggle/' + id, {
@@ -128,4 +209,9 @@ const faqs = [
   },
 ]
 
+useSeoMeta({
+  title: 'فرصت های شغلی حسابداری | آگهی استخدام حسابدار در شرکت‌های معتبر | های‌حساب',
+  description:
+    'جدیدترین فرصت های شغلی حسابداری و آگهی‌های استخدام حسابدار تمام‌وقت، پاره‌وقت و پروژه‌ای را در های‌حساب ببینید و سریع‌تر موقعیت شغلی مناسب خود را پیدا کنید.',
+})
 </script>
