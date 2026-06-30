@@ -30,7 +30,13 @@
     </template>
 
     <template v-else>
-      <div class="bg-[#F6F8FE] rounded-lg p-3">
+      <div
+        :class="[
+          'rounded-lg p-3',
+          variant === 'project' ? 'bg-[#FCF7F3]' : 'bg-[#F6F8FE]'
+        ]"
+      >
+
       <div class="flex justify-between items-center">
         <div class="flex items-center gap-2">
           <div class="flex justify-center items-center bg-[#ECF4D9] rounded-2xl">

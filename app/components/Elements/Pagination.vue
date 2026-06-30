@@ -8,9 +8,9 @@
     <button
       type="button"
       class="flex cursor-pointer h-10 w-10 items-center justify-center rounded-lg border border-surface-200 bg-white text-sm text-text-tertiary transition-colors hover:bg-surface-50 disabled:cursor-not-allowed disabled:opacity-40"
-      :disabled="currentPage >= lastPage"
-      aria-label="صفحه بعد"
-      @click="emit('update:currentPage', currentPage + 1)"
+      :disabled="currentPage <= 1"
+      aria-label="صفحه قبل"
+      @click="emit('update:currentPage', currentPage - 1)"
     >
       <Icon name="svg:chevron-right" size="16" />
     </button>
@@ -42,9 +42,9 @@
     <button
       type="button"
       class="flex h-10 w-10 items-center cursor-pointer justify-center rounded-lg border border-surface-200 bg-white text-sm text-text-tertiary transition-colors hover:bg-surface-50 disabled:cursor-not-allowed disabled:opacity-40"
-      :disabled="currentPage <= 1"
-      aria-label="صفحه قبل"
-      @click="emit('update:currentPage', currentPage - 1)"
+      :disabled="currentPage >= lastPage"
+      aria-label="صفحه بعد"
+      @click="emit('update:currentPage', currentPage + 1)"
     >
       <Icon name="svg:chevron-left" size="16" />
     </button>
