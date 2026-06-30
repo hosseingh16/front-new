@@ -11,7 +11,8 @@
         :value="jobType.value"
         class="checkbox checkbox-primary p-1.5"
       />
-      <Icon name="svg:bag-3" />
+      
+      <Icon :name="jobTypeIcon(jobType.value)" />
       <span>{{ jobType.label }}</span>
     </div>
   </div>
@@ -143,4 +144,17 @@ const filters = (() => {
   }
   return ctx
 })()
+
+function jobTypeIcon(value: string | number) {
+  switch (String(value)) {
+    case 'full_time':
+      return 'svg:bag-3'
+    case 'part_time':
+      return 'svg:timer'
+    case 'project_based':
+      return 'svg:projects-1'
+    default:
+      return 'svg:bag-3'
+  }
+}
 </script>

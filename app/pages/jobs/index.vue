@@ -47,14 +47,14 @@
           {{ error }}
         </p>
 
-        <NoResult v-else-if="initialized && !ads.length" wrapper-class="col-span-full" />
+        <NoResult v-else-if="initialized && !opportunities.length" wrapper-class="col-span-full" />
 
         <template v-else>
           <ItemBox
-            v-for="ad in ads"
-            :key="ad.id"
-            variant="ad"
-            :item="ad"
+            v-for="opportunity in opportunities"
+            :key="`${opportunity.type}-${opportunity.item.id}`"
+            :variant="opportunity.type === 'project' ? 'project' : 'ad'"
+            :item="opportunity.item"
             @bookmark="toggleBookmark"
           />
 
@@ -93,7 +93,7 @@ const router = useRouter()
 const initialState = routeQueryToJobFilters(route.query)
 const jobFilters = ref(initialState.filters)
 const page = ref(initialState.page)
-const { ads, lastPage, loading, initialized, error } = useJobAds(jobFilters, page)
+const { opportunities, lastPage, loading, initialized, error } = useJobAds(jobFilters, page)
 
 let urlSyncTimer: ReturnType<typeof setTimeout> | null = null
 let syncingFromRoute = false

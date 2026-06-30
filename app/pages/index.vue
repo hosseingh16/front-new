@@ -74,21 +74,20 @@
         </button>
       </div>
       <div class="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <template v-if="jobType === 'پروژه'">
+        <template v-if="opportunitiesLoading">
           <ItemBox
-            v-for="project in projects"
-            :key="project.id"
-            variant="project"
-            :item="project"
-            @bookmark="toggleBookmark"
+            v-for="n in 12"
+            :key="`skeleton-${n}`"
+            variant="ad"
+            loading
           />
         </template>
         <template v-else>
           <ItemBox
-            v-for="ad in ads"
-            :key="ad.id"
-            variant="ad"
-            :item="ad"
+            v-for="opportunity in opportunities"
+            :key="`${opportunity.type}-${opportunity.item.id}`"
+            :variant="opportunity.type === 'project' ? 'project' : 'ad'"
+            :item="opportunity.item"
             @bookmark="toggleBookmark"
           />
         </template>
@@ -205,7 +204,7 @@
         </div>
         <div class="flex flex-col justify-between">
           <div
-            v-for="(post, i) in posts.slice(1, 3)"
+            v-for="(post, i) in posts.slice(1, 4)"
             :key="i"
             class="bg-white rounded-lg p-6 flex gap-4 mb-4 last:mb-0"
           >
@@ -248,13 +247,12 @@ import TrustBar from '../components/Elements/TrustBar.vue';
 import type { Testimonial } from '~/components/Elements/Testimonials.vue';
 import type { AdList } from '~/types';
 import type { ApiResponse } from '~/types/api';
-import type { InitData } from '~/types/init';
-import type { ProjectList } from '~/types/project';
+import type { Opportunity } from '~/types/opportunity';
 
 // Variables
 const keyword = ref('');
-const ads = ref<AdList[]>([]);
-const projects = ref<ProjectList[]>([]);
+const opportunities = ref<Opportunity[]>([]);
+const opportunitiesLoading = ref(false);
 const posts = ref<any[]>([]);
 const jobType = ref('همه');
 const testimonials: Testimonial[] = [
@@ -321,31 +319,50 @@ const toggleBookmark = async (id: string | number, type: string) => {
     },
   });
 };
-const getAds = async (jobType: string) => {
-  if (jobType == 'پروژه') {
-    const result = await api.get<ApiResponse>('/projects');
-    console.log(1, result);
-    projects.value = result.data;
-  } else {
-    const result = await api.get<ApiResponse>('/ads', {
-      query: {
-        employment_type: jobType == 'همه' ? undefined : jobType,
-      },
+function filterOpportunities(items: Opportunity[], type: string): Opportunity[] {
+  if (type === 'پروژه') {
+    return items.filter((item) => item.type === 'project');
+  }
+
+  if (type === 'همه') {
+    return items;
+  }
+
+  return items.filter(
+    (item) =>
+      item.type === 'ad' &&
+      (item.item as AdList).employment_type === type,
+  );
+}
+
+const getOpportunities = async (type: string) => {
+  opportunitiesLoading.value = true;
+
+  try {
+    const query: Record<string, string | undefined> = {};
+
+    if (type === 'پروژه') {
+      query.employment_type = 'project_based';
+    } else if (type !== 'همه') {
+      query.employment_type = type;
+    }
+
+    const result = await api.get<ApiResponse<Opportunity[]>>('/opportunities', {
+      query,
     });
-    ads.value = result.data;
+
+    opportunities.value = filterOpportunities(result.data ?? [], type);
+  } finally {
+    opportunitiesLoading.value = false;
   }
 };
-onMounted(() => {
-  getAds(jobType.value);
-  getPosts();
-  const init = useState<InitData>('init');
 
-  init.value?.lookup_data?.salary_ranges?.forEach((item: any) => {
-    console.log(item);
-  });
+onMounted(() => {
+  getOpportunities(jobType.value);
+  getPosts();
 });
 watch(jobType, () => {
-  getAds(jobType.value);
+  getOpportunities(jobType.value);
 });
 
 useSeoMeta({
