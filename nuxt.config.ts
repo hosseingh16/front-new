@@ -1,8 +1,13 @@
 import tailwindcss from "@tailwindcss/vite";
 import fs from "node:fs";
 
-const certKey = "./docker/certs/hihesab.test-key.pem";
-const certCert = "./docker/certs/hihesab.test.pem";
+// Node.js SSR cannot verify the local api.hihesab.test dev certificate.
+// Browser/Postman work; only server-side $fetch fails without this in dev.
+if (process.env.NODE_ENV === "development") {
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+}
+
+const certKey = "./docker/certs/hihesab.test-key.pem";const certCert = "./docker/certs/hihesab.test.pem";
 
 export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
