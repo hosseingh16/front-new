@@ -5,7 +5,6 @@ export function getPaginationPages(
   last: number,
 ): PaginationItem[] {
   if (last <= 1) return last === 1 ? [1] : []
-  if (last <= 7) return Array.from({ length: last }, (_, i) => i + 1)
 
   if (current <= 4) {
     const pages: PaginationItem[] = []
@@ -22,5 +21,5 @@ export function getPaginationPages(
     return [1, 'ellipsis', last - 3, last - 2, last - 1, last]
   }
 
-  return [1, 'ellipsis', current - 1, current, current + 1, 'ellipsis', last]
+  return [1, 'ellipsis', current, current + 1, 'ellipsis', last]
 }

@@ -26,10 +26,10 @@ export interface Company {
 }
 
 export interface CompanyList {
-    name: string;
-    size: string;
+    name: string | null;
+    size: string | null;
     logo: string | null;
-    province_name: string;
-    city_name: string;
-    activity: string;
+    province_name: string | null;
+    city_name: string | null;
+    activity: string | null;
 }

@@ -21,6 +21,9 @@
         <NuxtLink to="/jobs" class="text-sm hover:opacity-80"
           >فرصت‌های شغلی</NuxtLink
         >
+        <NuxtLink to="/companies" class="text-sm hover:opacity-80"
+          >شرکت‌ها</NuxtLink
+        >
         <NuxtLink to="/" class="flex text-sm hover:opacity-80"
           >رزومه‌های شغلی
           <icons-chevron />
