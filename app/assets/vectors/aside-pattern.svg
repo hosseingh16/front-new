@@ -1,0 +1,41 @@
+<svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g opacity="0.24" filter="url(#filter0_f_7619_105499)">
+<path d="M208 218C208 234.569 221.431 248 238 248C254.569 248 268 234.569 268 218V179.429C268 164.28 255.72 152 240.571 152H235.429C220.28 152 208 164.28 208 179.429V218Z" fill="#008768"/>
+</g>
+<g opacity="0.33" filter="url(#filter1_f_7619_105499)">
+<path d="M130 218C130 234.569 143.431 248 160 248C176.569 248 190 234.569 190 218V179.429C190 164.28 177.72 152 162.571 152H157.429C142.28 152 130 164.28 130 179.429V218Z" fill="#4864E1"/>
+</g>
+<mask id="mask0_7619_105499" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="53" y="55" width="295" height="257">
+<path d="M53 136.441C53 233.4 119.038 312 200.5 312C281.962 312 348 233.4 348 136.441C348 39.4825 281.962 56.0796 200.5 56.0796C119.038 56.0796 53 39.4825 53 136.441Z" fill="#D9D9D9" fill-opacity="0.1"/>
+</mask>
+<g mask="url(#mask0_7619_105499)">
+<rect width="79.8" height="79.8" rx="8.4" transform="matrix(1 0 0 -1 23.5977 369.797)" fill="#BABABA"/>
+<rect width="79.8" height="79.8" rx="8.4" transform="matrix(1 0 0 -1 114.598 369.797)" fill="#BABABA"/>
+<rect width="79.8" height="79.8" rx="8.4" transform="matrix(1 0 0 -1 205.598 369.797)" fill="#BABABA"/>
+<rect width="79.8" height="79.8" rx="8.4" transform="matrix(1 0 0 -1 296.598 369.797)" fill="#BABABA"/>
+<rect width="79.8" height="79.8" rx="8.4" transform="matrix(1 0 0 -1 23.5977 278.797)" fill="#BABABA"/>
+<rect width="79.8" height="79.8" rx="8.4" transform="matrix(1 0 0 -1 114.598 278.797)" fill="#BABABA"/>
+<rect width="79.8" height="79.8" rx="8.4" transform="matrix(1 0 0 -1 205.598 278.797)" fill="#BABABA"/>
+<rect width="79.8" height="79.8" rx="8.4" transform="matrix(1 0 0 -1 296.598 278.797)" fill="#BABABA"/>
+<rect width="79.8" height="79.8" rx="8.4" transform="matrix(1 0 0 -1 23.5977 187.797)" fill="#BABABA"/>
+<rect width="79.8" height="79.8" rx="8.4" transform="matrix(1 0 0 -1 114.598 187.797)" fill="#BABABA"/>
+<rect width="79.8" height="79.8" rx="8.4" transform="matrix(1 0 0 -1 205.598 187.797)" fill="#BABABA"/>
+<rect width="79.8" height="79.8" rx="8.4" transform="matrix(1 0 0 -1 296.598 187.797)" fill="#BABABA"/>
+<rect width="79.8" height="79.8" rx="8.4" transform="matrix(1 0 0 -1 23.5977 96.7969)" fill="#BABABA"/>
+<rect width="79.8" height="79.8" rx="8.4" transform="matrix(1 0 0 -1 114.598 96.7969)" fill="#BABABA"/>
+<rect width="79.8" height="79.8" rx="8.4" transform="matrix(1 0 0 -1 205.598 96.7969)" fill="#BABABA"/>
+<rect width="79.8" height="79.8" rx="8.4" transform="matrix(1 0 0 -1 296.598 96.7969)" fill="#BABABA"/>
+</g>
+<defs>
+<filter id="filter0_f_7619_105499" x="108" y="52" width="260" height="296" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feGaussianBlur stdDeviation="50" result="effect1_foregroundBlur_7619_105499"/>
+</filter>
+<filter id="filter1_f_7619_105499" x="30" y="52" width="260" height="296" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feGaussianBlur stdDeviation="50" result="effect1_foregroundBlur_7619_105499"/>
+</filter>
+</defs>
+</svg>
