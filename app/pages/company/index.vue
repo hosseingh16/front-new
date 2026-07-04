@@ -32,13 +32,19 @@
         </button>
       </div>
 
-      <div dir="ltr" class="mt-6 grid items-start gap-4 lg:grid-cols-[260px_minmax(0,1fr)]">
+      <div dir="ltr" class="mt-6 grid items-start gap-4 lg:grid-cols-[272px_minmax(0,1fr)]">
         <aside
           dir="rtl"
-          class="company-aside relative overflow-hidden rounded-xl border border-surface-200 bg-white"
+          class="company-aside relative overflow-hidden rounded-2xl border border-gray-default bg-white"
         >
-          <div class="relative z-10 px-4 pb-4">
-            <div class="-mt-2 flex justify-center pt-6">
+          <img
+            :src="asidePattern"
+            alt=""
+            class="company-aside-pattern pointer-events-none absolute -top-5 left-0 w-full origin-top scale-[1.3]"
+            aria-hidden="true"
+          />
+          <div class="relative z-10 px-3 pb-3 pt-10">
+            <div class="flex justify-center">
               <div class="flex h-[74px] w-[74px] items-center justify-center rounded-2xl border-4 border-white bg-[#ECF4D9]">
                 <span class="font-yb-bold text-xl text-text-tertiary">م</span>
               </div>
@@ -47,7 +53,14 @@
             <h1 class="mt-2 text-center font-yb-bold text-xl text-text-tertiary">بازرگانی سپهر</h1>
             <p class="mt-1 text-center text-sm text-text-passive">توسعه‌دهنده وب</p>
 
-            <div class="mt-4 space-y-2 border-t border-surface-200 pt-4 text-sm text-text-tertiary">
+            <div class="flex w-full items-center gap-1 mt-10">
+              <span
+                class="h-1 w-2 shrink-0 rounded-full bg-linear-to-b from-[#3B6EF8] to-primary-500"
+                aria-hidden="true"
+              />
+              <h2 class="font-yb-bold text-base text-text-primay">اطلاعات پایه</h2>
+            </div>
+            <div class="mt-4 space-y-2 pt-4 text-sm text-text-tertiary">
               <div class="flex items-center justify-between">
                 <span class="text-text-passive">تعداد پرسنل</span>
                 <span class="font-semibold">۳۰ تا ۵۰ نفر</span>
@@ -67,9 +80,15 @@
               <p class="mt-2 text-sm text-text-passive">support@hihesabtest.com</p>
             </div>
 
-            <div class="mt-4 border-t border-surface-200 pt-4">
-              <h2 class="text-sm font-semibold text-text-tertiary">اشتراک‌گذاری</h2>
-              <div class="mt-2 flex items-center gap-2">
+            <div class="mt-4 pt-4">
+              <div class="flex w-full items-center gap-1">
+                  <span
+                    class="h-1 w-2 shrink-0 rounded-full bg-linear-to-b from-[#3B6EF8] to-primary-500"
+                    aria-hidden="true"
+                  />
+                  <h2 class="font-yb-bold text-base text-text-primay">اشتراک‌گذاری</h2>
+                </div>
+              <div class="mt-4 flex items-center justify-around gap-2">
                 <button
                   v-for="item in socialLinks"
                   :key="item.id"
@@ -81,8 +100,8 @@
                   <img
                     :src="item.icon"
                     :alt="item.label"
-                    width="24"
-                    height="24"
+                    width="32"
+                    height="32"
                     class="h-6 w-6 cursor-pointer"
                   />
                 </button>
@@ -92,41 +111,25 @@
         </aside>
 
         <main v-if="activeTab === 'about'" dir="rtl" class="space-y-4">
-          <section class="rounded-xl border border-surface-200 bg-white p-5">
-            <div class="grid gap-6 md:grid-cols-[170px_minmax(0,1fr)]">
-              <div class="flex flex-col items-center border-b border-surface-200 pb-4 md:border-b-0 md:border-l md:pb-0 md:pl-6">
-                <div class="flex h-[84px] w-[84px] items-center justify-center rounded-2xl bg-[#ECF4D9]">
-                  <span class="font-yb-bold text-2xl text-text-tertiary">م</span>
+          <section class="rounded-2xl border border-gray-default bg-white p-5">
+            <div class="">
+              <div class="space-y-3">
+                <div class="flex w-full items-center gap-1">
+                  <span
+                    class="h-1 w-2 shrink-0 rounded-full bg-linear-to-b from-[#3B6EF8] to-primary-500"
+                    aria-hidden="true"
+                  />
+                  <h2 class="font-yb-bold text-base text-text-primay">اطلاعات پایه</h2>
                 </div>
-                <p class="mt-3 text-sm text-text-passive">شناسه ملی: ۱۳۰۹۳۱۳۴۹۹</p>
-              </div>
 
-              <div>
-                <h2 class="font-yb-bold text-lg text-text-tertiary">اطلاعات پایه</h2>
-                <div class="mt-4 grid gap-x-8 gap-y-3 text-sm md:grid-cols-2">
-                  <div class="flex items-center justify-between gap-3 border-b border-surface-100 pb-2">
-                    <span class="text-text-passive">نام شرکت</span>
-                    <span class="font-semibold text-text-tertiary">بازرگانی سپهر</span>
-                  </div>
-                  <div class="flex items-center justify-between gap-3 border-b border-surface-100 pb-2">
-                    <span class="text-text-passive">سال تاسیس</span>
-                    <span class="font-semibold text-text-tertiary">۱۳۹۸</span>
-                  </div>
-                  <div class="flex items-center justify-between gap-3 border-b border-surface-100 pb-2">
-                    <span class="text-text-passive">نوع فعالیت</span>
-                    <span class="font-semibold text-text-tertiary">خدمات مالی</span>
-                  </div>
-                  <div class="flex items-center justify-between gap-3 border-b border-surface-100 pb-2">
-                    <span class="text-text-passive">اندازه شرکت</span>
-                    <span class="font-semibold text-text-tertiary">۳۰ تا ۵۰ نفر</span>
-                  </div>
-                  <div class="flex items-center justify-between gap-3 border-b border-surface-100 pb-2">
-                    <span class="text-text-passive">استان</span>
-                    <span class="font-semibold text-text-tertiary">تهران</span>
-                  </div>
-                  <div class="flex items-center justify-between gap-3 border-b border-surface-100 pb-2">
-                    <span class="text-text-passive">شهر</span>
-                    <span class="font-semibold text-text-tertiary">تهران</span>
+                <div class="grid gap-x-8 gap-y-4 sm:grid-cols-2">
+                  <div
+                    v-for="field in basicInfoFields"
+                    :key="field.label"
+                    class="flex flex-col items-start gap-1"
+                  >
+                    <span class="text-caption text-text-passive">{{ field.label }}</span>
+                    <span class="font-yb-bold text-base text-text-primay">{{ field.value }}</span>
                   </div>
                 </div>
               </div>
@@ -191,6 +194,7 @@
 
 <script setup lang="ts">
 import ItemBoxVertical from '~/components/Elements/item-box-vertical.vue'
+import asidePattern from '~/assets/vectors/aside-pattern.svg?url'
 import linkIcon from '~/assets/vectors/social/link.svg?url'
 import linkedinIcon from '~/assets/vectors/social/linkedin.svg?url'
 import telegramIcon from '~/assets/vectors/social/telegram.svg?url'
@@ -212,6 +216,15 @@ type CompanyAdPreview = {
 }
 
 const activeTab = ref<CompanyTab>('about')
+
+const basicInfoFields = [
+  { label: 'نام شرکت:', value: 'بازرگانی سپهر' },
+  { label: 'سال تاسیس:', value: '۱۳۹۸' },
+  { label: 'نوع فعالیت:', value: 'خدمات مالی' },
+  { label: 'اندازه شرکت:', value: '۳۰ تا ۵۰ نفر' },
+  { label: 'استان:', value: 'تهران' },
+  { label: 'شهر:', value: 'تهران' },
+]
 
 function getShareUrl() {
   if (!import.meta.client) return ''
@@ -298,4 +311,26 @@ useSeoMeta({
 </script>
 
 <style scoped>
+.company-aside-pattern {
+  -webkit-mask-image: linear-gradient(
+    to top,
+    transparent 40%,
+    rgb(0 0 0 / 40%) 8%,
+    rgb(0 0 0 / 75%) 70%,
+    #000 54%,
+    #000 74%,
+    rgb(0 0 0 / 90%) 99%,
+    rgb(0 0 0 / 60%) 100%
+  );
+  mask-image: linear-gradient(
+    to top,
+    transparent 40%,
+    rgb(0 0 0 / 40%) 8%,
+    rgb(0 0 0 / 75%) 70%,
+    #000 54%,
+    #000 74%,
+    rgb(0 0 0 / 90%) 99%,
+    rgb(0 0 0 / 60%) 100%
+  );
+}
 </style>
