@@ -163,13 +163,6 @@
 import CompanyFilterSectionContent from '~/components/Elements/CompanyFilterSectionContent.vue'
 import { toPersianDigits } from '~/composables/useCountUp'
 import { COMPANY_FILTERS_INJECTION_KEY } from '~/composables/company-filters-context'
-import {
-  COMPANY_ACTIVITY_OPTIONS,
-  COMPANY_AD_COUNT_OPTIONS,
-  COMPANY_BENEFIT_OPTIONS,
-  COMPANY_PROVINCE_OPTIONS,
-  COMPANY_SIZE_OPTIONS,
-} from '~/constants/company-filter-options'
 import { COMPANY_FILTER_SECTIONS } from '~/types/company-filters'
 
 const filters = (() => {
@@ -209,7 +202,7 @@ function chipButtonClass(sectionIndex: number) {
 }
 
 function chipHasSelection(sectionIndex: number) {
-  const model = filters.model.value
+  const model = filters.model
 
   switch (sectionIndex) {
     case 0:
@@ -221,8 +214,6 @@ function chipHasSelection(sectionIndex: number) {
     case 3:
       return model.sizes.length > 0
     case 4:
-      return model.adCounts.length > 0
-    case 5:
       return model.benefits.length > 0
     default:
       return false
@@ -233,7 +224,7 @@ function chipLabel(sectionIndex: number, title: string) {
   if (!chipHasSelection(sectionIndex)) return title
 
   if (sectionIndex === 0) {
-    return filters.model.value.search.trim()
+    return filters.model.search.trim()
   }
 
   const options = sectionOptions(sectionIndex)
@@ -245,24 +236,11 @@ function chipLabel(sectionIndex: number, title: string) {
 }
 
 function sectionOptions(sectionIndex: number) {
-  switch (sectionIndex) {
-    case 1:
-      return COMPANY_PROVINCE_OPTIONS
-    case 2:
-      return COMPANY_ACTIVITY_OPTIONS
-    case 3:
-      return COMPANY_SIZE_OPTIONS
-    case 4:
-      return COMPANY_AD_COUNT_OPTIONS
-    case 5:
-      return COMPANY_BENEFIT_OPTIONS
-    default:
-      return []
-  }
+  return filters.sectionOptions(sectionIndex)
 }
 
 function sectionSelectedValues(sectionIndex: number) {
-  const model = filters.model.value
+  const model = filters.model
 
   switch (sectionIndex) {
     case 1:
@@ -272,8 +250,6 @@ function sectionSelectedValues(sectionIndex: number) {
     case 3:
       return model.sizes
     case 4:
-      return model.adCounts
-    case 5:
       return model.benefits
     default:
       return []

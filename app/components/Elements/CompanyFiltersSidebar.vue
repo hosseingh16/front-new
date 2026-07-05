@@ -49,8 +49,9 @@ import FilterCollapse from '~/features/home/FilterCollapse.vue'
 import { toPersianDigits } from '~/composables/useCountUp'
 import {
   COMPANY_FILTERS_INJECTION_KEY,
-  useCompanyFilters,
+  type CompanyFiltersState,
 } from '~/composables/company-filters-context'
+import { useCompanyFilters } from '~/composables/useCompanyFilters'
 import {
   COMPANY_FILTER_SECTIONS,
   type CompanyFiltersModel,
@@ -62,7 +63,7 @@ const props = defineProps<{
 
 const model = defineModel<CompanyFiltersModel>({ required: true })
 
-const filters = useCompanyFilters(model)
+const filters = reactive(useCompanyFilters(model)) as CompanyFiltersState
 provide(COMPANY_FILTERS_INJECTION_KEY, filters)
 
 const activeFilterCount = filters.activeFilterCount

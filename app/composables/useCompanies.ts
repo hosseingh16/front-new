@@ -17,7 +17,6 @@ function cloneFilters(filters: CompanyFiltersModel): CompanyFiltersModel {
     cities: [...filters.cities],
     activities: [...filters.activities],
     sizes: [...filters.sizes],
-    adCounts: [...filters.adCounts],
     benefits: [...filters.benefits],
   }
 }
