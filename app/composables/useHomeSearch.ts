@@ -179,7 +179,7 @@ export function useHomeSearch() {
         .slice(0, SEARCH_RESULT_LIMIT)
 
       items.value = [...jobItems, ...organizationItems]
-      highlightedIndex.value = items.value.length ? 0 : -1
+      highlightedIndex.value = -1
     } catch {
       if (currentRequest !== requestId) return
       items.value = []
