@@ -27,23 +27,7 @@
           </button>
           </NuxtLink>
         </div>
-        <div
-          class="mt-6 p-2 border-4 border-surface-100 bg-white rounded-lg w-full h-16 flex items-center"
-        >
-          <icons-search-2 color="#D1D1D1" />
-          <input
-            v-model="keyword"
-            class="mr-1 grow py-3 focus:outline-none placeholder:text-text-muted"
-            placeholder="جستجوی عنوان‌ شغلی، نام کارجو، مشاور، سازمان یا نوع فعالیت ..."
-          />
-          <button
-            class="btn max-md:hidden"
-            :class="{ 'btn-disabled': keyword === '', 'btn-primary': keyword !== '' }"
-          >
-            <icons-search-2 color="#D1D1D1" />
-            جستجو
-          </button>
-        </div>
+        <HomeSearchBox />
       </div>
     </section>
 
@@ -248,6 +232,7 @@
 </template>
 
 <script setup lang="ts">
+import HomeSearchBox from '~/components/Elements/HomeSearchBox.vue';
 import ItemBox from '~/components/Elements/item-box.vue';
 import Testimonials from '~/components/Elements/Testimonials.vue';
 import TrustBar from '../components/Elements/TrustBar.vue';
@@ -258,7 +243,6 @@ import type { Opportunity } from '~/types/opportunity';
 import FaqSection from '~/components/Elements/FaqSection.vue';
 
 // Variables
-const keyword = ref('');
 const opportunities = ref<Opportunity[]>([]);
 const opportunitiesLoading = ref(false);
 const posts = ref<any[]>([]);
