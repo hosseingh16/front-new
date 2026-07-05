@@ -1,8 +1,14 @@
 <template>
   <div
-    class="rounded-xl border border-surface-200 bg-[#F6F8FE]"
-    :class="layout === 'horizontal' ? 'p-4' : 'p-4'"
+    class="relative rounded-xl border border-surface-200 bg-[#F6F8FE] p-4"
+    :class="to && !loading ? 'transition-colors hover:border-primary-300' : undefined"
   >
+    <NuxtLink
+      v-if="to && !loading"
+      :to="to"
+      class="absolute inset-0 rounded-xl"
+      :aria-label="name"
+    />
     <template v-if="loading">
       <div v-if="layout === 'horizontal'" class="space-y-3">
         <div class="flex items-start justify-between gap-4">
@@ -91,20 +97,9 @@
           </div>
         </div>
 
-        <NuxtLink
-          v-if="to"
-          :to="to"
-          class="flex shrink-0 items-center gap-1.5 text-sm font-semibold text-primary-500 transition-opacity hover:opacity-80"
-        >
+        <div class="flex shrink-0 items-center gap-1.5 text-sm font-semibold text-primary-500">
           <Icon name="svg:eye" class="shrink-0" />
-          <span>مشاهده رزومه</span>
-        </NuxtLink>
-        <div
-          v-else
-          class="flex shrink-0 items-center gap-1.5 text-sm font-semibold text-primary-500"
-        >
-          <Icon name="svg:eye" class="shrink-0" />
-          <span>مشاهده رزومه</span>
+          <span>مشاهده پروفایل</span>
         </div>
       </div>
     </template>
@@ -160,18 +155,7 @@
         </div>
       </div>
 
-      <NuxtLink
-        v-if="to"
-        :to="to"
-        class="mt-4 flex items-center justify-center gap-1.5 text-sm font-semibold text-primary-500 transition-opacity hover:opacity-80"
-      >
-        <Icon name="svg:eye" class="shrink-0" />
-        <span>مشاهده رزومه</span>
-      </NuxtLink>
-      <div
-        v-else
-        class="mt-4 flex items-center justify-center gap-1.5 text-sm font-semibold text-primary-500"
-      >
+      <div class="mt-4 flex items-center justify-center gap-1.5 text-sm font-semibold text-primary-500">
         <Icon name="svg:eye" class="shrink-0" />
         <span>مشاهده رزومه</span>
       </div>
