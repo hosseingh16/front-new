@@ -1,32 +1,32 @@
-import type { User } from "./user";
 import type { AdList } from "./ad";
 
 export interface Company {
     id: number;
-    user: User;
     name: string;
-    size: string;
-    activity: string;
-    intro: string;
-    culture: string;
-    advantages: string;
+    slug: string;
+    size: string | null;
+    activity: string | null;
+    intro: string | null;
+    culture: string | null;
+    advantages: string | null;
     logo: string | null;
     cover: string | null;
-    province_name: string;
-    city_name: string;
-    lat: number;
-    long: number;
-    address: string;
-    tel: string;
-    is_tell_public: boolean;
-    website: string;
-    gallery: string[]; // array of image URLs
-    is_profile_public: boolean;
+    province_name: string | null;
+    city_name: string | null;
+    lat: number | null;
+    long: number | null;
+    address: string | null;
+    tel: string | null;
+    is_tell_public: number | boolean;
+    website: string | null;
+    gallery: string[];
+    is_profile_public: number | boolean;
     ads?: AdList[];
 }
 
 export interface CompanyList {
     name: string | null;
+    slug?: string | null;
     size: string | null;
     logo: string | null;
     province_name: string | null;

@@ -64,7 +64,7 @@
             :key="`company-${page}-${index}-${company.logo ?? 'no-logo'}`"
             layout="horizontal"
             :company="company"
-            to="/company"
+            :to="company.slug ? `/companies/${company.slug}` : undefined"
           />
 
           <div class="flex justify-center pt-2">
