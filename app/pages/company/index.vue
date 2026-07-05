@@ -35,9 +35,10 @@
       <div dir="ltr" class="mt-6 grid items-start gap-4 lg:grid-cols-[272px_minmax(0,1fr)]">
         <aside
           dir="rtl"
-          class="company-aside relative overflow-hidden rounded-2xl border border-gray-default bg-white"
+          class="company-aside"
         >
-          <img
+          <div class="relative overflow-hidden rounded-2xl border border-gray-default bg-white">
+            <img
             :src="asidePattern"
             alt=""
             class="company-aside-pattern pointer-events-none absolute -top-5 left-0 w-full origin-top scale-[1.3]"
@@ -60,27 +61,47 @@
               />
               <h2 class="font-yb-bold text-base text-text-primay">اطلاعات پایه</h2>
             </div>
-            <div class="mt-4 space-y-2 pt-4 text-sm text-text-tertiary">
-              <div class="flex items-center justify-between">
+            <div class="mt-4 space-y-2 text-sm text-text-tertiary">
+              
+              <div class="flex items-center justify-between py-2">
+                <span class="text-text-passive">نوع فعالیت</span>
+                <span class="font-semibold">خدمات مالی</span>
+              </div>
+              <div class="flex items-center justify-between py-2">
                 <span class="text-text-passive">تعداد پرسنل</span>
                 <span class="font-semibold">۳۰ تا ۵۰ نفر</span>
               </div>
-              <div class="flex items-center justify-between">
-                <span class="text-text-passive">استان</span>
-                <span class="font-semibold">تهران</span>
+              <div class="flex items-center justify-between py-2">
+                <span class="text-text-passive">موقعیت مکانی</span>
+                <span class="font-semibold">مشهد ، وکیل آباد</span>
               </div>
-              <div class="flex items-center justify-between">
-                <span class="text-text-passive">شهر</span>
-                <span class="font-semibold">تهران</span>
+              <div class="flex items-center justify-between py-2">
+                <span class="text-text-passive">وبسایت</span>
+                <span class="font-semibold">dw**.ir</span>
               </div>
             </div>
-
-            <div class="mt-4 border-t border-surface-200 pt-4">
-              <h2 class="text-sm font-semibold text-text-tertiary">اطلاعات تماس</h2>
-              <p class="mt-2 text-sm text-text-passive">support@hihesabtest.com</p>
+            <div class="flex w-full items-center gap-1 mt-10">
+              <span
+                class="h-1 w-2 shrink-0 rounded-full bg-linear-to-b from-[#3B6EF8] to-primary-500"
+                aria-hidden="true"
+              />
+              <h2 class="font-yb-bold text-base text-text-primay">اطلاعات پایه</h2>
             </div>
+             <div class="mt-4 space-y-2 text-sm text-text-tertiary">
+                <div class="flex items-center justify-between py-2">
+                  <span class="text-text-passive">تلفن</span>
+                  <span class="font-semibold">051****87</span>
+                </div>
+                <div class="flex items-center justify-between py-2">
+                  <span class="text-text-passive">ایمیل</span>
+                  <span class="font-semibold">support@hihesabtest.com</span>
+                </div>
+              </div>
+          </div>
 
-            <div class="mt-4 pt-4">
+          </div>
+          <div class="relative overflow-hidden rounded-2xl border border-gray-default bg-white my-2">
+            <div class=" z-10 px-3 pb-3 pt-3">
               <div class="flex w-full items-center gap-1">
                   <span
                     class="h-1 w-2 shrink-0 rounded-full bg-linear-to-b from-[#3B6EF8] to-primary-500"
@@ -137,7 +158,13 @@
           </section>
 
           <section class="rounded-xl border border-surface-200 bg-white p-5">
-            <h2 class="font-yb-bold text-lg text-text-tertiary">معرفی سازمان</h2>
+            <div class="flex w-full items-center gap-1">
+              <span
+                class="h-1 w-2 shrink-0 rounded-full bg-linear-to-b from-[#3B6EF8] to-primary-500"
+                aria-hidden="true"
+              />
+              <h2 class="font-yb-bold text-base text-text-primay">معرفی سازمان</h2>
+            </div>
             <p class="mt-4 text-sm leading-8 text-text-secondary">
               گروه بازرگانی سپهر با تکیه بر تیم مالی و حسابداری متخصص، در حوزه خدمات مالی، مشاوره مالیاتی و راهکارهای
               مدیریت منابع انسانی فعالیت می‌کند. هدف ما ایجاد محیطی حرفه‌ای برای رشد نیروهای متخصص و همکاری بلندمدت با
@@ -152,18 +179,40 @@
           </section>
 
           <section class="rounded-xl border border-surface-200 bg-white p-5">
-            <h2 class="font-yb-bold text-lg text-text-tertiary">موقعیت مکانی</h2>
+            <div class="flex w-full items-center gap-1">
+              <span
+                class="h-1 w-2 shrink-0 rounded-full bg-linear-to-b from-[#3B6EF8] to-primary-500"
+                aria-hidden="true"
+              />
+              <h2 class="font-yb-bold text-base text-text-primay">موقعیت مکانی</h2>
+            </div>
             <div class="mt-4 overflow-hidden rounded-lg border border-surface-200">
+              <img
+                v-if="mapImageUrl"
+                :src="mapImageUrl"
+                alt="موقعیت مکانی شرکت"
+                class="h-auto w-full object-cover"
+                width="368"
+                height="383"
+                loading="lazy"
+              />
               <div
-                class="flex h-[260px] items-center justify-center bg-linear-to-br from-[#EAF0FF] to-[#D7E1FF] text-sm text-primary-500"
+                v-else
+                class="flex h-[260px] items-center justify-center bg-surface-100 text-sm text-text-passive"
               >
-                تصویر نمونه نقشه
+                موقعیت مکانی ثبت نشده است
               </div>
             </div>
           </section>
 
           <section class="rounded-xl border border-surface-200 bg-white p-5">
-            <h2 class="font-yb-bold text-lg text-text-tertiary">گالری تصاویر</h2>
+            <div class="flex w-full items-center gap-1">
+              <span
+                class="h-1 w-2 shrink-0 rounded-full bg-linear-to-b from-[#3B6EF8] to-primary-500"
+                aria-hidden="true"
+              />
+              <h2 class="font-yb-bold text-base text-text-primay">گالری تصاویر</h2>
+            </div>
             <div class="mt-4 grid gap-3 sm:grid-cols-3">
               <div class="h-28 rounded-lg bg-[#DDE5F8]" />
               <div class="h-28 rounded-lg bg-[#D6EBDD]" />
@@ -200,6 +249,8 @@ import linkedinIcon from '~/assets/vectors/social/linkedin.svg?url'
 import telegramIcon from '~/assets/vectors/social/telegram.svg?url'
 import twitterIcon from '~/assets/vectors/social/twitter.svg?url'
 import whatsappIcon from '~/assets/vectors/social/whatsapp.svg?url'
+import { buildYandexStaticMapUrl } from '~/utils/yandex-static-map'
+import type { YandexMapPoint } from '~/utils/yandex-static-map'
 
 type CompanyTab = 'about' | 'ads'
 type CompanyAdPreview = {
@@ -215,6 +266,8 @@ type CompanyAdPreview = {
   variant: 'ad' | 'project'
 }
 
+const config = useRuntimeConfig()
+
 const activeTab = ref<CompanyTab>('about')
 
 const basicInfoFields = [
@@ -225,6 +278,34 @@ const basicInfoFields = [
   { label: 'استان:', value: 'تهران' },
   { label: 'شهر:', value: 'تهران' },
 ]
+
+const companyLocation = ref({
+  longitude: 51.4322313,
+  latitude: 35.7314741,
+})
+
+const companyMapPoints = computed<YandexMapPoint[]>(() => {
+  const { longitude, latitude } = companyLocation.value
+
+  if (longitude == null || latitude == null) return []
+
+  return [{ longitude, latitude, marker: 'round' }]
+})
+
+const mapImageUrl = computed(() =>
+  buildYandexStaticMapUrl({
+    points: companyMapPoints.value,
+    center: {
+      longitude: companyLocation.value.longitude,
+      latitude: companyLocation.value.latitude,
+    },
+    width: 368,
+    height: 250,
+    zoom: 15,
+    lang: 'fa_IR',
+    theme: 'light',
+  }),
+)
 
 function getShareUrl() {
   if (!import.meta.client) return ''
@@ -312,25 +393,26 @@ useSeoMeta({
 
 <style scoped>
 .company-aside-pattern {
-  -webkit-mask-image: linear-gradient(
-    to top,
-    transparent 40%,
-    rgb(0 0 0 / 40%) 8%,
-    rgb(0 0 0 / 75%) 70%,
-    #000 54%,
-    #000 74%,
-    rgb(0 0 0 / 90%) 99%,
-    rgb(0 0 0 / 60%) 100%
-  );
   mask-image: linear-gradient(
     to top,
-    transparent 40%,
-    rgb(0 0 0 / 40%) 8%,
-    rgb(0 0 0 / 75%) 70%,
-    #000 54%,
-    #000 74%,
-    rgb(0 0 0 / 90%) 99%,
-    rgb(0 0 0 / 60%) 100%
+    transparent 0%,
+    rgb(0 0 0 / 40%) 50%,
+    rgb(0 0 0 / 85%) 56%,
+    #000 60%,
+    #000 90%,
+    rgb(0 0 0 / 60%) 97%,
+    transparent 100%
+  );
+
+  -webkit-mask-image: linear-gradient(
+    to top,
+    transparent 0%,
+    rgb(0 0 0 / 40%) 50%,
+    rgb(0 0 0 / 85%) 56%,
+    #000 60%,
+    #000 90%,
+    rgb(0 0 0 / 60%) 97%,
+    transparent 100%
   );
 }
 </style>
