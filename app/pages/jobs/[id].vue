@@ -1,7 +1,7 @@
 <template>
   <div class="bg-surface-50 pb-12">
-  <section class="bg-[url('/images/ad-hero.png')] bg-cover bg-center bg-no-repeat">
-    <div class="custom-pad pt-6">
+  <section class="bg-[url('/images/ad-cover-bg.jpg')] bg-cover bg-center bg-no-repeat">
+    <div class="custom-pad pt-6 pb-12">
       <nav class="text-sm text-text-passive">
         <NuxtLink to="/" class="transition-colors hover:text-primary-500">
           <Icon name="svg:home" size="16" />
@@ -77,7 +77,7 @@
     </p>
 
     <template v-else-if="ad">
-      <div class="pt-5 grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_272px] bg-surface-50">
+      <div class="pt-5 grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_300px] bg-surface-50">
         <main class="space-y-4">
           <div class="flex gap-6 border-b border-gray-default px-5 md:px-6">
             <button
