@@ -8,7 +8,7 @@
 
     <div class="bg-white p-4 rounded-2xl mt-8">
       <Titr>مهارت‌ها</Titr>
-      <div class="mt-4 grid lg:grid-cols-2 gap-x-4 gap-y-12">
+      <div class="my-4 grid lg:grid-cols-2 gap-x-4 gap-y-12">
         <Slider color="#FFA726" label="میزان آشنایی به نرم افزار اکسل:" />
         <Slider
           color="#2E7D32"

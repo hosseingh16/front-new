@@ -1,4 +1,5 @@
 import type { ApiError } from '~/types/api';
+import { paths } from '~/routes';
 
 export function useApiClient() {
   const config = useRuntimeConfig();
@@ -28,7 +29,7 @@ export function useApiClient() {
 
       if (status === 401) {
         user.value = null;      
-        await router.push('/login')
+        await router.push(paths.account.signIn)
       }
 
       const error: ApiError = {

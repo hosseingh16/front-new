@@ -400,7 +400,7 @@ const companyAds = computed(() => {
     logo: ad.company_logo || c.logo,
     highlight: index % 2 === 1,
     variant: 'ad' as const,
-    to: `/ad/${ad.id}`,
+    to: `/jobs/${ad.id}`,
   }))
 })
 

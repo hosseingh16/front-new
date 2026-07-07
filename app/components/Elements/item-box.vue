@@ -175,7 +175,7 @@ const itemUrl = computed(() => {
   if (!props.item?.id) return '#'
   return props.variant === 'project'
     ? `/project/${props.item.id}`
-    : `/ad/${props.item.id}`
+    : `/jobs/${props.item.id}`
 })
 
 function onBookmark() {

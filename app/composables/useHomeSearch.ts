@@ -22,7 +22,7 @@ function mapOpportunityToSearchItem(opportunity: SearchOpportunity): HomeSearchI
       title: `استخدام ${item.title}`,
       detailLabel: 'نام شرکت',
       detailValue: item.company_name,
-      url: `/ad/${item.id}`,
+      url: `/jobs/${item.id}`,
       image: item.company_logo,
     }
   }

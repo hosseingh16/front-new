@@ -5,4 +5,8 @@ export const paths = {
     signIn: '/account/sign-in',
     signUp: '/account/sign-up',
   },
+  jobs: {
+    root: '/jobs',
+    detail: (id: string | number) => `/jobs/${id}`,
+  },
 };

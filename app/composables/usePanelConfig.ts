@@ -40,13 +40,13 @@ export const usePanelConfig = () => {
     initialized.value = false
     if (initialized.value) return
 
-    const res = await api.get('/panel/bootstrap') as any
+      const res = await api.get('/panel/bootstrap') as any
 
   
 
     rawConfig.value = res.panel
-    initialized.value = true
-  }
+      initialized.value = true
+    }
 
   // -----------------------------
   // Recursive resolver (backend tree → UI tree)

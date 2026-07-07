@@ -30,6 +30,7 @@ export interface Ad {
     title: string
     company_logo: string
     company_name: string
+    category?: string
     company_address?: string
     company_description?: string
     owner_cellphone?: string
@@ -47,10 +48,10 @@ export interface Ad {
     gender?: string
     minimum_degree?: string
     company_software?: string
-    excel_skill?: boolean
-    maliat_skill?: boolean
-    bimeh_skill?: boolean
-    baha_skill?: boolean
+    excel_skill?: string | boolean
+    maliat_skill?: string | boolean
+    bimeh_skill?: string | boolean
+    baha_skill?: string | boolean
     onsite_days?: number
     onsite_hours?: number
     status: string
