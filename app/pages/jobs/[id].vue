@@ -65,6 +65,12 @@
             >
               <Icon name="material-symbols:share-outline" size="16" />
             </button>
+            <BookmarkToggleButton
+              v-if="ad?.id"
+              :target-id="ad?.id"
+              type="ads"
+              label="نشان کردن"
+            />
           </div>
         </div>
       </div>
@@ -77,7 +83,7 @@
     </p>
 
     <template v-else-if="ad">
-      <div class="pt-5 grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_300px] bg-surface-50">
+      <div class="p-5 grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_300px] bg-surface-50">
         <main class="space-y-4">
           <div class="flex gap-6 border-b border-gray-default px-5 md:px-6">
             <button
@@ -280,6 +286,14 @@
               ارسال رزومه
             </button>
           </div>
+          <button
+            type="button"
+            class="mt-4 p-6 cursor-pointer flex h-11 w-full items-center justify-start gap-2 rounded-2xl border border-gray-default bg-white text-red-500 transition-colors hover:bg-[#F3F3F3]"
+            @click="showReportModal"
+          >
+          <Icon name="solar:document-linear" size="18" class="text-red-500" />
+            گزارش مشکل
+          </button>
         </aside>
       </div>
       <section class="mt-10">
@@ -331,15 +345,22 @@
       </NuxtLink>
     </form>
   </dialog1>
+  <ReportIssueModal
+    ref="reportIssueModalRef"
+    :target-id="ad?.id ?? adId"
+    type="ads"
+  />
   </div>
 </template>
 
 <script setup lang="ts">
 import ItemBox from '~/components/Elements/item-box.vue'
 import NoResult from '~/components/Elements/NoResult.vue'
+import BookmarkToggleButton from '~/components/Elements/BookmarkToggleButton.vue'
 import AdSectionTitle from './components/AdSectionTitle.vue'
 import AdRequirementStat from './components/AdRequirementStat.vue'
 import AdSkillLevelBar from './components/AdSkillLevelBar.vue'
+import ReportIssueModal from './components/ReportIssueModal.vue'
 import { getProficiencyLevel, getProficiencySteps, parseAdBenefits } from './utils/ad-benefits'
 import { useAd, useSimilarAds } from '~/composables/useAd'
 import { useLookups } from '~/composables/useLookups'
@@ -358,6 +379,7 @@ const proficiencies = lookupItems('proficiencies')
 const proficiencySteps = computed(() => getProficiencySteps(proficiencies.value))
 
 const activeTab = ref<AdTab>('about')
+const reportIssueModalRef = ref<InstanceType<typeof ReportIssueModal> | null>(null)
 
 const tabs: { id: AdTab; label: string; icon: string }[] = [
   { id: 'about', label: 'درباره شغل', icon: 'lucide:briefcase' },
@@ -532,6 +554,10 @@ function showResumeModal() {
   if (!import.meta.client) return
   const modal = document.getElementById('ad-resume-login-modal') as HTMLDialogElement | null
   modal?.showModal()
+}
+
+function showReportModal() {
+  reportIssueModalRef.value?.showModal()
 }
 
 async function shareAd() {
