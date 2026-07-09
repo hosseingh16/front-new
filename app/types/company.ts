@@ -11,6 +11,7 @@ export interface Company {
     advantages: string | null;
     logo: string | null;
     cover: string | null;
+    static_map: string | null;
     province_name: string | null;
     city_name: string | null;
     lat: number | null;

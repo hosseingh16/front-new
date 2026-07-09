@@ -1,6 +1,6 @@
 <template>
   <div class="bg-surface-50 pb-12">
-    <div class="custom-pad mx-auto max-w-7xl pt-6">
+    <div class="custom-pad mx-auto pt-6">
       <nav class="text-sm text-text-passive">
         <NuxtLink to="/" class="hover:text-primary-500 transition-colors">
           <Icon name="svg:home" size="16" />
@@ -48,7 +48,7 @@
           </button>
         </div>
 
-        <div class="mt-6 grid items-start gap-4 lg:grid-cols-[700px_minmax(0,1fr)]">
+        <div class="mt-6 grid items-start gap-4 p-5 lg:grid-cols-[minmax(0,1fr)_300px]">
   
           <main v-if="activeTab === 'about'" class="space-y-4">
             <section class="rounded-2xl border border-gray-default bg-white p-5">

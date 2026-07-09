@@ -29,16 +29,30 @@
         class="relative z-10 mt-4 rounded-t-2xl bg-surface-50"
       >
         <div class="flex flex-wrap items-start justify-between gap-4 p-5 md:p-6">
-          <div class="flex min-w-0 items-start gap-4">
+          <div class="flex min-w-0 items-center gap-4">
             <div
               class="flex h-[74px] w-[74px] shrink-0 items-center justify-center overflow-hidden rounded-2xl border-4 border-white bg-[#ECF4D9]"
             >
+              <NuxtLink
+                v-if="ad.company_logo && ad.company?.slug"
+                :to="`/companies/${ad.company.slug}`"
+                class="block h-full w-full"
+                tabindex="-1"
+                aria-label="نمایه شرکت"
+              >
+                <img
+                  :src="ad.company_logo"
+                  :alt="ad.company_name"
+                  class="h-full w-full object-cover"
+                />
+              </NuxtLink>
               <img
-                v-if="ad.company_logo"
+                v-else-if="ad.company_logo"
                 :src="ad.company_logo"
                 :alt="ad.company_name"
                 class="h-full w-full object-cover"
               />
+     
               <span v-else class="font-yb-bold text-xl text-text-tertiary">
                 {{ companyInitial }}
               </span>
@@ -204,7 +218,7 @@
 
           <template v-else-if="activeTab === 'company'">
             <section class="rounded-2xl border border-gray-default bg-white p-5 md:p-6">
-              <AdSectionTitle title="معرفی سازمان" />
+              <AdSectionTitle title="درباره سازمان" />
               <div
                 v-if="ad.company?.intro"
                 class="prose prose-sm mt-4 max-w-none text-sm leading-8 text-text-secondary"
@@ -229,17 +243,31 @@
                   v-html="ad.company.advantages"
                 />
               </template>
-
-              <div
-                v-if="ad.company?.slug"
-                class="mt-8"
-              >
-                <NuxtLink
-                  :to="`/companies/${ad.company.slug}`"
-                  class="btn btn-outline text-primary-500"
-                >
-                  مشاهده پروفایل کامل شرکت
-                </NuxtLink>
+            </section>
+            <section class="rounded-2xl border border-gray-default bg-white p-5 md:p-6" v-if="ad.company?.static_map">
+              <AdSectionTitle title="موقعیت مکانی" />
+              <img :src="ad.company?.static_map" alt="موقعیت مکانی" class="w-full h-full object-cover mt-4" />
+            </section>
+            <section
+              v-if="ad.company?.gallery?.length"
+              class="rounded-xl border border-surface-200 bg-white p-5"
+            >
+              <div class="flex w-full items-center gap-1">
+                <span
+                  class="h-1 w-2 shrink-0 rounded-full bg-linear-to-b from-[#3B6EF8] to-primary-500"
+                  aria-hidden="true"
+                />
+                <h2 class="font-yb-bold text-base text-text-primay">گالری تصاویر</h2>
+              </div>
+              <div class="mt-4 grid gap-3 sm:grid-cols-3">
+                <img
+                  v-for="(image, index) in ad.company?.gallery"
+                  :key="`gallery-${index}`"
+                  :src="image"
+                  :alt="`تصویر ${index + 1} ${ad.company?.name}`"
+                  class="h-28 w-full rounded-lg object-cover"
+                  loading="lazy"
+                />
               </div>
             </section>
           </template>
@@ -291,7 +319,7 @@
             class="mt-4 p-6 cursor-pointer flex h-11 w-full items-center justify-start gap-2 rounded-2xl border border-gray-default bg-white text-red-500 transition-colors hover:bg-[#F3F3F3]"
             @click="showReportModal"
           >
-          <Icon name="solar:document-linear" size="18" class="text-red-500" />
+          <Icon name="svg:document-dismiss" size="18" class="text-red-500" />
             گزارش مشکل
           </button>
         </aside>
