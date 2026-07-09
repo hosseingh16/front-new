@@ -20,11 +20,12 @@
           </div>
           <div class="flex items-center gap-2">
             <span
-            class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-surface-100 text-text-passive"
-          >
-            <Icon :name="item.icon" size="18" />
-          </span>
-          <p class="text-xs text-text-passive">{{ item.label }}</p>
+              class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full"
+              :style="{ backgroundColor: item.iconBgColor }"
+            >
+              <Icon :name="item.icon" size="18" :style="{ color: item.iconColor }" />
+            </span>
+            <p class="text-sm text-text-passive">{{ item.label }}</p>
           </div>
         </div>
       </div>
@@ -41,14 +42,7 @@
       </span>
 
       <div class="flex flex-wrap items-center gap-2">
-        <NuxtLink
-          :to="`/dashboard/employer/ads/${ad.id}/resumes`"
-          class="btn btn-soft h-9 min-h-9 px-4 text-sm hover:bg-primary-500 hover:text-white"
-        >
-          رزومه‌ها
-        </NuxtLink>
-
-        <MDropdown>
+        <MDropdown hover>
           <template #btn>
             <button type="button" class="btn btn-ghost text-primary-500  h-9 min-h-9 gap-2 px-4 text-sm hover:bg-primary-500 hover:text-white">
               <Icon name="material-symbols:more-vert" size="16" />
@@ -56,7 +50,7 @@
             </button>
           </template>
           <template #content>
-            <ul class="min-w-56 py-2">
+            <ul class="min-w-56">
               <li>
                 <button
                   type="button"
@@ -70,6 +64,7 @@
               <li>
                 <NuxtLink
                   :to="`/jobs/${ad.id}`"
+                  target="_blank"
                   class="flex w-full items-center gap-2 px-4 py-2 text-sm text-text-secondary hover:bg-surface-50"
                 >
                   <Icon name="material-symbols:visibility-outline" size="16" />
@@ -99,6 +94,15 @@
             </ul>
           </template>
         </MDropdown>
+        
+        <NuxtLink
+          :to="`/dashboard/employer/ads/${ad.id}/resumes`"
+          class="group btn btn-ghost h-9 min-h-9 gap-2 px-4 text-sm text-primary-500 hover:bg-primary-500 hover:text-white"
+        >
+          <icons-search-briefcase class="text-current" />
+
+          رزومه‌ها
+        </NuxtLink>
       </div>
     </div>
   </article>

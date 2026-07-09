@@ -1,0 +1,36 @@
+<template>
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 16 16"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    class="inline-block shrink-0"
+  >
+    <g clip-path="url(#clip0_search_briefcase)">
+      <path
+        d="M7.99992 12.6667H2.53325C1.87051 12.6667 1.33325 12.136 1.33325 11.4815V5.55556C1.33325 4.901 1.87051 4.37037 2.53325 4.37037H12.1333C12.796 4.37037 13.3333 4.901 13.3333 5.55556V7.33333M4.93325 12.6667V3.18519C4.93325 2.87085 5.05968 2.5694 5.28472 2.34713C5.50977 2.12487 5.81499 2 6.13325 2H8.53325C8.85151 2 9.15674 2.12487 9.38178 2.34713C9.60682 2.5694 9.73325 2.87085 9.73325 3.18519V7.33333M14.6666 14.0001L13.4 12.7334M13.9999 11.3333C13.9999 12.4379 13.1045 13.3333 11.9999 13.3333C10.8953 13.3333 9.99992 12.4379 9.99992 11.3333C9.99992 10.2288 10.8953 9.33333 11.9999 9.33333C13.1045 9.33333 13.9999 10.2288 13.9999 11.3333Z"
+        :stroke="color"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </g>
+    <defs>
+      <clipPath id="clip0_search_briefcase">
+        <rect width="16" height="16" fill="white" />
+      </clipPath>
+    </defs>
+  </svg>
+</template>
+
+<script setup lang="ts">
+withDefaults(
+  defineProps<{
+    color?: string
+  }>(),
+  {
+    color: 'currentColor',
+  },
+)
+</script>

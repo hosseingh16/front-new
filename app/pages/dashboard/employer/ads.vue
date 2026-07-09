@@ -60,7 +60,7 @@
           v-for="tab in filterTabs"
           :key="tab.id"
           type="button"
-          class="flex items-center gap-2 border-b-2 pb-3 text-sm font-semibold transition-colors"
+          class="flex items-center gap-2 border-b-2 pb-3 text-sm font-semibold transition-colors cursor-pointer"
           :class="
             activeFilter === tab.id
               ? 'border-primary-500 text-primary-500'
@@ -98,11 +98,24 @@
         :icon-size="180"
       />
     </template>
+
+    <ConfirmDialog
+      ref="confirmDialogRef"
+      title="حذف آگهی"
+      subtitle="آیا از حذف این آگهی مطمئن هستید؟"
+      description="پس از حذف، اطلاعات این آگهی از پروفایل شما پاک می‌شود و قابل بازیابی نخواهد بود."
+      confirm-text="حذف آگهی"
+      cancel-text="نادیده گرفتن"
+      icon="svg:delete"
+      @confirm="handleDeleteAdConfirm"
+      @cancel="handleDeleteAdCancel"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import NoResult from '~/components/Elements/NoResult.vue'
+import ConfirmDialog from '~/components/M/ConfirmDialog.vue'
 import EmployerAdCard from './components/EmployerAdCard.vue'
 import type { EmployerAdFilter } from '~/types/employer-ad'
 import {
@@ -120,6 +133,8 @@ const { $toast } = useNuxtApp()
 const activeFilter = ref<EmployerAdFilter>('all')
 const searchQuery = ref('')
 const showSearch = ref(false)
+const confirmDialogRef = ref<InstanceType<typeof ConfirmDialog> | null>(null)
+const deletingAdId = ref<number | null>(null)
 
 const filterTabs = computed(() => [
   { id: 'all' as const, label: 'همه', icon: '', count: null },
@@ -132,13 +147,13 @@ const filterTabs = computed(() => [
   {
     id: 'draft' as const,
     label: 'پیش‌نویس',
-    icon: 'lucide:briefcase',
+    icon: 'lucide:pen-line',
     count: countEmployerAdsByFilter(adGroups.value, 'draft'),
   },
   {
     id: 'expired' as const,
     label: 'منقضی شده‌ها',
-    icon: 'lucide:pen-line',
+    icon: 'material-symbols:cancel-outline',
     count: countEmployerAdsByFilter(adGroups.value, 'expired'),
   },
 ])
@@ -160,16 +175,27 @@ function copyAd(id: number) {
   navigateTo(`/jobs/create?copy=${id}`)
 }
 
-async function confirmDeleteAd(id: number) {
+function confirmDeleteAd(id: number) {
   if (!import.meta.client) return
-  if (!window.confirm('آیا از حذف این آگهی مطمئن هستید؟')) return
+  deletingAdId.value = id
+  confirmDialogRef.value?.showModal()
+}
 
+async function handleDeleteAdConfirm() {
+  if (deletingAdId.value == null) return
   try {
-    await deleteAd(id)
+    await deleteAd(deletingAdId.value)
     $toast.success('آگهی با موفقیت حذف شد')
   } catch (err: any) {
     $toast.error(err?.message || 'حذف آگهی با خطا مواجه شد')
+  } finally {
+    deletingAdId.value = null
+    confirmDialogRef.value?.closeModal()
   }
+}
+
+function handleDeleteAdCancel() {
+  deletingAdId.value = null
 }
 
 useSeoMeta({
