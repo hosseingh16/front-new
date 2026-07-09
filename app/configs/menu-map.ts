@@ -97,10 +97,10 @@ export const menuMap: Record<string, MenuMeta> = {
   // -------------------------
   // Employer Sidebar Items
   // -------------------------
-   my_ads: {
+  emplopyer_ads: {
     label: 'آگهی های من',
     icon: 'eye',
-    to: '/jobs/applied',
+    to: '/dashboard/employer/ads',
   },
   create_ad: {
     label: 'ایجاد آگهی جدید',
