@@ -8,7 +8,7 @@
 }
 
 @utility btn {
-  @apply text-base rounded-lg font-semibold px-4 py-2 h-10 shadow-none;
+  @apply text-base rounded-lg font-semibold px-4 py-2 h-10 shadow-none cursor-pointer;
 }
 
 @utility btn-primary {

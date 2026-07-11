@@ -21,7 +21,12 @@ html {
 }
 
 button {
+  cursor: pointer;
   transition: all 0.2s linear;
+}
+
+button:disabled {
+  cursor: not-allowed;
 }
 
 /* مخفی کردن اسکرول‌بار */
