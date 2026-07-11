@@ -1,7 +1,8 @@
 <template>
   <button
     type="button"
-    class="flex cursor-pointer h-9 items-center justify-center gap-1 rounded-lg border-2 border-gray-default bg-white px-4 text-sm text-text-tertiary transition-opacity hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-60"
+    class="flex cursor-pointer items-center justify-center gap-1 rounded-lg border-2 border-gray-default bg-white text-sm text-text-tertiary transition-opacity hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-60"
+    :class="iconOnly ? 'h-8 w-8 p-0' : 'h-9 px-4'"
     :disabled="loading"
     :aria-label="bookmarked ? 'حذف نشان' : 'نشان کردن'"
     @click="toggleBookmark"
@@ -11,7 +12,7 @@
       size="16"
       :class="bookmarked ? 'text-primary-500' : ''"
     />
-    {{ label }}
+    <span v-if="!iconOnly">{{ label }}</span>
   </button>
 </template>
 
@@ -26,10 +27,12 @@ const props = withDefaults(
     type: BookmarkType
     label?: string
     initialBookmarked?: boolean
+    iconOnly?: boolean
   }>(),
   {
     label: 'نشان کردن',
     initialBookmarked: false,
+    iconOnly: false,
   },
 )
 

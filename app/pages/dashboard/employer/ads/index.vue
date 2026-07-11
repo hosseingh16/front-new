@@ -116,12 +116,12 @@
 <script setup lang="ts">
 import NoResult from '~/components/Elements/NoResult.vue'
 import ConfirmDialog from '~/components/M/ConfirmDialog.vue'
-import EmployerAdCard from './components/EmployerAdCard.vue'
+import EmployerAdCard from '~/components/Elements/EmployerAdCard.vue'
 import type { EmployerAdFilter } from '~/types/employer-ad'
 import {
   countEmployerAdsByFilter,
   getEmployerAdsByFilter,
-} from './utils/employer-ad'
+} from '../utils/employer-ad'
 
 definePageMeta({
   layout: 'dashboard',

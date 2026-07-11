@@ -14,7 +14,6 @@
           :key="item.label"
           class="flex flex-col items-center gap-2"
         >
-          
           <div class="min-w-0">
             <p class="font-yb-bold text-sm text-text-tertiary">{{ item.value }}</p>
           </div>
@@ -37,7 +36,6 @@
         :class="statusMeta.className"
       >
         <span class="inline-block h-2 w-2 ml-1 my-auto bg-[#2E7D32] rounded-full"></span>
-  
         {{ statusMeta.label }}
       </span>
 
@@ -94,13 +92,12 @@
             </ul>
           </template>
         </MDropdown>
-        
+
         <NuxtLink
           :to="`/dashboard/employer/ads/${ad.id}/resumes`"
           class="group btn btn-ghost h-9 min-h-9 gap-2 px-4 text-sm text-primary-500 hover:bg-primary-500 hover:text-white"
         >
           <icons-search-briefcase class="text-current" />
-
           رزومه‌ها
         </NuxtLink>
       </div>
@@ -115,7 +112,7 @@ import MDropdown from '~/components/M/Dropdown.vue'
 import {
   getEmployerAdStatItems,
   getEmployerAdStatusMeta,
-} from '../utils/employer-ad'
+} from '~/pages/dashboard/employer/utils/employer-ad'
 
 const props = defineProps<{
   ad: EmployerAd
