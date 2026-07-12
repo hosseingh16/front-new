@@ -180,7 +180,7 @@
               :key="request.id"
               :request="request"
               :action-loading="actionLoadingId === request.id"
-              @view="handleViewRequest(request.id)"
+              @view="handleViewRequest(request)"
               @confirm="handleConfirmRequest(request.id)"
               @reject="handleRejectRequest(request.id)"
             />
@@ -216,6 +216,7 @@ import AdRequestFiltersSidebar from "~/components/Elements/AdRequestFiltersSideb
 import { toPersianDigits } from "~/composables/useCountUp";
 import {
   DEFAULT_AD_REQUEST_STATUS_VALUES,
+  type EmployerAdRequest,
   type EmployerAdRequestTab,
 } from "~/types/employer-ad-request";
 import {
@@ -376,10 +377,17 @@ function onPageChange(nextPage: number) {
   nextTick(scrollToResults);
 }
 
-async function handleViewRequest(requestId: number) {
-  actionLoadingId.value = requestId;
+async function handleViewRequest(request: EmployerAdRequest) {
+  const userId = request.user?.id;
+  if (!userId) {
+    $toast.error("شناسه کاربر یافت نشد");
+    return;
+  }
+
+  actionLoadingId.value = request.id;
   try {
-    await markRequestSeen(requestId);
+    await markRequestSeen(request.id);
+    await navigateTo(`/users/${userId}`);
   } catch (err: any) {
     $toast.error(err?.message || "خطا در مشاهده رزومه");
   } finally {
