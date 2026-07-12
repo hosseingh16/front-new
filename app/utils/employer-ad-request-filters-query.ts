@@ -1,10 +1,11 @@
 import type { LocationQuery } from 'vue-router'
 import {
-  AD_REQUEST_STATUS_OPTIONS,
   createEmptyEmployerAdRequestFilters,
+  DEFAULT_AD_REQUEST_STATUS_VALUES,
   type EmployerAdRequestFiltersModel,
   type EmployerAdRequestTab,
 } from '~/types/employer-ad-request'
+import { normalizeGenderFilterValue } from '~/utils/employer-ad-request-lookups'
 
 type RouteQuery = LocationQuery | Record<string, string | string[] | undefined>
 
@@ -18,23 +19,25 @@ function queryValue(
   return value
 }
 
-function splitNumbers(value: string | string[] | undefined): number[] {
+function splitStrings(value: string | string[] | undefined): string[] {
   if (!value) return []
   const raw = Array.isArray(value) ? value.join(',') : value
-  return raw
-    .split(',')
-    .filter(Boolean)
+  return raw.split(',').filter(Boolean)
+}
+
+function splitNumbers(value: string | string[] | undefined): number[] {
+  return splitStrings(value)
     .map((item) => Number(item))
     .filter((item) => Number.isFinite(item))
 }
 
 export function resolveAdRequestStatusQuery(
   statuses: number[],
+  allStatusValues: number[] = DEFAULT_AD_REQUEST_STATUS_VALUES,
 ): string | undefined {
-  const allStatuses = AD_REQUEST_STATUS_OPTIONS.map((item) => item.value)
-  const selected = statuses.filter((status) => allStatuses.includes(status))
+  const selected = statuses.filter((status) => allStatusValues.includes(status))
 
-  if (!selected.length || selected.length === allStatuses.length) {
+  if (!selected.length || selected.length === allStatusValues.length) {
     return undefined
   }
 
@@ -45,11 +48,11 @@ export function employerAdRequestFiltersToRouteQuery(
   filters: EmployerAdRequestFiltersModel,
   page: number,
   tab: EmployerAdRequestTab,
+  allStatusValues: number[] = DEFAULT_AD_REQUEST_STATUS_VALUES,
 ): Record<string, string> {
   const query: Record<string, string> = {}
-  const allStatuses = AD_REQUEST_STATUS_OPTIONS.map((item) => item.value)
   const selectedStatuses = filters.statuses.filter((status) =>
-    allStatuses.includes(status),
+    allStatusValues.includes(status),
   )
 
   if (page > 1) query.page = String(page)
@@ -57,12 +60,14 @@ export function employerAdRequestFiltersToRouteQuery(
 
   if (
     selectedStatuses.length &&
-    selectedStatuses.length !== allStatuses.length
+    selectedStatuses.length !== allStatusValues.length
   ) {
     query.status = selectedStatuses.join(',')
   }
 
-  if (filters.experience) query.experience = filters.experience
+  if (filters.experience.length) {
+    query.experience = filters.experience.join(',')
+  }
   if (filters.gender != null) query.gender = String(filters.gender)
 
   return query
@@ -87,16 +92,17 @@ export function routeQueryToEmployerAdRequestFilters(query: RouteQuery): {
   }
 
   const experienceValue = queryValue(query.experience)
-  filters.experience =
-    typeof experienceValue === 'string'
-      ? experienceValue
-      : (experienceValue?.[0] ?? null)
+  const experiences = splitStrings(experienceValue)
+  if (experiences.length) {
+    filters.experience = experiences
+  }
 
   const genderValue = queryValue(query.gender)
-  filters.gender =
+  const rawGender =
     typeof genderValue === 'string'
       ? genderValue
       : (genderValue?.[0] ?? null)
+  filters.gender = normalizeGenderFilterValue(rawGender)
 
   return {
     filters,

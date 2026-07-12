@@ -214,7 +214,10 @@ import Pagination from "~/components/Elements/Pagination.vue";
 import AdRequestCard from "~/components/Elements/AdRequestCard.vue";
 import AdRequestFiltersSidebar from "~/components/Elements/AdRequestFiltersSidebar.vue";
 import { toPersianDigits } from "~/composables/useCountUp";
-import type { EmployerAdRequestTab } from "~/types/employer-ad-request";
+import {
+  DEFAULT_AD_REQUEST_STATUS_VALUES,
+  type EmployerAdRequestTab,
+} from "~/types/employer-ad-request";
 import {
   areAdRequestRouteQueriesEqual,
   employerAdRequestFiltersToRouteQuery,
@@ -278,12 +281,12 @@ const adTitle = computed(() => {
 });
 
 const hasActiveFilters = computed(() => {
-  const allStatuses = [35, 3, 10, 11];
+  const allStatuses = DEFAULT_AD_REQUEST_STATUS_VALUES;
   const selectedStatuses = requestFilters.value.statuses;
 
   return (
     selectedStatuses.length !== allStatuses.length ||
-    !!requestFilters.value.experience ||
+    requestFilters.value.experience.length > 0 ||
     requestFilters.value.gender != null ||
     activeTab.value === "bookmarked" ||
     searchQuery.value.trim().length > 0

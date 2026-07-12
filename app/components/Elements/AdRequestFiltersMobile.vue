@@ -200,7 +200,7 @@ function chipHasSelection(sectionIndex: number) {
     case 0:
       return filters.selectedStatuses.length !== filters.statusOptions.length
     case 1:
-      return !!filters.selectedExperience
+      return filters.selectedExperiences.length > 0
     case 2:
       return filters.selectedGender != null
     default:
@@ -211,13 +211,18 @@ function chipHasSelection(sectionIndex: number) {
 function chipLabel(sectionIndex: number, title: string) {
   if (!chipHasSelection(sectionIndex)) return title
 
-  if (sectionIndex === 1 && filters.selectedExperience) {
-    return filters.selectedExperience
+  if (sectionIndex === 1 && filters.selectedExperiences.length) {
+    const option = filters.experienceOptions.find((item) =>
+      filters.selectedExperiences.some(
+        (value) => String(value) === String(item.value),
+      ),
+    )
+    return option?.label ?? title
   }
 
   if (sectionIndex === 2 && filters.selectedGender != null) {
     const option = filters.genderOptions.find(
-      (item) => item.value === filters.selectedGender,
+      (item) => String(item.value) === String(filters.selectedGender),
     )
     return option?.label ?? title
   }

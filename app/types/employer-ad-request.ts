@@ -40,12 +40,13 @@ export interface EmployerAdRequest {
 export interface EmployerAdRequestStatusOption {
   value: number
   label: string
+  color?: string
   dotColor: string
 }
 
 export interface EmployerAdRequestFiltersModel {
   statuses: number[]
-  experience: string | null
+  experience: string[]
   gender: string | null
 }
 
@@ -54,24 +55,7 @@ export interface EmployerAdRequestFilterSection {
   icon: string
 }
 
-export const AD_REQUEST_STATUS_OPTIONS: EmployerAdRequestStatusOption[] = [
-  { value: 35, label: 'بررسی نشده', dotColor: '#4864E1' },
-  { value: 3, label: 'در انتظار تعیین وضعیت', dotColor: '#4864E1' },
-  { value: 10, label: 'تایید برای مصاحبه', dotColor: '#009F65' },
-  { value: 11, label: 'رد شده', dotColor: '#EF4035' },
-]
-
-export const AD_REQUEST_EXPERIENCE_OPTIONS = [
-  'زیر 5 سال',
-  'بین 5 تا 10 سال',
-  'بین 10 تا 15 سال',
-  'بالاتر از 15 سال',
-] as const
-
-export const AD_REQUEST_GENDER_OPTIONS = [
-  { value: '1', label: 'آقا' },
-  { value: '0', label: 'خانم' },
-]
+export const DEFAULT_AD_REQUEST_STATUS_VALUES = [35, 3, 10, 11]
 
 export const AD_REQUEST_FILTER_SECTIONS: EmployerAdRequestFilterSection[] = [
   { title: 'وضعیت رزومه‌ها', icon: 'user-search-4' },
@@ -79,10 +63,12 @@ export const AD_REQUEST_FILTER_SECTIONS: EmployerAdRequestFilterSection[] = [
   { title: 'جنسیت', icon: 'user-2' },
 ]
 
-export function createEmptyEmployerAdRequestFilters(): EmployerAdRequestFiltersModel {
+export function createEmptyEmployerAdRequestFilters(
+  statusValues: number[] = DEFAULT_AD_REQUEST_STATUS_VALUES,
+): EmployerAdRequestFiltersModel {
   return {
-    statuses: AD_REQUEST_STATUS_OPTIONS.map((item) => item.value),
-    experience: null,
+    statuses: [...statusValues],
+    experience: [],
     gender: null,
   }
 }

@@ -17,7 +17,7 @@ function getFetchErrorMessage(err: unknown): string {
 function cloneFilters(filters: EmployerAdRequestFiltersModel): EmployerAdRequestFiltersModel {
   return {
     statuses: [...filters.statuses],
-    experience: filters.experience,
+    experience: [...filters.experience],
     gender: filters.gender,
   }
 }
@@ -38,7 +38,9 @@ function buildRequestsQuery(
 
   const status = resolveAdRequestStatusQuery(filters.statuses)
   if (status != null) query.status = status
-  if (filters.experience) query.experience = filters.experience
+  if (filters.experience.length) {
+    query.experience = filters.experience.join(',')
+  }
   if (filters.gender != null) query.gender = filters.gender
   if (tab === 'bookmarked') query.only_bookmarked = 1
 

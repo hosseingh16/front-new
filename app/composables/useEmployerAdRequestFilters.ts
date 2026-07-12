@@ -1,35 +1,47 @@
+import type { ApiResponse } from '~/types/api'
 import {
-  AD_REQUEST_EXPERIENCE_OPTIONS,
-  AD_REQUEST_GENDER_OPTIONS,
-  AD_REQUEST_STATUS_OPTIONS,
   createEmptyEmployerAdRequestFilters,
   type EmployerAdRequestFiltersModel,
+  type EmployerAdRequestStatusOption,
 } from '~/types/employer-ad-request'
+import type { ISelectItem } from '~/types/select-item'
+import {
+  EMPLOYER_AD_REQUEST_LOOKUP_KEYS,
+  mapAdRequestStatusOptions,
+  mapEmployerGenderOptions,
+} from '~/utils/employer-ad-request-lookups'
 
 export function useEmployerAdRequestFilters(model?: Ref<EmployerAdRequestFiltersModel>) {
-  const selectedStatuses = ref<number[]>(
-    AD_REQUEST_STATUS_OPTIONS.map((item) => item.value),
-  )
-  const selectedExperience = ref<string | null>(null)
-  const selectedGender = ref<string | null>(null)
+  const api = useApi()
 
-  const statusOptions = AD_REQUEST_STATUS_OPTIONS
-  const experienceOptions = AD_REQUEST_EXPERIENCE_OPTIONS
-  const genderOptions = AD_REQUEST_GENDER_OPTIONS
+  const statusOptions = ref<EmployerAdRequestStatusOption[]>([])
+  const experienceOptions = ref<ISelectItem[]>([])
+  const genderOptions = ref<ISelectItem[]>([])
+
+  const selectedStatuses = ref<number[]>([])
+  const selectedExperiences = ref<string[]>([])
+  const selectedGender = ref<string | null>(null)
 
   const filtersModel = computed<EmployerAdRequestFiltersModel>(() => ({
     statuses: [...selectedStatuses.value],
-    experience: selectedExperience.value,
+    experience: [...selectedExperiences.value],
     gender: selectedGender.value,
   }))
+
+  const selectedGenderValues = computed(() =>
+    selectedGender.value != null ? [selectedGender.value] : [],
+  )
 
   const activeFilterCount = computed(() => {
     let count = 0
 
-    if (selectedStatuses.value.length !== statusOptions.length) {
+    if (
+      statusOptions.value.length &&
+      selectedStatuses.value.length !== statusOptions.value.length
+    ) {
       count += 1
     }
-    if (selectedExperience.value) count += 1
+    count += selectedExperiences.value.length
     if (selectedGender.value != null) count += 1
 
     return count
@@ -37,8 +49,26 @@ export function useEmployerAdRequestFilters(model?: Ref<EmployerAdRequestFilters
 
   function applyFiltersModel(value: EmployerAdRequestFiltersModel) {
     selectedStatuses.value = [...value.statuses]
-    selectedExperience.value = value.experience
+    selectedExperiences.value = [...value.experience]
     selectedGender.value = value.gender
+  }
+
+  function ensureDefaultStatuses() {
+    if (!statusOptions.value.length || selectedStatuses.value.length) return
+    selectedStatuses.value = statusOptions.value.map((item) => item.value)
+  }
+
+  async function loadLookups() {
+    const result = await api.get<ApiResponse<Record<string, ISelectItem[]>>>(
+      '/lookups',
+      { query: { keys: EMPLOYER_AD_REQUEST_LOOKUP_KEYS } },
+    )
+
+    const data = result.data ?? {}
+    statusOptions.value = mapAdRequestStatusOptions(data.ad_request_statuses ?? [])
+    experienceOptions.value = data.experience_levels ?? []
+    genderOptions.value = mapEmployerGenderOptions(data.genders ?? [])
+    ensureDefaultStatuses()
   }
 
   if (model?.value) {
@@ -64,10 +94,16 @@ export function useEmployerAdRequestFilters(model?: Ref<EmployerAdRequestFilters
     { deep: true },
   )
 
+  watch(statusOptions, () => {
+    ensureDefaultStatuses()
+  })
+
   function clearFilters() {
-    const empty = createEmptyEmployerAdRequestFilters()
+    const empty = createEmptyEmployerAdRequestFilters(
+      statusOptions.value.map((item) => item.value),
+    )
     selectedStatuses.value = [...empty.statuses]
-    selectedExperience.value = empty.experience
+    selectedExperiences.value = [...empty.experience]
     selectedGender.value = empty.gender
 
     if (model) model.value = empty
@@ -87,26 +123,33 @@ export function useEmployerAdRequestFilters(model?: Ref<EmployerAdRequestFilters
     selectedStatuses.value = [...selectedStatuses.value, value]
   }
 
-  function isExperienceSelected(value: string) {
-    return selectedExperience.value === value
+  function isGenderSelected(value: string | number) {
+    return selectedGender.value === String(value)
   }
 
-  function toggleExperience(value: string) {
-    selectedExperience.value = selectedExperience.value === value ? null : value
+  function toggleGender(value: string | number) {
+    const next = String(value)
+    selectedGender.value = selectedGender.value === next ? null : next
   }
 
-  function isGenderSelected(value: string) {
-    return selectedGender.value === value
+  function setGenderSelection(values: Array<string | number>) {
+    if (!values.length) {
+      selectedGender.value = null
+      return
+    }
+
+    selectedGender.value = String(values[values.length - 1])
   }
 
-  function toggleGender(value: string) {
-    selectedGender.value = selectedGender.value === value ? null : value
-  }
+  onMounted(() => {
+    loadLookups()
+  })
 
   return {
     selectedStatuses,
-    selectedExperience,
+    selectedExperiences,
     selectedGender,
+    selectedGenderValues,
     statusOptions,
     experienceOptions,
     genderOptions,
@@ -115,9 +158,8 @@ export function useEmployerAdRequestFilters(model?: Ref<EmployerAdRequestFilters
     clearFilters,
     isStatusSelected,
     toggleStatus,
-    isExperienceSelected,
-    toggleExperience,
     isGenderSelected,
     toggleGender,
+    setGenderSelection,
   }
 }
