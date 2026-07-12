@@ -21,26 +21,26 @@
       <form @submit="onSubmit" class="mt-6">
         <div class="grid md:grid-cols-2 gap-4">
           <m-form-select2
-            name="jobTitle"
+            name="title"
             label="عنوان شغلی:"
             required
             :options="jobTitles"
             placeholder="عنوان شغلی را انتخاب کنید"
           ></m-form-select2>
           <m-form-select2
-            name="employment_type"
+            name="employmentType"
             label="نوع قرارداد:"
             :options="employment_types"
             placeholder="نوع قرارداد را انتخاب کنید"
           ></m-form-select2>
           <m-form-input
-            name="organization"
+            name="companyName"
             label="نام سازمان:"
             placeholder="نام سازمان را وارد کنید"
             required
           ></m-form-input>
           <m-form-select2
-            name="actionType"
+            name="activityType"
             label="نوع فعالیت:"
             :options="industries"
             placeholder="نوع فعالیت را انتخاب کنید"
@@ -64,11 +64,11 @@
             ></m-form-select2>
             <label class="label mt-2 text-sm text-text-primay">
               <input
-                name="busy"
+                name="stillBusy"
                 type="checkbox"
                 class="checkbox"
-                :checked="values.busy"
-                @click="setFieldValue('busy', !values.busy)"
+                :checked="values.stillBusy"
+                @click="setFieldValue('stillBusy', !values.stillBusy)"
               />
               مشغول به کار هستم.
             </label>
@@ -80,7 +80,7 @@
             placeholder="آخرین حقوق را انتخاب کنید"
           ></m-form-select2>
           <m-form-select2
-            name="reason"
+            name="leavingReason"
             label="علت ترک کار:"
             :options="reasons"
             placeholder="علت ترک را انتخاب کنید"
@@ -150,27 +150,39 @@ const loading = api.loading;
 
 // Form
 const formSchema = Yup.object({
-  jobTitle: Yup.string().required("عنوان شغلی انتخاب نشده است"),
-  employment_type: Yup.string(),
-  organization: Yup.string().required("نام سازمان وارد نشده است"),
-  actionType: Yup.string().required("نوع فعالیت انتخاب نشده است"),
+  title: Yup.string().required("عنوان شغلی انتخاب نشده است"),
+  employmentType: Yup.string(),
+  companyName: Yup.string().required("نام سازمان وارد نشده است"),
+  activityType: Yup.string().required("نوع فعالیت انتخاب نشده است"),
   startYear: Yup.string().required("سال شروع انتخاب نشده است"),
-  busy: Yup.bool(),
-  endYear: Yup.string().when("busy", {
-    is: false,
-    then: (schema) => schema.required("سال پایان انتخاب نشده است"),
-    otherwise: (schema) => schema.optional(),
-  }),
+  stillBusy: Yup.bool(),
+  endYear: Yup.string()
+    .when("stillBusy", {
+      is: false,
+      then: (schema) => schema.required("سال پایان انتخاب نشده است"),
+      otherwise: (schema) => schema.optional(),
+    })
+    .test(
+      "end-year-after-start",
+      "سال پایان نباید از سال شروع کمتر باشد",
+      function (endYear) {
+        const { startYear, stillBusy } = this.parent;
+
+        if (stillBusy || !startYear || !endYear) return true;
+
+        return Number(endYear) >= Number(startYear);
+      },
+    ),
   lastSalary: Yup.string(),
-  reason: Yup.string(),
-  description: Yup.string(),
+  leavingReason: Yup.string(),
+  description: Yup.string().max(400, "توضیحات نباید بیشتر از 400 کاراکتر باشد"),
 });
 const { handleSubmit, values, setFieldValue, resetForm, setValues } = useForm<
   Yup.InferType<typeof formSchema>
 >({
   validationSchema: formSchema,
   initialValues: {
-    busy: false,
+    stillBusy: false,
   },
 });
 
@@ -184,11 +196,17 @@ async function showModal() {
   experienceModalRef.value?.showModal();
 }
 
-const isEndYearDisabled = computed(() => values.busy);
+const isEndYearDisabled = computed(() => values.stillBusy);
 
 const onSubmit = handleSubmit((data: Yup.InferType<typeof formSchema>) => {
-  console.log(data);
-  emits("item", data);
+  if (props.editMode) {
+    emits("item", {
+      ...data,
+      id: props.itemToEdit.id,
+    });
+  } else {
+    emits("item", data);
+  }
   experienceModalRef.value?.closeModal();
 });
 </script>

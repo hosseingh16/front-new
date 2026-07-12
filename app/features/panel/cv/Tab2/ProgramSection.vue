@@ -24,7 +24,8 @@
         شما هنوز نرم افزار حسابداری خود را تکمیل نکرده‌اید.
       </p>
       <p class="text-text-passive text-sm">
-        با افزودن حداقل یک نرم افزار حسابداری، شانس شما برای استخدام افزایش پیدا می‌کند.
+        با افزودن حداقل یک نرم افزار حسابداری، شانس شما برای استخدام افزایش پیدا
+        می‌کند.
       </p>
       <ProgramModal
         label="افزودن نرم‌افزار حسابداری"
@@ -41,7 +42,9 @@
           <p class="text-text-primay font-semibold">
             {{ programs.find((x) => x.value === item.programName)?.label }}
           </p>
-          <p class="text-text-passive text-sm mt-2">میزان تسلط به زیر سیستم‌ها:</p>
+          <p class="text-text-passive text-sm mt-2">
+            میزان تسلط به زیر سیستم‌ها:
+          </p>
           <div class="mt-2 flex items-center flex-wrap gap-x-12 gap-y-2">
             <p class="text-text-passive text-sm">
               انبار: <span class="text-text-primay">{{ item.slider1 }}</span>
@@ -56,7 +59,8 @@
               فروش: <span class="text-text-primay">{{ item.slider4 }}</span>
             </p>
             <p class="text-text-passive text-sm">
-              نقد و بانک: <span class="text-text-primay">{{ item.slider5 }}</span>
+              نقد و بانک:
+              <span class="text-text-primay">{{ item.slider5 }}</span>
             </p>
           </div>
         </div>
@@ -67,7 +71,9 @@
             :item-to-edit="item"
             @item="programsItems[index] = $event"
           />
-          <button class="btn bg-white h-8 w-8 p-0 border-2 rounded-lg border-text-muted">
+          <button
+            class="btn bg-white h-8 w-8 p-0 border-2 rounded-lg border-text-muted"
+          >
             <Icon name="svg:dots" />
           </button>
           <button
@@ -83,12 +89,19 @@
 </template>
 
 <script setup lang="ts">
-import type { ISelectItem } from '~/types/select-item.js';
-import ProgramModal from './ProgramModal.vue';
+import type { ISelectItem } from "~/types/select-item.js";
+import ProgramModal from "./ProgramModal.vue";
 
 // Variabels
-const levels = ref<ISelectItem[]>([{ label: 'کارشناسی', value: '1' }]);
-const years = ref<ISelectItem[]>([{ label: '1400', value: '1' }]);
-const programs = ref<ISelectItem[]>([{ label: 'برنامه 1', value: '1' }]);
+const levels = ref<ISelectItem[]>([{ label: "کارشناسی", value: "1" }]);
+const years = ref<ISelectItem[]>([{ label: "1400", value: "1" }]);
+const programs = ref<ISelectItem[]>([{ label: "برنامه 1", value: "1" }]);
 const programsItems = ref<any[]>([]);
+const api = useApi();
+
+onMounted(async () => {
+  const response = (await api.get("lookups?keys=accounting_programs")) as any;
+  console.log("response", response);
+  programs.value = response.data.accounting_programs;
+});
 </script>

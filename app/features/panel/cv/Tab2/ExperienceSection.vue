@@ -52,16 +52,16 @@
           <Icon name="svg:edu-item" size="28" />
           <div class="space-y-3">
             <p class="text-text-primay font-semibold">
-              {{ jobTitles.find((x) => x.value === item.jobTitle)?.label }} .
+              {{ jobTitles.find((x) => x.value === item.title)?.label }} .
               {{
-                employment_types.find((x) => x.value === item.contractType)
+                employment_types.find((x) => x.value === item.employmentType)
                   ?.label
               }}
             </p>
             <p class="text-text-passive text-sm">
-              {{ item.organization }} . از
+              {{ item.companyName }} . از
               {{ years.find((x) => x.value === item.startYear)?.label }} تا
-              <span v-if="!item.busy">{{
+              <span v-if="!item.stillBusy">{{
                 years.find((x) => x.value === item.endYear)?.label
               }}</span>
               <span v-else>الان</span>
@@ -81,7 +81,7 @@
             :years
             :edit-mode="true"
             :item-to-edit="item"
-            @item="experiencesItems[index] = $event"
+            @item="updatePrior"
           />
           <button
             class="btn bg-white h-8 w-8 p-0 border-2 rounded-lg border-text-muted"
@@ -90,7 +90,7 @@
           </button>
           <button
             class="btn bg-white h-8 w-8 p-0 border-2 rounded-lg border-text-muted"
-            @click="experiencesItems.splice(index, 1)"
+            @click="deletePrior(index, item.id)"
           >
             <Icon name="svg:trash" />
           </button>
@@ -112,23 +112,69 @@ const employment_types = ref<ISelectItem[]>([
   { label: "کارشناسی", value: "1" },
 ]);
 const industries = ref<ISelectItem[]>([]);
-const salaries = ref<ISelectItem[]>([{ label: "کارشناسی", value: "1" }]);
-const reasons = ref<ISelectItem[]>([{ label: "کارشناسی", value: "1" }]);
-const years = ref<ISelectItem[]>([{ label: "1400", value: "1" }]);
+const salaries = ref<ISelectItem[]>([]);
+const reasons = ref<ISelectItem[]>([]);
+const years = ref<ISelectItem[]>([]);
 const experiencesItems = ref<any[]>([]);
 
-const addPrior = (item: any) => {
-  console.log("kk");
+const addPrior = async (item: any) => {
   const exists = experiencesItems.value.some(
     (x) =>
-      x.jobTitle === item.jobTitle &&
+      x.title === item.title &&
       x.startYear === item.startYear &&
-      x.organization === item.organization,
+      x.companyName === item.companyName,
   );
-  if (!exists) {
-    experiencesItems.value.push(item);
+  if (exists) {
+    alert("duplicate prior");
+    return;
+  }
+
+  try {
+    const response = await api.post<any>("cv/create-prior", item);
+    experiencesItems.value.push(mapPrior(response));
+
+    // اگر بک‌اند id برمی‌گردونه:
+    //experiencesItems.value.push(res.data);
+  } finally {
+    //loading.value = false;
   }
 };
+
+const updatePrior = async (item: any) => {
+  try {
+    const { id, ...data } = item;
+
+    const response = await api.put(`cv/prior/${id}`, data);
+
+    const index = experiencesItems.value.findIndex((x) => x.id === id);
+
+    if (index !== -1) {
+      experiencesItems.value[index] = mapPrior(response);
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const deletePrior = async (index: number, id: number) => {
+  await api.delete(`cv/prior/${id}`);
+
+  experiencesItems.value.splice(index, 1);
+};
+
+const mapPrior = (item: any) => ({
+  id: item.id,
+  title: item.title,
+  employmentType: item.employment_type,
+  activityType: item.activity_type,
+  companyName: item.company_name,
+  startYear: item.start_year,
+  endYear: item.end_year,
+  stillBusy: item.still_busy,
+  lastSalary: item.last_salary,
+  leavingReason: item.leaving_reason,
+  description: item.description,
+});
 
 onMounted(async () => {
   //Get lookups
@@ -142,5 +188,11 @@ onMounted(async () => {
   years.value = response.data?.prior_years ?? [];
   salaries.value = response.data?.salary_ranges ?? [];
   reasons.value = response.data?.leaving_reasons ?? [];
+
+  const currentUser = useSanctumUser();
+  const priors = (currentUser.value?.data?.resume_priors ?? []).map(mapPrior);
+  console.log(currentUser.value?.data?.resume_priors);
+
+  experiencesItems.value = priors;
 });
 </script>
