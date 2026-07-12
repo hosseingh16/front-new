@@ -48,3 +48,15 @@ button:disabled {
 .toast-custom {
   font-family: 'yekanBakh-regular', sans-serif !important;
 }
+
+/* پس‌زمینه مودال — محو کردن صفحه پشت */
+.modal[open],
+.modal.modal-open,
+.modal:target,
+.modal-toggle:checked + .modal {
+  backdrop-filter: blur(3px);
+}
+
+.modal-backdrop {
+  @apply bg-black/40 backdrop-blur-[3px];
+}

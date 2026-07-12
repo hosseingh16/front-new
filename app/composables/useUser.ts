@@ -16,8 +16,11 @@ export function useUser(id: MaybeRef<string | number>) {
   const { data, pending, error: fetchError, status } = useAsyncData(
     () => `user-${idRef.value}`,
     async () => {
+      const id = idRef.value
+      if (id == null || id === '' || Number(id) <= 0) return null
+
       try {
-        const result = await api.get<ApiResponse<UserResume>>(`/users/${idRef.value}`)
+        const result = await api.get<ApiResponse<UserResume>>(`/users/${id}`)
         return result.data ?? null
       } catch (err: unknown) {
         const statusCode =

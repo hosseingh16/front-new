@@ -45,7 +45,7 @@
         class="fixed inset-0 z-100 md:hidden"
         @keydown.escape="closeSection"
       >
-        <div class="absolute inset-0 bg-black/40" @click="closeSection" />
+        <div class="modal-backdrop absolute inset-0" @click="closeSection" />
         <div
           class="absolute inset-x-0 bottom-0 flex max-h-[85vh] flex-col rounded-t-2xl bg-white"
           dir="rtl"

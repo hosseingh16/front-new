@@ -110,27 +110,27 @@
 <script setup lang="ts">
 const props = withDefaults(
   defineProps<{
-    name?: string
-    avatar?: string | null
-    jobTitle?: string
-    employmentType?: string
-    salary?: string
-    experience?: string
-    age?: string
-    provinceName?: string
-    cityName?: string
-    to?: string
-    loading?: boolean
+    name?: string;
+    avatar?: string | null;
+    jobTitle?: string;
+    employmentType?: string;
+    salary?: string;
+    experience?: string;
+    age?: string;
+    provinceName?: string;
+    cityName?: string;
+    to?: string;
+    loading?: boolean;
   }>(),
   {
     loading: false,
   },
-)
+);
 
 const location = computed(() => {
   if (props.provinceName && props.cityName) {
-    return `${props.provinceName}، ${props.cityName}`
+    return `${props.provinceName}، ${props.cityName}`;
   }
-  return props.provinceName || props.cityName || ''
-})
+  return props.provinceName || props.cityName || "";
+});
 </script>

@@ -8,12 +8,16 @@
   </template>
 
   <template v-else-if="user">
-    <h1 class="mt-6 font-yb-bold text-2xl text-text-tertiary">
+    <h1
+      v-if="!embedded"
+      class="mt-6 font-yb-bold text-2xl text-text-tertiary"
+    >
       {{ fullName }}
     </h1>
 
     <div
-      class="mt-6 grid items-start gap-4 p-5 lg:grid-cols-[minmax(0,1fr)_300px]"
+      class="grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_300px]"
+      :class="embedded ? 'gap-4' : 'mt-6 p-5'"
     >
       <div class="min-w-0 space-y-4">
         <div class="flex items-center gap-6 border-b border-surface-200">
@@ -312,6 +316,7 @@ type UserResumeTab = "basic" | "job";
 const props = defineProps<{
   user: UserResume | null;
   loading?: boolean;
+  embedded?: boolean;
 }>();
 
 const activeTab = ref<UserResumeTab>("basic");

@@ -1,6 +1,6 @@
 <template>
   <div class="space-y-4">
-    <section class="rounded-2xl border border-gray-default bg-white p-5">
+    <section class="rounded-2xl border border-gray-default bg-white p-4 md:p-5">
       <div class="flex w-full items-center gap-1">
         <span
           class="h-1 w-2 shrink-0 rounded-full bg-linear-to-b from-[#3B6EF8] to-primary-500"
@@ -15,12 +15,14 @@
         <div
           v-for="item in educationItems"
           :key="item.id"
-          class="items-start justify-between gap-4 pb-4 last:pb-0"
+          class="space-y-3 pb-4 last:border-b-0 last:pb-0"
         >
-          <div class="flex min-w-0 flex-1 items-start gap-4">
-            <div class="flex min-w-0 flex-1 items-start gap-4">
+          <div
+            class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between"
+          >
+            <div class="flex min-w-0 items-start gap-3">
               <span
-                class="flex h-7 w-7 items-center justify-center rounded-lg bg-primary-50"
+                class="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-primary-50"
               >
                 <Icon
                   name="svg:edu-item"
@@ -29,26 +31,27 @@
                 />
               </span>
 
-              <div class="min-w-0 space-y-2">
-                <p class="font-semibold text-sm text-text-tertiary">
-                  {{ item.title }}
-                </p>
-              </div>
+              <p class="min-w-0 font-semibold text-sm text-text-tertiary">
+                {{ item.title }}
+              </p>
             </div>
 
-            <div class="flex items-center justify-center gap-2">
+            <div
+              class="flex min-w-0 flex-wrap items-center gap-2 ps-10 sm:shrink-0 sm:justify-end sm:ps-0"
+            >
               <p class="text-sm text-text-passive">
                 {{ item.university }}
               </p>
-              <span class="h-1 w-1 rounded-full bg-surface-200" />
-              <p class="shrink-0 text-sm text-text-passive">
+              <span class="h-1 w-1 shrink-0 rounded-full bg-surface-200" />
+              <p class="text-sm text-text-passive">
                 {{ item.period }}
               </p>
             </div>
           </div>
+
           <p
             v-if="item.description"
-            class="p-2 px-12 text-sm leading-7 text-text-passive"
+            class="ps-10 text-sm leading-7 text-text-passive sm:ps-11"
           >
             {{ item.description }}
           </p>
@@ -56,7 +59,7 @@
       </div>
     </section>
 
-    <section class="rounded-2xl border border-gray-default bg-white p-5">
+    <section class="rounded-2xl border border-gray-default bg-white p-4 md:p-5">
       <div class="flex w-full items-center gap-1">
         <span
           class="h-1 w-2 shrink-0 rounded-full bg-linear-to-b from-[#3B6EF8] to-primary-500"
@@ -71,12 +74,14 @@
         <div
           v-for="item in workItems"
           :key="item.id"
-          class="items-start justify-between gap-4 pb-4 last:pb-0"
+          class="space-y-3 pb-4 last:border-b-0 last:pb-0"
         >
-          <div class="flex min-w-0 flex-1 items-start gap-4">
-            <div class="flex min-w-0 flex-1 items-start gap-4">
+          <div
+            class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between"
+          >
+            <div class="flex min-w-0 items-start gap-3">
               <span
-                class="h-7 w-7 rounded-lg bg-primary-50 flex justify-center items-center"
+                class="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-primary-50"
               >
                 <Icon
                   name="svg:bag-1"
@@ -85,32 +90,33 @@
                 />
               </span>
 
-              <div class="min-w-0 flex items-center gap-2">
+              <div class="min-w-0">
                 <p class="font-semibold text-sm text-text-tertiary">
-                  {{ item.title }}
-                </p>
-
-                <span class="h-1 w-1 rounded-full bg-surface-200"></span>
-
-                <p class="font-semibold text-sm text-text-tertiary">
-                  {{ item.type }}
+                  <span>{{ item.title }}</span>
+                  <template v-if="item.type && item.type !== '—'">
+                    <span class="mx-1 text-text-passive">·</span>
+                    <span>{{ item.type }}</span>
+                  </template>
                 </p>
               </div>
             </div>
 
-            <div class="flex items-center gap-2 justify-center">
+            <div
+              class="flex min-w-0 flex-wrap items-center gap-2 ps-10 sm:shrink-0 sm:justify-end sm:ps-0"
+            >
               <p class="text-sm text-text-passive">
                 {{ item.company }}
               </p>
-              <span class="h-1 w-1 rounded-full bg-surface-200"></span>
-              <p class="shrink-0 text-sm text-text-passive">
+              <span class="h-1 w-1 shrink-0 rounded-full bg-surface-200" />
+              <p class="text-sm text-text-passive">
                 {{ item.period }}
               </p>
             </div>
           </div>
+
           <p
             v-if="item.description"
-            class="text-sm leading-7 text-text-passive p-2 px-12"
+            class="ps-10 text-sm leading-7 text-text-passive sm:ps-11"
           >
             {{ item.description }}
           </p>
@@ -120,7 +126,7 @@
 
     <section
       v-if="softwareItems.length"
-      class="rounded-2xl border border-gray-default bg-white p-5"
+      class="rounded-2xl border border-gray-default bg-white p-4 md:p-5"
     >
       <div class="flex w-full items-center gap-1">
         <span
@@ -152,7 +158,7 @@
             میزان تسلط به زیرسیستم‌ها:
           </p>
           <div
-            class="mt-3 flex flex-wrap justify-between gap-x-6 gap-y-2 text-sm text-text-passive"
+            class="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 text-sm text-text-passive sm:grid-cols-3 lg:flex lg:flex-wrap lg:justify-between"
           >
             <span v-for="sub in software.subsystems" :key="sub.label">
               {{ sub.label }}:
@@ -165,7 +171,7 @@
       </div>
     </section>
 
-    <section class="rounded-2xl border border-gray-default bg-white p-5">
+    <section class="rounded-2xl border border-gray-default bg-white p-4 md:p-5">
       <div class="flex w-full items-center gap-1">
         <span
           class="h-1 w-2 shrink-0 rounded-full bg-linear-to-b from-[#3B6EF8] to-primary-500"
@@ -174,7 +180,9 @@
         <h2 class="font-yb-bold text-base text-text-primay">مهارت‌ها</h2>
       </div>
 
-      <div class="mt-4 grid gap-x-4 gap-y-10 md:grid-cols-2">
+      <div
+        class="mt-4 grid grid-cols-1 gap-x-4 gap-y-6 md:grid-cols-2 md:gap-y-10"
+      >
         <UserResumeSkillMeter
           v-for="skill in skillItems"
           :key="skill.label"
@@ -184,7 +192,7 @@
       </div>
     </section>
 
-    <section class="rounded-2xl border border-gray-default bg-white p-5">
+    <section class="rounded-2xl border border-gray-default bg-white p-4 md:p-5">
       <div class="flex w-full items-center gap-1">
         <span
           class="h-1 w-2 shrink-0 rounded-full bg-linear-to-b from-[#3B6EF8] to-primary-500"
@@ -195,7 +203,9 @@
         </h2>
       </div>
 
-      <div class="mt-4 grid gap-x-4 gap-y-10 md:grid-cols-2">
+      <div
+        class="mt-4 grid grid-cols-1 gap-x-4 gap-y-6 md:grid-cols-2 md:gap-y-10"
+      >
         <UserResumeSkillMeter
           v-for="skill in taxSkillItems"
           :key="skill.label"
@@ -205,7 +215,7 @@
       </div>
     </section>
 
-    <section class="rounded-2xl border border-gray-default bg-white p-5">
+    <section class="rounded-2xl border border-gray-default bg-white p-4 md:p-5">
       <div class="flex w-full items-center gap-1">
         <span
           class="h-1 w-2 shrink-0 rounded-full bg-linear-to-b from-[#3B6EF8] to-primary-500"
@@ -228,7 +238,7 @@
 
       <div
         v-if="attachment"
-        class="mt-4 flex items-center justify-between gap-4 rounded-xl border border-surface-200 bg-surface-50 p-4"
+        class="mt-4 flex flex-col gap-3 rounded-xl border border-surface-200 bg-surface-50 p-4 sm:flex-row sm:items-center sm:justify-between"
       >
         <div class="flex min-w-0 items-center gap-3">
           <span

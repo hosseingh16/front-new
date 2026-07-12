@@ -82,7 +82,7 @@
           @keydown.escape="closeMobileTabModal"
         >
           <div
-            class="absolute inset-0 bg-black/40"
+            class="modal-backdrop absolute inset-0"
             @click="closeMobileTabModal"
           />
           <div
@@ -205,6 +205,16 @@
         </div>
       </div>
     </template>
+
+    <UserResumeModal
+      v-model:open="showResumeModal"
+      :request="activeRequest"
+      :requests="filteredRequests"
+      :action-loading="activeRequest ? actionLoadingId === activeRequest.id : false"
+      @update:request="handleModalRequestChange"
+      @confirm="handleConfirmRequest"
+      @reject="handleRejectRequest"
+    />
   </div>
 </template>
 
@@ -213,6 +223,7 @@ import NoResult from "~/components/Elements/NoResult.vue";
 import Pagination from "~/components/Elements/Pagination.vue";
 import AdRequestCard from "~/components/Elements/AdRequestCard.vue";
 import AdRequestFiltersSidebar from "~/components/Elements/AdRequestFiltersSidebar.vue";
+import UserResumeModal from "~/pages/users/components/UserResumeModal.vue";
 import { toPersianDigits } from "~/composables/useCountUp";
 import {
   DEFAULT_AD_REQUEST_STATUS_VALUES,
@@ -245,6 +256,8 @@ const activeTab = ref<EmployerAdRequestTab>(initialState.tab);
 const searchQuery = ref("");
 const showSearch = ref(false);
 const showMobileTabModal = ref(false);
+const showResumeModal = ref(false);
+const activeRequest = ref<EmployerAdRequest | null>(null);
 const actionLoadingId = ref<number | null>(null);
 
 const { adGroups } = useEmployerAds();
@@ -378,16 +391,25 @@ function onPageChange(nextPage: number) {
 }
 
 async function handleViewRequest(request: EmployerAdRequest) {
-  const userId = request.user?.id;
-  if (!userId) {
+  if (!request.user?.id) {
     $toast.error("شناسه کاربر یافت نشد");
     return;
   }
 
-  actionLoadingId.value = request.id;
+  activeRequest.value = request;
+  showResumeModal.value = true;
+  await markRequestSeenIfNeeded(request.id);
+}
+
+async function handleModalRequestChange(request: EmployerAdRequest) {
+  activeRequest.value = request;
+  await markRequestSeenIfNeeded(request.id);
+}
+
+async function markRequestSeenIfNeeded(requestId: number) {
+  actionLoadingId.value = requestId;
   try {
-    await markRequestSeen(request.id);
-    await navigateTo(`/users/${userId}`);
+    await markRequestSeen(requestId);
   } catch (err: any) {
     $toast.error(err?.message || "خطا در مشاهده رزومه");
   } finally {
@@ -418,6 +440,13 @@ async function handleRejectRequest(requestId: number) {
     actionLoadingId.value = null;
   }
 }
+
+watch(filteredRequests, (list) => {
+  if (!activeRequest.value) return;
+
+  const updated = list.find((item) => item.id === activeRequest.value?.id);
+  if (updated) activeRequest.value = updated;
+});
 
 watch(page, () => {
   syncRouteQuery();
@@ -480,6 +509,9 @@ watch(
 onUnmounted(() => {
   if (urlSyncTimer) clearTimeout(urlSyncTimer);
   lockBodyScroll(false);
+  if (import.meta.client) {
+    document.body.style.overflow = "";
+  }
 });
 
 useSeoMeta({

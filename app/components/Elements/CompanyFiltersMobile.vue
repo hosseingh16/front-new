@@ -46,7 +46,7 @@
         @keydown.escape="closeSection"
       >
         <div
-          class="absolute inset-0 bg-black/40"
+          class="modal-backdrop absolute inset-0"
           @click="closeSection"
         />
         <div
