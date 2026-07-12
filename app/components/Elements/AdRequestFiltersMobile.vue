@@ -42,7 +42,7 @@
     <Teleport to="body">
       <div
         v-if="activeSection !== null"
-        class="fixed inset-0 z-[1100] md:hidden"
+        class="fixed inset-0 z-100 md:hidden"
         @keydown.escape="closeSection"
       >
         <div class="absolute inset-0 bg-black/40" @click="closeSection" />
@@ -84,7 +84,7 @@
     <Teleport to="body">
       <div
         v-if="allFiltersOpen"
-        class="fixed inset-0 z-[1100] flex flex-col bg-white md:hidden"
+        class="fixed inset-0 z-100 flex flex-col bg-white md:hidden"
         dir="rtl"
         @keydown.escape="closeAllFilters"
       >

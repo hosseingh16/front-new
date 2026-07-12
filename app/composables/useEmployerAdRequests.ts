@@ -61,30 +61,34 @@ export function useEmployerAdRequests(
   )
 
   const cacheKey = computed(() => `employer-ad-requests-${adId.value}`)
+  const hasLoadedOnce = ref(false)
+
+  async function fetchRequests(): Promise<EmployerAdRequestsResult> {
+    if (!adId.value) {
+      return {
+        requests: [],
+        currentPage: 1,
+        lastPage: 1,
+        total: 0,
+      }
+    }
+
+    const result = await api.get<ApiResponse<EmployerAdRequest[]>>(
+      `/employers/ads/requests/${adId.value}`,
+      { query: requestsQuery.value },
+    )
+
+    return {
+      requests: result.data ?? [],
+      currentPage: result.meta?.current_page ?? page.value,
+      lastPage: result.meta?.last_page ?? 1,
+      total: result.meta?.total ?? 0,
+    }
+  }
 
   const { data, pending, error: fetchError, status, refresh } = useAsyncData(
     cacheKey,
-    () => {
-      if (!adId.value) {
-        return Promise.resolve({
-          requests: [],
-          currentPage: 1,
-          lastPage: 1,
-          total: 0,
-        } satisfies EmployerAdRequestsResult)
-      }
-
-      return api
-        .get<ApiResponse<EmployerAdRequest[]>>(`/employers/ads/requests/${adId.value}`, {
-          query: requestsQuery.value,
-        })
-        .then((result): EmployerAdRequestsResult => ({
-          requests: result.data ?? [],
-          currentPage: result.meta?.current_page ?? page.value,
-          lastPage: result.meta?.last_page ?? 1,
-          total: result.meta?.total ?? 0,
-        }))
-    },
+    fetchRequests,
     {
       default: (): EmployerAdRequestsResult => ({
         requests: [],
@@ -95,6 +99,20 @@ export function useEmployerAdRequests(
       watch: [adId, page, debouncedFilters, tab],
     },
   )
+
+  watch(
+    status,
+    (value) => {
+      if (value === 'success' || value === 'error') {
+        hasLoadedOnce.value = true
+      }
+    },
+    { immediate: true },
+  )
+
+  watch(adId, () => {
+    hasLoadedOnce.value = false
+  })
 
   watch(
     filters,
@@ -124,19 +142,41 @@ export function useEmployerAdRequests(
     () => status.value === 'success' || status.value === 'error',
   )
 
+  const loading = computed(() => pending.value && !hasLoadedOnce.value)
+
+  function patchRequest(requestId: number, patch: Partial<EmployerAdRequest>) {
+    if (!data.value) return
+
+    data.value = {
+      ...data.value,
+      requests: data.value.requests.map((request) =>
+        request.id === requestId ? { ...request, ...patch } : request,
+      ),
+    }
+  }
+
+  async function syncRequestsSilently() {
+    try {
+      data.value = await fetchRequests()
+    } catch {
+      // Keep optimistic UI; next filter/page change will refetch.
+    }
+  }
+
   async function confirmRequest(requestId: number) {
     await api.post(`/employers/ads/${adId.value}/requests/${requestId}/confirm`)
-    await refresh()
+    patchRequest(requestId, { status: 'تایید برای مصاحبه' })
   }
 
   async function rejectRequest(requestId: number) {
     await api.post(`/employers/ads/${adId.value}/requests/${requestId}/reject`)
-    await refresh()
+    patchRequest(requestId, { status: 'رد شده' })
   }
 
   async function markRequestSeen(requestId: number) {
     await api.post(`/employers/ads/${adId.value}/requests/${requestId}/seen`)
-    await refresh()
+    patchRequest(requestId, { status: 'مشاهده شده', seen: '1' })
+    await syncRequestsSilently()
   }
 
   return {
@@ -144,7 +184,7 @@ export function useEmployerAdRequests(
     currentPage,
     lastPage,
     total,
-    loading: pending,
+    loading,
     initialized,
     error,
     refresh,

@@ -1,5 +1,82 @@
 import type { EmployerAdRequest } from '~/types/employer-ad-request'
 
+export type AdRequestStatusKey =
+  | 'sent'
+  | 'seen'
+  | 'pending'
+  | 'approved'
+  | 'rejected'
+
+export interface AdRequestStatusMeta {
+  key: AdRequestStatusKey
+  label: string
+  className: string
+  dotColor: string
+}
+
+const AD_REQUEST_STATUS_META: Record<
+  AdRequestStatusKey,
+  Omit<AdRequestStatusMeta, 'key'>
+> = {
+  sent: {
+    label: 'ارسال برای کارفرما',
+    className: 'bg-[#F2F2F2] text-[#4A4A4A]',
+    dotColor: '#4A4A4A',
+  },
+  seen: {
+    label: 'مشاهده شده',
+    className: 'bg-[#E5F5FD] text-[#0098E7]',
+    dotColor: '#0098E7',
+  },
+  pending: {
+    label: 'در انتظار تعیین وضعیت',
+    className: 'bg-[#FFF3E8] text-[#B95C04]',
+    dotColor: '#B95C04',
+  },
+  approved: {
+    label: 'تایید برای مصاحبه',
+    className: 'bg-[#E6F6F0] text-[#009F65]',
+    dotColor: '#009F65',
+  },
+  rejected: {
+    label: 'رد شده',
+    className: 'bg-[#FDECEB] text-[#EF4035]',
+    dotColor: '#EF4035',
+  },
+}
+
+function normalizeAdRequestStatusText(value: string) {
+  return value
+    .replace(/أ|إ|آ/g, 'ا')
+    .replace(/ئ/g, 'ی')
+    .replace(/ي/g, 'ی')
+    .replace(/ك/g, 'ک')
+}
+
+export function resolveAdRequestStatusKey(
+  request: Pick<EmployerAdRequest, 'status' | 'seen'>,
+): AdRequestStatusKey {
+  const status = normalizeAdRequestStatusText((request.status ?? '').trim())
+
+  if (status.includes('رد')) return 'rejected'
+  if (status.includes('تایید')) return 'approved'
+  if (status.includes('در انتظار') || status.includes('تعیین وضعیت')) {
+    return 'pending'
+  }
+  if (status.includes('مشاهده')) return 'seen'
+  if (request.seen) return 'seen'
+  if (status.includes('ارسال') || status.includes('بررسی نشده')) return 'sent'
+
+  return 'sent'
+}
+
+export function getAdRequestStatusMeta(
+  request: Pick<EmployerAdRequest, 'status' | 'seen'>,
+): AdRequestStatusMeta {
+  const key = resolveAdRequestStatusKey(request)
+  return { key, ...AD_REQUEST_STATUS_META[key] }
+}
+
 function displayValue(value?: string | number | null, fallback = '—') {
   if (value == null) return fallback
   const text = String(value).trim()
@@ -89,16 +166,16 @@ export function getAdRequestDisplayItems(request: EmployerAdRequest) {
 
   return [
     employmentType
-      ? { key: 'employment', label: employmentType, icon: 'tabler:file-text' }
+      ? { key: 'employment', label: employmentType, icon: 'lucide:file-text' }
       : null,
     salary ? { key: 'salary', label: salary, icon: 'svg:wallet' } : null,
     experience
       ? { key: 'experience', label: experience, icon: 'svg:work-history' }
       : null,
     age ? { key: 'age', label: age, icon: 'svg:timer' } : null,
-    phone ? { key: 'phone', label: phone, icon: 'svg:phone' } : null,
+    phone ? { key: 'phone', label: phone, icon: 'lucide:smartphone' } : null,
     location
-      ? { key: 'location', label: location, icon: 'svg:location-4' }
+      ? { key: 'location', label: location, icon: 'lucide:calendar-clock' }
       : null,
   ].filter(Boolean) as Array<{ key: string; label: string; icon: string }>
 }

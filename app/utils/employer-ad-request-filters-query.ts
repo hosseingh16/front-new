@@ -30,7 +30,7 @@ function splitNumbers(value: string | string[] | undefined): number[] {
 
 export function resolveAdRequestStatusQuery(
   statuses: number[],
-): number | undefined {
+): string | undefined {
   const allStatuses = AD_REQUEST_STATUS_OPTIONS.map((item) => item.value)
   const selected = statuses.filter((status) => allStatuses.includes(status))
 
@@ -38,11 +38,7 @@ export function resolveAdRequestStatusQuery(
     return undefined
   }
 
-  if (selected.length === 1) {
-    return selected[0]
-  }
-
-  return undefined
+  return selected.join(',')
 }
 
 export function employerAdRequestFiltersToRouteQuery(

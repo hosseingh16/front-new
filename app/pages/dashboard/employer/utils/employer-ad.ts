@@ -38,40 +38,40 @@ export function getEmployerAdStatusMeta(ad: EmployerAd) {
 }
 
 export function getEmployerAdStatItems(ad: EmployerAd) {
-  const stats = ad.stats
+  const stats = ad.requests
 
   return [
     {
       label: 'دریافت شده',
-      value: stats?.received ?? ad.received_count ?? 0,
+      value: stats?.total ?? 0,
       icon: 'mdi:briefcase-download-outline',
       iconColor: '#4A4A4A',
       iconBgColor: '#F2F2F2',
     },
     {
       label: 'بررسی نشده',
-      value: stats?.unreviewed ?? ad.unreviewed_count ?? 0,
+      value: stats?.unseen ?? 0,
       icon: 'mdi:briefcase-search-outline',
       iconColor: '#0098E7',
       iconBgColor: '#E5F5FD',
     },
     {
       label: 'تعیین وضعیت',
-      value: stats?.status_determined ?? ad.status_determined_count ?? 0,
+      value: stats?.seen ?? 0,
       icon: 'mdi:briefcase-clock-outline',
       iconColor: '#B95C04',
       iconBgColor: '#FFF3E8',
     },
     {
       label: 'تایید برای مصاحبه',
-      value: stats?.interview_approved ?? ad.interview_approved_count ?? 0,
+      value: stats?.confirmed ?? 0,
       icon: 'material-symbols:check-circle-outline',
       iconColor: '#009F65',
       iconBgColor: '#E6F6F0',
     },
     {
       label: 'رد شده',
-      value: stats?.rejected ?? ad.rejected_count ?? 0,
+      value: stats?.rejected ?? 0,
       icon: 'material-symbols:cancel-outline',
       iconColor: '#EF4035',
       iconBgColor: '#FDECEB',

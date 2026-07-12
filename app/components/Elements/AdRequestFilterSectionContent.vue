@@ -1,54 +1,60 @@
 <template>
-  <div v-if="sectionIndex === 0" class="space-y-3">
-    <label
-      v-for="status in filters.statusOptions"
-      :key="status.value"
-      class="flex cursor-pointer items-center gap-2"
-    >
-      <input
-        type="checkbox"
-        class="checkbox checkbox-primary p-1.5"
-        :checked="filters.isStatusSelected(status.value)"
-        @change="filters.toggleStatus(status.value)"
-      />
-      <span
-        class="inline-block h-2 w-2 shrink-0 rounded-full"
-        :style="{ backgroundColor: status.dotColor }"
-      />
-      <span>{{ status.label }}</span>
-    </label>
+  <div v-if="sectionIndex === 0" class="pb-1">
+    <div class="max-h-[280px] space-y-2 overflow-y-auto overflow-x-hidden">
+      <label
+        v-for="status in filters.statusOptions"
+        :key="status.value"
+        class="flex cursor-pointer items-center gap-2"
+      >
+        <input
+          type="checkbox"
+          class="checkbox checkbox-primary p-1.5"
+          :checked="filters.isStatusSelected(status.value)"
+          @change="filters.toggleStatus(status.value)"
+        />
+        <span
+          class="inline-block h-2 w-2 shrink-0 rounded-full"
+          :style="{ backgroundColor: status.dotColor }"
+        />
+        <span>{{ status.label }}</span>
+      </label>
+    </div>
   </div>
 
-  <div v-else-if="sectionIndex === 1" class="space-y-3">
-    <label
-      v-for="experience in filters.experienceOptions"
-      :key="experience"
-      class="flex cursor-pointer items-center gap-2"
-    >
-      <input
-        type="checkbox"
-        class="checkbox checkbox-primary p-1.5"
-        :checked="filters.isExperienceSelected(experience)"
-        @change="filters.toggleExperience(experience)"
-      />
-      <span>{{ experience }}</span>
-    </label>
+  <div v-else-if="sectionIndex === 1" class="pb-1">
+    <div class="max-h-[280px] space-y-2 overflow-y-auto overflow-x-hidden">
+      <label
+        v-for="experience in filters.experienceOptions"
+        :key="experience"
+        class="flex cursor-pointer items-center gap-2"
+      >
+        <input
+          type="checkbox"
+          class="checkbox checkbox-primary p-1.5"
+          :checked="filters.isExperienceSelected(experience)"
+          @change="filters.toggleExperience(experience)"
+        />
+        <span>{{ experience }}</span>
+      </label>
+    </div>
   </div>
 
-  <div v-else-if="sectionIndex === 2" class="space-y-3">
-    <label
-      v-for="gender in filters.genderOptions"
-      :key="gender.value"
-      class="flex cursor-pointer items-center gap-2"
-    >
-      <input
-        type="checkbox"
-        class="checkbox checkbox-primary p-1.5"
-        :checked="filters.isGenderSelected(gender.value)"
-        @change="filters.toggleGender(gender.value)"
-      />
-      <span>{{ gender.label }}</span>
-    </label>
+  <div v-else-if="sectionIndex === 2" class="pb-1">
+    <div class="max-h-[280px] space-y-2 overflow-y-auto overflow-x-hidden">
+      <label
+        v-for="gender in filters.genderOptions"
+        :key="gender.value"
+        class="flex cursor-pointer items-center gap-2"
+      >
+        <input
+          type="checkbox"
+          class="checkbox checkbox-primary p-1.5"
+          :checked="filters.isGenderSelected(gender.value)"
+          @change="filters.toggleGender(gender.value)"
+        />
+        <span>{{ gender.label }}</span>
+      </label>
+    </div>
   </div>
 </template>
 
