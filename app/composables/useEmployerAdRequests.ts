@@ -1,4 +1,5 @@
 import type { Ref } from 'vue'
+import { useApi } from '~/composables/useApi'
 import type { ApiResponse } from '~/types/api'
 import type {
   EmployerAdRequest,
@@ -170,8 +171,12 @@ export function useEmployerAdRequests(
     patchRequest(requestId, { status: 'تایید برای مصاحبه' })
   }
 
-  async function rejectRequest(requestId: number) {
-    await api.post(`/employers/ads/${adId.value}/requests/${requestId}/reject`)
+  async function rejectRequest(requestId: number, reason?: string | number) {
+    const body = reason != null ? { reason } : undefined
+    await api.post(
+      `/employers/ads/${adId.value}/requests/${requestId}/reject`,
+      body,
+    )
     patchRequest(requestId, { status: 'رد شده' })
   }
 

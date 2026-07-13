@@ -181,8 +181,8 @@
               :request="request"
               :action-loading="actionLoadingId === request.id"
               @view="handleViewRequest(request)"
-              @confirm="handleConfirmRequest(request.id)"
-              @reject="handleRejectRequest(request.id)"
+              @confirm="openConfirmModal(request.id)"
+              @reject="openRejectModal(request.id)"
             />
 
             <div class="mt-4 flex justify-center col-span-full">
@@ -212,8 +212,22 @@
       :requests="filteredRequests"
       :action-loading="activeRequest ? actionLoadingId === activeRequest.id : false"
       @update:request="handleModalRequestChange"
-      @confirm="handleConfirmRequest"
-      @reject="handleRejectRequest"
+      @confirm="openConfirmModal"
+      @reject="openRejectModal"
+    />
+
+    <AdRequestConfirmModal
+      v-model:open="showConfirmModal"
+      :request="pendingActionRequest"
+      :loading="pendingActionLoading"
+      @confirm="submitConfirmModal"
+    />
+
+    <AdRequestRejectModal
+      v-model:open="showRejectModal"
+      :request="pendingActionRequest"
+      :loading="pendingActionLoading"
+      @confirm="submitRejectModal"
     />
   </div>
 </template>
@@ -223,6 +237,8 @@ import NoResult from "~/components/Elements/NoResult.vue";
 import Pagination from "~/components/Elements/Pagination.vue";
 import AdRequestCard from "~/components/Elements/AdRequestCard.vue";
 import AdRequestFiltersSidebar from "~/components/Elements/AdRequestFiltersSidebar.vue";
+import AdRequestConfirmModal from "~/pages/dashboard/employer/components/AdRequestConfirmModal.vue";
+import AdRequestRejectModal from "~/pages/dashboard/employer/components/AdRequestRejectModal.vue";
 import UserResumeModal from "~/pages/users/components/UserResumeModal.vue";
 import { toPersianDigits } from "~/composables/useCountUp";
 import {
@@ -257,7 +273,10 @@ const searchQuery = ref("");
 const showSearch = ref(false);
 const showMobileTabModal = ref(false);
 const showResumeModal = ref(false);
+const showConfirmModal = ref(false);
+const showRejectModal = ref(false);
 const activeRequest = ref<EmployerAdRequest | null>(null);
+const pendingActionRequest = ref<EmployerAdRequest | null>(null);
 const actionLoadingId = ref<number | null>(null);
 
 const { adGroups } = useEmployerAds();
@@ -341,8 +360,53 @@ const emptyStateActionLabel = computed(() =>
   hasActiveFilters.value || activeTab.value === "requests" ? "" : "",
 );
 
+const pendingActionLoading = computed(
+  () =>
+    pendingActionRequest.value != null &&
+    actionLoadingId.value === pendingActionRequest.value.id,
+);
+
+function findRequestById(requestId: number) {
+  return (
+    requests.value.find((item) => item.id === requestId) ??
+    filteredRequests.value.find((item) => item.id === requestId) ??
+    null
+  );
+}
+
+function openConfirmModal(requestId: number) {
+  const request = findRequestById(requestId);
+  if (!request) return;
+
+  pendingActionRequest.value = request;
+  showConfirmModal.value = true;
+}
+
+function openRejectModal(requestId: number) {
+  const request = findRequestById(requestId);
+  if (!request) return;
+
+  pendingActionRequest.value = request;
+  showRejectModal.value = true;
+}
+
+function closeActionModals() {
+  showConfirmModal.value = false;
+  showRejectModal.value = false;
+  pendingActionRequest.value = null;
+}
+
+function closeResumeModalIfNeeded(requestId: number) {
+  if (activeRequest.value?.id === requestId) {
+    showResumeModal.value = false;
+    activeRequest.value = null;
+  }
+}
+
 let urlSyncTimer: ReturnType<typeof setTimeout> | null = null;
 let syncingFromRoute = false;
+let bodyScrollLockCount = 0;
+let actionModalScrollLocked = false;
 
 function syncRouteQuery() {
   if (syncingFromRoute) return;
@@ -371,7 +435,32 @@ function closeMobileTabModal() {
 
 function lockBodyScroll(lock: boolean) {
   if (!import.meta.client) return;
-  document.body.style.overflow = lock ? "hidden" : "";
+
+  if (lock) {
+    bodyScrollLockCount += 1;
+    document.body.style.overflow = "hidden";
+    return;
+  }
+
+  bodyScrollLockCount = Math.max(0, bodyScrollLockCount - 1);
+  if (bodyScrollLockCount === 0) {
+    document.body.style.overflow = "";
+  }
+}
+
+function syncActionModalBodyScroll() {
+  const shouldLock = showConfirmModal.value || showRejectModal.value;
+
+  if (shouldLock && !actionModalScrollLocked) {
+    lockBodyScroll(true);
+    actionModalScrollLocked = true;
+    return;
+  }
+
+  if (!shouldLock && actionModalScrollLocked) {
+    lockBodyScroll(false);
+    actionModalScrollLocked = false;
+  }
 }
 
 function scrollToResults() {
@@ -417,29 +506,62 @@ async function markRequestSeenIfNeeded(requestId: number) {
   }
 }
 
-async function handleConfirmRequest(requestId: number) {
+async function handleConfirmRequest(requestId: number): Promise<boolean> {
   actionLoadingId.value = requestId;
   try {
     await confirmRequest(requestId);
     $toast.success("درخواست با موفقیت تایید شد");
+    return true;
   } catch (err: any) {
     $toast.error(err?.message || "تایید درخواست با خطا مواجه شد");
+    return false;
   } finally {
     actionLoadingId.value = null;
   }
 }
 
-async function handleRejectRequest(requestId: number) {
+async function handleRejectRequest(
+  requestId: number,
+  reason?: string | number,
+): Promise<boolean> {
   actionLoadingId.value = requestId;
   try {
-    await rejectRequest(requestId);
+    await rejectRequest(requestId, reason);
     $toast.success("درخواست رد شد");
+    return true;
   } catch (err: any) {
     $toast.error(err?.message || "رد درخواست با خطا مواجه شد");
+    return false;
   } finally {
     actionLoadingId.value = null;
   }
 }
+
+async function submitConfirmModal() {
+  if (!pendingActionRequest.value) return;
+
+  const requestId = pendingActionRequest.value.id;
+  const success = await handleConfirmRequest(requestId);
+  if (!success) return;
+
+  closeActionModals();
+  closeResumeModalIfNeeded(requestId);
+}
+
+async function submitRejectModal(reason: string | number) {
+  if (!pendingActionRequest.value) return;
+
+  const requestId = pendingActionRequest.value.id;
+  const success = await handleRejectRequest(requestId, reason);
+  if (!success) return;
+
+  closeActionModals();
+  closeResumeModalIfNeeded(requestId);
+}
+
+watch([showConfirmModal, showRejectModal], () => {
+  syncActionModalBodyScroll();
+});
 
 watch(filteredRequests, (list) => {
   if (!activeRequest.value) return;
@@ -508,8 +630,11 @@ watch(
 
 onUnmounted(() => {
   if (urlSyncTimer) clearTimeout(urlSyncTimer);
-  lockBodyScroll(false);
-  if (import.meta.client) {
+  if (actionModalScrollLocked) {
+    lockBodyScroll(false);
+    actionModalScrollLocked = false;
+  }
+  if (import.meta.client && bodyScrollLockCount === 0) {
     document.body.style.overflow = "";
   }
 });

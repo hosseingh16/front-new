@@ -4,6 +4,28 @@ import type { ISelectItem } from '~/types/select-item'
 export const EMPLOYER_AD_REQUEST_LOOKUP_KEYS =
   'ad_request_statuses,experience_levels,genders'
 
+export const AD_REQUEST_REJECT_REASONS = [
+  { value: 1, label: 'نداشتن سابقه کار کافی در این حوزه' },
+  { value: 2, label: 'نداشتن دانش و تخصص کافی در این حوزه' },
+  {
+    value: 3,
+    label: 'عدم تطابق سن / جنسیت / محل سکونت / وضعیت سربازی',
+  },
+  { value: 4, label: 'عدم تناسب حقوق درخواستی' },
+  {
+    value: 5,
+    label: 'عدم تناسب رشته تحصیلی یا دانشگاه با شرایط مدنظر',
+  },
+  { value: 6, label: 'نداشتن سابقه کار کافی در این سطح سازمانی' },
+  { value: 7, label: 'نداشتن توانمندی کافی در کار با نرم افزار ها' },
+  { value: 8, label: 'نداشتن سابقه کار کافی در این صنعت' },
+  { value: 9, label: 'کارجو منصرف شد / جای دیگری استخدام شد' },
+  { value: 10, label: 'عدم تناسب با محیط و فرهنگ سازمان' },
+  { value: 11, label: 'عدم حضور در جلسه مصاحبه' },
+  { value: 12, label: 'فرد دیگری استخدام شد' },
+  { value: 13, label: 'سایر' },
+]
+
 const LOOKUP_COLOR_MAP: Record<string, string> = {
   success: '#009F65',
   danger: '#EF4035',

@@ -121,13 +121,15 @@ const selectItem = (item: ISelectItem) => {
 
 onMounted(() => {
   isClient.value = true;
-  document.addEventListener('click', handleClickOutside);
+  document.addEventListener('click', handleClickOutside, true);
 });
 onBeforeUnmount(() => {
-  document.removeEventListener('click', handleClickOutside);
+  document.removeEventListener('click', handleClickOutside, true);
 });
 const handleClickOutside = (e: MouseEvent) => {
-  const target = e.target as HTMLElement;
+  if (!open.value) return;
+
+  const target = e.target as Node;
   if (dropDownRef.value && !dropDownRef.value.contains(target)) {
     open.value = false;
     keyword.value = '';
