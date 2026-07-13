@@ -1,0 +1,71 @@
+<template>
+  <ClientOnly>
+    <component
+      :is="Editor"
+      v-if="ready"
+      v-model="model"
+      :init="editorInit"
+      license-key="gpl"
+      :disabled="disabled"
+    />
+    <div
+      v-else
+      class="h-[280px] animate-pulse rounded-lg border border-gray-default bg-surface-100"
+    />
+  </ClientOnly>
+</template>
+
+<script setup lang="ts">
+import type { Component } from 'vue'
+
+const model = defineModel<string>({ default: '' })
+
+const props = withDefaults(
+  defineProps<{
+    disabled?: boolean
+    placeholder?: string
+    height?: number
+  }>(),
+  {
+    disabled: false,
+    placeholder: 'متن را وارد کنید...',
+    height: 280,
+  },
+)
+
+const Editor = shallowRef<Component | null>(null)
+const ready = ref(false)
+
+const editorInit = computed(() => ({
+  height: props.height,
+  menubar: false,
+  directionality: 'rtl',
+  plugins: ['lists'],
+  toolbar: 'undo redo | bold italic | bullist numlist',
+  branding: false,
+  promotion: false,
+  placeholder: props.placeholder,
+  statusbar: false,
+  skin: 'oxide',
+  content_css: 'default',
+}))
+
+async function setupTinyMce() {
+  await import('tinymce/tinymce')
+  await import('tinymce/themes/silver')
+  await import('tinymce/icons/default')
+  await import('tinymce/models/dom')
+  await import('tinymce/plugins/lists')
+  await import('tinymce/skins/ui/oxide/skin.js')
+  await import('tinymce/skins/content/default/content.js')
+
+  const module = await import('@tinymce/tinymce-vue')
+  Editor.value = module.default
+  ready.value = true
+}
+
+onMounted(() => {
+  if (!import.meta.client) return
+  setupTinyMce()
+})
+</script>

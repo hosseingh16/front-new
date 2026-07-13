@@ -15,7 +15,9 @@
           :class="model ? 'text-gray-700' : 'text-text-muted'"
         >
           {{
-            options.find((x) => x.value === model)?.label || placeholder || 'انتخاب کنید'
+            options.find((x) => x.value === model)?.label ||
+            placeholder ||
+            "انتخاب کنید"
           }}
         </span>
         <icons-chevron-down
@@ -27,7 +29,7 @@
 
       <div
         v-if="open"
-        class="absolute mt-2 menu bg-white rounded-lg z-10 w-full p-0 shadow-sm border border-gray-200"
+        class="absolute mt-2 menu bg-white rounded-lg z-20 w-full p-0 shadow-sm border border-gray-200"
       >
         <div class="max-h-50 overflow-y-auto cursor-pointer">
           <div v-if="search && allOptions.length > 0" class="mb-4 mx-2">
@@ -62,7 +64,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ISelectItem } from '~/types/select-item';
+import type { ISelectItem } from "~/types/select-item";
 
 // Model
 const model = defineModel<string | number>();
@@ -76,7 +78,7 @@ const props = defineProps({
     type: Array as () => ISelectItem[],
     default: [],
   },
-  borderColor: { type: String, default: '#E8E8E8' },
+  borderColor: { type: String, default: "#E8E8E8" },
   error: { type: Boolean },
   disabled: { type: Boolean },
   search: { type: Boolean },
@@ -87,7 +89,7 @@ const open = ref(false);
 const isClient = ref(false);
 const options2 = ref<ISelectItem[]>([]);
 const allOptions = ref<ISelectItem[]>([]);
-const keyword = ref('');
+const keyword = ref("");
 const dropDownRef = ref<HTMLElement | null>(null);
 
 // Watches
@@ -116,15 +118,15 @@ const selectItem = (item: ISelectItem) => {
   if (props.disabled) return;
   model.value = item.value;
   open.value = false;
-  keyword.value = '';
+  keyword.value = "";
 };
 
 onMounted(() => {
   isClient.value = true;
-  document.addEventListener('click', handleClickOutside, true);
+  document.addEventListener("click", handleClickOutside, true);
 });
 onBeforeUnmount(() => {
-  document.removeEventListener('click', handleClickOutside, true);
+  document.removeEventListener("click", handleClickOutside, true);
 });
 const handleClickOutside = (e: MouseEvent) => {
   if (!open.value) return;
@@ -132,7 +134,7 @@ const handleClickOutside = (e: MouseEvent) => {
   const target = e.target as Node;
   if (dropDownRef.value && !dropDownRef.value.contains(target)) {
     open.value = false;
-    keyword.value = '';
+    keyword.value = "";
   }
 };
 </script>

@@ -9,17 +9,14 @@
     <div class="bg-white p-4 rounded-2xl mt-8">
       <Titr>مهارت‌ها</Titr>
       <div class="my-4 grid lg:grid-cols-2 gap-x-4 gap-y-12">
-        <Slider color="#FFA726" label="میزان آشنایی به نرم افزار اکسل:" />
+        <Slider label="میزان آشنایی به نرم افزار اکسل:" />
         <Slider
-          color="#2E7D32"
           label="میزان آشنایی به حسابداری بهای تمام شده:"
         />
         <Slider
-          color="#2E7D32"
           label="میزان تجربه شما در حوزه حسابداری پیمان:"
         />
         <Slider
-          color="#2E7D32"
           label="میزان آشنایی با تهیه صورت مالی استاندارد:"
         />
       </div>
@@ -38,14 +35,12 @@
     <div class="bg-white p-4 rounded-2xl mt-8">
       <Titr>ارزیابی بیمه ای و مالیاتی</Titr>
       <div class="mt-4 grid lg:grid-cols-2 gap-x-4 gap-y-12">
-        <Slider color="#FFA726" label="میزان آشنایی با مالیات ارزش افزوده:" />
-        <Slider color="#2E7D32" label="میزان آشنایی به مالیات عملکرد:" />
+        <Slider label="میزان آشنایی با مالیات ارزش افزوده:" />
+        <Slider label="میزان آشنایی به مالیات عملکرد:" />
         <Slider
-          color="#2E7D32"
           label="میزان آشنایی به بیمه های پرسنلی و قراردادی:"
         />
         <Slider
-          color="#2E7D32"
           label="میزان آشنایی به سامانه مودیان و پایانه های فروشگاهی:"
         />
       </div>

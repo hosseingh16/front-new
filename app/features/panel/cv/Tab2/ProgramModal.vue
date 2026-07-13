@@ -29,27 +29,22 @@
             placeholder="نرم‌افزار حسابداری را انتخاب کنید"
           ></m-form-select2>
           <Slider
-            color="#FFA726"
             label="میزان تسلط به زیر سیستم انبار:"
             @update:model-value="(v) => setFieldValue('slider1', v)"
           />
           <Slider
-            color="#FFA726"
             label="میزان تسلط به زیر سیستم مالی:"
             @update:model-value="(v) => setFieldValue('slider2', v)"
           />
           <Slider
-            color="#FFA726"
             label="میزان تسلط به زیر سیستم حقوق:"
             @update:model-value="(v) => setFieldValue('slider3', v)"
           />
           <Slider
-            color="#FFA726"
             label="میزان تسلط به زیر سیستم فروش:"
             @update:model-value="(v) => setFieldValue('slider4', v)"
           />
           <Slider
-            color="#FFA726"
             label="میزان تسلط به زیر سیستم نقد و بانک:"
             @update:model-value="(v) => setFieldValue('slider5', v)"
           />

@@ -12,7 +12,7 @@
       <div class="relative">
         <div
           class="rounded-full w-1 h-1"
-          :style="`background-color: ${model > 0 ? color : '#EBEBEB'}`"
+          :style="{ backgroundColor: dotFill(0) }"
           @click="model = 0"
         ></div>
         <span class="absolute -right-px top-8 text-[9px]">0</span>
@@ -20,12 +20,12 @@
 
       <div
         class="rounded-full w-full h-1"
-        :style="`background-color: ${model >= 1 ? color : '#EBEBEB'}`"
+        :style="{ backgroundColor: connectorFill(1) }"
       ></div>
       <div class="relative">
         <div
           class="rounded-full w-1.25 h-1.25"
-          :style="`background-color: ${model >= 1 ? color : '#EBEBEB'}`"
+          :style="{ backgroundColor: dotFill(1) }"
           @click="model = 1"
         ></div>
         <span class="absolute -right-px top-8 text-[9px]">1</span>
@@ -33,12 +33,12 @@
 
       <div
         class="rounded-full w-full h-1.25"
-        :style="`background-color: ${model >= 2 ? color : '#EBEBEB'}`"
+        :style="{ backgroundColor: connectorFill(2) }"
       ></div>
       <div class="relative">
         <div
           class="rounded-full w-1.5 h-1.5"
-          :style="`background-color: ${model >= 2 ? color : '#EBEBEB'}`"
+          :style="{ backgroundColor: dotFill(2) }"
           @click="model = 2"
         ></div>
         <span class="absolute -right-px top-8 text-[9px]">2</span>
@@ -46,12 +46,12 @@
 
       <div
         class="rounded-full w-full h-1.5"
-        :style="`background-color: ${model >= 3 ? color : '#EBEBEB'}`"
+        :style="{ backgroundColor: connectorFill(3) }"
       ></div>
       <div class="relative">
         <div
           class="rounded-full w-1.75 h-1.75"
-          :style="`background-color: ${model >= 3 ? color : '#EBEBEB'}`"
+          :style="{ backgroundColor: dotFill(3) }"
           @click="model = 3"
         ></div>
         <span class="absolute -right-px top-8 text-[9px]">3</span>
@@ -59,12 +59,12 @@
 
       <div
         class="rounded-full w-full h-1.75"
-        :style="`background-color: ${model >= 4 ? color : '#EBEBEB'}`"
+        :style="{ backgroundColor: connectorFill(4) }"
       ></div>
       <div class="relative">
         <div
           class="rounded-full w-2 h-2"
-          :style="`background-color: ${model >= 4 ? color : '#EBEBEB'}`"
+          :style="{ backgroundColor: dotFill(4) }"
           @click="model = 4"
         ></div>
         <span class="absolute -right-px top-8 text-[9px]">4</span>
@@ -72,12 +72,12 @@
 
       <div
         class="rounded-full w-full h-2"
-        :style="`background-color: ${model >= 5 ? color : '#EBEBEB'}`"
+        :style="{ backgroundColor: connectorFill(5) }"
       ></div>
       <div class="relative">
         <div
           class="rounded-full w-2.25 h-2.25"
-          :style="`background-color: ${model >= 5 ? color : '#EBEBEB'}`"
+          :style="{ backgroundColor: dotFill(5) }"
           @click="model = 5"
         ></div>
         <span class="absolute -right-px top-8 text-[9px]">5</span>
@@ -85,12 +85,12 @@
 
       <div
         class="rounded-full w-full h-2.25"
-        :style="`background-color: ${model >= 6 ? color : '#EBEBEB'}`"
+        :style="{ backgroundColor: connectorFill(6) }"
       ></div>
       <div class="relative">
         <div
           class="rounded-full w-2.5 h-2.5"
-          :style="`background-color: ${model > 6 ? color : '#EBEBEB'}`"
+          :style="{ backgroundColor: dotFill(6) }"
           @click="model = 6"
         ></div>
         <span class="absolute -right-px top-8 text-[9px]">6</span>
@@ -98,12 +98,12 @@
 
       <div
         class="rounded-full w-full h-2.5"
-        :style="`background-color: ${model >= 7 ? color : '#EBEBEB'}`"
+        :style="{ backgroundColor: connectorFill(7) }"
       ></div>
       <div class="relative">
         <div
           class="rounded-full w-2.75 h-2.75"
-          :style="`background-color: ${model >= 7 ? color : '#EBEBEB'}`"
+          :style="{ backgroundColor: dotFill(7) }"
           @click="model = 7"
         ></div>
         <span class="absolute -right-px top-8 text-[9px]">7</span>
@@ -111,12 +111,12 @@
 
       <div
         class="rounded-full w-full h-2.75"
-        :style="`background-color: ${model >= 8 ? color : '#EBEBEB'}`"
+        :style="{ backgroundColor: connectorFill(8) }"
       ></div>
       <div class="relative">
         <div
           class="rounded-full w-3 h-3"
-          :style="`background-color: ${model >= 8 ? color : '#EBEBEB'}`"
+          :style="{ backgroundColor: dotFill(8) }"
           @click="model = 8"
         ></div>
         <span class="absolute -right-px top-8 text-[9px]">8</span>
@@ -124,12 +124,12 @@
 
       <div
         class="rounded-full w-full h-3"
-        :style="`background-color: ${model >= 9 ? color : '#EBEBEB'}`"
+        :style="{ backgroundColor: connectorFill(9) }"
       ></div>
       <div class="relative">
         <div
           class="rounded-full w-3.25 h-3.25"
-          :style="`background-color: ${model >= 9 ? color : '#EBEBEB'}`"
+          :style="{ backgroundColor: dotFill(9) }"
           @click="model = 9"
         ></div>
         <span class="absolute -right-px top-8 text-[9px]">9</span>
@@ -137,12 +137,12 @@
 
       <div
         class="rounded-full w-full h-3.25"
-        :style="`background-color: ${model >= 10 ? color : '#EBEBEB'}`"
+        :style="{ backgroundColor: connectorFill(10) }"
       ></div>
       <div class="relative">
         <div
           class="rounded-full w-3.5 h-3.5"
-          :style="`background-color: ${model >= 10 ? color : '#EBEBEB'}`"
+          :style="{ backgroundColor: dotFill(10) }"
           @click="model = 10"
         ></div>
         <span class="absolute -right-px top-8 text-[9px]">10</span>
@@ -152,49 +152,81 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+const INACTIVE_COLOR = '#EBEBEB'
 
-// Model
-const model = defineModel({ default: 0 });
+const LEVEL_COLORS = {
+  red: '#EF5350',
+  orange: '#FFA726',
+  yellow: '#FFCA28',
+  lightGreen: '#AED581',
+  darkGreen: '#2E7D32',
+} as const
 
-// Props
+const model = defineModel({ default: 0 })
+
 defineProps({
   label: String,
-  color: { type: String, required: true },
-});
+})
 
-const isDragging = ref(false);
-const root = ref<HTMLElement | null>(null);
+const isDragging = ref(false)
+const root = ref<HTMLElement | null>(null)
 
-const clamp = (v: number) => Math.max(0, Math.min(10, v));
+function colorForValue(value: number) {
+  if (value <= 0) return INACTIVE_COLOR
+
+  const tier = Math.ceil((value / 10) * 6)
+  if (tier <= 2) return LEVEL_COLORS.red
+  if (tier === 3) return LEVEL_COLORS.orange
+  if (tier === 4) return LEVEL_COLORS.yellow
+  if (tier === 5) return LEVEL_COLORS.lightGreen
+  return LEVEL_COLORS.darkGreen
+}
+
+function dotFill(level: number) {
+  const current = Number(model.value)
+
+  if (level === 0) {
+    return current > 0 ? colorForValue(current) : INACTIVE_COLOR
+  }
+
+  if (current < level) return INACTIVE_COLOR
+  return colorForValue(current)
+}
+
+function connectorFill(level: number) {
+  const current = Number(model.value)
+  if (current < level) return INACTIVE_COLOR
+  return colorForValue(current)
+}
+
+const clamp = (v: number) => Math.max(0, Math.min(10, v))
 
 const getValue = (e: PointerEvent) => {
-  if (!root.value) return 0;
+  if (!root.value) return 0
 
-  const rect = root.value.getBoundingClientRect();
-  const x = e.clientX - rect.left;
-
-  const percent = x / rect.width;
-  return clamp(Math.round((1 - percent) * 10));
-};
+  const rect = root.value.getBoundingClientRect()
+  const x = e.clientX - rect.left
+  const percent = x / rect.width
+  return clamp(Math.round((1 - percent) * 10))
+}
 
 const setFromEvent = (e: PointerEvent) => {
-  model.value = getValue(e);
-};
+  model.value = getValue(e)
+}
 
 const startDrag = (e: PointerEvent) => {
-  isDragging.value = true;
-  document.body.style.userSelect = 'none';
-  setFromEvent(e);
-};
+  isDragging.value = true
+  document.body.style.userSelect = 'none'
+  setFromEvent(e)
+}
 
 const onDrag = (e: PointerEvent) => {
-  if (!isDragging.value) return;
-  setFromEvent(e);
-};
+  if (!isDragging.value) return
+  setFromEvent(e)
+}
 
 const endDrag = () => {
-  isDragging.value = false;
-  document.body.style.userSelect = '';
-};
+  isDragging.value = false
+  document.body.style.userSelect = ''
+}
 </script>
