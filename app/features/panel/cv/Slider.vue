@@ -18,7 +18,7 @@
       </div>
 
       <div
-        class="rounded-full w-full h-1"
+        class="rounded-full w-full h-1 cursor-pointer"
         :style="{ backgroundColor: connectorFill(1) }"
       ></div>
       <div class="relative" @pointerdown.stop="model = 1">
@@ -30,7 +30,7 @@
       </div>
 
       <div
-        class="rounded-full w-full h-1.25"
+        class="rounded-full w-full h-1.25 cursor-pointer"
         :style="{ backgroundColor: connectorFill(2) }"
       ></div>
       <div class="relative" @pointerdown.stop="model = 2">
@@ -42,7 +42,7 @@
       </div>
 
       <div
-        class="rounded-full w-full h-1.5"
+        class="rounded-full w-full h-1.5 cursor-pointer"
         :style="{ backgroundColor: connectorFill(3) }"
       ></div>
       <div class="relative" @pointerdown.stop="model = 3">
@@ -54,7 +54,7 @@
       </div>
 
       <div
-        class="rounded-full w-full h-1.75"
+        class="rounded-full w-full h-1.75 cursor-pointer"
         :style="{ backgroundColor: connectorFill(4) }"
       ></div>
       <div class="relative" @pointerdown.stop="model = 4">
@@ -66,7 +66,7 @@
       </div>
 
       <div
-        class="rounded-full w-full h-2"
+        class="rounded-full w-full h-2 cursor-pointer"
         :style="{ backgroundColor: connectorFill(5) }"
       ></div>
       <div class="relative" @pointerdown.stop="model = 5">
@@ -78,7 +78,7 @@
       </div>
 
       <div
-        class="rounded-full w-full h-2.25"
+        class="rounded-full w-full h-2.25 cursor-pointer"
         :style="{ backgroundColor: connectorFill(6) }"
       ></div>
       <div class="relative" @pointerdown.stop="model = 6">
@@ -90,7 +90,7 @@
       </div>
 
       <div
-        class="rounded-full w-full h-2.5"
+        class="rounded-full w-full h-2.5 cursor-pointer"
         :style="{ backgroundColor: connectorFill(7) }"
       ></div>
       <div class="relative" @pointerdown.stop="model = 7">
@@ -102,7 +102,7 @@
       </div>
 
       <div
-        class="rounded-full w-full h-2.75"
+        class="rounded-full w-full h-2.75 cursor-pointer"
         :style="{ backgroundColor: connectorFill(8) }"
       ></div>
       <div class="relative" @pointerdown.stop="model = 8">
@@ -114,7 +114,7 @@
       </div>
 
       <div
-        class="rounded-full w-full h-3"
+        class="rounded-full w-full h-3 cursor-pointer"
         :style="{ backgroundColor: connectorFill(9) }"
       ></div>
       <div class="relative" @pointerdown.stop="model = 9">
@@ -126,7 +126,7 @@
       </div>
 
       <div
-        class="rounded-full w-full h-3.25"
+        class="rounded-full w-full h-3.25 cursor-pointer"
         :style="{ backgroundColor: connectorFill(10) }"
       ></div>
       <div class="relative" @pointerdown.stop="model = 10">
@@ -141,82 +141,82 @@
 </template>
 
 <script setup lang="ts">
-const INACTIVE_COLOR = '#EBEBEB'
+const INACTIVE_COLOR = "#EBEBEB";
 
 const LEVEL_COLORS = {
-  red: '#EF5350',
-  orange: '#FFA726',
-  yellow: '#FFCA28',
-  lightGreen: '#AED581',
-  darkGreen: '#2E7D32',
-} as const
+  red: "#EF5350",
+  orange: "#FFA726",
+  yellow: "#FFCA28",
+  lightGreen: "#AED581",
+  darkGreen: "#2E7D32",
+} as const;
 
-const model = defineModel({ default: 0 })
+const model = defineModel({ default: 0 });
 
 defineProps({
   label: String,
-})
+});
 
-const isDragging = ref(false)
-const root = ref<HTMLElement | null>(null)
+const isDragging = ref(false);
+const root = ref<HTMLElement | null>(null);
 
 function colorForValue(value: number) {
-  if (value <= 0) return INACTIVE_COLOR
+  if (value <= 0) return INACTIVE_COLOR;
 
-  const tier = Math.ceil((value / 10) * 6)
-  if (tier <= 2) return LEVEL_COLORS.red
-  if (tier === 3) return LEVEL_COLORS.orange
-  if (tier === 4) return LEVEL_COLORS.yellow
-  if (tier === 5) return LEVEL_COLORS.lightGreen
-  return LEVEL_COLORS.darkGreen
+  const tier = Math.ceil((value / 10) * 6);
+  if (tier <= 2) return LEVEL_COLORS.red;
+  if (tier === 3) return LEVEL_COLORS.orange;
+  if (tier === 4) return LEVEL_COLORS.yellow;
+  if (tier === 5) return LEVEL_COLORS.lightGreen;
+  return LEVEL_COLORS.darkGreen;
 }
 
 function dotFill(level: number) {
-  const current = Number(model.value)
+  const current = Number(model.value);
 
   if (level === 0) {
-    return current > 0 ? colorForValue(current) : INACTIVE_COLOR
+    return current > 0 ? colorForValue(current) : INACTIVE_COLOR;
   }
 
-  if (current < level) return INACTIVE_COLOR
-  return colorForValue(current)
+  if (current < level) return INACTIVE_COLOR;
+  return colorForValue(current);
 }
 
 function connectorFill(level: number) {
-  const current = Number(model.value)
-  if (current < level) return INACTIVE_COLOR
-  return colorForValue(current)
+  const current = Number(model.value);
+  if (current < level) return INACTIVE_COLOR;
+  return colorForValue(current);
 }
 
-const clamp = (v: number) => Math.max(0, Math.min(10, v))
+const clamp = (v: number) => Math.max(0, Math.min(10, v));
 
 const getValue = (e: PointerEvent) => {
-  if (!root.value) return 0
+  if (!root.value) return 0;
 
-  const rect = root.value.getBoundingClientRect()
-  const ratio = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width))
-  const isRtl = getComputedStyle(root.value).direction === 'rtl'
-  const normalized = isRtl ? 1 - ratio : ratio
-  return clamp(Math.round(normalized * 10))
-}
+  const rect = root.value.getBoundingClientRect();
+  const ratio = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+  const isRtl = getComputedStyle(root.value).direction === "rtl";
+  const normalized = isRtl ? 1 - ratio : ratio;
+  return clamp(Math.round(normalized * 10));
+};
 
 const setFromEvent = (e: PointerEvent) => {
-  model.value = getValue(e)
-}
+  model.value = getValue(e);
+};
 
 const startDrag = (e: PointerEvent) => {
-  isDragging.value = true
-  document.body.style.userSelect = 'none'
-  setFromEvent(e)
-}
+  isDragging.value = true;
+  document.body.style.userSelect = "none";
+  setFromEvent(e);
+};
 
 const onDrag = (e: PointerEvent) => {
-  if (!isDragging.value) return
-  setFromEvent(e)
-}
+  if (!isDragging.value) return;
+  setFromEvent(e);
+};
 
 const endDrag = () => {
-  isDragging.value = false
-  document.body.style.userSelect = ''
-}
+  isDragging.value = false;
+  document.body.style.userSelect = "";
+};
 </script>
