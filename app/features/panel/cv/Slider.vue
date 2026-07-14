@@ -9,11 +9,10 @@
       @pointerup="endDrag"
       @pointerleave="endDrag"
     >
-      <div class="relative">
+      <div class="relative" @pointerdown.stop="model = 0">
         <div
           class="rounded-full w-1 h-1"
           :style="{ backgroundColor: dotFill(0) }"
-          @click="model = 0"
         ></div>
         <span class="absolute -right-px top-8 text-[9px]">0</span>
       </div>
@@ -22,11 +21,10 @@
         class="rounded-full w-full h-1"
         :style="{ backgroundColor: connectorFill(1) }"
       ></div>
-      <div class="relative">
+      <div class="relative" @pointerdown.stop="model = 1">
         <div
           class="rounded-full w-1.25 h-1.25"
           :style="{ backgroundColor: dotFill(1) }"
-          @click="model = 1"
         ></div>
         <span class="absolute -right-px top-8 text-[9px]">1</span>
       </div>
@@ -35,11 +33,10 @@
         class="rounded-full w-full h-1.25"
         :style="{ backgroundColor: connectorFill(2) }"
       ></div>
-      <div class="relative">
+      <div class="relative" @pointerdown.stop="model = 2">
         <div
           class="rounded-full w-1.5 h-1.5"
           :style="{ backgroundColor: dotFill(2) }"
-          @click="model = 2"
         ></div>
         <span class="absolute -right-px top-8 text-[9px]">2</span>
       </div>
@@ -48,11 +45,10 @@
         class="rounded-full w-full h-1.5"
         :style="{ backgroundColor: connectorFill(3) }"
       ></div>
-      <div class="relative">
+      <div class="relative" @pointerdown.stop="model = 3">
         <div
           class="rounded-full w-1.75 h-1.75"
           :style="{ backgroundColor: dotFill(3) }"
-          @click="model = 3"
         ></div>
         <span class="absolute -right-px top-8 text-[9px]">3</span>
       </div>
@@ -61,11 +57,10 @@
         class="rounded-full w-full h-1.75"
         :style="{ backgroundColor: connectorFill(4) }"
       ></div>
-      <div class="relative">
+      <div class="relative" @pointerdown.stop="model = 4">
         <div
           class="rounded-full w-2 h-2"
           :style="{ backgroundColor: dotFill(4) }"
-          @click="model = 4"
         ></div>
         <span class="absolute -right-px top-8 text-[9px]">4</span>
       </div>
@@ -74,11 +69,10 @@
         class="rounded-full w-full h-2"
         :style="{ backgroundColor: connectorFill(5) }"
       ></div>
-      <div class="relative">
+      <div class="relative" @pointerdown.stop="model = 5">
         <div
           class="rounded-full w-2.25 h-2.25"
           :style="{ backgroundColor: dotFill(5) }"
-          @click="model = 5"
         ></div>
         <span class="absolute -right-px top-8 text-[9px]">5</span>
       </div>
@@ -87,11 +81,10 @@
         class="rounded-full w-full h-2.25"
         :style="{ backgroundColor: connectorFill(6) }"
       ></div>
-      <div class="relative">
+      <div class="relative" @pointerdown.stop="model = 6">
         <div
           class="rounded-full w-2.5 h-2.5"
           :style="{ backgroundColor: dotFill(6) }"
-          @click="model = 6"
         ></div>
         <span class="absolute -right-px top-8 text-[9px]">6</span>
       </div>
@@ -100,11 +93,10 @@
         class="rounded-full w-full h-2.5"
         :style="{ backgroundColor: connectorFill(7) }"
       ></div>
-      <div class="relative">
+      <div class="relative" @pointerdown.stop="model = 7">
         <div
           class="rounded-full w-2.75 h-2.75"
           :style="{ backgroundColor: dotFill(7) }"
-          @click="model = 7"
         ></div>
         <span class="absolute -right-px top-8 text-[9px]">7</span>
       </div>
@@ -113,11 +105,10 @@
         class="rounded-full w-full h-2.75"
         :style="{ backgroundColor: connectorFill(8) }"
       ></div>
-      <div class="relative">
+      <div class="relative" @pointerdown.stop="model = 8">
         <div
           class="rounded-full w-3 h-3"
           :style="{ backgroundColor: dotFill(8) }"
-          @click="model = 8"
         ></div>
         <span class="absolute -right-px top-8 text-[9px]">8</span>
       </div>
@@ -126,11 +117,10 @@
         class="rounded-full w-full h-3"
         :style="{ backgroundColor: connectorFill(9) }"
       ></div>
-      <div class="relative">
+      <div class="relative" @pointerdown.stop="model = 9">
         <div
           class="rounded-full w-3.25 h-3.25"
           :style="{ backgroundColor: dotFill(9) }"
-          @click="model = 9"
         ></div>
         <span class="absolute -right-px top-8 text-[9px]">9</span>
       </div>
@@ -139,11 +129,10 @@
         class="rounded-full w-full h-3.25"
         :style="{ backgroundColor: connectorFill(10) }"
       ></div>
-      <div class="relative">
+      <div class="relative" @pointerdown.stop="model = 10">
         <div
           class="rounded-full w-3.5 h-3.5"
           :style="{ backgroundColor: dotFill(10) }"
-          @click="model = 10"
         ></div>
         <span class="absolute -right-px top-8 text-[9px]">10</span>
       </div>
@@ -205,9 +194,10 @@ const getValue = (e: PointerEvent) => {
   if (!root.value) return 0
 
   const rect = root.value.getBoundingClientRect()
-  const x = e.clientX - rect.left
-  const percent = x / rect.width
-  return clamp(Math.round((1 - percent) * 10))
+  const ratio = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width))
+  const isRtl = getComputedStyle(root.value).direction === 'rtl'
+  const normalized = isRtl ? 1 - ratio : ratio
+  return clamp(Math.round(normalized * 10))
 }
 
 const setFromEvent = (e: PointerEvent) => {

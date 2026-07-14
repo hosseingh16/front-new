@@ -3,11 +3,13 @@ export interface CreateAdFormModel {
   company_address: string
   city: number | null
   city_name: string
+  region: number | null
+  region_name: string
   province: number | null
   province_name: string
   employment_type: string
   salary_range: string
-  minimum_work_experience: number | null
+  minimum_work_experience: string
   gender: string
   minimum_degree: string
   resume_terms: string
@@ -35,11 +37,13 @@ export function createEmptyCreateAdForm(): CreateAdFormModel {
     company_address: '',
     city: null,
     city_name: '',
+    region: null,
+    region_name: '',
     province: null,
     province_name: '',
     employment_type: '',
     salary_range: '',
-    minimum_work_experience: null,
+    minimum_work_experience: '',
     gender: '',
     minimum_degree: '',
     resume_terms: '',

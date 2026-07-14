@@ -14,8 +14,11 @@
           :education-levels="educationLevels"
           :genders="genders"
           :city-options="cityOptions"
+          :region-options="regionOptions"
           :cities-loading="citiesLoading"
+          :regions-loading="regionsLoading"
           :load-cities="loadCities"
+          :load-regions="loadRegions"
         />
 
         <CreateAdRequirementsEditor :form="form" :errors="errors" />
@@ -69,7 +72,9 @@ const {
   submitting,
   savingDraft,
   citiesLoading,
+  regionsLoading,
   cityOptions,
+  regionOptions,
   companyName,
   companyLogo,
   jobTitles,
@@ -82,6 +87,7 @@ const {
   genders,
   accountingPrograms,
   loadCities,
+  loadRegions,
   saveDraft,
   publish,
 } = useCreateAdForm()

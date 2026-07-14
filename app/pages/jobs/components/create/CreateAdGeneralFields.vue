@@ -18,47 +18,91 @@
       </div>
 
       <div class="lg:col-span-2">
-        <p class="mb-2 text-base">آدرس:</p>
-        <button
-          type="button"
-          class="mb-3 text-sm font-semibold text-primary-500"
+        <div class="flex items-center justify-between">
+          <p class="mb-2 text-base">آدرس:</p>
+          <button
+            v-if="!showCustomAddress"
+            type="button"
+            class="mb-3 font-semibold btn btn-ghost-primary text-sm max-lg:w-9 max-lg:h-9 max-lg:p-2"
+            @click="enableCustomAddress"
+          >
+            + آدرس جدید
+          </button>
+          <button
+            v-else-if="form.company_address"
+            type="button"
+            class="mb-3 font-semibold btn btn-ghost-primary text-sm max-lg:w-9 max-lg:h-9 max-lg:p-2"
+            @click="enableProfileAddress"
+          >
+            آدرس پیش‌فرض
+          </button>
+        </div>
+
+        <template v-if="!showCustomAddress">
+          <p class="mb-3 text-sm leading-7 text-text-passive">
+            <template v-if="form.company_address">
+              آدرس از پروفایل سازمان شما دریافت می‌شود. در صورت نیاز می‌توانید
+              آدرس دیگری انتخاب کنید.
+            </template>
+            <template v-else>
+              آدرس سازمان ثبت نشده است. برای انتخاب محل آگهی، آدرس جدید اضافه
+              کنید.
+            </template>
+          </p>
+          <div
+            v-if="form.company_address"
+            class="flex items-center gap-2 rounded-lg border border-dashed border-gray-default p-3"
+          >
+            <span class="text-sm text-text-secondary">{{
+              form.company_address
+            }}</span>
+          </div>
+        </template>
+
+        <div
+          v-else
+          class="mt-4 grid gap-6 rounded-lg border border-dashed border-gray-default p-3 lg:grid-cols-2"
         >
-          + آدرس جدید
-        </button>
-        <p class="mb-3 text-sm leading-7 text-text-passive">
-          آدرس از پروفایل سازمان شما دریافت می‌شود. در صورت نیاز می‌توانید آدرس
-          دیگری انتخاب کنید.
-        </p>
-        <label
-          class="flex cursor-pointer items-start gap-2 rounded-lg border border-gray-default bg-surface-50 p-3"
-        >
-          <input
-            v-model="form.company_address"
-            type="radio"
-            class="radio radio-primary mt-1"
-            :value="defaultAddress"
+          <m-select2
+            v-model="selectedProvince"
+            label="استان:"
+            search
+            :options="provinceOptions"
+            placeholder="استان را انتخاب کنید"
           />
-          <span class="text-sm text-text-secondary">{{ defaultAddress }}</span>
-        </label>
-      </div>
 
-      <div>
-        <m-select2
-          v-model="selectedProvince"
-          label="استان:"
-          :options="provinceOptions"
-          placeholder="استان را انتخاب کنید"
-        />
-      </div>
+          <m-select2
+            v-model="selectedCity"
+            label="شهر:"
+            :options="cityOptions"
+            search
+            placeholder="شهر را انتخاب کنید"
+            :disabled="!form.province || citiesLoading"
+          />
 
-      <div>
-        <m-select2
-          v-model="selectedCity"
-          label="شهر:"
-          :options="cityOptions"
-          placeholder="شهر را انتخاب کنید"
-          :disabled="!form.province || citiesLoading"
-        />
+          <m-select2
+            v-model="selectedRegion"
+            label="منطقه:"
+            :options="regionOptions"
+            search
+            placeholder="منطقه را انتخاب کنید"
+            :disabled="!form.city || regionsLoading || !hasRegions"
+          />
+        </div>
+
+        <div
+          v-if="paidCityName"
+          class="mt-3 flex items-start gap-2 text-sm text-[#B95C04]"
+        >
+          <Icon
+            name="lucide:triangle-alert"
+            class="mt-0.5 shrink-0"
+            size="18"
+          />
+          <span>
+            ثبت آگهی در شهر «{{ paidCityName }}» شامل هزینه می‌باشد.
+          </span>
+        </div>
       </div>
 
       <div>
@@ -77,16 +121,12 @@
 
       <div>
         <p class="mb-2 text-base">جنسیت:</p>
-        <m-toggle
-          v-model="form.gender"
-          same-width
-          :items="genderItems"
-        />
+        <m-toggle v-model="form.gender" same-width :items="genderItems" />
       </div>
 
       <div>
         <m-select2
-          v-model="selectedExperience"
+          v-model="form.minimum_work_experience"
           label="سابقه کار:"
           required
           :options="experienceLevels"
@@ -116,80 +156,142 @@
 </template>
 
 <script setup lang="ts">
-import Titr from '~/features/panel/cv/Titr.vue'
-import { provinces } from '~/feeders/provinces'
-import type { CreateAdFormErrors, CreateAdFormModel } from '~/types/create-ad-form'
-import type { ISelectItem } from '~/types/select-item'
+import Titr from "~/features/panel/cv/Titr.vue";
+import { provinces } from "~/feeders/provinces";
+import { findPaidAdCityName } from "~/pages/jobs/utils/paid-ad-cities";
+import type {
+  CreateAdFormErrors,
+  CreateAdFormModel,
+} from "~/types/create-ad-form";
+import type { ISelectItem } from "~/types/select-item";
 
 const props = defineProps<{
-  form: CreateAdFormModel
-  errors: CreateAdFormErrors
-  jobTitles: ISelectItem[]
-  employmentTypes: ISelectItem[]
-  experienceLevels: ISelectItem[]
-  salaryRanges: ISelectItem[]
-  educationLevels: ISelectItem[]
-  genders: ISelectItem[]
-  cityOptions: ISelectItem[]
-  citiesLoading: boolean
-  loadCities: (provinceId: number) => Promise<void>
-}>()
+  form: CreateAdFormModel;
+  errors: CreateAdFormErrors;
+  jobTitles: ISelectItem[];
+  employmentTypes: ISelectItem[];
+  experienceLevels: ISelectItem[];
+  salaryRanges: ISelectItem[];
+  educationLevels: ISelectItem[];
+  genders: ISelectItem[];
+  cityOptions: ISelectItem[];
+  regionOptions: ISelectItem[];
+  citiesLoading: boolean;
+  regionsLoading: boolean;
+  loadCities: (provinceId: number) => Promise<void>;
+  loadRegions: (cityId: number) => Promise<void>;
+}>();
 
-const defaultAddress = 'خراسان رضوی، مشهد، پیمان آید'
+const provinceOptions = provinces;
+const showCustomAddress = ref(false);
+const hasRegions = computed(() => props.regionOptions.length > 0);
 
-const provinceOptions = provinces
+const paidCityName = computed(() => {
+  if (showCustomAddress.value) {
+    return findPaidAdCityName(props.form.city_name);
+  }
+
+  return findPaidAdCityName(props.form.company_address);
+});
+
+function clearLocationFields() {
+  props.form.province = null;
+  props.form.province_name = "";
+  props.form.city = null;
+  props.form.city_name = "";
+  props.form.region = null;
+  props.form.region_name = "";
+}
+
+function enableCustomAddress() {
+  showCustomAddress.value = true;
+  clearLocationFields();
+}
+
+function enableProfileAddress() {
+  showCustomAddress.value = false;
+  clearLocationFields();
+}
+
+function clearRegionFields() {
+  props.form.region = null;
+  props.form.region_name = "";
+}
+
+watch(
+  () => [props.form.province, props.form.city, props.form.region] as const,
+  ([province, city, region]) => {
+    if (province != null || city != null || region != null) {
+      showCustomAddress.value = true;
+    }
+  },
+  { immediate: true },
+);
 
 const genderItems = computed(() => {
   if (props.genders.length) {
     return props.genders.map((item) => ({
       title: item.label,
       value: String(item.value),
-    }))
+    }));
   }
 
   return [
-    { title: 'زن', value: 'زن' },
-    { title: 'مرد', value: 'مرد' },
-    { title: 'در هر دو حالت', value: 'مهم نیست' },
-  ]
-})
+    { title: "زن", value: "زن" },
+    { title: "مرد", value: "مرد" },
+    { title: "در هر دو حالت", value: "مهم نیست" },
+  ];
+});
 
 const selectedProvince = computed({
   get: () => props.form.province ?? undefined,
   set: async (value: string | number | undefined) => {
-    const provinceId = value == null ? null : Number(value)
-    props.form.province = provinceId
+    const provinceId = value == null ? null : Number(value);
+    props.form.province = provinceId;
     props.form.province_name =
-      provinceOptions.find((item) => item.value === provinceId)?.label ?? ''
-    props.form.city = null
-    props.form.city_name = ''
-    if (provinceId) await props.loadCities(provinceId)
+      provinceOptions.find((item) => item.value === provinceId)?.label ?? "";
+    props.form.city = null;
+    props.form.city_name = "";
+    clearRegionFields();
+    if (provinceId) await props.loadCities(provinceId);
   },
-})
+});
 
 const selectedCity = computed({
   get: () => props.form.city ?? undefined,
-  set: (value: string | number | undefined) => {
-    const cityId = value == null ? null : Number(value)
-    props.form.city = cityId
+  set: async (value: string | number | undefined) => {
+    const cityId = value == null ? null : Number(value);
+    props.form.city = cityId;
     props.form.city_name =
-      props.cityOptions.find((item) => item.value === cityId)?.label ?? ''
+      props.cityOptions.find((item) => item.value === cityId)?.label ?? "";
+    clearRegionFields();
+    if (cityId) await props.loadRegions(cityId);
   },
-})
+});
 
-const selectedExperience = computed({
-  get: () => props.form.minimum_work_experience ?? undefined,
+const selectedRegion = computed({
+  get: () => props.form.region ?? undefined,
   set: (value: string | number | undefined) => {
-    props.form.minimum_work_experience =
-      value == null || value === '' ? null : Number(value)
+    const regionId = value == null ? null : Number(value);
+    props.form.region = regionId;
+    props.form.region_name =
+      props.regionOptions.find((item) => item.value === regionId)?.label ?? "";
   },
-})
+});
 
 watch(
-  () => props.form.company_address,
-  (value) => {
-    if (!value) props.form.company_address = defaultAddress
+  [() => props.genders, () => props.form.gender],
+  ([genders, gender]) => {
+    if (gender) return;
+
+    const defaultOption =
+      genders.find((item) => String(item.value) === "any") ??
+      genders.find((item) => /هر دو|مهم/.test(item.label));
+
+    props.form.gender = defaultOption
+      ? String(defaultOption.value)
+      : "مهم نیست";
   },
-  { immediate: true },
-)
+  { immediate: true, deep: true },
+);
 </script>

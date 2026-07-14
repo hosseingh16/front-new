@@ -75,6 +75,8 @@ export function buildCreateAdPayload(
 
   if (form.city != null) payload.city = form.city
   if (form.city_name.trim()) payload.city_name = form.city_name.trim()
+  if (form.region != null) payload.region = form.region
+  if (form.region_name.trim()) payload.region_name = form.region_name.trim()
   if (form.province != null) payload.province = form.province
   if (form.province_name.trim()) payload.province_name = form.province_name.trim()
   const salaryRange =
@@ -82,8 +84,11 @@ export function buildCreateAdPayload(
     form.salary_range.trim()
   if (salaryRange) payload.salary_range = salaryRange
 
-  if (form.minimum_work_experience != null) {
-    payload.minimum_work_experience = form.minimum_work_experience
+  if (form.minimum_work_experience.trim()) {
+    const workExperience =
+      resolveLabel(context.experienceLevels, form.minimum_work_experience) ||
+      form.minimum_work_experience.trim()
+    payload.minimum_work_experience = workExperience
   }
 
   const gender =

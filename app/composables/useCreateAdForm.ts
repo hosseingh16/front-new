@@ -37,7 +37,9 @@ export function useCreateAdForm() {
   const accountingPrograms = items('accounting_programs')
 
   const cityOptions = ref<ISelectItem[]>([])
+  const regionOptions = ref<ISelectItem[]>([])
   const citiesLoading = ref(false)
+  const regionsLoading = ref(false)
 
   const companyName = ref('شرکت شما')
   const companyLogo = ref('')
@@ -45,12 +47,22 @@ export function useCreateAdForm() {
   async function loadCities(provinceId: number) {
     citiesLoading.value = true
     try {
-      const result = await api.get<ApiResponse<ISelectItem[]>>(`/cities/${provinceId}`)
-      cityOptions.value = result.data ?? []
+      cityOptions.value = await api.get<ISelectItem[]>(`/cities/${provinceId}`)
     } catch {
       cityOptions.value = []
     } finally {
       citiesLoading.value = false
+    }
+  }
+
+  async function loadRegions(cityId: number) {
+    regionsLoading.value = true
+    try {
+      regionOptions.value = await api.get<ISelectItem[]>(`/regions/${cityId}`)
+    } catch {
+      regionOptions.value = []
+    } finally {
+      regionsLoading.value = false
     }
   }
 
@@ -63,8 +75,18 @@ export function useCreateAdForm() {
     try {
       const parsed = JSON.parse(raw) as CreateAdFormModel
       form.value = { ...createEmptyCreateAdForm(), ...parsed }
+      if (
+        parsed.minimum_work_experience != null &&
+        parsed.minimum_work_experience !== ''
+      ) {
+        form.value.minimum_work_experience = String(parsed.minimum_work_experience)
+      }
       if (form.value.province) {
-        loadCities(form.value.province)
+        loadCities(form.value.province).then(() => {
+          if (form.value.city) {
+            loadRegions(form.value.city)
+          }
+        })
       }
       $toast.info('پیش‌نویس بازیابی شد')
     } catch {
@@ -146,6 +168,8 @@ export function useCreateAdForm() {
     savingDraft,
     lookupsLoading,
     citiesLoading,
+    regionOptions,
+    regionsLoading,
     cityOptions,
     companyName,
     companyLogo,
@@ -159,6 +183,7 @@ export function useCreateAdForm() {
     genders,
     accountingPrograms,
     loadCities,
+    loadRegions,
     saveDraft,
     publish,
   }

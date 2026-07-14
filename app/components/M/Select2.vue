@@ -12,10 +12,10 @@
       >
         <span
           class="text-sm font-normal line-clamp-1"
-          :class="model ? 'text-gray-700' : 'text-text-muted'"
+          :class="hasModelValue ? 'text-gray-700' : 'text-text-muted'"
         >
           {{
-            options.find((x) => x.value === model)?.label ||
+            options.find((x) => String(x.value) === String(model))?.label ||
             placeholder ||
             "انتخاب کنید"
           }}
@@ -45,7 +45,7 @@
               v-for="item in options2"
               @click="selectItem(item)"
               class="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg"
-              :class="{ 'bg-gray-200 font-semibold': item.value === model }"
+              :class="{ 'bg-gray-200 font-semibold': String(item.value) === String(model) }"
             >
               {{ item.label }}
             </p>
@@ -91,6 +91,10 @@ const options2 = ref<ISelectItem[]>([]);
 const allOptions = ref<ISelectItem[]>([]);
 const keyword = ref("");
 const dropDownRef = ref<HTMLElement | null>(null);
+
+const hasModelValue = computed(
+  () => model.value != null && model.value !== "",
+);
 
 // Watches
 watch(
