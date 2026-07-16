@@ -158,7 +158,7 @@
 <script setup lang="ts">
 import Titr from "~/features/panel/cv/Titr.vue";
 import { provinces } from "~/feeders/provinces";
-import { findPaidAdCityName } from "~/pages/jobs/utils/paid-ad-cities";
+import { findPaidAdCityName } from "~/pages/dashboard/employer/ads/utils/paid-ad-cities";
 import type {
   CreateAdFormErrors,
   CreateAdFormModel,

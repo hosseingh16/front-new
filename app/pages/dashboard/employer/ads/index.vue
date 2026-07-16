@@ -18,7 +18,7 @@
       icon="svg:no-jobs"
       action-label="آگهی جدید"
       action-icon="svg:bag-1"
-      action-to="/jobs/create"
+      action-to="/dashboard/employer/ads/create"
     />
 
     <template v-else>
@@ -39,7 +39,7 @@
           >
             <Icon name="svg:search-1" size="20" />
           </button>
-          <NuxtLink to="/jobs/create" class="btn btn-success h-10 gap-2 px-4">
+          <NuxtLink to="/dashboard/employer/ads/create" class="btn btn-success h-10 gap-2 px-4">
             <Icon name="svg:bag-1" size="16" class="text-white" />
             آگهی جدید
           </NuxtLink>
@@ -168,11 +168,11 @@ const filteredAds = computed(() => {
 })
 
 function editAd(id: number) {
-  navigateTo(`/jobs/create?edit=${id}`)
+  navigateTo(`/dashboard/employer/ads/create?edit=${id}`)
 }
 
 function copyAd(id: number) {
-  navigateTo(`/jobs/create?copy=${id}`)
+  navigateTo(`/dashboard/employer/ads/create?copy=${id}`)
 }
 
 function confirmDeleteAd(id: number) {
