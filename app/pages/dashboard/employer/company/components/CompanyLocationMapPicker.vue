@@ -19,6 +19,8 @@
           hide-layers
           hide-search-container
           :reverse-on-click="false"
+          :popup-on-marker-hover="false"
+          :zoom-on-marker-click="false"
           @on-init="onInit"
           @on-click="onMapClick"
         />
@@ -26,7 +28,7 @@
           v-else
           class="flex h-full items-center justify-center px-4 text-center text-sm text-text-muted"
         >
-          کلید نقشه نشان تنظیم نشده است. (NUXT_PUBLIC_NESHAN_MAP_KEY)
+          کلید نقشه نشان تنظیم نشده است.
         </div>
 
         <button
