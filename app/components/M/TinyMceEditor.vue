@@ -39,6 +39,7 @@ const ready = ref(false)
 const editorInit = computed(() => ({
   height: props.height,
   menubar: false,
+  language: 'fa',
   directionality: 'rtl',
   plugins: ['lists'],
   toolbar: 'undo redo | bold italic | bullist numlist',
@@ -56,6 +57,8 @@ async function setupTinyMce() {
   await import('tinymce/icons/default')
   await import('tinymce/models/dom')
   await import('tinymce/plugins/lists')
+  // @ts-expect-error language pack has no type declarations
+  await import('tinymce-i18n/langs8/fa')
   await import('tinymce/skins/ui/oxide/skin.js')
   await import('tinymce/skins/content/default/content.js')
 
