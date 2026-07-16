@@ -7,6 +7,7 @@
         <CreateAdGeneralFields
           :form="form"
           :errors="errors"
+          :is-part-time="isPartTime"
           :job-titles="jobTitles"
           :employment-types="employmentTypes"
           :experience-levels="experienceLevels"
@@ -38,17 +39,19 @@
           :company-name="companyName"
           :company-logo="companyLogo"
           :job-titles="jobTitles"
+          :employment-types="employmentTypes"
+          :genders="genders"
+          :salary-ranges="salaryRanges"
         />
       </div>
 
-      <div class="lg:col-span-2">
-        <CreateAdInvoiceSidebar
-          :submitting="submitting"
-          :saving-draft="savingDraft"
-          @publish="publish"
-          @save-draft="saveDraft"
-        />
-      </div>
+      <CreateAdInvoiceSidebar
+        class="lg:col-span-2"
+        :submitting="submitting"
+        :saving-draft="savingDraft"
+        @publish="publish"
+        @save-draft="saveDraft"
+      />
     </div>
   </div>
 </template>
@@ -69,6 +72,7 @@ definePageMeta({
 const {
   form,
   errors,
+  isPartTime,
   submitting,
   savingDraft,
   citiesLoading,

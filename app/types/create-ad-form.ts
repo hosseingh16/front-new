@@ -1,3 +1,32 @@
+export interface PartTimeTimeRange {
+  start: string
+  end: string
+}
+
+export interface PartTimeDaySchedule {
+  day: string
+  enabled: boolean
+  ranges: PartTimeTimeRange[]
+}
+
+export const PART_TIME_WEEK_DAYS = [
+  'شنبه‌ها',
+  'یکشنبه‌ها',
+  'دوشنبه‌ها',
+  'سه‌شنبه‌ها',
+  'چهارشنبه‌ها',
+  'پنج‌شنبه‌ها',
+  'جمعه‌ها',
+] as const
+
+export function createEmptyPartTimeWeekSchedule(): PartTimeDaySchedule[] {
+  return PART_TIME_WEEK_DAYS.map((day) => ({
+    day,
+    enabled: false,
+    ranges: [{ start: '', end: '' }],
+  }))
+}
+
 export interface CreateAdFormModel {
   title: string
   company_address: string
@@ -21,12 +50,23 @@ export interface CreateAdFormModel {
   baha_skill: string | null
   work_schedule: string
   travel_need: string
+  accounting_management: string
+  accounting_needs: string[]
+  collaboration_type: string
+  floating_days: string
+  floating_hours: string
+  fixed_schedule: PartTimeDaySchedule[]
 }
 
 export interface CreateAdFormErrors {
   title?: string
   employment_type?: string
   resume_terms?: string
+  accounting_management?: string
+  collaboration_type?: string
+  floating_days?: string
+  floating_hours?: string
+  fixed_schedule?: string
 }
 
 export const CREATE_AD_DRAFT_KEY = 'create-ad-draft'
@@ -55,5 +95,11 @@ export function createEmptyCreateAdForm(): CreateAdFormModel {
     baha_skill: null,
     work_schedule: '',
     travel_need: '',
+    accounting_management: '',
+    accounting_needs: [],
+    collaboration_type: '',
+    floating_days: '',
+    floating_hours: '',
+    fixed_schedule: createEmptyPartTimeWeekSchedule(),
   }
 }

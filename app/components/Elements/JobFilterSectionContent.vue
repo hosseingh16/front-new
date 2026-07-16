@@ -11,7 +11,7 @@
         :value="jobType.value"
         class="checkbox checkbox-primary p-1.5"
       />
-      
+
       <Icon :name="jobTypeIcon(jobType.value)" />
       <span>{{ jobType.label }}</span>
     </div>
@@ -42,7 +42,7 @@
       placeholder="جستجو در شهرها"
       wrapper-class="mb-3"
     />
-    <div class="max-h-[280px] space-y-2 overflow-y-auto overflow-x-hidden">
+    <div class="max-h-[280px] space-y-2 overflow-y-scroll md:overflow-y-auto overflow-x-hidden">
       <div
         v-for="item in filters.filteredLocationTree"
         :key="item.province.value"
@@ -90,7 +90,13 @@
               type="checkbox"
               :checked="filters.isCitySelected(city.value)"
               class="checkbox checkbox-primary p-1.5"
-              @change="filters.toggleCity(city.value, item.province.value as number, $event)"
+              @change="
+                filters.toggleCity(
+                  city.value,
+                  item.province.value as number,
+                  $event,
+                )
+              "
             />
             <span>{{ city.label }}</span>
           </div>
@@ -129,32 +135,34 @@
 </template>
 
 <script setup lang="ts">
-import FilterCheckboxList from '~/components/Elements/FilterCheckboxList.vue'
-import FilterSearchField from '~/components/Elements/FilterSearchField.vue'
-import { JOB_FILTERS_INJECTION_KEY } from '~/composables/job-filters-context'
+import FilterCheckboxList from "~/components/Elements/FilterCheckboxList.vue";
+import FilterSearchField from "~/components/Elements/FilterSearchField.vue";
+import { JOB_FILTERS_INJECTION_KEY } from "~/composables/job-filters-context";
 
 defineProps<{
-  sectionIndex: number
-}>()
+  sectionIndex: number;
+}>();
 
 const filters = (() => {
-  const ctx = inject(JOB_FILTERS_INJECTION_KEY)
+  const ctx = inject(JOB_FILTERS_INJECTION_KEY);
   if (!ctx) {
-    throw new Error('JobFilterSectionContent must be used within a job filters provider')
+    throw new Error(
+      "JobFilterSectionContent must be used within a job filters provider",
+    );
   }
-  return ctx
-})()
+  return ctx;
+})();
 
 function jobTypeIcon(value: string | number) {
   switch (String(value)) {
-    case 'full_time':
-      return 'svg:bag-3'
-    case 'part_time':
-      return 'svg:timer'
-    case 'project_based':
-      return 'svg:projects-1'
+    case "full_time":
+      return "svg:bag-3";
+    case "part_time":
+      return "svg:timer";
+    case "project_based":
+      return "svg:projects-1";
     default:
-      return 'svg:bag-3'
+      return "svg:bag-3";
   }
 }
 </script>

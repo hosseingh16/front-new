@@ -36,7 +36,10 @@ export function getResumeTermsPlainLength(value: string) {
   return stripHtml(value).length
 }
 
-export function validateCreateAdForm(form: CreateAdFormModel) {
+export function validateCreateAdForm(
+  form: CreateAdFormModel,
+  options: { isPartTime?: boolean } = {},
+) {
   const errors: Record<string, string> = {}
 
   if (!form.title.trim()) {
@@ -49,6 +52,45 @@ export function validateCreateAdForm(form: CreateAdFormModel) {
 
   if (getResumeTermsPlainLength(form.resume_terms) < 10) {
     errors.resume_terms = 'شرایط احراز باید حداقل ۱۰ کاراکتر باشد'
+  }
+
+  if (options.isPartTime) {
+    if (!form.accounting_management) {
+      errors.accounting_management =
+        'نحوه مدیریت حسابداری در سازمان الزامی است'
+    }
+
+    if (!form.collaboration_type) {
+      errors.collaboration_type = 'نحوه همکاری الزامی است'
+    } else if (form.collaboration_type === 'floating') {
+      if (!form.floating_days) {
+        errors.floating_days = 'تعداد روز مورد نیاز الزامی است'
+      }
+      if (!form.floating_hours) {
+        errors.floating_hours = 'تعداد ساعت مورد نیاز الزامی است'
+      }
+    } else if (form.collaboration_type === 'fixed') {
+      const hasCompleteDay = form.fixed_schedule.some(
+        (day) =>
+          day.enabled &&
+          day.ranges.some((range) => range.start.trim() && range.end.trim()),
+      )
+      if (!hasCompleteDay) {
+        errors.fixed_schedule =
+          'حداقل یک روز را با ساعت شروع و پایان مشخص کنید'
+      } else {
+        const hasInvalidRange = form.fixed_schedule.some(
+          (day) =>
+            day.enabled &&
+            day.ranges.some(
+              (range) => range.start && range.end && range.end <= range.start,
+            ),
+        )
+        if (hasInvalidRange) {
+          errors.fixed_schedule = 'ساعت پایان باید بعد از ساعت شروع باشد'
+        }
+      }
+    }
   }
 
   return errors
@@ -123,6 +165,31 @@ export function buildCreateAdPayload(
       schedule: form.work_schedule.trim(),
       travel: form.travel_need.trim(),
     })
+  }
+
+  if (/پاره\s*وقت/.test(employmentType)) {
+    const partTime: Record<string, unknown> = {
+      accounting_management: form.accounting_management,
+      accounting_needs: form.accounting_needs,
+      collaboration_type: form.collaboration_type,
+    }
+
+    if (form.collaboration_type === 'floating') {
+      partTime.days_per_week = form.floating_days
+      partTime.hours_per_day = form.floating_hours
+    } else if (form.collaboration_type === 'fixed') {
+      partTime.schedule = form.fixed_schedule
+        .filter((day) => day.enabled)
+        .map((day) => ({
+          day: day.day,
+          ranges: day.ranges.filter(
+            (range) => range.start.trim() && range.end.trim(),
+          ),
+        }))
+        .filter((day) => day.ranges.length)
+    }
+
+    payload.part_time_conditions = JSON.stringify(partTime)
   }
 
   return payload

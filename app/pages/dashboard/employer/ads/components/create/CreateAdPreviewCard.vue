@@ -37,11 +37,11 @@
             <span>{{ locationLabel }}</span>
           </div>
           <div
-            v-if="form.gender"
+            v-if="genderLabel"
             class="flex shrink-0 items-center gap-2 rounded-full border border-gray-default bg-white px-3 py-1"
           >
             <Icon name="lucide:user" class="shrink-0" />
-            <span>{{ form.gender }}</span>
+            <span>{{ genderLabel }}</span>
           </div>
         </div>
       </div>
@@ -49,10 +49,10 @@
       <div class="mt-2 flex items-center justify-between px-2 pb-2">
         <div>
           <p class="text-sm text-text-secondary">
-            {{ form.employment_type || 'نوع همکاری' }}
+            {{ employmentTypeLabel || 'نوع همکاری' }}
           </p>
           <p class="font-semibold text-text-tertiary">
-            {{ form.salary_range || 'حقوق توافقی' }}
+            {{ salaryRangeLabel || 'حقوق توافقی' }}
           </p>
         </div>
         <button
@@ -78,7 +78,19 @@ const props = defineProps<{
   companyName: string
   companyLogo: string
   jobTitles: ISelectItem[]
+  employmentTypes: ISelectItem[]
+  genders: ISelectItem[]
+  salaryRanges: ISelectItem[]
 }>()
+
+function resolveLabel(
+  options: ISelectItem[],
+  value: string | number | null | undefined,
+) {
+  if (value == null || value === '') return ''
+  const match = options.find((item) => String(item.value) === String(value))
+  return match?.label ?? ''
+}
 
 const titleLabel = computed(() => {
   if (props.form.title) {
@@ -89,6 +101,18 @@ const titleLabel = computed(() => {
   }
   return 'استخدام حسابدار'
 })
+
+const employmentTypeLabel = computed(() =>
+  resolveLabel(props.employmentTypes, props.form.employment_type),
+)
+
+const genderLabel = computed(() =>
+  resolveLabel(props.genders, props.form.gender),
+)
+
+const salaryRangeLabel = computed(() =>
+  resolveLabel(props.salaryRanges, props.form.salary_range),
+)
 
 const locationLabel = computed(() => {
   if (props.form.province_name && props.form.city_name) {

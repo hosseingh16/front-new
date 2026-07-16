@@ -44,6 +44,14 @@ export function useCreateAdForm() {
   const companyName = ref('شرکت شما')
   const companyLogo = ref('')
 
+  const isPartTime = computed(() => {
+    const selected = employmentTypes.value.find(
+      (item) => String(item.value) === String(form.value.employment_type),
+    )
+    const label = selected?.label ?? form.value.employment_type
+    return /پاره\s*وقت/.test(String(label))
+  })
+
   async function loadCities(provinceId: number) {
     citiesLoading.value = true
     try {
@@ -107,7 +115,9 @@ export function useCreateAdForm() {
   }
 
   async function publish() {
-    const validationErrors = validateCreateAdForm(form.value)
+    const validationErrors = validateCreateAdForm(form.value, {
+      isPartTime: isPartTime.value,
+    })
     errors.value = validationErrors
 
     if (Object.keys(validationErrors).length) {
@@ -164,6 +174,7 @@ export function useCreateAdForm() {
   return {
     form,
     errors,
+    isPartTime,
     submitting,
     savingDraft,
     lookupsLoading,

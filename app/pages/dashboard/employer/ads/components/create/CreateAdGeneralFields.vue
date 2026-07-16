@@ -124,6 +124,10 @@
         <m-toggle v-model="form.gender" same-width :items="genderItems" />
       </div>
 
+      <div v-if="isPartTime" class="lg:col-span-2">
+        <CreateAdPartTimeSection :form="form" :errors="errors" />
+      </div>
+
       <div>
         <m-select2
           v-model="form.minimum_work_experience"
@@ -157,6 +161,7 @@
 
 <script setup lang="ts">
 import Titr from "~/features/panel/cv/Titr.vue";
+import CreateAdPartTimeSection from "./CreateAdPartTimeSection.vue";
 import { provinces } from "~/feeders/provinces";
 import { findPaidAdCityName } from "~/pages/dashboard/employer/ads/utils/paid-ad-cities";
 import type {
@@ -168,6 +173,7 @@ import type { ISelectItem } from "~/types/select-item";
 const props = defineProps<{
   form: CreateAdFormModel;
   errors: CreateAdFormErrors;
+  isPartTime: boolean;
   jobTitles: ISelectItem[];
   employmentTypes: ISelectItem[];
   experienceLevels: ISelectItem[];

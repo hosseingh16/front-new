@@ -14,7 +14,11 @@
         />
         <div
           class="w-67.5 items-start gap-5 absolute bg-white p-3 border-2 border-[#F2F2F2] rounded-lg"
-          :class="!showTip ? 'hidden group-hover:flex -top-25' : '-top-35 max-lg:left-3'"
+          :class="
+            !showTip
+              ? 'hidden group-hover:flex -top-25'
+              : '-top-35 max-lg:left-3'
+          "
         >
           <Icon name="svg:hint" size="24" />
           <ul class="list-disc list-inside text-text-passive">
@@ -28,7 +32,11 @@
       :class="[
         multiline ? 'textarea py-12' : '',
         'w-full rounded-lg shadow-none hover:border-[#cccccc] focus:border-[#cccccc] focus-within:outline-none focus-within:shadow-[0px_0px_0px_2px_#FFFFFF,0px_0px_0px_4px_#4A4A4A14]',
-        error ? 'border-danger-200' : model ? 'border-[#cccccc]' : 'border-gray-default',
+        error
+          ? 'border-danger-200'
+          : model
+          ? 'border-[#cccccc]'
+          : 'border-gray-default',
       ]"
     >
       <slot name="prefix" />
@@ -38,6 +46,7 @@
         v-model="model"
         :type="type"
         :placeholder="placeholder"
+        autofocus
         class="pr-0 placeholder:text-gray-default w-full"
       />
 
@@ -63,7 +72,7 @@
 
 <script setup lang="ts">
 // Model
-const model = defineModel({ default: '' });
+const model = defineModel({ default: "" });
 
 // Props
 const props = withDefaults(
@@ -71,7 +80,7 @@ const props = withDefaults(
     label?: string;
     defaultValue?: string;
     required?: boolean;
-    type?: 'text' | 'password';
+    type?: "text" | "password";
     placeholder?: string;
     hint?: string[];
     error?: boolean;
