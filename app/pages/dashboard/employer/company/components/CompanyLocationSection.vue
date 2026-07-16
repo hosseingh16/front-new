@@ -59,11 +59,11 @@
         </p>
       </div>
 
-      <div v-if="mapImageUrl" class="lg:col-span-2">
-        <img
-          :src="mapImageUrl"
-          alt="موقعیت مکانی سازمان روی نقشه"
-          class="h-64 w-full rounded-lg border border-gray-default object-cover"
+      <div class="lg:col-span-2">
+        <CompanyLocationMapPicker
+          :lat="form.lat"
+          :long="form.long"
+          @select="onMapSelect"
         />
       </div>
     </div>
@@ -78,9 +78,9 @@
 
 <script setup lang="ts">
 import Titr from '~/features/panel/cv/Titr.vue'
+import CompanyLocationMapPicker from './CompanyLocationMapPicker.vue'
 import CompanySectionActions from './CompanySectionActions.vue'
 import { provinces } from '~/feeders/provinces'
-import { buildYandexStaticMapUrl } from '~/utils/yandex-static-map'
 import type {
   CompanyProfileFormErrors,
   CompanyProfileFormModel,
@@ -107,20 +107,10 @@ const emit = defineEmits<{
 const provinceOptions = provinces
 const hasRegions = computed(() => props.regionOptions.length > 0)
 
-const mapImageUrl = computed(() => {
-  if (props.form.lat == null || props.form.long == null) return null
-
-  return buildYandexStaticMapUrl({
-    points: [
-      { longitude: props.form.long, latitude: props.form.lat, marker: 'round' },
-    ],
-    center: { longitude: props.form.long, latitude: props.form.lat },
-    width: 650,
-    height: 256,
-    zoom: 15,
-    lang: 'fa_IR',
-  })
-})
+function onMapSelect(coords: { lat: number; long: number }) {
+  props.form.lat = coords.lat
+  props.form.long = coords.long
+}
 
 const selectedProvince = computed({
   get: () => props.form.province ?? undefined,

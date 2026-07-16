@@ -19,6 +19,8 @@ export default defineNuxtConfig({
       baseUrl: process.env.NUXT_PUBLIC_BASE_URL || "https://api.hihesab.test",
       apiBase:
         process.env.NUXT_PUBLIC_API_BASE || "https://api.hihesab.test/api/v1",
+      neshanMapKey: process.env.NUXT_PUBLIC_NESHAN_MAP_KEY || "",
+      neshanServiceKey: process.env.NUXT_PUBLIC_NESHAN_SERVICE_KEY || "",
     },
   },
   ...(fs.existsSync(certKey) && fs.existsSync(certCert)
@@ -58,7 +60,19 @@ export default defineNuxtConfig({
   vite: {
     plugins: [tailwindcss()],
     optimizeDeps: {
-      include: ["@vue/devtools-core", "@vue/devtools-kit", "vee-validate"],
+      include: [
+        "@vue/devtools-core",
+        "@vue/devtools-kit",
+        "vee-validate",
+        "@neshan-maps-platform/vue3-openlayers",
+        "@neshan-maps-platform/ol/Feature",
+        "@neshan-maps-platform/ol/geom/Point",
+        "@neshan-maps-platform/ol/layer/Vector",
+        "@neshan-maps-platform/ol/source/Vector",
+        "@neshan-maps-platform/ol/style/Style",
+        "@neshan-maps-platform/ol/style/Icon",
+        "@neshan-maps-platform/ol/proj",
+      ],
     },
   },
 

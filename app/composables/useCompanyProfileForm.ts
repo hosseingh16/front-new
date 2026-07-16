@@ -62,6 +62,8 @@ function buildSectionPayload(
         region: form.region,
         region_name: form.region_name,
         address: form.address.trim(),
+        lat: form.lat,
+        long: form.long,
       }
     case 'gallery':
       return { gallery: form.gallery }
