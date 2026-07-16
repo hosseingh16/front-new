@@ -3,11 +3,19 @@
     class="max-h-[280px] space-y-2 overflow-y-auto overflow-x-hidden"
     :class="listClass"
   >
-    <label
+    <component
+      :is="variant === 'card' ? 'label' : 'div'"
       v-for="option in options"
       :key="option.value"
-      class="flex cursor-pointer items-center gap-2 rounded-xl p-3 max-h-[48px]"
-      :class="isSelected(option) ? 'bg-[#F6F8FE]' : 'bg-surface-50'"
+      class="flex items-center gap-2"
+      :class="
+        variant === 'card'
+          ? [
+              'max-h-[48px] cursor-pointer rounded-xl p-3',
+              isSelected(option) ? 'bg-[#F6F8FE]' : 'bg-surface-50',
+            ]
+          : ''
+      "
     >
       <input
         v-model="model"
@@ -18,7 +26,7 @@
       <slot name="label" :option="option">
         <span>{{ option.label }}</span>
       </slot>
-    </label>
+    </component>
   </div>
 </template>
 
@@ -29,9 +37,11 @@ withDefaults(
   defineProps<{
     options: ISelectItem[];
     listClass?: string;
+    variant?: "plain" | "card";
   }>(),
   {
     listClass: "",
+    variant: "plain",
   },
 );
 

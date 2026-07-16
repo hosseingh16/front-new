@@ -158,7 +158,7 @@ export function useCreateAdForm() {
   }
 
   onMounted(() => {
-    restoreDraft()
+    // restoreDraft()
   })
 
   return {
