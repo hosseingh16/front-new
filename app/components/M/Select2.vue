@@ -44,7 +44,7 @@
             <p
               v-for="item in options2"
               @click="selectItem(item)"
-              class="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg"
+              class="px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg"
               :class="{ 'bg-gray-200 font-semibold': String(item.value) === String(model) }"
             >
               {{ item.label }}
@@ -52,7 +52,7 @@
           </div>
           <div
             v-else
-            class="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg min-h-20 flex justify-center items-center"
+            class="px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg min-h-20 flex justify-center items-center"
             @click="open = false"
           >
             موردی برای نمایش وجود ندارد
