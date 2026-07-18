@@ -8,16 +8,20 @@
     </p>
 
     <div class="mt-4">
-      <CompanyImageUpload @select="(file) => emit('upload', file)" />
+      <CompanyImageUpload
+        :max-size="2"
+        :accept="['jpg', 'jpeg', 'png', 'webp', 'gif']"
+        @select="(file) => emit('upload', file)"
+      />
     </div>
 
     <div v-if="form.gallery.length" class="mt-4 flex flex-wrap gap-3">
       <div
         v-for="(image, index) in form.gallery"
-        :key="`${image}-${index}`"
+        :key="`${image.id ?? image.path ?? image.url}-${index}`"
         class="group relative h-24 w-24 overflow-hidden rounded-lg border border-gray-default"
       >
-        <img :src="image" alt="" class="h-full w-full object-cover" />
+        <img :src="image.url" alt="" class="h-full w-full object-cover" />
         <button
           type="button"
           class="absolute left-1 top-1 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-white/90 text-[#EF4035] opacity-0 shadow transition-opacity group-hover:opacity-100"

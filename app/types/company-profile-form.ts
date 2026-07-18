@@ -1,4 +1,14 @@
+export interface CompanyMediaValue {
+  /** Pending Spatie media id after POST /media — prefer this on save */
+  id?: number | null
+  /** Relative storage path — use for existing attached media */
+  path?: string | null
+  /** Public URL for preview */
+  url: string
+}
+
 export interface CompanyProfileFormModel {
+  id: number | null
   name: string
   activity: string
   size: string
@@ -15,9 +25,9 @@ export interface CompanyProfileFormModel {
   address: string
   lat: number | null
   long: number | null
-  logo: string
-  cover: string
-  gallery: string[]
+  logo: CompanyMediaValue | null
+  cover: CompanyMediaValue | null
+  gallery: CompanyMediaValue[]
   is_profile_public: boolean
   slug: string
 }
@@ -56,6 +66,7 @@ export const COMPANY_PROFILE_SECTIONS: CompanyProfileSection[] = [
 
 export function createEmptyCompanyProfileForm(): CompanyProfileFormModel {
   return {
+    id: null,
     name: '',
     activity: '',
     size: '',
@@ -72,8 +83,8 @@ export function createEmptyCompanyProfileForm(): CompanyProfileFormModel {
     address: '',
     lat: null,
     long: null,
-    logo: '',
-    cover: '',
+    logo: null,
+    cover: null,
     gallery: [],
     is_profile_public: false,
     slug: '',
@@ -94,8 +105,29 @@ export function isCompanyProfileSectionComplete(
     case 'gallery':
       return form.gallery.length > 0
     case 'cover':
-      return Boolean(form.cover)
+      return Boolean(form.cover?.url)
     case 'visibility':
       return form.is_profile_public
   }
+}
+
+/**
+ * Prefer media id for newly uploaded pending files.
+ * Fall back to storage path for existing/legacy company media.
+ */
+export function toMediaPayload(
+  media: CompanyMediaValue | null | undefined,
+): number | string | null {
+  if (!media?.url) return null
+  if (media.id != null) return media.id
+  if (media.path) return media.path
+  return null
+}
+
+export function toGalleryPayload(
+  items: CompanyMediaValue[],
+): Array<number | string> {
+  return items
+    .map((item) => toMediaPayload(item))
+    .filter((value): value is number | string => value != null)
 }

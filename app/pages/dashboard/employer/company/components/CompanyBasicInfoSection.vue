@@ -5,22 +5,24 @@
     <div class="mt-6 grid gap-6 lg:grid-cols-2">
       <div class="lg:col-span-2">
         <p class="mb-2 text-base">لوگو سازمان:</p>
-        <div v-if="form.logo" class="mb-3 flex items-center gap-4">
+        <div v-if="form.logo?.url" class="mb-3 flex items-center gap-4">
           <img
-            :src="form.logo"
+            :src="form.logo.url"
             alt=""
             class="h-20 w-20 rounded-2xl border border-gray-default object-cover"
           />
           <button
             type="button"
             class="btn btn-error btn-outline h-9 text-sm"
-            @click="form.logo = ''"
+            @click="form.logo = null"
           >
             حذف لوگو
           </button>
         </div>
         <CompanyImageUpload
           v-else
+          :max-size="2"
+          :accept="['jpg', 'jpeg', 'png', 'webp', 'gif']"
           @select="(file) => emit('upload-logo', file)"
         />
       </div>

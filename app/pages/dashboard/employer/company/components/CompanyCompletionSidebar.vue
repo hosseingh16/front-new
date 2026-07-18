@@ -102,7 +102,7 @@ const dashOffset = computed(
 );
 
 const profileUrl = computed(() =>
-  props.slug ? `hihesab.ir/companies/${props.slug}` : "",
+  props.slug ? `hihesab.com/companies/${props.slug}` : "",
 );
 
 function scrollToSection(key: CompanyProfileSectionKey) {

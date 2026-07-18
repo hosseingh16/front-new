@@ -37,8 +37,8 @@ const props = withDefaults(
   }>(),
   {
     title: 'برای آپلود تصویر کلیک کنید',
-    accept: () => ['jpg', 'png'],
-    maxSize: 10,
+    accept: () => ['jpg', 'jpeg', 'png', 'webp', 'gif'],
+    maxSize: 2,
   },
 )
 

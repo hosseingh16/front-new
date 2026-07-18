@@ -6,23 +6,27 @@
       این تصویر در بالای پروفایل سازمان شما نمایش داده می‌شود.
     </p>
 
-    <div v-if="form.cover" class="mt-4">
+    <div v-if="form.cover?.url" class="mt-4">
       <img
-        :src="form.cover"
+        :src="form.cover.url"
         alt="عکس سرصفحه سازمان"
         class="h-48 w-full rounded-lg border border-gray-default object-cover"
       />
       <button
         type="button"
         class="btn btn-error btn-outline mt-3 h-9 text-sm"
-        @click="form.cover = ''"
+        @click="form.cover = null"
       >
         حذف تصویر
       </button>
     </div>
 
     <div v-else class="mt-4">
-      <CompanyImageUpload @select="(file) => emit('upload', file)" />
+      <CompanyImageUpload
+        :max-size="2"
+        :accept="['jpg', 'jpeg', 'png', 'webp', 'gif']"
+        @select="(file) => emit('upload', file)"
+      />
     </div>
 
     <CompanySectionActions

@@ -60,9 +60,9 @@
             <Icon
               name="svg:copy"
               class="cursor-pointer"
-              @click="copy('Hihesab.ir/d4ds54gd')"
+              @click="copy('Hihesab.com/d4ds54gd')"
             />
-            <span>Hihesab.ir/d4ds54gd</span>
+            <span>Hihesab.com/d4ds54gd</span>
           </div>
         </div>
       </div>
