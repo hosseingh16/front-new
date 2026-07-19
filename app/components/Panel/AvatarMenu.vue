@@ -69,7 +69,7 @@ const menus1 = [
 const menus2 = [
   { title: 'نشان شده‌ها', to: '#', icon: 'bookmark-1' },
   { title: 'رزومه من', to: '#', icon: 'work-history' },
-  { title: 'رزومه سازمان', to: '#', icon: 'buildings-5' },
+  { title: 'پروفایل سازمان', to: '#', icon: 'buildings-5' },
 ];
 
 const theme = ref<'system' | 'light' | 'dark'>('light');

@@ -65,6 +65,7 @@ export const usePanelConfig = () => {
       label: meta.label,
       icon: meta.icon,
       to: meta.to,
+      placement: meta.placement ?? 'top',
       children: children?.length ? children : undefined,
     }
   }

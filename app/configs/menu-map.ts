@@ -2,6 +2,7 @@ type MenuMeta = {
   label: string
   icon: string
   to: string
+  placement?: 'top' | 'bottom'
 }
 
 export const menuMap: Record<string, MenuMeta> = {
@@ -21,6 +22,7 @@ export const menuMap: Record<string, MenuMeta> = {
     label: 'رزومه من',
     icon: 'work-history',
     to: '/dashboard/my-resume',
+    placement: 'bottom',
   },
 
   resume_view: {
@@ -52,8 +54,9 @@ export const menuMap: Record<string, MenuMeta> = {
   },
    saved_jobs: {
     label: 'نشان شده ها',
-    icon: 'eye',
+    icon: 'bookmark-1',
     to: '/dashboard/ads',
+    placement: 'bottom',
   },
 
   // -------------------------
@@ -138,6 +141,7 @@ export const menuMap: Record<string, MenuMeta> = {
     label: 'ویرایش اطلاعات شرکت',
     icon: 'bookmark-1',
     to: '/jobs/bookmarked',
+    placement: 'bottom',
   }, 
 
   // -------------------------
@@ -257,8 +261,9 @@ export const menuMap: Record<string, MenuMeta> = {
   // Organization (future use)
   // -------------------------
   organization_resume: {
-    label: 'رزومه سازمان',
+    label: 'پروفایل سازمان',
     icon: 'buildings-5',
-    to: '/resumes/org',
+    to: '/dashboard/employer/company',
+    placement: 'bottom',
   },
 } as const

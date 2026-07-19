@@ -59,9 +59,9 @@
     </div>
 
     <div class="rounded-2xl border border-gray-default bg-white p-4">
-      <Titr>آدرس رزومه سازمان</Titr>
+      <Titr>آدرس پروفایل سازمان</Titr>
       <p class="mt-3 text-sm leading-7 text-text-passive">
-        به کمک این آدرس یکتا می‌توانید رزومه سازمان خود را با دیگران به اشتراک
+        به کمک این آدرس یکتا می‌توانید پروفایل سازمان خود را با دیگران به اشتراک
         بگذارید.
       </p>
       <div

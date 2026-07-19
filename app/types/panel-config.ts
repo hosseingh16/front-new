@@ -3,5 +3,6 @@ export type MenuItem = {
   label: string;
   icon: string;
   to: string;
+  placement?: 'top' | 'bottom';
   children?: MenuItem[];
 };

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1 class="font-yb-bold text-2xl text-text-tertiary">رزومه سازمان</h1>
+    <h1 class="font-yb-bold text-2xl text-text-tertiary">پروفایل سازمان</h1>
 
     <template v-if="loading">
       <div class="mt-5 grid items-start gap-4 lg:grid-cols-8">
@@ -115,6 +115,6 @@ const {
 } = useCompanyProfileForm()
 
 useSeoMeta({
-  title: 'رزومه سازمان',
+  title: 'پروفایل سازمان',
 })
 </script>
