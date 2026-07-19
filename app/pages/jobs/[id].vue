@@ -1,6 +1,9 @@
 <template>
   <div class="bg-surface-50 pb-12">
-  <section class="bg-[url('/images/ad-cover-bg.jpg')] bg-cover bg-center bg-no-repeat">
+  <section
+    class="bg-cover bg-center bg-no-repeat"
+    :style="{ backgroundImage: `url('${coverImage}')` }"
+  >
     <div class="custom-pad pt-6 pb-12">
       <nav class="text-sm text-text-passive">
         <NuxtLink to="/" class="transition-colors hover:text-primary-500">
@@ -176,6 +179,10 @@ const { similarAds, loadingSimilar } = useSimilarAds(adId)
 const reportIssueModalRef = ref<InstanceType<typeof ReportIssueModal> | null>(null)
 
 const companyInitial = computed(() => ad.value?.company_name?.charAt(0) ?? 'ش')
+
+const coverImage = computed(
+  () => ad.value?.company?.cover || '/images/ad-cover-bg.jpg',
+)
 
 const publishDateLabel = computed(() => {
   const date = ad.value?.publish_date || ad.value?.created_at

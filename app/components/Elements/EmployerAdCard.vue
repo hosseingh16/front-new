@@ -35,7 +35,10 @@
         class="rounded-lg px-3 py-1 text-sm font-semibold flex justify-center"
         :class="statusMeta.className"
       >
-        <span class="inline-block h-2 w-2 ml-1 my-auto bg-[#2E7D32] rounded-full"></span>
+        <span
+          class="inline-block h-2 w-2 ml-1 my-auto rounded-full"
+          :class="statusMeta.dotClassName"
+        ></span>
         {{ statusMeta.label }}
       </span>
 
