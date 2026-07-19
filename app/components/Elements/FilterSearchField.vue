@@ -7,7 +7,7 @@
     <input
       v-model="model"
       type="search"
-      class="w-full bg-transparent text-sm text-text-tertiary placeholder:text-text-passive focus:outline-none"
+      class="w-full bg-transparent text-md text-text-tertiary placeholder:text-text-passive focus:outline-none"
       :placeholder="placeholder"
     />
   </div>
@@ -16,13 +16,13 @@
 <script setup lang="ts">
 withDefaults(
   defineProps<{
-    placeholder: string
-    wrapperClass?: string
+    placeholder: string;
+    wrapperClass?: string;
   }>(),
   {
-    wrapperClass: '',
+    wrapperClass: "",
   },
-)
+);
 
-const model = defineModel<string>({ default: '' })
+const model = defineModel<string>({ default: "" });
 </script>

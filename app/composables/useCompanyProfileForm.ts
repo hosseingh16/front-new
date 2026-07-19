@@ -94,8 +94,6 @@ function fillFormFromCompany(
       | undefined) ??
     null
   form.city = company.city_id ?? null
-  form.region = null
-  form.region_name = ''
   form.address = company.address ?? ''
   form.lat = company.lat
   form.long = company.long
@@ -218,9 +216,7 @@ export function useCompanyProfileForm() {
   const sizeOptions = items('company_sizes')
 
   const cityOptions = ref<ISelectItem[]>([])
-  const regionOptions = ref<ISelectItem[]>([])
   const citiesLoading = ref(false)
-  const regionsLoading = ref(false)
 
   const sectionStates = computed(() =>
     COMPANY_PROFILE_SECTIONS.map((section) => ({
@@ -246,15 +242,21 @@ export function useCompanyProfileForm() {
     }
   }
 
-  async function loadRegions(cityId: number) {
-    regionsLoading.value = true
-    try {
-      regionOptions.value = await api.get<ISelectItem[]>(`/regions/${cityId}`)
-    } catch {
-      regionOptions.value = []
-    } finally {
-      regionsLoading.value = false
+  async function syncLocationFields() {
+    if (!form.value.province) {
+      cityOptions.value = []
+      return
     }
+
+    await loadCities(form.value.province)
+
+    if (form.value.city) return
+    if (!form.value.city_name) return
+
+    const matchedCity = cityOptions.value.find(
+      (item) => item.label === form.value.city_name,
+    )
+    if (matchedCity) form.value.city = Number(matchedCity.value)
   }
 
   async function load() {
@@ -289,16 +291,7 @@ export function useCompanyProfileForm() {
 
       if (company) {
         fillFormFromCompany(form.value, company)
-        if (form.value.province) {
-          await loadCities(form.value.province)
-          if (!form.value.city && form.value.city_name) {
-            const matchedCity = cityOptions.value.find(
-              (item) => item.label === form.value.city_name,
-            )
-            if (matchedCity) form.value.city = Number(matchedCity.value)
-          }
-        }
-        if (form.value.city) await loadRegions(form.value.city)
+        await syncLocationFields()
       } else {
         Object.assign(form.value, createEmptyCompanyProfileForm())
       }
@@ -339,6 +332,7 @@ export function useCompanyProfileForm() {
 
       if (result.data) {
         fillFormFromCompany(form.value, result.data)
+        await syncLocationFields()
       }
 
       $toast.success('تغییرات با موفقیت ذخیره شد')
@@ -405,13 +399,10 @@ export function useCompanyProfileForm() {
     activityOptions,
     sizeOptions,
     cityOptions,
-    regionOptions,
     citiesLoading,
-    regionsLoading,
     sectionStates,
     completionPercent,
     loadCities,
-    loadRegions,
     reload: load,
     saveSection,
     uploadImage,

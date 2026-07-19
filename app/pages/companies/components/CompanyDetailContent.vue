@@ -81,7 +81,7 @@
         </section>
 
         <section
-          v-if="company.address || mapImageUrl"
+          v-if="company.address || company.static_map"
           class="rounded-xl border border-surface-200 bg-white p-5"
         >
           <div class="flex w-full items-center gap-1">
@@ -96,12 +96,10 @@
           </p>
           <div class="mt-4 overflow-hidden rounded-lg border border-surface-200">
             <img
-              v-if="mapImageUrl"
-              :src="mapImageUrl"
+              v-if="company.static_map"
+              :src="company.static_map"
               alt="موقعیت مکانی شرکت"
               class="h-auto w-full object-cover"
-              width="368"
-              height="250"
               loading="lazy"
             />
             <div
@@ -125,14 +123,20 @@
             <h2 class="font-yb-bold text-base text-text-primay">گالری تصاویر</h2>
           </div>
           <div class="mt-4 grid gap-3 sm:grid-cols-3">
-            <img
+            <button
               v-for="(image, index) in company.gallery"
               :key="`gallery-${index}`"
-              :src="image"
-              :alt="`تصویر ${index + 1} ${company.name}`"
-              class="h-28 w-full rounded-lg object-cover"
-              loading="lazy"
-            />
+              type="button"
+              class="cursor-pointer overflow-hidden rounded-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500"
+              @click="openGalleryImage(image, index)"
+            >
+              <img
+                :src="image"
+                :alt="`تصویر ${index + 1} ${company.name}`"
+                class="h-28 w-full object-cover transition-opacity hover:opacity-90"
+                loading="lazy"
+              />
+            </button>
           </div>
         </section>
       </main>
@@ -184,8 +188,8 @@
             <h1 class="mt-2 text-center font-yb-bold text-xl text-text-tertiary">
               {{ company.name }}
             </h1>
-            <p v-if="company.activity" class="mt-1 text-center text-sm text-text-passive">
-              {{ company.activity }}
+            <p v-if="activityLabel" class="mt-1 text-center text-sm text-text-passive">
+              {{ activityLabel }}
             </p>
 
             <div class="mt-10 flex w-full items-center gap-1">
@@ -196,9 +200,9 @@
               <h2 class="font-yb-bold text-base text-text-primay">اطلاعات پایه</h2>
             </div>
             <div class="mt-4 space-y-2 text-sm text-text-tertiary">
-              <div v-if="company.activity" class="flex items-center justify-between py-2">
+              <div v-if="activityLabel" class="flex items-center justify-between py-2">
                 <span class="text-text-passive">نوع فعالیت</span>
-                <span class="font-semibold">{{ company.activity }}</span>
+                <span class="font-semibold">{{ activityLabel }}</span>
               </div>
               <div v-if="company.size" class="flex items-center justify-between py-2">
                 <span class="text-text-passive">تعداد پرسنل</span>
@@ -272,6 +276,25 @@
         </div>
       </aside>
     </div>
+
+    <dialog ref="galleryDialogRef" class="modal" @click="handleGalleryBackdropClick">
+      <div class="modal-box relative max-w-[min(90vw,720px)] p-3 sm:p-4">
+        <button
+          type="button"
+          class="absolute left-4 top-4 z-10 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-white/90 text-text-passive shadow"
+          aria-label="بستن"
+          @click="closeGalleryImage"
+        >
+          <Icon name="material-symbols:close" size="18" />
+        </button>
+        <img
+          v-if="selectedGalleryImage"
+          :src="selectedGalleryImage"
+          :alt="selectedGalleryAlt"
+          class="max-h-[80vh] w-full rounded-lg object-contain"
+        />
+      </div>
+    </dialog>
   </template>
 </template>
 
@@ -284,8 +307,6 @@ import linkedinIcon from '~/assets/vectors/social/linkedin.svg?url'
 import telegramIcon from '~/assets/vectors/social/telegram.svg?url'
 import twitterIcon from '~/assets/vectors/social/twitter.svg?url'
 import whatsappIcon from '~/assets/vectors/social/whatsapp.svg?url'
-import { buildYandexStaticMapUrl } from '~/utils/yandex-static-map'
-import type { YandexMapPoint } from '~/utils/yandex-static-map'
 import { formatRelativeDate } from '~/utils/format-relative-date'
 import type { Company } from '~/types/company'
 
@@ -297,6 +318,40 @@ const props = defineProps<{
 }>()
 
 const activeTab = ref<CompanyTab>('about')
+const galleryDialogRef = ref<HTMLDialogElement | null>(null)
+const selectedGalleryImage = ref<string | null>(null)
+const selectedGalleryIndex = ref(0)
+
+const { items: lookupItems } = useLookups('industries')
+const industryOptions = lookupItems('industries')
+
+function resolveIndustryLabel(value: string | null | undefined) {
+  if (!value?.trim()) return ''
+  const match = industryOptions.value.find((item) => String(item.value) === String(value))
+  return match?.label ?? value
+}
+
+const activityLabel = computed(() => resolveIndustryLabel(props.company?.activity))
+
+const selectedGalleryAlt = computed(
+  () => `تصویر ${selectedGalleryIndex.value + 1} ${props.company?.name ?? ''}`,
+)
+
+function openGalleryImage(image: string, index: number) {
+  selectedGalleryImage.value = image
+  selectedGalleryIndex.value = index
+  galleryDialogRef.value?.showModal()
+}
+
+function closeGalleryImage() {
+  galleryDialogRef.value?.close()
+}
+
+function handleGalleryBackdropClick(event: MouseEvent) {
+  if (event.target === event.currentTarget) {
+    closeGalleryImage()
+  }
+}
 
 function displayValue(value: string | null | undefined) {
   return value?.trim() ? value : '—'
@@ -329,34 +384,13 @@ const basicInfoFields = computed(() => {
 
   return [
     { label: 'نام شرکت:', value: displayValue(c.name) },
-    { label: 'نوع فعالیت:', value: displayValue(c.activity) },
+    { label: 'نوع فعالیت:', value: displayValue(activityLabel.value) },
     { label: 'اندازه شرکت:', value: displayValue(c.size) },
     { label: 'استان:', value: displayValue(c.province_name) },
     { label: 'شهر:', value: displayValue(c.city_name) },
     { label: 'آدرس:', value: displayValue(c.address) },
     { label: 'وبسایت:', value: displayValue(c.website) },
   ]
-})
-
-const companyMapPoints = computed<YandexMapPoint[]>(() => {
-  const c = props.company
-  if (c?.lat == null || c?.long == null) return []
-
-  return [{ longitude: c.long, latitude: c.lat, marker: 'round' }]
-})
-
-const mapImageUrl = computed(() => {
-  const c = props.company
-  if (!c?.lat || !c?.long) return null
-
-  return buildYandexStaticMapUrl({
-    points: companyMapPoints.value,
-    center: { longitude: c.long, latitude: c.lat },
-    width: 368,
-    height: 250,
-    zoom: 15,
-    lang: 'fa_IR',
-  })
 })
 
 const companyAds = computed(() => {

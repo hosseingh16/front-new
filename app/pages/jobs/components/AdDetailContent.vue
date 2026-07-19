@@ -173,14 +173,20 @@
             <h2 class="font-yb-bold text-base text-text-primay">گالری تصاویر</h2>
           </div>
           <div class="mt-4 grid gap-3 sm:grid-cols-3">
-            <img
+            <button
               v-for="(image, index) in ad.company.gallery"
               :key="`gallery-${index}`"
-              :src="image"
-              :alt="`تصویر ${index + 1} ${ad.company?.name}`"
-              class="h-28 w-full rounded-lg object-cover"
-              loading="lazy"
-            />
+              type="button"
+              class="cursor-pointer overflow-hidden rounded-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500"
+              @click="openGalleryImage(image, index)"
+            >
+              <img
+                :src="image"
+                :alt="`تصویر ${index + 1} ${ad.company?.name}`"
+                class="h-28 w-full object-cover transition-opacity hover:opacity-90"
+                loading="lazy"
+              />
+            </button>
           </div>
         </section>
       </template>
@@ -237,6 +243,25 @@
         گزارش مشکل
       </button>
     </aside>
+
+    <dialog ref="galleryDialogRef" class="modal" @click="handleGalleryBackdropClick">
+      <div class="modal-box relative max-w-[min(90vw,720px)] p-3 sm:p-4">
+        <button
+          type="button"
+          class="absolute left-4 top-4 z-10 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-white/90 text-text-passive shadow"
+          aria-label="بستن"
+          @click="closeGalleryImage"
+        >
+          <Icon name="material-symbols:close" size="18" />
+        </button>
+        <img
+          v-if="selectedGalleryImage"
+          :src="selectedGalleryImage"
+          :alt="selectedGalleryAlt"
+          class="max-h-[80vh] w-full rounded-lg object-contain"
+        />
+      </div>
+    </dialog>
   </div>
 </template>
 
@@ -270,6 +295,29 @@ const proficiencies = lookupItems('proficiencies')
 const proficiencySteps = computed(() => getProficiencySteps(proficiencies.value))
 
 const activeTab = ref<AdTab>('about')
+const galleryDialogRef = ref<HTMLDialogElement | null>(null)
+const selectedGalleryImage = ref<string | null>(null)
+const selectedGalleryIndex = ref(0)
+
+const selectedGalleryAlt = computed(
+  () => `تصویر ${selectedGalleryIndex.value + 1} ${props.ad.company?.name ?? ''}`,
+)
+
+function openGalleryImage(image: string, index: number) {
+  selectedGalleryImage.value = image
+  selectedGalleryIndex.value = index
+  galleryDialogRef.value?.showModal()
+}
+
+function closeGalleryImage() {
+  galleryDialogRef.value?.close()
+}
+
+function handleGalleryBackdropClick(event: MouseEvent) {
+  if (event.target === event.currentTarget) {
+    closeGalleryImage()
+  }
+}
 
 const tabs: { id: AdTab; label: string; icon: string }[] = [
   { id: 'about', label: 'درباره شغل', icon: 'lucide:briefcase' },

@@ -42,11 +42,8 @@
           :form="form"
           :errors="errors"
           :city-options="cityOptions"
-          :region-options="regionOptions"
           :cities-loading="citiesLoading"
-          :regions-loading="regionsLoading"
           :load-cities="loadCities"
-          :load-regions="loadRegions"
           :saving="savingSection === 'location'"
           @save="saveSection('location')"
           @cancel="reload"
@@ -107,13 +104,10 @@ const {
   activityOptions,
   sizeOptions,
   cityOptions,
-  regionOptions,
   citiesLoading,
-  regionsLoading,
   sectionStates,
   completionPercent,
   loadCities,
-  loadRegions,
   reload,
   saveSection,
   uploadImage,

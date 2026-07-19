@@ -20,8 +20,6 @@ export interface CompanyProfileFormModel {
   province_name: string
   city: number | null
   city_name: string
-  region: number | null
-  region_name: string
   address: string
   lat: number | null
   long: number | null
@@ -78,8 +76,6 @@ export function createEmptyCompanyProfileForm(): CompanyProfileFormModel {
     province_name: '',
     city: null,
     city_name: '',
-    region: null,
-    region_name: '',
     address: '',
     lat: null,
     long: null,

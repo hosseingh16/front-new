@@ -188,8 +188,17 @@ const props = withDefaults(
 
 const name = computed(() => props.company?.name ?? props.name ?? 'شرکت')
 const logo = computed(() => props.company?.logo ?? props.logo ?? null)
-const activity = computed(() => props.company?.activity ?? props.activity ?? '')
 const size = computed(() => props.company?.size ?? props.size ?? '')
+
+const { items: lookupItems } = useLookups('industries')
+const industryOptions = lookupItems('industries')
+
+const activity = computed(() => {
+  const value = props.company?.activity ?? props.activity ?? ''
+  if (!value) return ''
+  const match = industryOptions.value.find((item) => String(item.value) === String(value))
+  return match?.label ?? value
+})
 
 const location = computed(() => {
   const province = props.company?.province_name ?? props.provinceName

@@ -69,7 +69,9 @@
         class="mt-3 flex items-center justify-end gap-2 text-sm font-semibold text-primary-500"
       >
         <Icon name="svg:copy" class="cursor-pointer" @click="copyProfileUrl" />
-        <span dir="ltr">{{ profileUrl }}</span>
+        <span dir="ltr" @click="copyProfileUrl" class="cursor-pointer">{{
+          profileUrl
+        }}</span>
       </div>
       <p v-else class="mt-3 text-sm text-text-muted">
         پس از تکمیل و ذخیره اطلاعات پایه، آدرس اختصاصی سازمان شما ساخته می‌شود.
