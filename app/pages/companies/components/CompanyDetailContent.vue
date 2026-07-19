@@ -12,7 +12,11 @@
       <button
         type="button"
         class="cursor-pointer border-b-2 pb-2 text-sm font-semibold transition-colors"
-        :class="activeTab === 'about' ? 'border-primary-500 text-primary-500' : 'border-transparent text-text-passive'"
+        :class="
+          activeTab === 'about'
+            ? 'border-primary-500 text-primary-500'
+            : 'border-transparent text-text-passive'
+        "
         @click="activeTab = 'about'"
       >
         اطلاعات شرکت
@@ -20,14 +24,20 @@
       <button
         type="button"
         class="cursor-pointer border-b-2 pb-2 text-sm font-semibold transition-colors"
-        :class="activeTab === 'ads' ? 'border-primary-500 text-primary-500' : 'border-transparent text-text-passive'"
+        :class="
+          activeTab === 'ads'
+            ? 'border-primary-500 text-primary-500'
+            : 'border-transparent text-text-passive'
+        "
         @click="activeTab = 'ads'"
       >
         آگهی‌ها
       </button>
     </div>
 
-    <div class="mt-6 grid items-start gap-4 p-5 lg:grid-cols-[minmax(0,1fr)_300px]">
+    <div
+      class="mt-6 grid items-start gap-4 p-5 lg:grid-cols-[minmax(0,1fr)_300px]"
+    >
       <main v-if="activeTab === 'about'" class="space-y-4">
         <section class="rounded-2xl border border-gray-default bg-white p-5">
           <div class="space-y-3">
@@ -36,7 +46,9 @@
                 class="h-1 w-2 shrink-0 rounded-full bg-linear-to-b from-[#3B6EF8] to-primary-500"
                 aria-hidden="true"
               />
-              <h2 class="font-yb-bold text-base text-text-primay">اطلاعات پایه</h2>
+              <h2 class="font-yb-bold text-base text-text-primay">
+                اطلاعات پایه
+              </h2>
             </div>
 
             <div class="grid gap-x-8 gap-y-4 sm:grid-cols-2">
@@ -45,8 +57,12 @@
                 :key="field.label"
                 class="flex flex-col items-start gap-1"
               >
-                <span class="text-caption text-text-passive">{{ field.label }}</span>
-                <span class="font-yb-bold text-base text-text-primay">{{ field.value }}</span>
+                <span class="text-caption text-text-passive">{{
+                  field.label
+                }}</span>
+                <span class="font-yb-bold text-base text-text-primay">{{
+                  field.value
+                }}</span>
               </div>
             </div>
           </div>
@@ -61,7 +77,9 @@
               class="h-1 w-2 shrink-0 rounded-full bg-linear-to-b from-[#3B6EF8] to-primary-500"
               aria-hidden="true"
             />
-            <h2 class="font-yb-bold text-base text-text-primay">معرفی سازمان</h2>
+            <h2 class="font-yb-bold text-base text-text-primay">
+              معرفی سازمان
+            </h2>
           </div>
           <div
             v-if="company.intro"
@@ -89,12 +107,19 @@
               class="h-1 w-2 shrink-0 rounded-full bg-linear-to-b from-[#3B6EF8] to-primary-500"
               aria-hidden="true"
             />
-            <h2 class="font-yb-bold text-base text-text-primay">موقعیت مکانی</h2>
+            <h2 class="font-yb-bold text-base text-text-primay">
+              موقعیت مکانی
+            </h2>
           </div>
-          <p v-if="company.address" class="mt-4 text-sm leading-7 text-text-secondary">
+          <p
+            v-if="company.address"
+            class="mt-4 text-sm leading-7 text-text-secondary"
+          >
             {{ company.address }}
           </p>
-          <div class="mt-4 overflow-hidden rounded-lg border border-surface-200">
+          <div
+            class="mt-4 overflow-hidden rounded-lg border border-surface-200"
+          >
             <img
               v-if="company.static_map"
               :src="company.static_map"
@@ -120,7 +145,9 @@
               class="h-1 w-2 shrink-0 rounded-full bg-linear-to-b from-[#3B6EF8] to-primary-500"
               aria-hidden="true"
             />
-            <h2 class="font-yb-bold text-base text-text-primay">گالری تصاویر</h2>
+            <h2 class="font-yb-bold text-base text-text-primay">
+              گالری تصاویر
+            </h2>
           </div>
           <div class="mt-4 grid gap-3 sm:grid-cols-3">
             <button
@@ -163,7 +190,9 @@
       </main>
 
       <aside class="company-aside">
-        <div class="relative overflow-hidden rounded-2xl border border-gray-default bg-white">
+        <div
+          class="relative overflow-hidden rounded-2xl border border-gray-default bg-white"
+        >
           <img
             :src="asidePattern"
             alt=""
@@ -172,7 +201,9 @@
           />
           <div class="relative z-10 px-3 pb-3 pt-10">
             <div class="flex justify-center">
-              <div class="flex h-[74px] w-[74px] items-center justify-center overflow-hidden rounded-2xl border-4 border-white bg-[#ECF4D9]">
+              <div
+                class="flex h-[74px] w-[74px] items-center justify-center overflow-hidden rounded-2xl border-4 border-white bg-[#ECF4D9]"
+              >
                 <img
                   v-if="company.logo"
                   :src="company.logo"
@@ -185,10 +216,15 @@
               </div>
             </div>
 
-            <h1 class="mt-2 text-center font-yb-bold text-xl text-text-tertiary">
+            <h1
+              class="mt-2 text-center font-yb-bold text-xl text-text-tertiary"
+            >
               {{ company.name }}
             </h1>
-            <p v-if="activityLabel" class="mt-1 text-center text-sm text-text-passive">
+            <p
+              v-if="activityLabel"
+              class="mt-1 text-center text-sm text-text-passive"
+            >
               {{ activityLabel }}
             </p>
 
@@ -197,22 +233,36 @@
                 class="h-1 w-2 shrink-0 rounded-full bg-linear-to-b from-[#3B6EF8] to-primary-500"
                 aria-hidden="true"
               />
-              <h2 class="font-yb-bold text-base text-text-primay">اطلاعات پایه</h2>
+              <h2 class="font-yb-bold text-base text-text-primay">
+                اطلاعات پایه
+              </h2>
             </div>
             <div class="mt-4 space-y-2 text-sm text-text-tertiary">
-              <div v-if="activityLabel" class="flex items-center justify-between py-2">
+              <div
+                v-if="activityLabel"
+                class="flex items-center justify-between py-2"
+              >
                 <span class="text-text-passive">نوع فعالیت</span>
                 <span class="font-semibold">{{ activityLabel }}</span>
               </div>
-              <div v-if="company.size" class="flex items-center justify-between py-2">
+              <div
+                v-if="company.size"
+                class="flex items-center justify-between py-2"
+              >
                 <span class="text-text-passive">تعداد پرسنل</span>
                 <span class="font-semibold">{{ company.size }}</span>
               </div>
-              <div v-if="locationLabel" class="flex items-center justify-between py-2">
+              <div
+                v-if="locationLabel"
+                class="flex items-center justify-between py-2"
+              >
                 <span class="text-text-passive">موقعیت مکانی</span>
                 <span class="font-semibold">{{ locationLabel }}</span>
               </div>
-              <div v-if="company.website" class="flex items-center justify-between py-2">
+              <div
+                v-if="company.website"
+                class="flex items-center justify-between py-2"
+              >
                 <span class="text-text-passive">وبسایت</span>
                 <a
                   :href="websiteUrl"
@@ -225,34 +275,54 @@
               </div>
             </div>
 
-            <div v-if="showContactInfo" class="mt-10 flex w-full items-center gap-1">
+            <div
+              v-if="showContactInfo"
+              class="mt-10 flex w-full items-center gap-1"
+            >
               <span
                 class="h-1 w-2 shrink-0 rounded-full bg-linear-to-b from-[#3B6EF8] to-primary-500"
                 aria-hidden="true"
               />
-              <h2 class="font-yb-bold text-base text-text-primay">اطلاعات تماس</h2>
+              <h2 class="font-yb-bold text-base text-text-primay">
+                اطلاعات تماس
+              </h2>
             </div>
-            <div v-if="showContactInfo" class="mt-4 space-y-2 text-sm text-text-tertiary">
-              <div v-if="company.tel && isTelPublic" class="flex items-center justify-between py-2">
+            <div
+              v-if="showContactInfo"
+              class="mt-4 space-y-2 text-sm text-text-tertiary"
+            >
+              <div
+                v-if="company.tel && isTelPublic"
+                class="flex items-center justify-between py-2"
+              >
                 <span class="text-text-passive">تلفن</span>
                 <span class="font-semibold">{{ company.tel }}</span>
               </div>
-              <div v-if="company.address" class="flex items-center justify-between gap-3 py-2">
+              <div
+                v-if="company.address"
+                class="flex items-center justify-between gap-3 py-2"
+              >
                 <span class="shrink-0 text-text-passive">آدرس</span>
-                <span class="text-left font-semibold">{{ company.address }}</span>
+                <span class="text-left font-semibold">{{
+                  company.address
+                }}</span>
               </div>
             </div>
           </div>
         </div>
 
-        <div class="relative my-2 overflow-hidden rounded-2xl border border-gray-default bg-white">
+        <div
+          class="relative my-2 overflow-hidden rounded-2xl border border-gray-default bg-white"
+        >
           <div class="z-10 px-3 pb-3 pt-3">
             <div class="flex w-full items-center gap-1">
               <span
                 class="h-1 w-2 shrink-0 rounded-full bg-linear-to-b from-[#3B6EF8] to-primary-500"
                 aria-hidden="true"
               />
-              <h2 class="font-yb-bold text-base text-text-primay">اشتراک‌گذاری</h2>
+              <h2 class="font-yb-bold text-base text-text-primay">
+                اشتراک‌گذاری
+              </h2>
             </div>
             <div class="mt-4 flex items-center justify-around gap-2">
               <button
@@ -277,7 +347,11 @@
       </aside>
     </div>
 
-    <dialog ref="galleryDialogRef" class="modal" @click="handleGalleryBackdropClick">
+    <dialog
+      ref="galleryDialogRef"
+      class="modal"
+      @click="handleGalleryBackdropClick"
+    >
       <div class="modal-box relative max-w-[min(90vw,720px)] p-3 sm:p-4">
         <button
           type="button"
@@ -299,159 +373,192 @@
 </template>
 
 <script setup lang="ts">
-import ItemBoxVertical from '~/components/Elements/item-box-vertical.vue'
-import NoResult from '~/components/Elements/NoResult.vue'
-import asidePattern from '~/assets/vectors/aside-pattern.svg?url'
-import linkIcon from '~/assets/vectors/social/link.svg?url'
-import linkedinIcon from '~/assets/vectors/social/linkedin.svg?url'
-import telegramIcon from '~/assets/vectors/social/telegram.svg?url'
-import twitterIcon from '~/assets/vectors/social/twitter.svg?url'
-import whatsappIcon from '~/assets/vectors/social/whatsapp.svg?url'
-import { formatRelativeDate } from '~/utils/format-relative-date'
-import type { Company } from '~/types/company'
+import ItemBoxVertical from "~/components/Elements/item-box-vertical.vue";
+import NoResult from "~/components/Elements/NoResult.vue";
+import asidePattern from "~/assets/vectors/aside-pattern.svg?url";
+import linkIcon from "~/assets/vectors/social/link.svg?url";
+import linkedinIcon from "~/assets/vectors/social/linkedin.svg?url";
+import telegramIcon from "~/assets/vectors/social/telegram.svg?url";
+import twitterIcon from "~/assets/vectors/social/twitter.svg?url";
+import whatsappIcon from "~/assets/vectors/social/whatsapp.svg?url";
+import { formatRelativeDate } from "~/utils/format-relative-date";
+import type { Company } from "~/types/company";
 
-type CompanyTab = 'about' | 'ads'
+type CompanyTab = "about" | "ads";
 
 const props = defineProps<{
-  company: Company | null
-  loading?: boolean
-}>()
+  company: Company | null;
+  loading?: boolean;
+}>();
 
-const activeTab = ref<CompanyTab>('about')
-const galleryDialogRef = ref<HTMLDialogElement | null>(null)
-const selectedGalleryImage = ref<string | null>(null)
-const selectedGalleryIndex = ref(0)
+const activeTab = ref<CompanyTab>("about");
+const galleryDialogRef = ref<HTMLDialogElement | null>(null);
+const selectedGalleryImage = ref<string | null>(null);
+const selectedGalleryIndex = ref(0);
 
-const { items: lookupItems } = useLookups('industries')
-const industryOptions = lookupItems('industries')
+const { items: lookupItems } = useLookups("industries");
+const industryOptions = lookupItems("industries");
 
 function resolveIndustryLabel(value: string | null | undefined) {
-  if (!value?.trim()) return ''
-  const match = industryOptions.value.find((item) => String(item.value) === String(value))
-  return match?.label ?? value
+  if (!value?.trim()) return "";
+  const match = industryOptions.value.find(
+    (item) => String(item.value) === String(value),
+  );
+  return match?.label ?? value;
 }
 
-const activityLabel = computed(() => resolveIndustryLabel(props.company?.activity))
+const activityLabel = computed(() =>
+  resolveIndustryLabel(props.company?.activity),
+);
 
 const selectedGalleryAlt = computed(
-  () => `تصویر ${selectedGalleryIndex.value + 1} ${props.company?.name ?? ''}`,
-)
+  () => `تصویر ${selectedGalleryIndex.value + 1} ${props.company?.name ?? ""}`,
+);
 
 function openGalleryImage(image: string, index: number) {
-  selectedGalleryImage.value = image
-  selectedGalleryIndex.value = index
-  galleryDialogRef.value?.showModal()
+  selectedGalleryImage.value = image;
+  selectedGalleryIndex.value = index;
+  galleryDialogRef.value?.showModal();
 }
 
 function closeGalleryImage() {
-  galleryDialogRef.value?.close()
+  galleryDialogRef.value?.close();
 }
 
 function handleGalleryBackdropClick(event: MouseEvent) {
   if (event.target === event.currentTarget) {
-    closeGalleryImage()
+    closeGalleryImage();
   }
 }
 
 function displayValue(value: string | null | undefined) {
-  return value?.trim() ? value : '—'
+  return value?.trim() ? value : "—";
 }
 
-const companyInitial = computed(() => props.company?.name?.charAt(0) ?? 'ش')
+const companyInitial = computed(() => props.company?.name?.charAt(0) ?? "ش");
 
 const locationLabel = computed(() => {
-  const province = props.company?.province_name
-  const city = props.company?.city_name
-  if (province && city) return `${province}، ${city}`
-  return province || city || ''
-})
+  const province = props.company?.province_name;
+  const city = props.company?.city_name;
+  if (province && city) return `${province}، ${city}`;
+  return province || city || "";
+});
 
-const isTelPublic = computed(() => Boolean(props.company?.is_tell_public))
+const isTelPublic = computed(() => Boolean(props.company?.is_tell_public));
 
 const showContactInfo = computed(
   () => (props.company?.tel && isTelPublic.value) || props.company?.address,
-)
+);
 
 const websiteUrl = computed(() => {
-  const website = props.company?.website
-  if (!website) return ''
-  return website.startsWith('http') ? website : `https://${website}`
-})
+  const website = props.company?.website;
+  if (!website) return "";
+  return website.startsWith("http") ? website : `https://${website}`;
+});
 
 const basicInfoFields = computed(() => {
-  const c = props.company
-  if (!c) return []
+  const c = props.company;
+  if (!c) return [];
 
   return [
-    { label: 'نام شرکت:', value: displayValue(c.name) },
-    { label: 'نوع فعالیت:', value: displayValue(activityLabel.value) },
-    { label: 'اندازه شرکت:', value: displayValue(c.size) },
-    { label: 'استان:', value: displayValue(c.province_name) },
-    { label: 'شهر:', value: displayValue(c.city_name) },
-    { label: 'آدرس:', value: displayValue(c.address) },
-    { label: 'وبسایت:', value: displayValue(c.website) },
-  ]
-})
+    { label: "نام شرکت:", value: displayValue(c.name) },
+    { label: "نوع فعالیت:", value: displayValue(activityLabel.value) },
+    { label: "اندازه شرکت:", value: displayValue(c.size) },
+    { label: "استان:", value: displayValue(c.province_name) },
+    { label: "شهر:", value: displayValue(c.city_name) },
+    { label: "آدرس:", value: displayValue(c.address) },
+    { label: "وبسایت:", value: displayValue(c.website) },
+  ];
+});
 
 const companyAds = computed(() => {
-  const c = props.company
-  if (!c?.ads?.length) return []
+  const c = props.company;
+  if (!c?.ads?.length) return [];
 
   return c.ads.map((ad, index) => ({
     id: ad.id,
     title: ad.title,
     companyName: c.name,
-    type: ad.category || c.activity || '—',
-    location: [ad.province_name, ad.city_name].filter(Boolean).join('، ') || locationLabel.value || '—',
-    gender: ad.gender || '—',
-    employmentType: ad.employment_type || '—',
-    salary: String(ad.salary_range ?? ad.salary ?? '—'),
+    type: ad.category || c.activity || "—",
+    location:
+      [ad.province_name, ad.city_name].filter(Boolean).join("، ") ||
+      locationLabel.value ||
+      "—",
+    gender: ad.gender || "—",
+    employmentType: ad.employment_type || "—",
+    salary: String(ad.salary_range ?? ad.salary ?? "—"),
     age: formatRelativeDate(ad.publish_date),
     logo: ad.company_logo || c.logo,
     highlight: index % 2 === 1,
-    variant: 'ad' as const,
+    variant: "ad" as const,
     to: `/jobs/${ad.id}`,
-  }))
-})
+  }));
+});
 
 function getShareUrl() {
-  if (!import.meta.client) return ''
-  return window.location.href
+  if (!import.meta.client) return "";
+  return window.location.href;
 }
 
 function openShare(url: string) {
-  if (!import.meta.client) return
-  window.open(url, '_blank', 'noopener,noreferrer')
+  if (!import.meta.client) return;
+  window.open(url, "_blank", "noopener,noreferrer");
 }
 
 function shareOnLinkedIn() {
-  openShare(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(getShareUrl())}`)
+  openShare(
+    `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
+      getShareUrl(),
+    )}`,
+  );
 }
 
 function shareOnTwitter() {
-  openShare(`https://twitter.com/intent/tweet?url=${encodeURIComponent(getShareUrl())}`)
+  openShare(
+    `https://twitter.com/intent/tweet?url=${encodeURIComponent(getShareUrl())}`,
+  );
 }
 
 function shareOnTelegram() {
-  openShare(`https://t.me/share/url?url=${encodeURIComponent(getShareUrl())}`)
+  openShare(`https://t.me/share/url?url=${encodeURIComponent(getShareUrl())}`);
 }
 
 function shareOnWhatsapp() {
-  openShare(`https://wa.me/?text=${encodeURIComponent(getShareUrl())}`)
+  openShare(`https://wa.me/?text=${encodeURIComponent(getShareUrl())}`);
 }
 
 async function copyShareLink() {
-  if (!import.meta.client) return
-  await navigator.clipboard.writeText(getShareUrl())
+  if (!import.meta.client) return;
+  await navigator.clipboard.writeText(getShareUrl());
 }
 
 const socialLinks = [
-  { id: 'linkedin', icon: linkedinIcon, label: 'اشتراک در لینکدین', onClick: shareOnLinkedIn },
-  { id: 'twitter', icon: twitterIcon, label: 'اشتراک در توییتر', onClick: shareOnTwitter },
-  { id: 'telegram', icon: telegramIcon, label: 'اشتراک در تلگرام', onClick: shareOnTelegram },
-  { id: 'whatsapp', icon: whatsappIcon, label: 'اشتراک در واتساپ', onClick: shareOnWhatsapp },
-  { id: 'link', icon: linkIcon, label: 'کپی لینک', onClick: copyShareLink },
-]
+  {
+    id: "linkedin",
+    icon: linkedinIcon,
+    label: "اشتراک در لینکدین",
+    onClick: shareOnLinkedIn,
+  },
+  {
+    id: "twitter",
+    icon: twitterIcon,
+    label: "اشتراک در توییتر",
+    onClick: shareOnTwitter,
+  },
+  {
+    id: "telegram",
+    icon: telegramIcon,
+    label: "اشتراک در تلگرام",
+    onClick: shareOnTelegram,
+  },
+  {
+    id: "whatsapp",
+    icon: whatsappIcon,
+    label: "اشتراک در واتساپ",
+    onClick: shareOnWhatsapp,
+  },
+  { id: "link", icon: linkIcon, label: "کپی لینک", onClick: copyShareLink },
+];
 </script>
 
 <style scoped>
