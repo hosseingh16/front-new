@@ -26,10 +26,7 @@
     </NuxtLink>
 
     <Transition name="accordion">
-      <div
-        v-if="item.children?.length && open"
-        class="mr-6 flex text-sm"
-      >
+      <div v-if="item.children?.length && open" class="mr-6 flex text-sm">
         <div
           class="mb-4 w-3 rounded-br-full border-b-2 border-r-2 border-dotted border-[#cccccc]"
         >
@@ -47,10 +44,12 @@
             :to="child.to"
           >
             <button
-              class="btn btn-block btn-ghost flex justify-start pr-2 hover:bg-gray-100"
+              class="btn btn-block btn-ghost flex justify-start pr-2 hover:bg-gray-100 my-2"
               :class="[
                 { 'bg-primary-50': activePath === child.to },
-                activePath !== child.to ? 'hover:bg-gray-100' : 'hover:bg-primary-50',
+                activePath !== child.to
+                  ? 'hover:bg-gray-100'
+                  : 'hover:bg-primary-50',
               ]"
             >
               <div class="flex items-center justify-start">
@@ -66,15 +65,15 @@
 </template>
 
 <script setup lang="ts">
-import type { MenuItem } from '~/types/panel-config'
+import type { MenuItem } from "~/types/panel-config";
 
 defineProps<{
-  item: MenuItem
-  activePath: string
-  open?: boolean
-}>()
+  item: MenuItem;
+  activePath: string;
+  open?: boolean;
+}>();
 
 const emit = defineEmits<{
-  toggle: []
-}>()
+  toggle: [];
+}>();
 </script>
