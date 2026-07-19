@@ -1,5 +1,7 @@
 <template>
-  <div class="grid items-start gap-4 bg-surface-50 p-5 lg:grid-cols-[minmax(0,1fr)_300px]">
+  <div
+    class="grid items-start gap-4 bg-surface-50 p-5 lg:grid-cols-[minmax(0,1fr)_300px]"
+  >
     <main class="space-y-4">
       <div class="flex gap-6 border-b border-gray-default px-5 md:px-6">
         <button
@@ -16,7 +18,11 @@
         >
           <div
             class="flex h-7 w-7 items-center justify-center rounded-full bg-primary-300 p-1"
-            :class="activeTab === tab.id ? 'bg-primary-500 text-white' : 'bg-surface-200 text-text-passive'"
+            :class="
+              activeTab === tab.id
+                ? 'bg-primary-500 text-white'
+                : 'bg-surface-200 text-text-passive'
+            "
           >
             <Icon :name="tab.icon" size="16" />
           </div>
@@ -34,18 +40,15 @@
           <div
             v-if="qualificationIntro"
             class="prose prose-sm mt-4 max-w-none text-sm leading-8 text-text-secondary"
-            v-html="qualificationIntro"
-          />
+          >
+            {{ qualificationIntro }}
+          </div>
 
-          <ul v-if="qualificationItems.length" class="mt-4 space-y-2 pr-4">
-            <li
-              v-for="(item, index) in qualificationItems"
-              :key="`qualification-${index}`"
-              class="list-disc text-sm font-semibold text-text-secondary marker:text-text-tertiary"
-            >
-              {{ item }}
-            </li>
-          </ul>
+          <div
+            v-if="qualificationItems.length"
+            class="mt-4 space-y-2 pr-4"
+            v-html="qualificationItems"
+          ></div>
 
           <div
             v-if="requirementStats.length"
@@ -71,7 +74,9 @@
             v-if="ad.company_software"
             class="mt-4 flex flex-wrap items-center gap-3 text-sm text-text-secondary"
           >
-            <div class="flex items-center gap-2 rounded-lg border border-gray-default bg-surface-50 px-3 py-2">
+            <div
+              class="flex items-center gap-2 rounded-lg border border-gray-default bg-surface-50 px-3 py-2"
+            >
               <img
                 v-if="ad.company_logo"
                 :src="ad.company_logo"
@@ -81,7 +86,9 @@
             </div>
             <div class="flex flex-col">
               <span>نرم‌افزار حسابداری مورد استفاده در مجموعه:</span>
-              <span class="font-yb-bold text-text-tertiary">{{ ad.company_software }}</span>
+              <span class="font-yb-bold text-text-tertiary">{{
+                ad.company_software
+              }}</span>
             </div>
           </div>
 
@@ -114,14 +121,18 @@
               >
                 <Icon :name="item.icon" size="20" />
               </span>
-              <span class="text-sm font-semibold text-text-secondary">{{ item.label }}</span>
+              <span class="text-sm font-semibold text-text-secondary">{{
+                item.label
+              }}</span>
             </div>
           </div>
         </section>
       </template>
 
       <template v-else-if="activeTab === 'company'">
-        <section class="rounded-2xl border border-gray-default bg-white p-5 md:p-6">
+        <section
+          class="rounded-2xl border border-gray-default bg-white p-5 md:p-6"
+        >
           <AdSectionTitle title="درباره سازمان" />
           <div
             v-if="ad.company?.intro"
@@ -170,7 +181,9 @@
               class="h-1 w-2 shrink-0 rounded-full bg-linear-to-b from-[#3B6EF8] to-primary-500"
               aria-hidden="true"
             />
-            <h2 class="font-yb-bold text-base text-text-primay">گالری تصاویر</h2>
+            <h2 class="font-yb-bold text-base text-text-primay">
+              گالری تصاویر
+            </h2>
           </div>
           <div class="mt-4 grid gap-3 sm:grid-cols-3">
             <button
@@ -192,22 +205,29 @@
       </template>
 
       <template v-else>
-        <section class="rounded-2xl border border-gray-default bg-white p-5 py-12 md:p-6">
+        <section
+          class="rounded-2xl border border-gray-default bg-white p-5 py-12 md:p-6"
+        >
           <p class="mt-2 text-center text-sm text-text-passive">
-            پس از ورود به حساب کاربری، سوابق ارسال رزومه در این بخش نمایش داده می‌شود.
+            پس از ورود به حساب کاربری، سوابق ارسال رزومه در این بخش نمایش داده
+            می‌شود.
           </p>
         </section>
       </template>
     </main>
 
     <aside class="lg:sticky lg:top-6">
-      <div class="overflow-hidden rounded-2xl border border-gray-default bg-white p-5">
+      <div
+        class="overflow-hidden rounded-2xl border border-gray-default bg-white p-5"
+      >
         <div class="flex w-full items-center gap-1">
           <span
             class="h-1 w-2 shrink-0 rounded-full bg-linear-to-b from-[#3B6EF8] to-primary-500"
             aria-hidden="true"
           />
-          <h2 class="font-yb-bold text-base text-text-primay">بررسی اجمالی شغل</h2>
+          <h2 class="font-yb-bold text-base text-text-primay">
+            بررسی اجمالی شغل
+          </h2>
         </div>
 
         <dl class="mt-4 space-y-3">
@@ -220,7 +240,9 @@
               <Icon :name="item.icon" size="16" />
               {{ item.label }}
             </dt>
-            <dd class="text-left font-semibold text-text-tertiary">{{ item.value }}</dd>
+            <dd class="text-left font-semibold text-text-tertiary">
+              {{ item.value }}
+            </dd>
           </div>
         </dl>
 
@@ -229,7 +251,11 @@
           class="btn btn-success mt-6 h-11 w-full gap-2"
           @click="emit('resume')"
         >
-          <Icon name="material-symbols:chevron-left" size="16" class="text-white" />
+          <Icon
+            name="material-symbols:chevron-left"
+            size="16"
+            class="text-white"
+          />
           ارسال رزومه
         </button>
       </div>
@@ -244,7 +270,11 @@
       </button>
     </aside>
 
-    <dialog ref="galleryDialogRef" class="modal" @click="handleGalleryBackdropClick">
+    <dialog
+      ref="galleryDialogRef"
+      class="modal"
+      @click="handleGalleryBackdropClick"
+    >
       <div class="modal-box relative max-w-[min(90vw,720px)] p-3 sm:p-4">
         <button
           type="button"
@@ -266,180 +296,209 @@
 </template>
 
 <script setup lang="ts">
-import type { Ad } from '~/types/ad'
-import AdSectionTitle from './AdSectionTitle.vue'
-import AdRequirementStat from './AdRequirementStat.vue'
-import AdSkillLevelBar from './AdSkillLevelBar.vue'
-import { getProficiencyLevel, getProficiencySteps, parseAdBenefits } from '../utils/ad-benefits'
-import { useLookups } from '~/composables/useLookups'
+import type { Ad } from "~/types/ad";
+import AdSectionTitle from "./AdSectionTitle.vue";
+import AdRequirementStat from "./AdRequirementStat.vue";
+import AdSkillLevelBar from "./AdSkillLevelBar.vue";
+import {
+  getProficiencyLevel,
+  getProficiencySteps,
+  parseAdBenefits,
+} from "../utils/ad-benefits";
+import { useLookups } from "~/composables/useLookups";
 
-type AdTab = 'about' | 'company' | 'history'
+type AdTab = "about" | "company" | "history";
 
 type SkillBarItem = {
-  label: string
-  value: string | boolean | number
-  level: number
-}
+  label: string;
+  value: string | boolean | number;
+  level: number;
+};
 
 const props = defineProps<{
-  ad: Ad
-}>()
+  ad: Ad;
+}>();
 
 const emit = defineEmits<{
-  resume: []
-  'report-issue': []
-}>()
+  resume: [];
+  "report-issue": [];
+}>();
 
-const { items: lookupItems } = useLookups('proficiencies')
-const proficiencies = lookupItems('proficiencies')
-const proficiencySteps = computed(() => getProficiencySteps(proficiencies.value))
+const { items: lookupItems } = useLookups("proficiencies");
+const proficiencies = lookupItems("proficiencies");
+const proficiencySteps = computed(() =>
+  getProficiencySteps(proficiencies.value),
+);
 
-const activeTab = ref<AdTab>('about')
-const galleryDialogRef = ref<HTMLDialogElement | null>(null)
-const selectedGalleryImage = ref<string | null>(null)
-const selectedGalleryIndex = ref(0)
+const activeTab = ref<AdTab>("about");
+const galleryDialogRef = ref<HTMLDialogElement | null>(null);
+const selectedGalleryImage = ref<string | null>(null);
+const selectedGalleryIndex = ref(0);
 
 const selectedGalleryAlt = computed(
-  () => `تصویر ${selectedGalleryIndex.value + 1} ${props.ad.company?.name ?? ''}`,
-)
+  () =>
+    `تصویر ${selectedGalleryIndex.value + 1} ${props.ad.company?.name ?? ""}`,
+);
 
 function openGalleryImage(image: string, index: number) {
-  selectedGalleryImage.value = image
-  selectedGalleryIndex.value = index
-  galleryDialogRef.value?.showModal()
+  selectedGalleryImage.value = image;
+  selectedGalleryIndex.value = index;
+  galleryDialogRef.value?.showModal();
 }
 
 function closeGalleryImage() {
-  galleryDialogRef.value?.close()
+  galleryDialogRef.value?.close();
 }
 
 function handleGalleryBackdropClick(event: MouseEvent) {
   if (event.target === event.currentTarget) {
-    closeGalleryImage()
+    closeGalleryImage();
   }
 }
 
 const tabs: { id: AdTab; label: string; icon: string }[] = [
-  { id: 'about', label: 'درباره شغل', icon: 'lucide:briefcase' },
-  { id: 'company', label: 'پروفایل سازمان', icon: 'mdi:office-building-outline' },
-  { id: 'history', label: 'سوابق ارسال', icon: 'lucide:history' },
-]
+  { id: "about", label: "درباره شغل", icon: "lucide:briefcase" },
+  {
+    id: "company",
+    label: "پروفایل سازمان",
+    icon: "mdi:office-building-outline",
+  },
+  { id: "history", label: "سوابق ارسال", icon: "lucide:history" },
+];
 
 function displayValue(
   value: string | number | null | undefined,
-  fallback = '—',
+  fallback = "—",
 ) {
-  const normalized = value == null ? '' : String(value).trim()
-  return normalized || fallback
+  const normalized = value == null ? "" : String(value).trim();
+  return normalized || fallback;
 }
 
-const salaryLabel = computed(() => displayValue(props.ad.salary ?? props.ad.salary_range))
+const salaryLabel = computed(() =>
+  displayValue(props.ad.salary ?? props.ad.salary_range),
+);
 
 const workExperienceLabel = computed(() => {
-  const value = props.ad.minimum_work_experience
-  if (value == null || value === '') return '—'
-  const normalized = String(value).trim()
-  return normalized.includes('سال') ? normalized : `${normalized} سال`
-})
+  const value = props.ad.minimum_work_experience;
+  if (value == null || value === "") return "—";
+  const normalized = String(value).trim();
+  return normalized.includes("سال") ? normalized : `${normalized} سال`;
+});
 
-const genderLabel = computed(() => displayValue(props.ad.gender, 'مهم نیست'))
+const genderLabel = computed(() => displayValue(props.ad.gender, "مهم نیست"));
 
 const locationLabel = computed(() => {
-  const province = props.ad.province_name
-  const city = props.ad.city_name
-  if (province && city) return `${province}، ${city}`
-  return province || city || '—'
-})
+  const province = props.ad.province_name;
+  const city = props.ad.city_name;
+  if (province && city) return `${province}، ${city}`;
+  return province || city || "—";
+});
 
 const overviewItems = computed(() => [
-  { label: 'نوع آگهی', value: 'شغلی', icon: 'svg:bag-1' },
-  { label: 'نوع همکاری', value: displayValue(props.ad.employment_type), icon: 'ph:suitcase-simple-light' },
-  { label: 'گروه شغلی', value: displayValue(props.ad.category), icon: 'svg:bag-4' },
-  { label: 'موقعیت مکانی', value: locationLabel.value, icon: 'svg:location-4' },
-  { label: 'سابقه کار', value: workExperienceLabel.value, icon: 'svg:work-history' },
-  { label: 'حقوق', value: salaryLabel.value, icon: 'svg:wallet' },
-  { label: 'جنسیت', value: genderLabel.value, icon: 'lucide:user' },
-])
+  { label: "نوع آگهی", value: "شغلی", icon: "svg:bag-1" },
+  {
+    label: "نوع همکاری",
+    value: displayValue(props.ad.employment_type),
+    icon: "ph:suitcase-simple-light",
+  },
+  {
+    label: "گروه شغلی",
+    value: displayValue(props.ad.category),
+    icon: "svg:bag-4",
+  },
+  { label: "موقعیت مکانی", value: locationLabel.value, icon: "svg:location-4" },
+  {
+    label: "سابقه کار",
+    value: workExperienceLabel.value,
+    icon: "svg:work-history",
+  },
+  { label: "حقوق", value: salaryLabel.value, icon: "svg:wallet" },
+  { label: "جنسیت", value: genderLabel.value, icon: "lucide:user" },
+]);
 
 const requirementStats = computed(() =>
   [
     {
-      label: 'نوع آگهی:',
-      value: displayValue(props.ad.type ?? props.ad.category, 'استخدامی'),
-      icon: 'svg:user-search-2',
+      label: "نوع آگهی:",
+      value: displayValue(props.ad.type ?? props.ad.category, "استخدامی"),
+      icon: "svg:user-search-2",
     },
     {
-      label: 'نوع قرارداد:',
+      label: "نوع قرارداد:",
       value: displayValue(props.ad.employment_type),
-      icon: 'tabler:file-text',
+      icon: "tabler:file-text",
     },
     {
-      label: 'حقوق:',
+      label: "حقوق:",
       value: salaryLabel.value,
-      icon: 'svg:wallet',
+      icon: "svg:wallet",
     },
     {
-      label: 'سابقه کار:',
+      label: "سابقه کار:",
       value: workExperienceLabel.value,
-      icon: 'svg:work-history',
+      icon: "svg:work-history",
     },
     {
-      label: 'مدرک تحصیلی:',
+      label: "مدرک تحصیلی:",
       value: displayValue(props.ad.minimum_degree),
-      icon: 'svg:edu-item',
+      icon: "svg:edu-item",
     },
     {
-      label: 'جنسیت:',
+      label: "جنسیت:",
       value: genderLabel.value,
-      icon: 'lucide:user',
+      icon: "lucide:user",
     },
-  ].filter((item) => item.value !== '—'),
-)
+  ].filter((item) => item.value !== "—"),
+);
 
-const qualificationIntro = computed(() => props.ad.job_description?.trim() || '')
+const qualificationIntro = computed(
+  () => props.ad.job_description?.trim() || "",
+);
 
 const qualificationItems = computed(() => {
-  if (!props.ad.resume_terms?.trim()) return []
+  if (!props.ad.resume_terms?.trim()) return [];
 
   return props.ad.resume_terms
     .split(/\n|،|,/)
     .map((item) => item.trim())
-    .filter(Boolean)
-})
+    .filter(Boolean);
+});
 
 const showQualificationsSection = computed(
   () =>
-    Boolean(qualificationIntro.value)
-    || qualificationItems.value.length > 0
-    || requirementStats.value.length > 0,
-)
+    Boolean(qualificationIntro.value) ||
+    qualificationItems.value.length > 0 ||
+    requirementStats.value.length > 0,
+);
 
-const benefitItems = computed(() => parseAdBenefits(props.ad.company_advantages))
+const benefitItems = computed(() =>
+  parseAdBenefits(props.ad.company_advantages),
+);
 
 const skillItems = computed<SkillBarItem[]>(() => {
-  const skills: SkillBarItem[] = []
+  const skills: SkillBarItem[] = [];
   const candidates = [
     {
-      label: 'بیمه',
+      label: "بیمه",
       value: props.ad.bimeh_skill,
       level: getProficiencyLevel(props.ad.bimeh_skill, proficiencies.value),
     },
     {
-      label: 'اکسل',
+      label: "اکسل",
       value: props.ad.excel_skill,
       level: getProficiencyLevel(props.ad.excel_skill, proficiencies.value),
     },
     {
-      label: 'مالیات',
+      label: "مالیات",
       value: props.ad.maliat_skill,
       level: getProficiencyLevel(props.ad.maliat_skill, proficiencies.value),
     },
     {
-      label: 'بهای تمام شده',
+      label: "بهای تمام شده",
       value: props.ad.baha_skill,
       level: getProficiencyLevel(props.ad.baha_skill, proficiencies.value),
     },
-  ]
+  ];
 
   for (const skill of candidates) {
     if (skill.level != null && skill.value != null && skill.value !== false) {
@@ -447,14 +506,14 @@ const skillItems = computed<SkillBarItem[]>(() => {
         label: skill.label,
         value: skill.value,
         level: skill.level,
-      })
+      });
     }
   }
 
-  return skills
-})
+  return skills;
+});
 
 const showSkillsSection = computed(
   () => Boolean(props.ad.company_software) || skillItems.value.length > 0,
-)
+);
 </script>
