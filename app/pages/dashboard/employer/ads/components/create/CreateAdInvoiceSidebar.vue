@@ -16,11 +16,11 @@
           @click="emit('publish')"
         >
           <span v-if="submitting">در حال انتشار...</span>
-          <span v-else>انتشار آگهی</span>
+          <span v-else>{{ publishLabel }}</span>
         </button>
       </div>
 
-      <div class="px-4">
+      <div v-if="showDraft" class="px-4">
         <button
           type="button"
           class="btn mt-3 h-11 w-full rounded-lg border-2 border-gray-default bg-white font-semibold text-text-tertiary"
@@ -38,10 +38,18 @@
 <script setup lang="ts">
 import Titr from "~/features/panel/cv/Titr.vue";
 
-defineProps<{
-  submitting?: boolean;
-  savingDraft?: boolean;
-}>();
+withDefaults(
+  defineProps<{
+    submitting?: boolean;
+    savingDraft?: boolean;
+    publishLabel?: string;
+    showDraft?: boolean;
+  }>(),
+  {
+    publishLabel: "انتشار آگهی",
+    showDraft: true,
+  },
+);
 
 const emit = defineEmits<{
   publish: [];

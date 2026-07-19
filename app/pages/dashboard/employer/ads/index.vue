@@ -168,7 +168,7 @@ const filteredAds = computed(() => {
 })
 
 function editAd(id: number) {
-  navigateTo(`/dashboard/employer/ads/create?edit=${id}`)
+  navigateTo(`/dashboard/employer/ads/${id}/edit`)
 }
 
 function copyAd(id: number) {
