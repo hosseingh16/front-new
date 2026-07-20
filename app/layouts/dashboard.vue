@@ -1,5 +1,5 @@
 <template>
-  <div dir="rtl">
+  <div dir="rtl" :class="{ dark: isDark }">
     <div class="min-h-screen">
       <div
         class="bg-surface-50 flex flex-col justify-between max-w-384 w-full m-auto"
@@ -19,7 +19,10 @@
 </template>
 
 <script setup lang="ts">
+import { useAppTheme } from "~/composables/useAppTheme";
+
 const { fetchMenu, sidebarMenu } = usePanelConfig();
 const { collapsed } = useDashboardSidebar();
+const { isDark } = useAppTheme();
 await fetchMenu();
 </script>

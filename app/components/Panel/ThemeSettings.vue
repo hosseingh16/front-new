@@ -1,19 +1,22 @@
 <template>
   <div
-    class="mt-3 flex justify-center gap-1 bg-surface-100 p-1 mx-3 rounded-xl [&>.btn]:text-sm [&>.btn]:h-8">
+    class="mt-3 mx-3 flex justify-center gap-1 rounded-xl bg-surface-100 p-1 [&>.btn]:h-8 [&>.btn]:text-sm"
+  >
     <button
       v-for="item in themes"
+      :key="item.value"
+      type="button"
       class="btn btn-ghost text-caption"
       :class="
-        selectedTheme === item.value
-          ? 'bg-white text-text-primay'
+        preference === item.value
+          ? 'bg-white text-text-primay dark:bg-surface-200 dark:text-text-tertiary'
           : 'bg-surface-100 text-text-passive'
       "
-      @click="selectedTheme=item.value"
+      @click="setTheme(item.value)"
     >
       <icons-theme-icon
         :theme="item.value"
-        :color="selectedTheme === item.value ? 'black' : '#757575'"
+        :color="preference === item.value ? activeIconColor : '#757575'"
       />
       {{ item.title }}
     </button>
@@ -21,18 +24,15 @@
 </template>
 
 <script setup lang="ts">
-import type { ThemeType } from '~/types/theme';
+import type { ThemeType } from '~/types/theme'
 
-// Props
-defineProps({
-  theme: { type: String as () => ThemeType, required: true },
-});
+const { preference, isDark, setTheme } = useAppTheme()
 
-// Variables
-const selectedTheme = ref<ThemeType>('light');
-const themes = ref<{ title: string; value: ThemeType }[]>([
+const themes: { title: string; value: ThemeType }[] = [
   { title: 'سیستم', value: 'system' },
   { title: 'روشن', value: 'light' },
   { title: 'تاریک', value: 'dark' },
-]);
+]
+
+const activeIconColor = computed(() => (isDark.value ? '#f5f5f5' : 'black'))
 </script>

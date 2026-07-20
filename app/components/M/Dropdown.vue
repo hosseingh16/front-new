@@ -1,5 +1,8 @@
 <template>
-  <div class="dropdown dropdown-start" :class="{ 'dropdown-hover': hover }">
+  <div
+    class="dropdown dropdown-start mx-1"
+    :class="{ 'dropdown-hover': hover }"
+  >
     <div :tabindex="Math.round(1)">
       <slot name="btn" />
     </div>
@@ -16,10 +19,10 @@
 <script setup lang="ts">
 withDefaults(
   defineProps<{
-    hover?: boolean
+    hover?: boolean;
   }>(),
   {
     hover: false,
   },
-)
+);
 </script>

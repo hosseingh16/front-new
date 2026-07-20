@@ -20,7 +20,7 @@
 }
 
 @utility btn-ghost {
-  @apply border-none hover:bg-white;
+  @apply border-none hover:bg-white dark:hover:bg-surface-200;
 }
 
 @utility btn-ghost-primary {
