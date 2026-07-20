@@ -16,9 +16,15 @@
           </div>
         </NuxtLink>
         <div class="flex items-center gap-2 max-lg:hidden mr-8">
-          <NuxtLink to="" class="text-sm hover:opacity-80">
+          <button
+            type="button"
+            class="flex items-center justify-center rounded-lg p-1 text-text-passive transition-opacity hover:opacity-80"
+            :aria-label="collapsed ? 'باز کردن منو' : 'بستن منو'"
+            :aria-pressed="collapsed"
+            @click="toggle"
+          >
             <Icon name="svg:panel-right" size="16" />
-          </NuxtLink>
+          </button>
           <span class="text-gray-default">|</span>
           <NuxtLink to="/" class="text-sm hover:opacity-80">
             <Icon name="svg:home" size="16" />
@@ -81,3 +87,7 @@
     </div>
   </header>
 </template>
+
+<script setup lang="ts">
+const { collapsed, toggle } = useDashboardSidebar()
+</script>

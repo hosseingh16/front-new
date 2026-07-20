@@ -7,7 +7,8 @@
         <panel-header />
         <panel-sidebar :sidebar-menu="sidebarMenu" />
         <div
-          class="min-h-screen no-scrollbar mt-16 flex-1 max-lg:pb-28 pl-4 pr-4 lg:pr-76 py-6 md-h-full"
+          class="min-h-screen no-scrollbar mt-16 flex-1 max-lg:pb-28 pl-4 pr-4 py-6 md-h-full transition-[padding] duration-300"
+          :class="collapsed ? 'lg:pr-4' : 'lg:pr-76'"
         >
           <slot />
         </div>
@@ -19,5 +20,6 @@
 
 <script setup lang="ts">
 const { fetchMenu, sidebarMenu } = usePanelConfig();
+const { collapsed } = useDashboardSidebar();
 await fetchMenu();
 </script>
