@@ -143,7 +143,7 @@
             <p class="font-semibold text-text-tertiary">{{ footerValue }}</p>
           </div>
           <span
-            class="btn border-none px-2 h-8 text-sm text-primary-500 bg-[#4864E114] dark:bg-primary-500/10"
+            class="btn border-none px-2 h-8 text-sm text-primary-500 bg-[#4864E114]"
           >
             <icons-chevron class="rotate-90" color="#4864e1" />
             مشاهده

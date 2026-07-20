@@ -1,6 +1,6 @@
 <template>
   <article class="rounded-lg bg-surface-50 p-1">
-    <div class="rounded-lg bg-[#F6F8FE] dark:bg-surface-200 p-3">
+    <div class="rounded-lg bg-[#F6F8FE] p-3">
       <div class="flex items-start justify-between">
         <div class="flex min-w-0 flex-1 items-center gap-2">
           <div
@@ -89,7 +89,7 @@
 
         <button
           type="button"
-          class="flex h-9 items-center gap-2 rounded-lg bg-[#E6F6F0] dark:bg-[#009F65]/15 px-4 text-sm text-[#009F65] dark:text-[#34d399] transition-opacity hover:bg-[#d8f0e8] dark:hover:bg-[#009F65]/25 disabled:opacity-60"
+          class="flex h-9 items-center gap-2 rounded-lg bg-[#E6F6F0] px-4 text-sm text-[#009F65] dark:text-[#34d399] transition-opacity hover:bg-[#d8f0e8] dark:hover:bg-[#009F65]/25 disabled:opacity-60"
           :disabled="actionLoading || isApproved"
           @click="emit('confirm')"
         >

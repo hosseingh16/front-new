@@ -3,7 +3,7 @@
     <template v-if="loading">
       <div
         class="p-4 m-2 rounded-xl"
-        :class="highlight ? 'bg-[#FBF7EF] dark:bg-surface-200' : 'bg-[#F7F8FF] dark:bg-surface-200'"
+        :class="highlight ? 'bg-[#FBF7EF]' : 'bg-[#F7F8FF]'"
       >
         <div class="flex items-start justify-between gap-4">
           <div class="flex items-start gap-3">
@@ -34,12 +34,12 @@
     <template v-else>
       <div
         class="p-4 m-2 rounded-xl"
-        :class="highlight ? 'bg-[#FBF7EF] dark:bg-surface-200' : 'bg-[#F7F8FF] dark:bg-surface-200'"
+        :class="highlight ? 'bg-[#FBF7EF]' : 'bg-[#F7F8FF]'"
       >
         <div class="flex items-end justify-between gap-4">
           <div class="flex min-w-0 items-start gap-3">
             <div
-              class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#ECF4D9] dark:bg-surface-300"
+              class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#ECF4D9]"
             >
               <img
                 v-if="logo"
@@ -107,7 +107,7 @@
         <NuxtLink
           v-if="to"
           :to="to"
-          class="inline-flex items-center gap-1 rounded-md bg-[#EBEEFA] dark:bg-primary-500/10 px-3 py-1.5 text-sm font-semibold text-primary-500 transition-opacity hover:opacity-90"
+          class="inline-flex items-center gap-1 rounded-md bg-[#EBEEFA] px-3 py-1.5 text-sm font-semibold text-primary-500 transition-opacity hover:opacity-90"
         >
           <icons-chevron class="rotate-90" color="#4864e1" />
           مشاهده
@@ -115,7 +115,7 @@
         <NuxtLink
           v-else
           to="#"
-          class="pointer-events-none inline-flex items-center gap-1 rounded-md bg-[#EBEEFA] dark:bg-primary-500/10 px-3 py-1.5 text-sm font-semibold text-primary-500"
+          class="pointer-events-none inline-flex items-center gap-1 rounded-md bg-[#EBEEFA] px-3 py-1.5 text-sm font-semibold text-primary-500"
         >
           <icons-chevron class="rotate-90" color="#4864e1" />
           مشاهده

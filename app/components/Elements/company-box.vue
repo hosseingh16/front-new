@@ -1,6 +1,6 @@
 <template>
   <div
-    class="relative rounded-xl border border-surface-200 bg-[#F6F8FE] dark:bg-surface-200 p-4"
+    class="relative rounded-xl border border-surface-200 bg-[#F6F8FE] p-4"
     :class="
       to && !loading ? 'transition-colors hover:border-primary-300' : undefined
     "
@@ -52,7 +52,7 @@
       <div class="flex items-start justify-between gap-4">
         <div class="flex min-w-0 flex-1 items-start gap-3">
           <div
-            class="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-[#ECF4D9] dark:bg-surface-300"
+            class="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-[#ECF4D9]"
           >
             <img
               v-if="logo"
@@ -115,7 +115,7 @@
     <template v-else>
       <div class="flex flex-col items-center text-center">
         <div
-          class="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#ECF4D9] dark:bg-surface-300"
+          class="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#ECF4D9]"
         >
           <img
             v-if="logo"

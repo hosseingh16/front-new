@@ -1,8 +1,8 @@
 <template>
   <article class="rounded-2xl border border-gray-default bg-surface-50 p-1">
-    <div class="rounded-lg p-3 dark:bg-[#0D131F] bg-[#F6F8FE]">
+    <div class="rounded-lg p-3 bg-[#F6F8FE]">
       <div class="flex items-start justify-between gap-4">
-        <h2 class="font-yb-bold text-base text-text-tertiary">
+        <h2 class="font-yb-bold text-base">
           {{ ad.title }}
         </h2>
         <span v-if="publishedLabel" class="shrink-0 text-sm text-text-passive">
@@ -17,7 +17,7 @@
           class="flex flex-col items-center gap-2"
         >
           <div class="min-w-0">
-            <p class="font-yb-bold text-sm text-text-tertiary">
+            <p class="font-yb-bold text-sm">
               {{ item.value }}
             </p>
           </div>
