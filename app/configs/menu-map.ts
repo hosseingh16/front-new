@@ -52,10 +52,10 @@ export const menuMap: Record<string, MenuMeta> = {
     icon: 'eye',
     to: '/dashboard/ads',
   },
-   saved_jobs: {
+   bookmarks: {
     label: 'نشان شده ها',
     icon: 'bookmark-1',
-    to: '/dashboard/ads',
+    to: '/dashboard/bookmarks',
     placement: 'bottom',
   },
 
@@ -83,10 +83,10 @@ export const menuMap: Record<string, MenuMeta> = {
     icon: 'eye',
     to: '/dashboard/my-requests',
   },
-   shortcut_saved_jobs: {
+   shortcut_bookmarks: {
     label: 'نشان شده ها',
-    icon: 'eye',
-    to: '/dashboard/my-requests',
+    icon: 'bookmark-1',
+    to: '/dashboard/bookmarks',
   },
 
   // -------------------------
@@ -108,7 +108,7 @@ export const menuMap: Record<string, MenuMeta> = {
   create_ad: {
     label: 'ایجاد آگهی جدید',
     icon: 'eye',
-    to: '/jobs/applied',
+    to: '/dashboard/employer/ads/create',
   },
   manage_ads: {
     label: 'مدیریت آگهی‌ها',
@@ -251,10 +251,11 @@ export const menuMap: Record<string, MenuMeta> = {
     icon: 'eye',
     to: '/dashboard/my-requests',
   },
-   user_saved_jobs: {
+  user_bookmarks: {
     label: 'نشان شده‌ها',
-    icon: 'eye',
-    to: '/dashboard/my-requests',
+    icon: 'bookmark-1',
+    to: '/dashboard/bookmarks',
+    placement: 'bottom',
   },
 
   // -------------------------
