@@ -1,17 +1,17 @@
-@import './tailwind.css';
-@import './daisyui.css';
-@import './icomoon/style.css';
-@import './fonts.css';
-@import './transitions.css';
+@import "./tailwind.css";
+@import "./daisyui.css";
+@import "./icomoon/style.css";
+@import "./fonts.css";
+@import "./transitions.css";
 
 body {
-  font-family: 'yekanBakh-regular', sans-serif !important;
+  font-family: "yekanBakh-regular", sans-serif !important;
 }
 
 body,
 html {
- /* overflow-x: hidden created some issue in sticky aside sections in terms page */
-  overflow-x: clip; 
+  /* overflow-x: hidden created some issue in sticky aside sections in terms page */
+  overflow-x: clip;
   background-color: #fafafa;
 }
 
@@ -23,6 +23,10 @@ html {
 button {
   cursor: pointer;
   transition: all 0.2s linear;
+}
+button:focus-visible,
+button:focus {
+  outline: none;
 }
 
 button:disabled {
@@ -46,7 +50,7 @@ button:disabled {
 
 /* toast شخصی‌سازی */
 .toast-custom {
-  font-family: 'yekanBakh-regular', sans-serif !important;
+  font-family: "yekanBakh-regular", sans-serif !important;
 }
 
 :root {

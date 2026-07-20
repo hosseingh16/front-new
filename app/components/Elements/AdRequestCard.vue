@@ -1,5 +1,5 @@
 <template>
-  <article class="rounded-lg bg-surface-50 p-1">
+  <article class="rounded-lg bg-white p-1">
     <div class="rounded-lg bg-[#F6F8FE] p-3">
       <div class="flex items-start justify-between">
         <div class="flex min-w-0 flex-1 items-center gap-2">

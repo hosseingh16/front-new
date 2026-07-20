@@ -294,7 +294,7 @@ const {
 
 const tabs = [
   { id: "requests" as const, label: "درخواست‌ها" },
-  { id: "bookmarked" as const, label: "نشان‌گذاری شده‌ها" },
+  { id: "bookmarked" as const, label: "نشان‌ شده‌ها" },
 ];
 
 const activeTabLabel = computed(

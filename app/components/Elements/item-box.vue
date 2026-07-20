@@ -1,5 +1,5 @@
 <template>
-  <div class="rounded-lg bg-surface-50 p-1">
+  <div class="rounded-lg bg-white p-1">
     <template v-if="loading">
       <div class="bg-[#F6F8FE] rounded-lg p-3">
         <div class="flex justify-between items-center">
