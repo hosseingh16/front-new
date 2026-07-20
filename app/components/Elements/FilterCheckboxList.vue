@@ -24,7 +24,7 @@
         class="checkbox checkbox-primary p-1.5"
       />
       <slot name="label" :option="option">
-        <span>{{ option.label }}</span>
+        <span class="text-text-tertiary">{{ option.label }}</span>
       </slot>
     </component>
   </div>

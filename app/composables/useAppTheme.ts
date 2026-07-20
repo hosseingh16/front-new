@@ -28,8 +28,13 @@ export function useAppTheme() {
     'app-system-theme',
     () => 'light',
   )
+  const forcedTheme = useState<'light' | 'dark' | null>(
+    'app-forced-theme',
+    () => null,
+  )
 
   const resolved = computed<'light' | 'dark'>(() => {
+    if (forcedTheme.value) return forcedTheme.value
     if (preference.value === 'system') return systemTheme.value
     return preference.value === 'dark' ? 'dark' : 'light'
   })
@@ -38,6 +43,10 @@ export function useAppTheme() {
 
   function setTheme(value: ThemeType) {
     preference.value = value
+  }
+
+  function setForcedTheme(value: 'light' | 'dark' | null) {
+    forcedTheme.value = value
   }
 
   function applyToDocument() {
@@ -74,5 +83,7 @@ export function useAppTheme() {
     resolved,
     isDark,
     setTheme,
+    forcedTheme,
+    setForcedTheme,
   }
 }

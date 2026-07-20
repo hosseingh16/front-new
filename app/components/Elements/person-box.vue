@@ -1,5 +1,5 @@
 <template>
-  <div class="rounded-xl border border-surface-200 bg-[#F6F8FE] p-4">
+  <div class="rounded-xl border border-surface-200 bg-[#F6F8FE] dark:bg-surface-200 p-4">
     <template v-if="loading">
       <div class="flex flex-col items-center">
         <div class="h-16 w-16 rounded-2xl bg-surface-200 animate-pulse" />
@@ -49,7 +49,7 @@
       <div class="mt-4 flex flex-col gap-2">
         <div
           v-if="employmentType"
-          class="flex items-center gap-2 rounded-full border border-gray-default bg-white px-3 py-1.5 text-sm text-text-tertiary"
+          class="flex items-center gap-2 rounded-full border border-gray-default bg-surface-50 px-3 py-1.5 text-sm text-text-tertiary"
         >
           <Icon name="tabler:file-text" class="shrink-0 text-text-passive" />
           <span>{{ employmentType }}</span>
@@ -57,7 +57,7 @@
 
         <div
           v-if="salary"
-          class="flex items-center gap-2 rounded-full border border-gray-default bg-white px-3 py-1.5 text-sm text-text-tertiary"
+          class="flex items-center gap-2 rounded-full border border-gray-default bg-surface-50 px-3 py-1.5 text-sm text-text-tertiary"
         >
           <Icon name="svg:wallet" class="shrink-0" size="16" />
           <span>{{ salary }}</span>
@@ -65,7 +65,7 @@
 
         <div
           v-if="experience"
-          class="flex items-center gap-2 rounded-full border border-gray-default bg-white px-3 py-1.5 text-sm text-text-tertiary"
+          class="flex items-center gap-2 rounded-full border border-gray-default bg-surface-50 px-3 py-1.5 text-sm text-text-tertiary"
         >
           <Icon name="svg:work-history" class="shrink-0" />
           <span>{{ experience }}</span>
@@ -73,7 +73,7 @@
 
         <div
           v-if="age"
-          class="flex items-center gap-2 rounded-full border border-gray-default bg-white px-3 py-1.5 text-sm text-text-tertiary"
+          class="flex items-center gap-2 rounded-full border border-gray-default bg-surface-50 px-3 py-1.5 text-sm text-text-tertiary"
         >
           <Icon name="svg:timer" class="shrink-0" size="12" />
           <span>{{ age }}</span>
@@ -81,7 +81,7 @@
 
         <div
           v-if="location"
-          class="flex items-center gap-2 rounded-full border border-gray-default bg-white px-3 py-1.5 text-sm text-text-tertiary"
+          class="flex items-center gap-2 rounded-full border border-gray-default bg-surface-50 px-3 py-1.5 text-sm text-text-tertiary"
         >
           <Icon name="svg:location-4" class="shrink-0" />
           <span>{{ location }}</span>

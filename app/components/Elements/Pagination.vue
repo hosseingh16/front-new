@@ -7,7 +7,7 @@
   >
     <button
       type="button"
-      class="flex cursor-pointer h-10 w-10 items-center justify-center rounded-lg border border-surface-200 bg-white text-sm text-text-tertiary transition-colors hover:bg-surface-50 disabled:cursor-not-allowed disabled:opacity-40"
+      class="flex cursor-pointer h-10 w-10 items-center justify-center rounded-lg border border-surface-200 bg-surface-50 text-sm text-text-tertiary transition-colors hover:bg-surface-100 disabled:cursor-not-allowed disabled:opacity-40"
       :disabled="currentPage <= 1"
       aria-label="صفحه قبل"
       @click="emit('update:currentPage', currentPage - 1)"
@@ -18,7 +18,7 @@
     <template v-for="(item, index) in pages" :key="`${item}-${index}`">
       <span
         v-if="item === 'ellipsis'"
-        class="pointer-events-none flex cursor-pointer h-10 w-10 items-center justify-center rounded-lg border border-surface-200 bg-white text-sm text-text-passive"
+        class="pointer-events-none flex cursor-pointer h-10 w-10 items-center justify-center rounded-lg border border-surface-200 bg-surface-50 text-sm text-text-passive"
         aria-hidden="true"
       >
         ⋮
@@ -30,7 +30,7 @@
         :class="
           item === currentPage
             ? 'border-text-tertiary bg-text-tertiary text-white'
-            : 'border-surface-200 bg-white text-text-tertiary hover:bg-surface-50'
+            : 'border-surface-200 bg-surface-50 text-text-tertiary hover:bg-surface-100'
         "
         :aria-current="item === currentPage ? 'page' : undefined"
         @click="emit('update:currentPage', item)"
@@ -41,7 +41,7 @@
 
     <button
       type="button"
-      class="flex h-10 w-10 items-center cursor-pointer justify-center rounded-lg border border-surface-200 bg-white text-sm text-text-tertiary transition-colors hover:bg-surface-50 disabled:cursor-not-allowed disabled:opacity-40"
+      class="flex h-10 w-10 items-center cursor-pointer justify-center rounded-lg border border-surface-200 bg-surface-50 text-sm text-text-tertiary transition-colors hover:bg-surface-100 disabled:cursor-not-allowed disabled:opacity-40"
       :disabled="currentPage >= lastPage"
       aria-label="صفحه بعد"
       @click="emit('update:currentPage', currentPage + 1)"

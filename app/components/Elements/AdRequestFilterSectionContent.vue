@@ -12,7 +12,7 @@
         @change="filters.toggleStatus(status.value)"
       />
       <Icon :name="adRequestStatusIcon(status.value)" class="text-gray-500" />
-      <span>{{ status.label }}</span>
+      <span class="text-text-tertiary">{{ status.label }}</span>
     </label>
   </div>
 

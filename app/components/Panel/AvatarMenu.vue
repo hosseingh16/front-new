@@ -1,8 +1,8 @@
 <template>
-  <div class="bg-surface-100 max-lg:p-1 max-lg:h-[110%] max-lg:overflow-scroll">
-    <div class="rounded-lg bg-white p-6 flex flex-col items-center gap-y-3">
+  <div class="bg-surface-100 max-lg:h-[110%] max-lg:overflow-scroll max-lg:p-1">
+    <div class="flex flex-col items-center gap-y-3 rounded-lg bg-surface-50 p-6">
       <Avatar class="w-20 h-20" />
-      <span class="font-semibold">آرمان علیمرادی</span>
+      <span class="font-semibold text-text-tertiary">آرمان علیمرادی</span>
       <button class="flex items-center">
         <Icon name="svg:settings" />
         <span class="text-text-passive text-sm font-normal">تنظیمات</span>
@@ -10,7 +10,7 @@
     </div>
 
     <div
-      class="hover:rounded-none px-3 lg:p-0 py-3 mt-1 bg-white [&_button]:text-sm [&_button]:font-normal"
+      class="mt-1 bg-surface-50 px-3 py-3 hover:rounded-none lg:p-0 [&_button]:text-sm [&_button]:font-normal"
     >
       <div class="flex flex-col gap-y-2">
         <NuxtLink
@@ -26,7 +26,7 @@
               item.children ? 'items-center justify-between' : 'justify-start',
               { 'bg-primary-50': route.path === item.to },
               route.path !== item.to
-                ? 'hover:bg-gray-100'
+                ? 'hover:bg-gray-100 dark:hover:bg-surface-200'
                 : 'hover:bg-primary-50',
             ]"
           >
@@ -45,7 +45,7 @@
     </div>
 
     <div
-      class="hover:rounded-none px-3 lg:p-0 py-3 mt-1 bg-white [&_button]:text-sm [&_button]:font-normal"
+      class="mt-1 bg-surface-50 px-3 py-3 hover:rounded-none lg:p-0 [&_button]:text-sm [&_button]:font-normal"
     >
       <div class="flex flex-col gap-y-2">
         <NuxtLink
@@ -60,7 +60,7 @@
             :class="[
               { 'bg-primary-50': route.path === item.to },
               route.path !== item.to
-                ? 'hover:bg-gray-100'
+                ? 'hover:bg-gray-100 dark:hover:bg-surface-200'
                 : 'hover:bg-primary-50',
             ]"
           >
@@ -77,11 +77,11 @@
 
         <button
           type="button"
-          class="btn btn-block btn-ghost flex justify-start hover:bg-gray-100"
+          class="btn btn-block btn-ghost flex justify-start hover:bg-gray-100 dark:hover:bg-surface-200"
         >
           <div class="flex items-center justify-start">
             <Icon name="svg:log-out" class="text-danger-500" size="16" />
-            <span class="mr-2 text-sm font-normal text-danger-500">
+            <span class="mr-2 font-normal text-danger-500">
               خروج از حساب کاربری
             </span>
           </div>

@@ -1,6 +1,6 @@
 <template>
   <header
-    class="fixed right-0 left-0 z-20 h-16 px-4 shadow-sm flex justify-between items-center bg-white max-md:border-b-2 max-md:border-gray-default"
+    class="fixed right-0 left-0 z-20 flex h-16 items-center justify-between border-gray-default bg-surface-50 px-4 shadow-sm max-md:border-b-2"
   >
     <div class="flex gap-12">
       <div class="flex gap-2 items-center">
@@ -11,8 +11,8 @@
           <NuxtImg src="/images/logo.png" alt="Logo" class="lg:w-10 lg:h-12" />
 
           <div class="max-lg:hidden">
-            <h1 class="font-semibold">های‌حساب</h1>
-            <h2 class="text-caption">خانه حسابداران با تجربه</h2>
+            <h1 class="font-semibold text-text-tertiary">های‌حساب</h1>
+            <h2 class="text-caption text-text-secondary">خانه حسابداران با تجربه</h2>
           </div>
         </NuxtLink>
         <div class="flex items-center gap-2 max-lg:hidden mr-8">
@@ -58,7 +58,7 @@
             tabindex="0"
           >
             <Icon name="svg:plus-blue" size="16" />
-            <span class="max-lg:hidden">ایجاد کردن</span>
+            <span class="max-lg:hidden text-text-tertiary">ایجاد کردن</span>
           </button>
         </template>
         <template #content>
@@ -66,19 +66,19 @@
             <li>
               <NuxtLink>
                 <Icon name="svg:new-briefcase" />
-                <span>آگهی تمام وقت</span>
+                <span class="text-text-tertiary">آگهی تمام وقت</span>
               </NuxtLink>
             </li>
             <li>
               <NuxtLink>
                 <Icon name="svg:new-briefcase" />
-                <span>آگهی نیمه وقت</span>
+                <span class="text-text-tertiary">آگهی نیمه وقت</span>
               </NuxtLink>
             </li>
             <li>
               <NuxtLink>
                 <Icon name="svg:new-notepad-text" />
-                <span>پروژه</span>
+                <span class="text-text-tertiary">پروژه</span>
               </NuxtLink>
             </li>
           </ul>

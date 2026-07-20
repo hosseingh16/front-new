@@ -9,7 +9,7 @@
       class="btn btn-ghost text-caption"
       :class="
         preference === item.value
-          ? 'bg-white text-text-primay dark:bg-surface-200 dark:text-text-tertiary'
+          ? 'bg-surface-50 text-text-primay'
           : 'bg-surface-100 text-text-passive'
       "
       @click="setTheme(item.value)"

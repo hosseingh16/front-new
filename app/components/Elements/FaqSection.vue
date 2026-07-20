@@ -33,7 +33,7 @@
         :class="
           faqType === category.id
             ? 'btn-primary'
-            : 'btn-outline border-primary-200 bg-white text-primary-500'
+            : 'btn-outline border-primary-200 bg-surface-50 text-primary-500'
         "
         @click="selectCategory(category.id)"
       >
@@ -48,7 +48,7 @@
       <div
         v-for="(item, index) in filteredItems"
         :key="item.question"
-        class="cursor-pointer rounded-lg bg-surface-200 px-4 py-4 text-sm"
+        class="cursor-pointer rounded-lg bg-surface-200 px-4 py-4 text-sm text-text-tertiary"
         @click="toggleItem(index)"
       >
         <div class="flex items-center justify-between gap-4">
@@ -57,7 +57,7 @@
             <p class="font-light text-text-tertiary">{{ item.question }}</p>
           </div>
           <icons-chevron
-            color="black"
+            color="currentColor"
             class="shrink-0 transition-transform"
             :class="expandedIndex === index ? 'rotate-180' : ''"
           />

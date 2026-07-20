@@ -1,6 +1,6 @@
 <template>
-  <article class="rounded-lg bg-white p-1">
-    <div class="rounded-lg bg-[#F6F8FE] p-3">
+  <article class="rounded-lg bg-surface-50 p-1">
+    <div class="rounded-lg bg-[#F6F8FE] dark:bg-surface-200 p-3">
       <div class="flex items-start justify-between">
         <div class="flex min-w-0 flex-1 items-center gap-2">
           <div
@@ -39,12 +39,12 @@
 
                 <button
                   type="button"
-                  class="flex items-center gap-1.5 text-sm text-gray-500 transition-opacity hover:opacity-80 disabled:opacity-60"
+                  class="flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 transition-opacity hover:opacity-80 disabled:opacity-60"
                   :disabled="actionLoading"
                   @click="emit('view')"
                 >
                   <Icon name="lucide:eye" class="shrink-0" />
-                  <span>مشاهده رزومه</span>
+                  <span class="text-text-secondary">مشاهده رزومه</span>
                 </button>
               </div>
             </div>
@@ -62,10 +62,13 @@
         <div
           v-for="item in displayItems"
           :key="item.key"
-          class="flex shrink-0 items-center gap-2 rounded-full border border-gray-default bg-white px-3 py-1"
+          class="flex shrink-0 items-center gap-2 rounded-full border border-gray-default bg-surface-50 px-3 py-1"
         >
-          <Icon :name="item.icon" class="ma-auto shrink-0 text-gray-500" />
-          <span>{{ item.label }}</span>
+          <Icon
+            :name="item.icon"
+            class="ma-auto shrink-0 text-gray-500 dark:text-gray-400"
+          />
+          <span class="text-text-tertiary">{{ item.label }}</span>
         </div>
       </div>
     </div>
@@ -76,7 +79,7 @@
       <div class="flex items-center justify-end gap-2">
         <button
           type="button"
-          class="flex h-9 items-center gap-1 px-2 text-sm text-[#dd4a48] transition-opacity hover:opacity-80 disabled:opacity-60"
+          class="flex h-9 items-center gap-1 px-2 text-sm text-[#dd4a48] dark:text-red-400 transition-opacity hover:opacity-80 disabled:opacity-60"
           :disabled="actionLoading || isRejected"
           @click="emit('reject')"
         >
@@ -86,7 +89,7 @@
 
         <button
           type="button"
-          class="flex h-9 items-center gap-2 rounded-lg bg-[#E6F6F0] px-4 text-sm text-[#009F65] transition-opacity hover:bg-[#d8f0e8] disabled:opacity-60"
+          class="flex h-9 items-center gap-2 rounded-lg bg-[#E6F6F0] dark:bg-[#009F65]/15 px-4 text-sm text-[#009F65] dark:text-[#34d399] transition-opacity hover:bg-[#d8f0e8] dark:hover:bg-[#009F65]/25 disabled:opacity-60"
           :disabled="actionLoading || isApproved"
           @click="emit('confirm')"
         >

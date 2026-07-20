@@ -4,12 +4,12 @@
     class="relative mt-6 w-full"
     :class="
       showDropdown
-        ? 'max-md:fixed max-md:inset-0 max-md:z-100 max-md:mt-0 max-md:flex max-md:flex-col max-md:bg-white max-md:px-4 max-md:pt-4 max-md:pb-0'
+        ? 'max-md:fixed max-md:inset-0 max-md:z-100 max-md:mt-0 max-md:flex max-md:flex-col max-md:bg-surface-50 max-md:px-4 max-md:pt-4 max-md:pb-0'
         : ''
     "
   >
     <div
-      class="flex h-16 shrink-0 items-center rounded-lg border-4 border-surface-100 bg-white p-2"
+      class="flex h-16 shrink-0 items-center rounded-lg border-4 border-surface-100 bg-surface-50 p-2"
       :class="showDropdown ? 'max-md:h-12 max-md:gap-2' : ''"
     >
       <icons-search-2 color="#D1D1D1" class="shrink-0" />
@@ -17,7 +17,7 @@
         ref="inputRef"
         v-model="keyword"
         type="text"
-        class="mx-1 grow py-3 focus:outline-none placeholder:text-text-muted"
+        class="mx-1 grow py-3 text-text-tertiary focus:outline-none placeholder:text-text-muted"
         placeholder="جستجوی عنوان‌ شغلی، سازمان یا نوع فعالیت ..."
         autocomplete="off"
         @focus="openDropdown"
@@ -55,7 +55,7 @@
 
     <div
       v-if="showDropdown"
-      class="z-50 flex min-h-0 flex-col overflow-hidden bg-white max-md:flex-1 md:absolute md:inset-x-0 md:top-[calc(100%+8px)] md:rounded-xl md:border md:border-surface-100 md:shadow-[0_12px_40px_rgba(18,18,18,0.12)]"
+      class="z-50 flex min-h-0 flex-col overflow-hidden bg-surface-50 max-md:flex-1 md:absolute md:inset-x-0 md:top-[calc(100%+8px)] md:rounded-xl md:border md:border-surface-100 md:shadow-[0_12px_40px_rgba(18,18,18,0.12)]"
       @mousedown.prevent
     >
       <div class="shrink-0 border-b border-surface-100 py-3 max-md:border-t max-md:pt-4 md:p-2">
@@ -69,7 +69,7 @@
             class="btn btn-ghost flex shrink-0 items-center gap-1.5 rounded-lg px-3 text-sm max-md:border max-md:px-4"
             :class="
               activeTab === tab.value
-                ? 'bg-white text-text-primary shadow-sm max-md:border-surface-100'
+                ? 'bg-surface-50 text-text-primary shadow-sm max-md:border-surface-100'
                 : 'bg-surface-100 text-text-passive max-md:border-transparent max-md:bg-transparent'
             "
             @mousedown.prevent
@@ -171,7 +171,7 @@
 
       <div
         v-if="showDropdown"
-        class="shrink-0 border-t border-surface-100 bg-white p-4 md:hidden"
+        class="shrink-0 border-t border-surface-100 bg-surface-50 p-4 md:hidden"
       >
         <button
           type="button"

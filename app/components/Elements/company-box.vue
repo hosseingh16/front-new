@@ -1,7 +1,9 @@
 <template>
   <div
-    class="relative rounded-xl border border-surface-200 bg-[#F6F8FE] p-4"
-    :class="to && !loading ? 'transition-colors hover:border-primary-300' : undefined"
+    class="relative rounded-xl border border-surface-200 bg-[#F6F8FE] dark:bg-surface-200 p-4"
+    :class="
+      to && !loading ? 'transition-colors hover:border-primary-300' : undefined
+    "
   >
     <NuxtLink
       v-if="to && !loading"
@@ -13,7 +15,9 @@
       <div v-if="layout === 'horizontal'" class="space-y-3">
         <div class="flex items-start justify-between gap-4">
           <div class="flex flex-1 items-start gap-3">
-            <div class="h-16 w-16 shrink-0 rounded-2xl bg-surface-200 animate-pulse" />
+            <div
+              class="h-16 w-16 shrink-0 rounded-2xl bg-surface-200 animate-pulse"
+            />
             <div class="flex-1 space-y-2">
               <div class="h-5 w-32 rounded bg-surface-200 animate-pulse" />
               <div class="h-4 w-48 rounded bg-surface-200 animate-pulse" />
@@ -47,7 +51,9 @@
     <template v-else-if="layout === 'horizontal'">
       <div class="flex items-start justify-between gap-4">
         <div class="flex min-w-0 flex-1 items-start gap-3">
-          <div class="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-[#ECF4D9]">
+          <div
+            class="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-[#ECF4D9] dark:bg-surface-300"
+          >
             <img
               v-if="logo"
               :src="logo"
@@ -72,7 +78,7 @@
             <div class="mt-3 flex flex-wrap gap-2">
               <div
                 v-if="size"
-                class="flex items-center gap-2 rounded-full border border-gray-default bg-white px-3 py-1.5 text-sm text-text-tertiary"
+                class="flex items-center gap-2 rounded-full border border-gray-default bg-surface-50 px-3 py-1.5 text-sm text-text-tertiary"
               >
                 <Icon name="svg:users-1" class="shrink-0" />
                 <span>{{ size }}</span>
@@ -80,7 +86,7 @@
 
               <div
                 v-if="location"
-                class="flex items-center gap-2 rounded-full border border-gray-default bg-white px-3 py-1.5 text-sm text-text-tertiary"
+                class="flex items-center gap-2 rounded-full border border-gray-default bg-surface-50 px-3 py-1.5 text-sm text-text-tertiary"
               >
                 <Icon name="svg:location-4" class="shrink-0" />
                 <span>{{ location }}</span>
@@ -88,7 +94,7 @@
 
               <div
                 v-if="activeAds != null"
-                class="flex items-center gap-2 rounded-full border border-gray-default bg-white px-3 py-1.5 text-sm text-text-tertiary"
+                class="flex items-center gap-2 rounded-full border border-gray-default bg-surface-50 px-3 py-1.5 text-sm text-text-tertiary"
               >
                 <Icon name="ph:suitcase-simple-light" class="shrink-0" />
                 <span>{{ persianActiveAds }} آگهی فعال</span>
@@ -97,7 +103,9 @@
           </div>
         </div>
 
-        <div class="flex shrink-0 items-center gap-1.5 text-sm font-semibold text-primary-500">
+        <div
+          class="flex shrink-0 items-center gap-1.5 text-sm font-semibold text-primary-500"
+        >
           <Icon name="svg:eye" class="shrink-0" />
           <span>مشاهده پروفایل</span>
         </div>
@@ -106,7 +114,9 @@
 
     <template v-else>
       <div class="flex flex-col items-center text-center">
-        <div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#ECF4D9]">
+        <div
+          class="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#ECF4D9] dark:bg-surface-300"
+        >
           <img
             v-if="logo"
             :src="logo"
@@ -132,7 +142,7 @@
       <div class="mt-4 flex flex-col gap-2">
         <div
           v-if="size"
-          class="flex items-center gap-2 rounded-full border border-gray-default bg-white px-3 py-1.5 text-sm text-text-tertiary"
+          class="flex items-center gap-2 rounded-full border border-gray-default bg-surface-50 px-3 py-1.5 text-sm text-text-tertiary"
         >
           <Icon name="svg:users-1" class="shrink-0" />
           <span>{{ size }}</span>
@@ -140,7 +150,7 @@
 
         <div
           v-if="location"
-          class="flex items-center gap-2 rounded-full border border-gray-default bg-white px-3 py-1.5 text-sm text-text-tertiary"
+          class="flex items-center gap-2 rounded-full border border-gray-default bg-surface-50 px-3 py-1.5 text-sm text-text-tertiary"
         >
           <Icon name="svg:location-4" class="shrink-0" />
           <span>{{ location }}</span>
@@ -148,14 +158,16 @@
 
         <div
           v-if="activeAds != null"
-          class="flex items-center gap-2 rounded-full border border-gray-default bg-white px-3 py-1.5 text-sm text-text-tertiary"
+          class="flex items-center gap-2 rounded-full border border-gray-default bg-surface-50 px-3 py-1.5 text-sm text-text-tertiary"
         >
           <Icon name="ph:suitcase-simple-light" class="shrink-0" />
           <span>{{ persianActiveAds }} آگهی فعال</span>
         </div>
       </div>
 
-      <div class="mt-4 flex items-center justify-center gap-1.5 text-sm font-semibold text-primary-500">
+      <div
+        class="mt-4 flex items-center justify-center gap-1.5 text-sm font-semibold text-primary-500"
+      >
         <Icon name="svg:eye" class="shrink-0" />
         <span>مشاهده رزومه</span>
       </div>
@@ -164,52 +176,57 @@
 </template>
 
 <script setup lang="ts">
-import type { CompanyList } from '~/types/company'
+import type { CompanyList } from "~/types/company";
 
 const props = withDefaults(
   defineProps<{
-    company?: CompanyList
-    name?: string
-    logo?: string | null
-    activity?: string
-    size?: string
-    provinceName?: string
-    cityName?: string
-    activeAds?: number
-    to?: string
-    loading?: boolean
-    layout?: 'vertical' | 'horizontal'
+    company?: CompanyList;
+    name?: string;
+    logo?: string | null;
+    activity?: string;
+    size?: string;
+    provinceName?: string;
+    cityName?: string;
+    activeAds?: number;
+    to?: string;
+    loading?: boolean;
+    layout?: "vertical" | "horizontal";
   }>(),
   {
     loading: false,
-    layout: 'vertical',
+    layout: "vertical",
   },
-)
+);
 
-const name = computed(() => props.company?.name ?? props.name ?? 'شرکت')
-const logo = computed(() => props.company?.logo ?? props.logo ?? null)
-const size = computed(() => props.company?.size ?? props.size ?? '')
+const name = computed(() => props.company?.name ?? props.name ?? "شرکت");
+const logo = computed(() => props.company?.logo ?? props.logo ?? null);
+const size = computed(() => props.company?.size ?? props.size ?? "");
 
-const { items: lookupItems } = useLookups('industries')
-const industryOptions = lookupItems('industries')
+const { items: lookupItems } = useLookups("industries");
+const industryOptions = lookupItems("industries");
 
 const activity = computed(() => {
-  const value = props.company?.activity ?? props.activity ?? ''
-  if (!value) return ''
-  const match = industryOptions.value.find((item) => String(item.value) === String(value))
-  return match?.label ?? value
-})
+  const value = props.company?.activity ?? props.activity ?? "";
+  if (!value) return "";
+  const match = industryOptions.value.find(
+    (item) => String(item.value) === String(value),
+  );
+  return match?.label ?? value;
+});
 
 const location = computed(() => {
-  const province = props.company?.province_name ?? props.provinceName
-  const city = props.company?.city_name ?? props.cityName
+  const province = props.company?.province_name ?? props.provinceName;
+  const city = props.company?.city_name ?? props.cityName;
 
-  if (province && city) return `${province}، ${city}`
-  return province || city || ''
-})
+  if (province && city) return `${province}، ${city}`;
+  return province || city || "";
+});
 
 const persianActiveAds = computed(() => {
-  if (props.activeAds == null) return ''
-  return String(props.activeAds).replace(/\d/g, (d) => '۰۱۲۳۴۵۶۷۸۹'[Number(d)]!)
-})
+  if (props.activeAds == null) return "";
+  return String(props.activeAds).replace(
+    /\d/g,
+    (d) => "۰۱۲۳۴۵۶۷۸۹"[Number(d)]!,
+  );
+});
 </script>

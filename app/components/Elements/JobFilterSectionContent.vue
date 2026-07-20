@@ -13,7 +13,7 @@
       />
 
       <Icon :name="jobTypeIcon(jobType.value)" />
-      <span>{{ jobType.label }}</span>
+      <span class="text-text-tertiary">{{ jobType.label }}</span>
     </div>
   </div>
 
@@ -57,7 +57,7 @@
             @change="filters.toggleProvince(item.province.value as number)"
           />
           <span
-            class="flex-1 cursor-pointer"
+            class="flex-1 cursor-pointer text-text-tertiary"
             @click="filters.toggleProvinceExpand(item.province.value as number)"
           >
             {{ item.province.label }}
@@ -98,7 +98,7 @@
                 )
               "
             />
-            <span>{{ city.label }}</span>
+            <span class="text-text-tertiary">{{ city.label }}</span>
           </div>
         </div>
       </div>

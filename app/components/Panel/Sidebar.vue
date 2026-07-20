@@ -1,6 +1,6 @@
 <template>
   <aside
-    class="fixed top-0 right-0 flex h-full w-72 flex-col border-l-2 border-t-2 border-gray-default bg-white py-5 max-lg:hidden [&_button]:text-sm [&_button]:font-normal px-4 transition-transform duration-300"
+    class="fixed top-0 right-0 flex h-full w-72 flex-col border-l-2 border-t-2 border-gray-default bg-surface-50 px-4 py-5 transition-transform duration-300 max-lg:hidden [&_button]:text-sm [&_button]:font-normal"
     :class="collapsed ? 'translate-x-full' : 'translate-x-0'"
   >
     <div class="flex min-h-0 flex-1 flex-col pt-16">
@@ -31,7 +31,7 @@
       <div class="flex gap-2 px-4 pt-3">
         <Avatar />
         <div class="flex flex-col gap-3">
-          <span class="font-semibold">آرمان علیمرادی</span>
+          <span class="font-semibold text-text-tertiary">آرمان علیمرادی</span>
           <button class="flex items-center">
             <Icon name="svg:settings" />
             <span class="text-sm font-normal text-text-passive">تنظیمات</span>

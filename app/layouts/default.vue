@@ -7,3 +7,13 @@
     </div>
   </div>
 </template>
+
+<script setup lang="ts">
+const { setForcedTheme } = useAppTheme()
+
+setForcedTheme('light')
+
+onUnmounted(() => {
+  setForcedTheme(null)
+})
+</script>

@@ -1,5 +1,5 @@
 <template>
-  <div class="fixed bottom-0 lg:hidden w-full h-18 bg-white border-t-2 border-gray-default py-3 z-1000">
+  <div class="fixed bottom-0 z-1000 h-18 w-full border-t-2 border-gray-default bg-surface-50 py-3 lg:hidden">
     <div class="grid grid-cols-5 gap-2">
       <div v-for="(item, index) in menus">
         <div v-if="index !== 2" class="flex flex-col items-center">
@@ -24,7 +24,10 @@
         >
       </div>
 
-      <div v-if="showMenu" class="fixed top-16.5 left-0 right-0 bottom-40 bg-white">
+      <div
+        v-if="showMenu"
+        class="fixed top-16.5 right-0 bottom-40 left-0 bg-surface-50"
+      >
         <panel-avatar-menu />
       </div>
     </div>

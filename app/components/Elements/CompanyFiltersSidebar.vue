@@ -2,7 +2,7 @@
   <CompanyFiltersMobile class="col-span-full min-w-0 md:hidden" />
 
   <aside
-    class="hidden md:block bg-white rounded-lg border border-b-0 border-gray-default text-text-tertiary text-sm"
+    class="hidden md:block bg-surface-50 rounded-lg border border-b-0 border-gray-default text-text-tertiary text-sm"
     :class="props.class"
   >
     <div class="flex w-full items-center justify-between px-4 py-2 mt-2">
@@ -43,29 +43,29 @@
 </template>
 
 <script setup lang="ts">
-import CompanyFilterSectionContent from '~/components/Elements/CompanyFilterSectionContent.vue'
-import CompanyFiltersMobile from '~/components/Elements/CompanyFiltersMobile.vue'
-import FilterCollapse from '~/features/home/FilterCollapse.vue'
-import { toPersianDigits } from '~/composables/useCountUp'
+import CompanyFilterSectionContent from "~/components/Elements/CompanyFilterSectionContent.vue";
+import CompanyFiltersMobile from "~/components/Elements/CompanyFiltersMobile.vue";
+import FilterCollapse from "~/features/home/FilterCollapse.vue";
+import { toPersianDigits } from "~/composables/useCountUp";
 import {
   COMPANY_FILTERS_INJECTION_KEY,
   type CompanyFiltersState,
-} from '~/composables/company-filters-context'
-import { useCompanyFilters } from '~/composables/useCompanyFilters'
+} from "~/composables/company-filters-context";
+import { useCompanyFilters } from "~/composables/useCompanyFilters";
 import {
   COMPANY_FILTER_SECTIONS,
   type CompanyFiltersModel,
-} from '~/types/company-filters'
+} from "~/types/company-filters";
 
 const props = defineProps<{
-  class?: string
-}>()
+  class?: string;
+}>();
 
-const model = defineModel<CompanyFiltersModel>({ required: true })
+const model = defineModel<CompanyFiltersModel>({ required: true });
 
-const filters = reactive(useCompanyFilters(model)) as CompanyFiltersState
-provide(COMPANY_FILTERS_INJECTION_KEY, filters)
+const filters = reactive(useCompanyFilters(model)) as CompanyFiltersState;
+provide(COMPANY_FILTERS_INJECTION_KEY, filters);
 
-const activeFilterCount = filters.activeFilterCount
-const clearFilters = filters.clearFilters
+const activeFilterCount = filters.activeFilterCount;
+const clearFilters = filters.clearFilters;
 </script>

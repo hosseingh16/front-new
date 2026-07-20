@@ -14,7 +14,7 @@
           class="rounded-full w-1 h-1"
           :style="{ backgroundColor: dotFill(0) }"
         ></div>
-        <span class="absolute -right-px top-8 text-[9px]">0</span>
+        <span class="absolute -right-px top-8 text-[9px] text-text-tertiary">0</span>
       </div>
 
       <div
@@ -26,7 +26,7 @@
           class="rounded-full w-1.25 h-1.25"
           :style="{ backgroundColor: dotFill(1) }"
         ></div>
-        <span class="absolute -right-px top-8 text-[9px]">1</span>
+        <span class="absolute -right-px top-8 text-[9px] text-text-tertiary">1</span>
       </div>
 
       <div
@@ -38,7 +38,7 @@
           class="rounded-full w-1.5 h-1.5"
           :style="{ backgroundColor: dotFill(2) }"
         ></div>
-        <span class="absolute -right-px top-8 text-[9px]">2</span>
+        <span class="absolute -right-px top-8 text-[9px] text-text-tertiary">2</span>
       </div>
 
       <div
@@ -50,7 +50,7 @@
           class="rounded-full w-1.75 h-1.75"
           :style="{ backgroundColor: dotFill(3) }"
         ></div>
-        <span class="absolute -right-px top-8 text-[9px]">3</span>
+        <span class="absolute -right-px top-8 text-[9px] text-text-tertiary">3</span>
       </div>
 
       <div
@@ -62,7 +62,7 @@
           class="rounded-full w-2 h-2"
           :style="{ backgroundColor: dotFill(4) }"
         ></div>
-        <span class="absolute -right-px top-8 text-[9px]">4</span>
+        <span class="absolute -right-px top-8 text-[9px] text-text-tertiary">4</span>
       </div>
 
       <div
@@ -74,7 +74,7 @@
           class="rounded-full w-2.25 h-2.25"
           :style="{ backgroundColor: dotFill(5) }"
         ></div>
-        <span class="absolute -right-px top-8 text-[9px]">5</span>
+        <span class="absolute -right-px top-8 text-[9px] text-text-tertiary">5</span>
       </div>
 
       <div
@@ -86,7 +86,7 @@
           class="rounded-full w-2.5 h-2.5"
           :style="{ backgroundColor: dotFill(6) }"
         ></div>
-        <span class="absolute -right-px top-8 text-[9px]">6</span>
+        <span class="absolute -right-px top-8 text-[9px] text-text-tertiary">6</span>
       </div>
 
       <div
@@ -98,7 +98,7 @@
           class="rounded-full w-2.75 h-2.75"
           :style="{ backgroundColor: dotFill(7) }"
         ></div>
-        <span class="absolute -right-px top-8 text-[9px]">7</span>
+        <span class="absolute -right-px top-8 text-[9px] text-text-tertiary">7</span>
       </div>
 
       <div
@@ -110,7 +110,7 @@
           class="rounded-full w-3 h-3"
           :style="{ backgroundColor: dotFill(8) }"
         ></div>
-        <span class="absolute -right-px top-8 text-[9px]">8</span>
+        <span class="absolute -right-px top-8 text-[9px] text-text-tertiary">8</span>
       </div>
 
       <div
@@ -122,7 +122,7 @@
           class="rounded-full w-3.25 h-3.25"
           :style="{ backgroundColor: dotFill(9) }"
         ></div>
-        <span class="absolute -right-px top-8 text-[9px]">9</span>
+        <span class="absolute -right-px top-8 text-[9px] text-text-tertiary">9</span>
       </div>
 
       <div
@@ -134,7 +134,7 @@
           class="rounded-full w-3.5 h-3.5"
           :style="{ backgroundColor: dotFill(10) }"
         ></div>
-        <span class="absolute -right-px top-8 text-[9px]">10</span>
+        <span class="absolute -right-px top-8 text-[9px] text-text-tertiary">10</span>
       </div>
     </div>
   </div>

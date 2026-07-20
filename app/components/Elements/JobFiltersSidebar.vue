@@ -2,7 +2,7 @@
   <JobFiltersMobile class="col-span-full min-w-0 md:hidden" />
 
   <aside
-    class="hidden md:block bg-white rounded-lg border border-b-0 border-gray-default text-text-tertiary text-sm"
+    class="hidden md:block bg-surface-50 rounded-lg border border-b-0 border-gray-default text-text-tertiary text-sm"
     :class="props.class"
   >
     <div class="flex w-full items-center justify-between px-4 py-2 mt-2">
@@ -43,20 +43,23 @@
 </template>
 
 <script setup lang="ts">
-import JobFilterSectionContent from '~/components/Elements/JobFilterSectionContent.vue'
-import JobFiltersMobile from '~/components/Elements/JobFiltersMobile.vue'
-import FilterCollapse from '~/features/home/FilterCollapse.vue'
-import { toPersianDigits } from '~/composables/useCountUp'
-import { JOB_FILTERS_INJECTION_KEY, type JobFiltersState } from '~/composables/job-filters-context'
-import { useJobFilters } from '~/composables/useJobFilters'
-import { JOB_FILTER_SECTIONS, type JobFiltersModel } from '~/types/job-filters'
+import JobFilterSectionContent from "~/components/Elements/JobFilterSectionContent.vue";
+import JobFiltersMobile from "~/components/Elements/JobFiltersMobile.vue";
+import FilterCollapse from "~/features/home/FilterCollapse.vue";
+import { toPersianDigits } from "~/composables/useCountUp";
+import {
+  JOB_FILTERS_INJECTION_KEY,
+  type JobFiltersState,
+} from "~/composables/job-filters-context";
+import { useJobFilters } from "~/composables/useJobFilters";
+import { JOB_FILTER_SECTIONS, type JobFiltersModel } from "~/types/job-filters";
 
 const props = defineProps<{
-  class?: string
-}>()
+  class?: string;
+}>();
 
-const model = defineModel<JobFiltersModel>({ required: true })
+const model = defineModel<JobFiltersModel>({ required: true });
 
-const filters = reactive(useJobFilters(model)) as JobFiltersState
-provide(JOB_FILTERS_INJECTION_KEY, filters)
+const filters = reactive(useJobFilters(model)) as JobFiltersState;
+provide(JOB_FILTERS_INJECTION_KEY, filters);
 </script>

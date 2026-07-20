@@ -7,7 +7,7 @@
       <slot name="btn" />
     </div>
     <div
-      class="dropdown-content p-0 left-0 menu bg-base-100 rounded-xl z-1 min-w-62 w-fit border-3 border-surface-100 font-semibold"
+      class="dropdown-content left-0 z-1 min-w-62 w-fit rounded-xl border-3 border-gray-default bg-surface-50 p-0 font-semibold shadow-sm"
       :class="hover ? 'mt-0' : 'mt-2'"
     >
       <img src="/images/rectangle.png" class="absolute -top-2 left-5" />
