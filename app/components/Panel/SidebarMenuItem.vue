@@ -10,7 +10,9 @@
         :class="[
           item.children ? 'items-center justify-between' : 'justify-start',
           { 'bg-primary-50': activePath === item.to },
-          activePath !== item.to ? 'hover:bg-gray-100 dark:hover:bg-surface-200' : 'hover:bg-primary-50',
+          activePath !== item.to
+            ? 'hover:bg-gray-100 dark:hover:bg-surface-200'
+            : 'hover:bg-primary-50',
         ]"
       >
         <div class="flex items-center justify-start">
@@ -30,7 +32,9 @@
         <div
           class="mb-4 w-3 rounded-br-full border-b-2 border-r-2 border-dotted border-[#cccccc] dark:border-surface-200"
         >
-          <div class="mt-4 h-2 w-2 border-b-2 border-dotted border-[#cccccc] dark:border-surface-200" />
+          <div
+            class="mt-4 h-2 w-2 border-b-2 border-dotted border-[#cccccc] dark:border-surface-200"
+          />
           <div
             v-for="n in Math.max(item.children.length - 2, 0)"
             :key="n"
