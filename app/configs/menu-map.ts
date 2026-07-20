@@ -11,7 +11,7 @@ export const menuMap: Record<string, MenuMeta> = {
   // -------------------------
   dashboard: {
     label: 'پیشخوان',
-    icon: 'gauge-1',
+    icon: 'svg:gauge-1',
     to: '/dashboard',
   },
 
@@ -20,41 +20,41 @@ export const menuMap: Record<string, MenuMeta> = {
   // -------------------------
   my_resume: {
     label: 'رزومه من',
-    icon: 'work-history',
+    icon: 'svg:work-history',
     to: '/dashboard/my-resume',
     placement: 'bottom',
   },
 
   resume_view: {
     label: 'مشاهده رزومه',
-    icon: 'eye',
+    icon: 'svg:eye',
     to: '/dashboard/my-resume',
   },
 
   resume_edit: {
     label: 'ویرایش رزومه',
-    icon: 'eye',
+    icon: 'svg:eye',
     to: '/dashboard/my-resume/edit',
   },
 
    ads: {
     label: 'فرصت های شغلی',
-    icon: 'eye',
+    icon: 'svg:eye',
     to: '/dashboard/ads',
   },
    my_requests: {
     label: 'درخواست های من',
-    icon: 'eye',
+    icon: 'svg:eye',
     to: '/dashboard/ads',
   },
    projects: {
     label: 'پروژه ها',
-    icon: 'eye',
+    icon: 'svg:folder',
     to: '/dashboard/ads',
   },
    bookmarks: {
     label: 'نشان شده ها',
-    icon: 'bookmark-1',
+    icon: 'svg:bookmark-1',
     to: '/dashboard/bookmarks',
     placement: 'bottom',
   },
@@ -65,27 +65,27 @@ export const menuMap: Record<string, MenuMeta> = {
 
    shortcut_ads: {
     label: 'فرصت های شغلی',
-    icon: 'eye',
+    icon: 'svg:eye',
     to: '/dashboard/my-requests',
   },
    shortcut_my_requests: {
     label: 'درخواست های من',
-    icon: 'eye',
+    icon: 'svg:eye',
     to: '/dashboard/my-requests',
   },
    shortcut_my_resume: {
     label: 'مشاهده رزومه',
-    icon: 'eye',
+    icon: 'svg:eye',
     to: '/dashboard/my-requests',
   },
    shortcut_edit_resume: {
     label: 'رزومه ساز',
-    icon: 'eye',
+    icon: 'svg:eye',
     to: '/dashboard/my-requests',
   },
    shortcut_bookmarks: {
     label: 'نشان شده ها',
-    icon: 'bookmark-1',
+    icon: 'svg:bookmark-1',
     to: '/dashboard/bookmarks',
   },
 
@@ -102,44 +102,44 @@ export const menuMap: Record<string, MenuMeta> = {
   // -------------------------
   emplopyer_ads: {
     label: 'آگهی های من',
-    icon: 'eye',
+    icon: 'lucide:briefcase',
     to: '/dashboard/employer/ads',
   },
   create_ad: {
     label: 'ایجاد آگهی جدید',
-    icon: 'eye',
+    icon: 'svg:add-briefcase',
     to: '/dashboard/employer/ads/create',
   },
   manage_ads: {
     label: 'مدیریت آگهی‌ها',
-    icon: 'eye',
+    icon: 'lucide:briefcase',
     to: '/jobs/manage-ads',
   },
 
    my_projects: {
     label: 'پروژه های من',
-    icon: 'eye',
+    icon: 'svg:eye',
     to: '/jobs/applied',
   },
    create_project: {
     label: 'ایجاد پروژه',
-    icon: 'eye',
+    icon: 'svg:eye',
     to: '/jobs/applied',
   },
 
   ad_management: {
     label: 'مدیریت آگهی‌ها',
-    icon: 'bookmark-1',
+    icon: 'lucide:briefcase',
     to: '/jobs/bookmarked',
   },
    project_management: {
     label: 'مدیریت پروژه ها',
-    icon: 'bookmark-1',
+    icon: 'svg:bookmark-1',
     to: '/jobs/bookmarked',
   },
   edit_company: {
     label: 'ویرایش اطلاعات شرکت',
-    icon: 'bookmark-1',
+    icon: 'svg:bookmark-1',
     to: '/jobs/bookmarked',
     placement: 'bottom',
   }, 
@@ -150,27 +150,27 @@ export const menuMap: Record<string, MenuMeta> = {
   
   shortcut_create_ad: {
     label: 'ایجاد آگهی جدید',
-    icon: 'eye',
+    icon: 'svg:eye',
     to: '/dashboard/my-requests',
   },
   shortcut_create_project: {
     label: 'ایجاد پروژه',
-    icon: 'eye',
+    icon: 'svg:eye',
     to: '/dashboard/my-requests',
   },
   shortcut_manage_ads: {
     label: 'مدیریت آگهی‌ها',
-    icon: 'eye',
+    icon: 'lucide:briefcase',
     to: '/dashboard/my-requests',
   },
   shortcut_manage_projects: {
     label: 'مدیریت پروژه ها',
-    icon: 'eye',
+    icon: 'svg:eye',
     to: '/dashboard/my-requests',
   },
   shortcut_edit_company: {
     label: 'ویرایش اطلاعات شرکت',
-    icon: 'eye',
+    icon: 'svg:eye',
     to: '/dashboard/my-requests',
   },
 
@@ -180,17 +180,17 @@ export const menuMap: Record<string, MenuMeta> = {
 
   quick_create_fulltime_ad: {
     label: 'ایجاد آگهی تمام وقت',
-    icon: 'eye',
+    icon: 'svg:eye',
     to: '/dashboard/my-requests',
   },
   quick_create_parttime_ad: {
     label: 'ایجاد آگهی پاره وقت',
-    icon: 'eye',
+    icon: 'svg:eye',
     to: '/dashboard/my-requests',
   },
   quick_create_project: {
     label: 'ایجاد پروژه',
-    icon: 'eye',
+    icon: 'svg:eye',
     to: '/dashboard/my-requests',
   },
 
@@ -201,59 +201,59 @@ export const menuMap: Record<string, MenuMeta> = {
   //For Employer
    user_dashboard: {
     label: 'پیشخوان',
-    icon: 'eye',
+    icon: 'svg:eye',
     to: '/dashboard/my-requests',
   },
    user_create_ad: {
     label: 'ایجاد آگهی',
-    icon: 'eye',
+    icon: 'svg:eye',
     to: '/dashboard/my-requests',
   },
    user_manage_ads: {
     label: 'مدیریت آگهی‌ها',
-    icon: 'eye',
+    icon: 'lucide:briefcase',
     to: '/dashboard/my-requests',
   },
    user_create_project: {
     label: 'ایجاد پروژه',
-    icon: 'eye',
+    icon: 'svg:eye',
     to: '/dashboard/my-requests',
   },
    user_manage_projects: {
     label: ' مدیریت پروژه ها',
-    icon: 'eye',
+    icon: 'svg:eye',
     to: '/dashboard/my-requests',
   },
    user_edit_company: {
     label: 'ویرایش اطلاعات شرکت',
-    icon: 'eye',
+    icon: 'svg:eye',
     to: '/dashboard/my-requests',
   },
 
   //For JobSeeker
    user_my_resume: {
     label: 'رزومه من',
-    icon: 'eye',
+    icon: 'svg:eye',
     to: '/dashboard/my-requests',
   },
    user_edit_resume: {
     label: 'ویرایش رزومه',
-    icon: 'eye',
+    icon: 'svg:eye',
     to: '/dashboard/my-requests',
   },
    user_requests: {
     label: 'درخواست‌های من',
-    icon: 'eye',
+    icon: 'svg:eye',
     to: '/dashboard/my-requests',
   },
    user_projects: {
     label: 'پروژه‌های من',
-    icon: 'eye',
+    icon: 'svg:eye',
     to: '/dashboard/my-requests',
   },
   user_bookmarks: {
     label: 'نشان شده‌ها',
-    icon: 'bookmark-1',
+    icon: 'svg:bookmark-1',
     to: '/dashboard/bookmarks',
     placement: 'bottom',
   },
@@ -263,7 +263,7 @@ export const menuMap: Record<string, MenuMeta> = {
   // -------------------------
   organization_resume: {
     label: 'پروفایل سازمان',
-    icon: 'buildings-5',
+    icon: 'svg:buildings-5',
     to: '/dashboard/employer/company',
     placement: 'bottom',
   },
