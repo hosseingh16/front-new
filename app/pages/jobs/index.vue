@@ -55,7 +55,6 @@
             :key="`${opportunity.type}-${opportunity.item.id}`"
             :variant="opportunity.type === 'project' ? 'project' : 'ad'"
             :item="opportunity.item"
-            @bookmark="toggleBookmark"
           />
 
           <div class="col-span-full mt-4 flex justify-center">
@@ -80,7 +79,6 @@ import JobFiltersSidebar from '~/components/Elements/JobFiltersSidebar.vue'
 import NoResult from '~/components/Elements/NoResult.vue'
 import Pagination from '~/components/Elements/Pagination.vue'
 import FaqSection from '~/components/Elements/FaqSection.vue'
-import type { ApiResponse } from '~/types/api'
 import {
   areRouteQueriesEqual,
   jobFiltersToRouteQuery,
@@ -163,14 +161,6 @@ watch(
 onUnmounted(() => {
   if (urlSyncTimer) clearTimeout(urlSyncTimer)
 })
-
-const api = useApi()
-
-const toggleBookmark = async (id: string | number, type: string) => {
-  await api.post<ApiResponse>('/bookmarks/toggle/' + id, {
-    query: { type },
-  })
-}
 
 const faqCategories = [
   { id: 1, label: 'کارفرمایان' },

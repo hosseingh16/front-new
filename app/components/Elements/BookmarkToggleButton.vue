@@ -8,8 +8,12 @@
     @click="toggleBookmark"
   >
     <Icon
-      :name="bookmarked ? 'material-symbols:bookmark' : 'material-symbols:bookmark-outline'"
-      size="16"
+      :name="
+        bookmarked
+          ? 'material-symbols:bookmark'
+          : 'material-symbols:bookmark-outline'
+      "
+      size="18"
       :class="bookmarked ? 'text-primary-500' : ''"
     />
     <span v-if="!iconOnly">{{ label }}</span>
@@ -17,63 +21,85 @@
 </template>
 
 <script setup lang="ts">
-import type { ApiResponse } from '~/types/api'
+import type { ApiResponse } from "~/types/api";
 
-export type BookmarkType = 'users' | 'requests' | 'companies' | 'ads'
+export type BookmarkType =
+  | "users"
+  | "requests"
+  | "companies"
+  | "ads"
+  | "projects";
+
+const BOOKMARK_SUCCESS_MESSAGES: Record<
+  BookmarkType,
+  { add: string; remove: string }
+> = {
+  ads: { add: "آگهی نشان شد", remove: "نشان آگهی حذف شد" },
+  projects: { add: "پروژه نشان شد", remove: "نشان پروژه حذف شد" },
+  companies: { add: "سازمان نشان شد", remove: "نشان سازمان حذف شد" },
+  users: { add: "کارجو نشان شد", remove: "نشان کارجو حذف شد" },
+  requests: { add: "رزومه نشان شد", remove: "نشان رزومه حذف شد" },
+};
 
 const props = withDefaults(
   defineProps<{
-    targetId: string | number
-    type: BookmarkType
-    label?: string
-    initialBookmarked?: boolean
-    iconOnly?: boolean
+    targetId: string | number;
+    type: BookmarkType;
+    label?: string;
+    initialBookmarked?: boolean;
+    iconOnly?: boolean;
   }>(),
   {
-    label: 'نشان کردن',
+    label: "نشان کردن",
     initialBookmarked: false,
     iconOnly: false,
   },
-)
+);
 
-const api = useApi()
-const { $toast } = useNuxtApp()
+const emit = defineEmits<{
+  "update:bookmarked": [value: boolean];
+}>();
 
-const loading = ref(false)
-const bookmarked = ref(props.initialBookmarked)
+const api = useApi();
+const { $toast } = useNuxtApp();
+
+const loading = ref(false);
+const bookmarked = ref(Boolean(props.initialBookmarked));
 
 watch(
   () => props.initialBookmarked,
   (value) => {
-    bookmarked.value = value
+    bookmarked.value = Boolean(value);
   },
-)
+);
 
 async function toggleBookmark() {
-  if (loading.value) return
+  if (loading.value) return;
 
-  loading.value = true
+  loading.value = true;
   try {
     const result = await api.post<ApiResponse<{ bookmarked?: boolean }>>(
       `/bookmarks/toggle/${props.targetId}`,
       {
         type: props.type,
       },
-    )
+    );
 
-    if (typeof result.data?.bookmarked === 'boolean') {
-      bookmarked.value = result.data.bookmarked
+    if (typeof result.data?.bookmarked === "boolean") {
+      bookmarked.value = result.data.bookmarked;
     } else {
-      bookmarked.value = !bookmarked.value
+      bookmarked.value = !bookmarked.value;
     }
 
-    $toast.success(bookmarked.value ? 'آگهی نشان شد' : 'نشان حذف شد')
+    const messages = BOOKMARK_SUCCESS_MESSAGES[props.type];
+    $toast.success(bookmarked.value ? messages.add : messages.remove);
+    emit("update:bookmarked", bookmarked.value);
   } catch (error: any) {
     if (error?.status !== 401) {
-      $toast.error(error?.message || 'خطا در نشان‌گذاری')
+      $toast.error(error?.message || "خطا در نشان‌گذاری");
     }
   } finally {
-    loading.value = false
+    loading.value = false;
   }
 }
 </script>

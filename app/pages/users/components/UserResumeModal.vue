@@ -67,6 +67,8 @@
                   :target-id="request.id"
                   type="requests"
                   label="نشان کردن"
+                  :initial-bookmarked="Boolean(request.is_bookmarked)"
+                  @update:bookmarked="onBookmarkChange"
                 />
 
                 <button
@@ -218,6 +220,11 @@ function goNext() {
   if (!canGoNext.value || !props.requests?.length) return;
   const nextRequest = props.requests[currentIndex.value + 1];
   if (nextRequest) emit("update:request", nextRequest);
+}
+
+function onBookmarkChange(value: boolean) {
+  if (!props.request) return;
+  props.request.is_bookmarked = value;
 }
 
 function handleDownload() {

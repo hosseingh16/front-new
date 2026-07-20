@@ -8,12 +8,26 @@
   </template>
 
   <template v-else-if="user">
-    <h1
+    <div
       v-if="!embedded"
-      class="mt-6 font-yb-bold text-2xl text-text-tertiary"
+      class="mt-6 flex flex-wrap items-center justify-between gap-3"
     >
-      {{ fullName }}
-    </h1>
+      <h1 class="font-yb-bold text-2xl text-text-tertiary">
+        {{ fullName }}
+      </h1>
+      <BookmarkToggleButton
+        v-if="user?.id"
+        :target-id="user.id"
+        type="users"
+        label="نشان کردن"
+        :initial-bookmarked="Boolean(user.is_bookmarked)"
+        @update:bookmarked="
+          (value) => {
+            if (user) user.is_bookmarked = value;
+          }
+        "
+      />
+    </div>
 
     <div
       class="grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_300px]"
@@ -288,6 +302,7 @@
 
 <script setup lang="ts">
 import UserResumeJobTab from "./UserResumeJobTab.vue";
+import BookmarkToggleButton from "~/components/Elements/BookmarkToggleButton.vue";
 import asidePattern from "~/assets/vectors/aside-pattern.svg?url";
 import linkIcon from "~/assets/vectors/social/link.svg?url";
 import linkedinIcon from "~/assets/vectors/social/linkedin.svg?url";

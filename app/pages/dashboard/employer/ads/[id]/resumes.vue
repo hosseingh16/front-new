@@ -183,6 +183,7 @@
               @view="handleViewRequest(request)"
               @confirm="openConfirmModal(request.id)"
               @reject="openRejectModal(request.id)"
+              @bookmark-change="(bookmarked) => onRequestBookmarkChange(request.id, bookmarked)"
             />
 
             <div class="mt-4 flex justify-center col-span-full">
@@ -287,6 +288,7 @@ const {
   loading,
   initialized,
   error,
+  refresh,
   confirmRequest,
   rejectRequest,
   markRequestSeen,
@@ -372,6 +374,15 @@ function findRequestById(requestId: number) {
     filteredRequests.value.find((item) => item.id === requestId) ??
     null
   );
+}
+
+async function onRequestBookmarkChange(requestId: number, bookmarked: boolean) {
+  const request = findRequestById(requestId);
+  if (request) request.is_bookmarked = bookmarked;
+
+  if (activeTab.value === "bookmarked" && !bookmarked) {
+    await refresh();
+  }
 }
 
 function openConfirmModal(requestId: number) {

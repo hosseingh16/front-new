@@ -23,9 +23,11 @@ export interface Company {
     gallery: string[];
     is_profile_public: number | boolean;
     ads?: AdList[];
+    is_bookmarked?: boolean;
 }
 
 export interface CompanyList {
+    id?: number;
     name: string | null;
     slug?: string | null;
     size: string | null;
@@ -33,4 +35,5 @@ export interface CompanyList {
     province_name: string | null;
     city_name: string | null;
     activity: string | null;
+    is_bookmarked?: boolean;
 }

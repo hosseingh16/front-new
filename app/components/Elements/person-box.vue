@@ -1,5 +1,5 @@
 <template>
-  <div class="rounded-xl border border-surface-200 bg-[#F6F8FE] p-4">
+  <div class="relative rounded-xl border border-surface-200 bg-[#F6F8FE] p-4">
     <template v-if="loading">
       <div class="flex flex-col items-center">
         <div class="h-16 w-16 rounded-2xl bg-surface-200 animate-pulse" />
@@ -19,6 +19,21 @@
     </template>
 
     <template v-else>
+      <div
+        v-if="bookmarkId != null"
+        class="absolute left-3 top-3 z-10"
+        @click.stop.prevent
+      >
+        <BookmarkToggleButton
+          :target-id="bookmarkId"
+          :type="bookmarkType"
+          :initial-bookmarked="Boolean(isBookmarked)"
+          icon-only
+          class="!h-auto !w-auto !border-none !bg-transparent !p-0"
+          @update:bookmarked="onBookmarkChange"
+        />
+      </div>
+
       <div class="flex flex-col items-center text-center">
         <div class="h-16 w-16 overflow-hidden rounded-2xl bg-[#c5dff5]">
           <img
@@ -108,6 +123,10 @@
 </template>
 
 <script setup lang="ts">
+import BookmarkToggleButton, {
+  type BookmarkType,
+} from "~/components/Elements/BookmarkToggleButton.vue";
+
 const props = withDefaults(
   defineProps<{
     name?: string;
@@ -121,11 +140,21 @@ const props = withDefaults(
     cityName?: string;
     to?: string;
     loading?: boolean;
+    bookmarkId?: string | number | null;
+    bookmarkType?: BookmarkType;
+    isBookmarked?: boolean;
   }>(),
   {
     loading: false,
+    bookmarkId: null,
+    bookmarkType: "users",
+    isBookmarked: false,
   },
 );
+
+const emit = defineEmits<{
+  bookmarkChange: [id: number | string, bookmarked: boolean];
+}>();
 
 const location = computed(() => {
   if (props.provinceName && props.cityName) {
@@ -133,4 +162,9 @@ const location = computed(() => {
   }
   return props.provinceName || props.cityName || "";
 });
+
+function onBookmarkChange(value: boolean) {
+  if (props.bookmarkId == null) return;
+  emit("bookmarkChange", props.bookmarkId, value);
+}
 </script>

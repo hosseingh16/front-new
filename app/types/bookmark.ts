@@ -27,6 +27,7 @@ export interface BookmarkedUser {
   age?: string | number
   province_name?: string
   city_name?: string
+  is_bookmarked?: boolean
 }
 
 export interface BookmarkedCompany extends CompanyList {

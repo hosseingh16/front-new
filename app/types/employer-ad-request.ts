@@ -35,6 +35,7 @@ export interface EmployerAdRequest {
   status?: string
   seen?: string
   work_experience?: string
+  is_bookmarked?: boolean
 }
 
 export interface EmployerAdRequestStatusOption {

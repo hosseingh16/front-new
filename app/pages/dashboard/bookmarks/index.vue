@@ -72,8 +72,8 @@
             v-for="entry in groups.ad"
             :key="`ad-${entry.model.id}`"
             variant="ad"
-            :item="entry.model"
-            @bookmark="(id) => removeBookmark(id, 'ad')"
+            :item="{ ...entry.model, is_bookmarked: true }"
+            @bookmark-change="(_id, bookmarked) => onBookmarkChange(bookmarked)"
           />
         </div>
         <NoResult
@@ -94,8 +94,8 @@
             v-for="entry in groups.project"
             :key="`project-${entry.model.id}`"
             variant="project"
-            :item="entry.model"
-            @bookmark="(id) => removeBookmark(id, 'project')"
+            :item="{ ...entry.model, is_bookmarked: true }"
+            @bookmark-change="(_id, bookmarked) => onBookmarkChange(bookmarked)"
           />
         </div>
         <NoResult
@@ -115,11 +115,13 @@
           <CompanyBox
             v-for="(entry, index) in groups.company"
             :key="`company-${entry.model.id ?? entry.model.slug ?? index}`"
-            :company="entry.model"
+            :company="{ ...entry.model, is_bookmarked: true }"
             :active-ads="entry.model.active_ads"
             :to="
               entry.model.slug ? `/companies/${entry.model.slug}` : undefined
             "
+            show-bookmark
+            @bookmark-change="(_id, bookmarked) => onBookmarkChange(bookmarked)"
           />
         </div>
         <NoResult
@@ -149,6 +151,10 @@
             :province-name="entry.model.province_name"
             :city-name="entry.model.city_name"
             :to="`/users/${entry.model.id}`"
+            :bookmark-id="entry.model.id"
+            bookmark-type="users"
+            :is-bookmarked="true"
+            @bookmark-change="(_id, bookmarked) => onBookmarkChange(bookmarked)"
           />
         </div>
         <NoResult
@@ -178,6 +184,10 @@
             :province-name="entry.model.province_name"
             :city-name="entry.model.city_name"
             :to="`/users/${entry.model.id}`"
+            :bookmark-id="entry.model.id"
+            bookmark-type="users"
+            :is-bookmarked="true"
+            @bookmark-change="(_id, bookmarked) => onBookmarkChange(bookmarked)"
           />
         </div>
         <NoResult
@@ -198,7 +208,6 @@ import ItemBox from "~/components/Elements/item-box.vue";
 import NoResult from "~/components/Elements/NoResult.vue";
 import PersonBox from "~/components/Elements/person-box.vue";
 import { toPersianDigits } from "~/composables/useCountUp";
-import type { ApiResponse } from "~/types/api";
 import type { BookmarkTab } from "~/types/bookmark";
 import { countBookmarks } from "~/types/bookmark";
 
@@ -206,8 +215,6 @@ definePageMeta({
   layout: "dashboard",
 });
 
-const api = useApi();
-const { $toast } = useNuxtApp();
 const { groups, loading, initialized, error, fetchBookmarks } = useBookmarks();
 
 const activeTab = ref<BookmarkTab>("ad");
@@ -222,26 +229,9 @@ const tabs = [
 
 const totalCount = computed(() => countBookmarks(groups.value));
 
-/** Map UI tab → API toggle `type` body value. */
-const toggleTypeByTab: Record<BookmarkTab, string> = {
-  ad: "ads",
-  project: "projects",
-  company: "companies",
-  user: "users",
-  consultant: "users",
-};
-
-async function removeBookmark(id: number | string, tab: BookmarkTab) {
-  try {
-    await api.post<ApiResponse>(`/bookmarks/toggle/${id}`, {
-      type: toggleTypeByTab[tab],
-    });
+async function onBookmarkChange(bookmarked: boolean) {
+  if (!bookmarked) {
     await fetchBookmarks();
-    $toast.success("نشان حذف شد");
-  } catch (err: any) {
-    if (err?.status !== 401) {
-      $toast.error(err?.message || "خطا در حذف نشان");
-    }
   }
 }
 

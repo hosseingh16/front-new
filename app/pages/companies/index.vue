@@ -65,6 +65,7 @@
             layout="horizontal"
             :company="company"
             :to="company.slug ? `/companies/${company.slug}` : undefined"
+            show-bookmark
           />
 
           <div class="flex justify-center pt-2">

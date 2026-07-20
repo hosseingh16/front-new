@@ -221,6 +221,20 @@
             >
               {{ company.name }}
             </h1>
+            <div class="mt-3 flex justify-center">
+              <BookmarkToggleButton
+                v-if="company.id"
+                :target-id="company.id"
+                type="companies"
+                label="نشان کردن"
+                :initial-bookmarked="Boolean(company.is_bookmarked)"
+                @update:bookmarked="
+                  (value) => {
+                    if (company) company.is_bookmarked = value;
+                  }
+                "
+              />
+            </div>
             <p
               v-if="activityLabel"
               class="mt-1 text-center text-sm text-text-passive"
@@ -374,6 +388,7 @@
 
 <script setup lang="ts">
 import ItemBoxVertical from "~/components/Elements/item-box-vertical.vue";
+import BookmarkToggleButton from "~/components/Elements/BookmarkToggleButton.vue";
 import NoResult from "~/components/Elements/NoResult.vue";
 import asidePattern from "~/assets/vectors/aside-pattern.svg?url";
 import linkIcon from "~/assets/vectors/social/link.svg?url";

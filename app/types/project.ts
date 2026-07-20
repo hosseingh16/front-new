@@ -23,6 +23,7 @@ export interface Project {
     payable_price?: number
     paid_at?: string
     status?: string
+    is_bookmarked?: boolean
 }
 
 export interface ProjectList {
@@ -44,6 +45,7 @@ export interface ProjectList {
     payable_price?: number
     paid_at?: string
     status?: string
+    is_bookmarked?: boolean
 }
 
 export interface ProjectSummery {

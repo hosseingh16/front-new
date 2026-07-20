@@ -108,4 +108,5 @@ export interface UserResume {
   resume_skills?: UserResumeSkill | null
   resume_softwares?: UserResumeSoftware[]
   resume_priors?: UserResumePrior[]
+  is_bookmarked?: boolean
 }

@@ -77,11 +77,17 @@
                 </div>
               </div>
             </div>
-            <div class="text-center">
-              <Icon
-                name="svg:bookmark"
-                class="relative z-10 cursor-pointer"
-                @click.stop.prevent="onBookmark"
+            <div
+              class="relative z-10 text-center flex flex-col justify-start items-center"
+              @click.stop.prevent
+            >
+              <BookmarkToggleButton
+                :target-id="item!.id"
+                :type="variant === 'project' ? 'projects' : 'ads'"
+                :initial-bookmarked="Boolean(item!.is_bookmarked)"
+                icon-only
+                class="!h-auto !w-auto !border-none !bg-transparent !p-0"
+                @update:bookmarked="onBookmarkChange"
               />
               <p
                 v-if="variant === 'ad' && ad.publish_date"
@@ -157,6 +163,7 @@
 <script setup lang="ts">
 import moment from "moment-jalaali";
 import "moment/locale/fa";
+import BookmarkToggleButton from "~/components/Elements/BookmarkToggleButton.vue";
 import type { AdList } from "~/types/ad";
 import type { ProjectList } from "~/types/project";
 
@@ -179,7 +186,7 @@ const props = withDefaults(
 );
 
 const emit = defineEmits<{
-  bookmark: [id: number | string, type: string];
+  bookmarkChange: [id: number | string, bookmarked: boolean];
 }>();
 
 const ad = computed(() => props.item as AdList);
@@ -194,12 +201,10 @@ const itemUrl = computed(() => {
     : `/jobs/${props.item.id}`;
 });
 
-function onBookmark() {
-  emit(
-    "bookmark",
-    props.item!.id,
-    props.variant === "project" ? "Project" : "Ad",
-  );
+function onBookmarkChange(value: boolean) {
+  if (!props.item) return;
+  props.item.is_bookmarked = value;
+  emit("bookmarkChange", props.item.id, value);
 }
 
 const truncatedCompanyName = computed(() => {

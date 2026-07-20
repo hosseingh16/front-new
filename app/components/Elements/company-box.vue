@@ -103,79 +103,108 @@
           </div>
         </div>
 
-        <div
-          class="flex shrink-0 items-center gap-1.5 text-sm font-semibold text-primary-500"
-        >
-          <Icon name="svg:eye" class="shrink-0" />
-          <span>مشاهده پروفایل</span>
+        <div class="relative z-10 flex shrink-0 items-center gap-2">
+          <BookmarkToggleButton
+            v-if="showBookmark && bookmarkTargetId != null"
+            :target-id="bookmarkTargetId"
+            type="companies"
+            :initial-bookmarked="Boolean(isBookmarked)"
+            icon-only
+            class="!h-auto !w-auto !border-none !bg-transparent !p-0"
+            @update:bookmarked="onBookmarkChange"
+          />
+          <div
+            class="flex items-center gap-1.5 text-sm font-semibold text-primary-500"
+          >
+            <Icon name="svg:eye" class="shrink-0" />
+            <span>مشاهده پروفایل</span>
+          </div>
         </div>
       </div>
     </template>
 
     <template v-else>
-      <div class="flex flex-col items-center text-center">
+      <div class="relative">
         <div
-          class="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#ECF4D9]"
+          v-if="showBookmark && bookmarkTargetId != null"
+          class="absolute left-0 top-0 z-10"
+          @click.stop.prevent
         >
-          <img
-            v-if="logo"
-            :src="logo"
-            :alt="name"
-            class="h-16 w-16 rounded-2xl object-cover"
+          <BookmarkToggleButton
+            :target-id="bookmarkTargetId"
+            type="companies"
+            :initial-bookmarked="Boolean(isBookmarked)"
+            icon-only
+            class="!h-auto !w-auto !border-none !bg-transparent !p-0"
+            @update:bookmarked="onBookmarkChange"
           />
-          <span v-else class="font-yb-bold text-lg text-text-tertiary">
-            {{ name.charAt(0) }}
-          </span>
         </div>
 
-        <p class="mt-3 font-yb-bold text-base text-text-tertiary">{{ name }}</p>
+        <div class="flex flex-col items-center text-center">
+          <div
+            class="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#ECF4D9]"
+          >
+            <img
+              v-if="logo"
+              :src="logo"
+              :alt="name"
+              class="h-16 w-16 rounded-2xl object-cover"
+            />
+            <span v-else class="font-yb-bold text-lg text-text-tertiary">
+              {{ name.charAt(0) }}
+            </span>
+          </div>
+
+          <p class="mt-3 font-yb-bold text-base text-text-tertiary">{{ name }}</p>
+
+          <div
+            v-if="activity"
+            class="mt-2 flex items-center gap-1 text-sm text-text-passive"
+          >
+            <Icon name="ph:suitcase-simple-light" class="shrink-0" />
+            <span>نوع فعالیت: {{ activity }}</span>
+          </div>
+        </div>
+
+        <div class="mt-4 flex flex-col gap-2">
+          <div
+            v-if="size"
+            class="flex items-center gap-2 rounded-full border border-gray-default bg-surface-50 px-3 py-1.5 text-sm text-text-tertiary"
+          >
+            <Icon name="svg:users-1" class="shrink-0" />
+            <span>{{ size }}</span>
+          </div>
+
+          <div
+            v-if="location"
+            class="flex items-center gap-2 rounded-full border border-gray-default bg-surface-50 px-3 py-1.5 text-sm text-text-tertiary"
+          >
+            <Icon name="svg:location-4" class="shrink-0" />
+            <span>{{ location }}</span>
+          </div>
+
+          <div
+            v-if="activeAds != null"
+            class="flex items-center gap-2 rounded-full border border-gray-default bg-surface-50 px-3 py-1.5 text-sm text-text-tertiary"
+          >
+            <Icon name="ph:suitcase-simple-light" class="shrink-0" />
+            <span>{{ persianActiveAds }} آگهی فعال</span>
+          </div>
+        </div>
 
         <div
-          v-if="activity"
-          class="mt-2 flex items-center gap-1 text-sm text-text-passive"
+          class="mt-4 flex items-center justify-center gap-1.5 text-sm font-semibold text-primary-500"
         >
-          <Icon name="ph:suitcase-simple-light" class="shrink-0" />
-          <span>نوع فعالیت: {{ activity }}</span>
+          <Icon name="svg:eye" class="shrink-0" />
+          <span>مشاهده رزومه</span>
         </div>
-      </div>
-
-      <div class="mt-4 flex flex-col gap-2">
-        <div
-          v-if="size"
-          class="flex items-center gap-2 rounded-full border border-gray-default bg-surface-50 px-3 py-1.5 text-sm text-text-tertiary"
-        >
-          <Icon name="svg:users-1" class="shrink-0" />
-          <span>{{ size }}</span>
-        </div>
-
-        <div
-          v-if="location"
-          class="flex items-center gap-2 rounded-full border border-gray-default bg-surface-50 px-3 py-1.5 text-sm text-text-tertiary"
-        >
-          <Icon name="svg:location-4" class="shrink-0" />
-          <span>{{ location }}</span>
-        </div>
-
-        <div
-          v-if="activeAds != null"
-          class="flex items-center gap-2 rounded-full border border-gray-default bg-surface-50 px-3 py-1.5 text-sm text-text-tertiary"
-        >
-          <Icon name="ph:suitcase-simple-light" class="shrink-0" />
-          <span>{{ persianActiveAds }} آگهی فعال</span>
-        </div>
-      </div>
-
-      <div
-        class="mt-4 flex items-center justify-center gap-1.5 text-sm font-semibold text-primary-500"
-      >
-        <Icon name="svg:eye" class="shrink-0" />
-        <span>مشاهده رزومه</span>
       </div>
     </template>
   </div>
 </template>
 
 <script setup lang="ts">
+import BookmarkToggleButton from "~/components/Elements/BookmarkToggleButton.vue";
 import type { CompanyList } from "~/types/company";
 
 const props = withDefaults(
@@ -191,16 +220,26 @@ const props = withDefaults(
     to?: string;
     loading?: boolean;
     layout?: "vertical" | "horizontal";
+    showBookmark?: boolean;
   }>(),
   {
     loading: false,
     layout: "vertical",
+    showBookmark: false,
   },
 );
+
+const emit = defineEmits<{
+  bookmarkChange: [id: number | string, bookmarked: boolean];
+}>();
 
 const name = computed(() => props.company?.name ?? props.name ?? "شرکت");
 const logo = computed(() => props.company?.logo ?? props.logo ?? null);
 const size = computed(() => props.company?.size ?? props.size ?? "");
+const bookmarkTargetId = computed(
+  () => props.company?.id ?? null,
+);
+const isBookmarked = computed(() => Boolean(props.company?.is_bookmarked));
 
 const { items: lookupItems } = useLookups("industries");
 const industryOptions = lookupItems("industries");
@@ -229,4 +268,13 @@ const persianActiveAds = computed(() => {
     (d) => "۰۱۲۳۴۵۶۷۸۹"[Number(d)]!,
   );
 });
+
+function onBookmarkChange(value: boolean) {
+  if (props.company) {
+    props.company.is_bookmarked = value;
+  }
+  if (bookmarkTargetId.value != null) {
+    emit("bookmarkChange", bookmarkTargetId.value, value);
+  }
+}
 </script>

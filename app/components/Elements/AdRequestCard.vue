@@ -33,7 +33,9 @@
                   <BookmarkToggleButton
                     :target-id="request.id"
                     type="requests"
+                    :initial-bookmarked="Boolean(request.is_bookmarked)"
                     icon-only
+                    @update:bookmarked="onBookmarkChange"
                   />
                 </div>
 
@@ -120,6 +122,7 @@ const emit = defineEmits<{
   view: [];
   confirm: [];
   reject: [];
+  bookmarkChange: [value: boolean];
 }>();
 
 const name = computed(() => props.request.user?.name || "—");
@@ -132,4 +135,9 @@ const statusKey = computed(() => resolveAdRequestStatusKey(props.request));
 const isApproved = computed(() => statusKey.value === "approved");
 
 const isRejected = computed(() => statusKey.value === "rejected");
+
+function onBookmarkChange(value: boolean) {
+  props.request.is_bookmarked = value;
+  emit("bookmarkChange", value);
+}
 </script>

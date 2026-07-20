@@ -72,7 +72,6 @@
             :key="`${opportunity.type}-${opportunity.item.id}`"
             :variant="opportunity.type === 'project' ? 'project' : 'ad'"
             :item="opportunity.item"
-            @bookmark="toggleBookmark"
           />
         </template>
         <button class="btn btn-outline text-primary-500 sm:hidden">
@@ -385,13 +384,6 @@ const api = useApi();
 const getPosts = async () => {
   const result = await api.get<ApiResponse>('/posts');
   posts.value = result.data;
-};
-const toggleBookmark = async (id: string | number, type: string) => {
-  const result = await api.post<ApiResponse>('/bookmarks/toggle/' + id, {
-    query: {
-      type: type,
-    },
-  });
 };
 function filterOpportunities(items: Opportunity[], type: string): Opportunity[] {
   if (type === 'پروژه') {

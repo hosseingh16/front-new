@@ -185,7 +185,6 @@
           :key="project.id"
           variant="project"
           :item="project"
-          @bookmark="toggleBookmark"
         />
       </div>
     </section>
@@ -396,12 +395,6 @@ const posts = [
     link: '/account',
   },
 ];
-async function toggleBookmark(id: string | number, type: string) {
-  await api.post<ApiResponse>(`/bookmarks/toggle/${id}`, {
-    query: { type },
-  })
-}
-
 
 onMounted(() => {
   getProjects()

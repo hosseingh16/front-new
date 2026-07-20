@@ -21,6 +21,7 @@ export interface AdList {
     expired: boolean
     publish_date: string
     placement?: string
+    is_bookmarked?: boolean
 }
 
 export interface Ad {
@@ -80,4 +81,5 @@ export interface Ad {
     dynamic_need_days?: number
     dynamic_need_hours?: number
     static_hours?: number
+    is_bookmarked?: boolean
 }

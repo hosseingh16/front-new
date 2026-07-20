@@ -84,9 +84,11 @@
             </button>
             <BookmarkToggleButton
               v-if="ad?.id"
-              :target-id="ad?.id"
+              :target-id="ad.id"
               type="ads"
               label="نشان کردن"
+              :initial-bookmarked="Boolean(ad.is_bookmarked)"
+              @update:bookmarked="(value) => { if (ad) ad.is_bookmarked = value }"
             />
           </div>
         </div>
