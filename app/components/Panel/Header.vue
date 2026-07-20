@@ -62,23 +62,14 @@
           </button>
         </template>
         <template #content>
-          <ul class="space-y-2 p-2 rounded-xl">
-            <li>
-              <NuxtLink>
-                <Icon name="svg:new-briefcase" />
-                <span class="text-text-tertiary">آگهی تمام وقت</span>
-              </NuxtLink>
-            </li>
-            <li>
-              <NuxtLink>
-                <Icon name="svg:new-briefcase" />
-                <span class="text-text-tertiary">آگهی نیمه وقت</span>
-              </NuxtLink>
-            </li>
-            <li>
-              <NuxtLink>
-                <Icon name="svg:new-notepad-text" />
-                <span class="text-text-tertiary">پروژه</span>
+          <ul class="min-w-56 p-2">
+            <li v-for="item in createMenuItems" :key="item.title">
+              <NuxtLink
+                :to="item.to"
+                class="flex items-center gap-2 rounded-lg px-4 py-2 text-sm text-text-secondary transition-colors hover:bg-surface-100"
+              >
+                <Icon :name="item.icon" size="16" class="text-text-passive" />
+                <span>{{ item.title }}</span>
               </NuxtLink>
             </li>
           </ul>
@@ -90,4 +81,10 @@
 
 <script setup lang="ts">
 const { collapsed, toggle } = useDashboardSidebar()
+
+const createMenuItems = [
+  { title: 'آگهی تمام وقت', to: '#', icon: 'svg:new-briefcase' },
+  { title: 'آگهی نیمه وقت', to: '#', icon: 'svg:new-briefcase' },
+  { title: 'پروژه', to: '#', icon: 'svg:new-notepad-text' },
+]
 </script>
