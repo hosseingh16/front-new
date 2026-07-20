@@ -1,6 +1,6 @@
 <template>
   <div dir="rtl" :class="{ dark: isDark }">
-    <div class="min-h-screen">
+    <div class="min-h-screen bg-surface-50">
       <div
         class="bg-surface-50 flex flex-col justify-between max-w-384 w-full m-auto"
       >

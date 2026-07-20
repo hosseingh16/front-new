@@ -26,7 +26,7 @@
               >
                 <Icon name="svg:buildings-4" />
                 <span>نام شرکت:</span>
-                <span class="mr-1 text-text-secondary">{{ companyName }}</span>
+                <span class="mr-1">{{ companyName }}</span>
               </div>
             </div>
           </div>

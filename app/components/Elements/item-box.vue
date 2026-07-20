@@ -60,7 +60,7 @@
                 />
               </div>
               <div class="text-sm">
-                <p class="font-semibold text-text-tertiary">
+                <p class="font-semibold">
                   {{
                     variant === "project" ? `پروژه ${project.type}` : ad.title
                   }}
@@ -69,7 +69,7 @@
                   <Icon name="svg:buildings-4" />
                   <p class="text-text-passive">نام شرکت:</p>
                   <p
-                    class="mr-1 text-text-tertiary"
+                    class="mr-1"
                     :title="companyName.length > 24 ? companyName : undefined"
                   >
                     {{ truncatedCompanyName }}
