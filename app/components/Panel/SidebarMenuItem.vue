@@ -14,7 +14,7 @@
         ]"
       >
         <div class="flex items-center justify-start">
-          <Icon :name="`${item.icon}`" class="text-text-passive" />
+          <Icon :name="`${item.icon}`" class="text-text-passive" size="16" />
           <span class="mr-2 text-text-secondary">{{ item.label }}</span>
         </div>
         <icons-chevron
@@ -53,7 +53,11 @@
               ]"
             >
               <div class="flex items-center justify-start">
-                <Icon :name="`${child.icon}`" class="text-text-passive" />
+                <Icon
+                  :name="`${child.icon}`"
+                  size="16"
+                  class="text-text-passive"
+                />
                 <span class="mr-2 text-text-secondary">{{ child.label }}</span>
               </div>
             </button>
