@@ -1,6 +1,8 @@
 <template>
   <div class="bg-surface-100 max-lg:h-[110%] max-lg:overflow-scroll max-lg:p-1">
-    <div class="flex flex-col items-center gap-y-3 rounded-lg bg-surface-50 p-6">
+    <div
+      class="flex flex-col items-center gap-y-3 rounded-lg bg-surface-50 p-6"
+    >
       <Avatar class="w-20 h-20" />
       <span class="font-semibold text-text-tertiary">آرمان علیمرادی</span>
       <button class="flex items-center">
@@ -99,7 +101,7 @@
 const route = useRoute();
 
 const menus1 = [
-  { title: "پیشخوان", to: "#", icon: "gauge-1" },
+  { title: "پیشخوان", to: "/dashboard", icon: "gauge-1" },
   { title: "فرصت‌های شغلی", to: "#", icon: "jobs-2" },
   {
     title: "پروفایل‌های شغلی",
@@ -107,14 +109,23 @@ const menus1 = [
     icon: "search-briefcase",
     children: [],
   },
-  { title: "آگهی‌ها", to: "#", icon: "bag-3", children: [] },
-  { title: "پروژه‌ها", to: "#", icon: "projects-1", children: [] },
-  { title: "مشاوره‌ها", to: "#", icon: "users-1", children: [] },
+  {
+    title: "آگهی‌ها",
+    to: "/dashboard/employer/ads",
+    icon: "bag-3",
+    children: [],
+  },
+  // { title: "پروژه‌ها", to: "#", icon: "projects-1", children: [] },
+  // { title: "مشاوره‌ها", to: "#", icon: "users-1", children: [] },
 ];
 
 const menus2 = [
-  { title: "نشان شده‌ها", to: "#", icon: "bookmark-1" },
+  { title: "نشان شده‌ها", to: "/dashboard/bookmarks", icon: "bookmark-1" },
   { title: "رزومه من", to: "#", icon: "work-history" },
-  { title: "پروفایل سازمان", to: "#", icon: "buildings-5" },
+  {
+    title: "پروفایل سازمان",
+    to: "/dashboard/employer/company",
+    icon: "buildings-5",
+  },
 ];
 </script>

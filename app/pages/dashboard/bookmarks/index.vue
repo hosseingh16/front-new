@@ -43,7 +43,9 @@
         </span>
       </div>
 
-      <div class="mt-6 flex flex-wrap items-center gap-6 border-b border-gray-default">
+      <div
+        class="mt-6 flex flex-wrap items-center gap-6 border-b border-gray-default"
+      >
         <button
           v-for="tab in tabs"
           :key="tab.id"
@@ -115,7 +117,9 @@
             :key="`company-${entry.model.id ?? entry.model.slug ?? index}`"
             :company="entry.model"
             :active-ads="entry.model.active_ads"
-            :to="entry.model.slug ? `/companies/${entry.model.slug}` : undefined"
+            :to="
+              entry.model.slug ? `/companies/${entry.model.slug}` : undefined
+            "
           />
         </div>
         <NoResult
@@ -189,59 +193,59 @@
 </template>
 
 <script setup lang="ts">
-import CompanyBox from '~/components/Elements/company-box.vue'
-import ItemBox from '~/components/Elements/item-box.vue'
-import NoResult from '~/components/Elements/NoResult.vue'
-import PersonBox from '~/components/Elements/person-box.vue'
-import { toPersianDigits } from '~/composables/useCountUp'
-import type { ApiResponse } from '~/types/api'
-import type { BookmarkTab } from '~/types/bookmark'
-import { countBookmarks } from '~/types/bookmark'
+import CompanyBox from "~/components/Elements/company-box.vue";
+import ItemBox from "~/components/Elements/item-box.vue";
+import NoResult from "~/components/Elements/NoResult.vue";
+import PersonBox from "~/components/Elements/person-box.vue";
+import { toPersianDigits } from "~/composables/useCountUp";
+import type { ApiResponse } from "~/types/api";
+import type { BookmarkTab } from "~/types/bookmark";
+import { countBookmarks } from "~/types/bookmark";
 
 definePageMeta({
-  layout: 'dashboard',
-})
+  layout: "dashboard",
+});
 
-const api = useApi()
-const { $toast } = useNuxtApp()
-const { groups, loading, initialized, error, fetchBookmarks } = useBookmarks()
+const api = useApi();
+const { $toast } = useNuxtApp();
+const { groups, loading, initialized, error, fetchBookmarks } = useBookmarks();
 
-const activeTab = ref<BookmarkTab>('ad')
+const activeTab = ref<BookmarkTab>("ad");
 
 const tabs = [
-  { id: 'ad' as const, label: 'آگهی‌ها', icon: 'lucide:briefcase' },
-  { id: 'project' as const, label: 'پروژه‌ها', icon: 'lucide:folder' },
-  { id: 'company' as const, label: 'سازمان‌ها', icon: 'svg:buildings-5' },
-  { id: 'user' as const, label: 'کارجویان', icon: 'svg:users-1' },
-  { id: 'consultant' as const, label: 'مشاوران', icon: 'mdi:headset' },
-]
+  { id: "ad" as const, label: "آگهی‌ها", icon: "lucide:briefcase" },
+  { id: "project" as const, label: "پروژه‌ها", icon: "lucide:folder" },
+  { id: "company" as const, label: "سازمان‌ها", icon: "svg:buildings-5" },
+  { id: "user" as const, label: "کارجویان", icon: "svg:users-1" },
+  // { id: 'consultant' as const, label: 'مشاوران', icon: 'mdi:headset' },
+];
 
-const totalCount = computed(() => countBookmarks(groups.value))
+const totalCount = computed(() => countBookmarks(groups.value));
 
 /** Map UI tab → API toggle `type` body value. */
 const toggleTypeByTab: Record<BookmarkTab, string> = {
-  ad: 'ads',
-  project: 'projects',
-  company: 'companies',
-  user: 'users',
-  consultant: 'users',
-}
+  ad: "ads",
+  project: "projects",
+  company: "companies",
+  user: "users",
+  consultant: "users",
+};
 
 async function removeBookmark(id: number | string, tab: BookmarkTab) {
   try {
     await api.post<ApiResponse>(`/bookmarks/toggle/${id}`, {
       type: toggleTypeByTab[tab],
-    })
-    await fetchBookmarks()
-    $toast.success('نشان حذف شد')
+    });
+    await fetchBookmarks();
+    $toast.success("نشان حذف شد");
   } catch (err: any) {
     if (err?.status !== 401) {
-      $toast.error(err?.message || 'خطا در حذف نشان')
+      $toast.error(err?.message || "خطا در حذف نشان");
     }
   }
 }
 
 useSeoMeta({
-  title: 'نشان شده‌ها',
-})
+  title: "نشان شده‌ها",
+});
 </script>
