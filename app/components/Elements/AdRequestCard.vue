@@ -1,10 +1,10 @@
 <template>
-  <article class="rounded-lg bg-white p-1">
-    <div class="rounded-lg bg-[#F6F8FE] p-3">
+  <article class="rounded-lg border border-base-300 bg-surface-card p-1">
+    <div class="rounded-lg bg-surface-soft p-3">
       <div class="flex items-start justify-between">
         <div class="flex min-w-0 flex-1 items-center gap-2">
           <div
-            class="h-16 w-16 shrink-0 overflow-hidden rounded-2xl bg-[#c5dff5]"
+            class="h-16 w-16 shrink-0 overflow-hidden rounded-2xl bg-avatar-from"
           >
             <img
               v-if="avatar"
@@ -14,9 +14,9 @@
             />
             <div
               v-else
-              class="flex h-full w-full items-end justify-center bg-gradient-to-b from-[#c5dff5] to-[#9ec5e8]"
+              class="flex h-full w-full items-end justify-center bg-linear-to-b from-avatar-from to-avatar-to"
             >
-              <div class="h-[85%] w-[70%] rounded-t-full bg-[#e8a4a4]" />
+              <div class="h-[85%] w-[70%] rounded-t-full bg-avatar-skin" />
             </div>
           </div>
 
@@ -41,7 +41,7 @@
 
                 <button
                   type="button"
-                  class="flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 transition-opacity hover:opacity-80 disabled:opacity-60"
+                  class="flex items-center gap-1.5 text-sm text-text-passive transition-opacity hover:opacity-80 disabled:opacity-60"
                   :disabled="actionLoading"
                   @click="emit('view')"
                 >
@@ -68,7 +68,7 @@
         >
           <Icon
             :name="item.icon"
-            class="ma-auto shrink-0 text-gray-500 dark:text-gray-400"
+            class="ma-auto shrink-0 text-text-passive"
           />
           <span class="text-text-tertiary">{{ item.label }}</span>
         </div>
@@ -83,7 +83,7 @@
       <div class="flex items-center justify-end gap-2">
         <button
           type="button"
-          class="flex h-9 items-center gap-1 px-2 text-sm text-[#dd4a48] dark:text-red-400 transition-opacity hover:opacity-80 disabled:opacity-60"
+          class="flex h-9 items-center gap-1 px-2 text-sm text-danger-500 transition-opacity hover:opacity-80 disabled:opacity-60"
           :disabled="actionLoading || isRejected"
           @click="emit('reject')"
         >
@@ -93,7 +93,7 @@
 
         <button
           type="button"
-          class="flex h-9 items-center gap-2 rounded-lg bg-[#E6F6F0] px-4 text-sm text-[#009F65] dark:text-[#34d399] transition-opacity hover:bg-[#d8f0e8] dark:hover:bg-[#009F65]/25 disabled:opacity-60"
+          class="flex h-9 items-center gap-2 rounded-lg bg-success-100 px-4 text-sm text-success-500 transition-opacity hover:bg-success-50 disabled:opacity-60"
           :disabled="actionLoading || isApproved"
           @click="emit('confirm')"
         >

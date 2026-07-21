@@ -1,6 +1,6 @@
 <template>
   <div
-    class="relative rounded-xl border border-surface-200 bg-[#F6F8FE] p-4"
+    class="relative rounded-xl border border-surface-200 bg-surface-soft p-4"
     :class="
       to && !loading ? 'transition-colors hover:border-primary-300' : undefined
     "

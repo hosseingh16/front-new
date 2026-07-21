@@ -221,8 +221,8 @@
             >
               {{ company.name }}
             </h1>
-            <div class="mt-3 flex justify-center">
-              <BookmarkToggleButton
+            <!-- <div class="mt-3 flex justify-center"> -->
+            <!-- <BookmarkToggleButton
                 v-if="company.id"
                 :target-id="company.id"
                 type="companies"
@@ -233,8 +233,8 @@
                     if (company) company.is_bookmarked = value;
                   }
                 "
-              />
-            </div>
+              /> -->
+            <!-- </div> -->
             <p
               v-if="activityLabel"
               class="mt-1 text-center text-sm text-text-passive"

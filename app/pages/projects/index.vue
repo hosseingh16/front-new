@@ -35,7 +35,7 @@
           class="mt-10 flex w-full max-w-5xl flex-col items-center gap-4 md:flex-row md:items-stretch md:gap-6"
         >
           <div
-            class="flex w-full flex-1 flex-col rounded-2xl bg-[#F6F8FE] p-5 shadow-[0px_4px_20px_0px_#4864E114] md:p-6"
+            class="flex w-full flex-1 flex-col rounded-2xl bg-surface-soft p-5 shadow-[0px_4px_20px_0px_#4864E114] md:p-6"
           >
             <img
               :src="heroImage2"

@@ -1,5 +1,3 @@
-import { useApi } from '~/composables/useApi'
-import type { ApiResponse } from '~/types/api'
 import {
   createEmptyEmployerAdRequestFilters,
   type EmployerAdRequestFiltersModel,
@@ -13,11 +11,14 @@ import {
 } from '~/utils/employer-ad-request-lookups'
 
 export function useEmployerAdRequestFilters(model?: Ref<EmployerAdRequestFiltersModel>) {
-  const api = useApi()
+  const { items } = useLookups(EMPLOYER_AD_REQUEST_LOOKUP_KEYS)
 
   const statusOptions = ref<EmployerAdRequestStatusOption[]>([])
   const experienceOptions = ref<ISelectItem[]>([])
   const genderOptions = ref<ISelectItem[]>([])
+  const adRequestStatuses = items('ad_request_statuses')
+  const experienceLevels = items('experience_levels')
+  const genders = items('genders')
 
   const selectedStatuses = ref<number[]>([])
   const selectedExperiences = ref<string[]>([])
@@ -59,16 +60,10 @@ export function useEmployerAdRequestFilters(model?: Ref<EmployerAdRequestFilters
     selectedStatuses.value = statusOptions.value.map((item) => item.value)
   }
 
-  async function loadLookups() {
-    const result = await api.get<ApiResponse<Record<string, ISelectItem[]>>>(
-      '/lookups',
-      { query: { keys: EMPLOYER_AD_REQUEST_LOOKUP_KEYS } },
-    )
-
-    const data = result.data ?? {}
-    statusOptions.value = mapAdRequestStatusOptions(data.ad_request_statuses ?? [])
-    experienceOptions.value = data.experience_levels ?? []
-    genderOptions.value = mapEmployerGenderOptions(data.genders ?? [])
+  function syncLookupOptions() {
+    statusOptions.value = mapAdRequestStatusOptions(adRequestStatuses.value)
+    experienceOptions.value = experienceLevels.value
+    genderOptions.value = mapEmployerGenderOptions(genders.value)
     ensureDefaultStatuses()
   }
 
@@ -142,9 +137,13 @@ export function useEmployerAdRequestFilters(model?: Ref<EmployerAdRequestFilters
     selectedGender.value = String(values[values.length - 1])
   }
 
-  onMounted(() => {
-    loadLookups()
-  })
+  watch(
+    [adRequestStatuses, experienceLevels, genders],
+    () => {
+      syncLookupOptions()
+    },
+    { immediate: true },
+  )
 
   return {
     selectedStatuses,

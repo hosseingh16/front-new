@@ -1,5 +1,5 @@
 <template>
-  <div class="relative rounded-xl border border-surface-200 bg-[#F6F8FE] p-4">
+  <div class="relative rounded-xl border border-surface-200 bg-surface-soft p-4">
     <template v-if="loading">
       <div class="flex flex-col items-center">
         <div class="h-16 w-16 rounded-2xl bg-surface-200 animate-pulse" />

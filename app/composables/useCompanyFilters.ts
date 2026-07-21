@@ -1,4 +1,3 @@
-import type { ApiResponse } from '~/types/api'
 import {
   createEmptyCompanyFilters,
   type CompanyFiltersModel,
@@ -6,12 +5,17 @@ import {
 import type { ISelectItem } from '~/types/select-item'
 
 export function useCompanyFilters(model: Ref<CompanyFiltersModel>) {
-  const api = useApi()
+  const { items } = useLookups([
+    'provinces',
+    'industries',
+    'company_sizes',
+    'benefits',
+  ])
 
-  const provinces = ref<ISelectItem[]>([])
-  const activities = ref<ISelectItem[]>([])
-  const sizes = ref<ISelectItem[]>([])
-  const benefits = ref<ISelectItem[]>([])
+  const provinces = items('provinces')
+  const activities = items('industries')
+  const sizes = items('company_sizes')
+  const benefits = items('benefits')
 
   const activeFilterCount = computed(() => {
     let count = 0
@@ -42,22 +46,6 @@ export function useCompanyFilters(model: Ref<CompanyFiltersModel>) {
   function clearFilters() {
     model.value = createEmptyCompanyFilters()
   }
-
-  async function loadLookups() {
-    const response = await api.get<ApiResponse<Record<string, ISelectItem[]>>>(
-      '/lookups?keys=all',
-    )
-    const data = response.data ?? {}
-
-    provinces.value = data.provinces ?? []
-    activities.value = data.industries ?? []
-    sizes.value = data.company_sizes ?? []
-    benefits.value = data.benefits ?? []
-  }
-
-  onMounted(() => {
-    loadLookups()
-  })
 
   return {
     model,

@@ -89,19 +89,10 @@
 </template>
 
 <script setup lang="ts">
-import type { ISelectItem } from "~/types/select-item.js";
 import ProgramModal from "./ProgramModal.vue";
 
 // Variabels
-const levels = ref<ISelectItem[]>([{ label: "کارشناسی", value: "1" }]);
-const years = ref<ISelectItem[]>([{ label: "1400", value: "1" }]);
-const programs = ref<ISelectItem[]>([{ label: "برنامه 1", value: "1" }]);
 const programsItems = ref<any[]>([]);
-const api = useApi();
-
-onMounted(async () => {
-  const response = (await api.get("lookups?keys=accounting_programs")) as any;
-  console.log("response", response);
-  programs.value = response.data.accounting_programs;
-});
+const { items: lookupItems } = useLookups("accounting_programs");
+const programs = lookupItems("accounting_programs");
 </script>

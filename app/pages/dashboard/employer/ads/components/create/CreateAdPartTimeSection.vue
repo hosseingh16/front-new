@@ -16,7 +16,7 @@
             class="cursor-pointer rounded-xl border p-4 transition-colors"
             :class="
               form.accounting_management === group.value
-                ? 'border-primary-500 bg-[#F6F8FE]'
+                ? 'border-primary-500 bg-surface-soft'
                 : 'border-transparent bg-surface-50'
             "
             @click="selectAccountingGroup(group.value)"

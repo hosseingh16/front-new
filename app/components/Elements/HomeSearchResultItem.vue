@@ -2,7 +2,7 @@
   <button
     type="button"
     class="flex w-full items-center gap-3 rounded-lg px-3 py-3 text-right transition-colors"
-    :class="active ? 'bg-[#F6F8FE]' : 'hover:bg-surface-50'"
+    :class="active ? 'bg-surface-soft' : 'hover:bg-surface-50'"
     @click="emit('select', item)"
   >
     <div

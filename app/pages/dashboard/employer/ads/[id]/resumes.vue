@@ -45,7 +45,7 @@
           </button>
           <div class="hidden items-center justify-between gap-4 md:flex">
             <div
-              class="flex items-center gap-2 rounded-lg border border-gray-default bg-[#F6F8FE] p-1"
+              class="flex items-center gap-2 rounded-lg border border-gray-default bg-surface-soft p-1"
             >
               <button
                 v-for="tab in tabs"
@@ -86,7 +86,7 @@
             @click="closeMobileTabModal"
           />
           <div
-            class="absolute inset-x-0 bottom-0 flex flex-col rounded-t-2xl bg-white"
+            class="absolute inset-x-0 bottom-[72px] flex flex-col rounded-t-2xl bg-white sm:bottom-0"
           >
             <div
               class="flex flex-row-reverse items-center justify-between border-b border-gray-default px-4 py-4"
@@ -106,7 +106,7 @@
 
             <div class="px-4 py-5">
               <div
-                class="flex items-center gap-2 rounded-lg border border-gray-default bg-[#F6F8FE] p-1"
+                class="flex items-center gap-2 rounded-lg border border-gray-default bg-surface-soft p-1"
               >
                 <button
                   v-for="tab in tabs"
@@ -183,7 +183,9 @@
               @view="handleViewRequest(request)"
               @confirm="openConfirmModal(request.id)"
               @reject="openRejectModal(request.id)"
-              @bookmark-change="(bookmarked) => onRequestBookmarkChange(request.id, bookmarked)"
+              @bookmark-change="
+                (bookmarked) => onRequestBookmarkChange(request.id, bookmarked)
+              "
             />
 
             <div class="mt-4 flex justify-center col-span-full">
@@ -211,7 +213,9 @@
       v-model:open="showResumeModal"
       :request="activeRequest"
       :requests="filteredRequests"
-      :action-loading="activeRequest ? actionLoadingId === activeRequest.id : false"
+      :action-loading="
+        activeRequest ? actionLoadingId === activeRequest.id : false
+      "
       @update:request="handleModalRequestChange"
       @confirm="openConfirmModal"
       @reject="openRejectModal"

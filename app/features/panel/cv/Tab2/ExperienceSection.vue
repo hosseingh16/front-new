@@ -107,15 +107,16 @@ import ExperienceModal from "./ExperienceModal.vue";
 const api = useApi();
 
 // Variabels
-const jobTitles = ref<ISelectItem[]>([{ label: "کارشناسی", value: "1" }]);
-const employment_types = ref<ISelectItem[]>([
-  { label: "کارشناسی", value: "1" },
-]);
-const industries = ref<ISelectItem[]>([]);
-const salaries = ref<ISelectItem[]>([]);
-const reasons = ref<ISelectItem[]>([]);
-const years = ref<ISelectItem[]>([]);
 const experiencesItems = ref<any[]>([]);
+const { items: lookupItems } = useLookups(
+  "job_titles,employment_types,industries,prior_years,salary_ranges,leaving_reasons",
+);
+const jobTitles = lookupItems("job_titles");
+const employment_types = lookupItems("employment_types");
+const industries = lookupItems("industries");
+const salaries = lookupItems("salary_ranges");
+const reasons = lookupItems("leaving_reasons");
+const years = lookupItems("prior_years");
 
 const addPrior = async (item: any) => {
   const exists = experiencesItems.value.some(
@@ -177,18 +178,6 @@ const mapPrior = (item: any) => ({
 });
 
 onMounted(async () => {
-  //Get lookups
-  const response = (await api.get(
-    "lookups?keys=job_titles,employment_types,industries, prior_years,salary_ranges,leaving_reasons",
-  )) as any;
-
-  jobTitles.value = response.data?.job_titles ?? [];
-  employment_types.value = response.data?.employment_types ?? [];
-  industries.value = response.data?.industries ?? [];
-  years.value = response.data?.prior_years ?? [];
-  salaries.value = response.data?.salary_ranges ?? [];
-  reasons.value = response.data?.leaving_reasons ?? [];
-
   const currentUser = useSanctumUser();
   const priors = (currentUser.value?.data?.resume_priors ?? []).map(mapPrior);
   console.log(currentUser.value?.data?.resume_priors);

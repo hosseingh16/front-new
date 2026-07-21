@@ -4,10 +4,12 @@
       class="flex flex-col items-center gap-y-3 rounded-lg bg-surface-50 p-6"
     >
       <Avatar class="w-20 h-20" />
-      <span class="font-semibold text-text-tertiary">آرمان علیمرادی</span>
+      <span class="font-semibold text-text-tertiary">{{ userName }}</span>
       <button class="flex items-center">
-        <Icon name="svg:settings" />
-        <span class="text-text-passive text-sm font-normal">تنظیمات</span>
+        <!-- <Icon name="svg:settings" /> -->
+        <span class="text-text-passive text-sm font-normal">{{
+          cellphone
+        }}</span>
       </button>
     </div>
 
@@ -98,7 +100,10 @@
 </template>
 
 <script setup lang="ts">
+import { useCurrentUser } from "~/composables/useCurrentUser";
+
 const route = useRoute();
+const { name: userName, cellphone } = useCurrentUser();
 
 const menus1 = [
   { title: "پیشخوان", to: "/dashboard", icon: "gauge-1" },

@@ -1,5 +1,4 @@
 import { provinces } from '~/feeders/provinces'
-import type { ApiResponse } from '~/types/api'
 import {
   createEmptyJobFilters,
   type JobFiltersModel,
@@ -11,16 +10,23 @@ import type { ISelectItem } from '~/types/select-item'
 
 export function useJobFilters(model?: Ref<JobFiltersModel>) {
   const api = useApi()
+  const { items } = useLookups([
+    'job_titles',
+    'employment_types',
+    'experience_levels',
+    'salary_ranges',
+    'benefits',
+  ])
 
   const jobTitleSearch = ref('')
   const jobGroupSearch = ref('')
   const citySearch = ref('')
 
-  const jobTitles = ref<ISelectItem[]>([])
-  const employmentTypes = ref<ISelectItem[]>([])
-  const experienceLevels = ref<ISelectItem[]>([])
-  const salaryRanges = ref<ISelectItem[]>([])
-  const benefits = ref<ISelectItem[]>([])
+  const jobTitles = items('job_titles')
+  const employmentTypes = items('employment_types')
+  const experienceLevels = items('experience_levels')
+  const salaryRanges = items('salary_ranges')
+  const benefits = items('benefits')
 
   const selectedJobTypes = ref<Array<string | number>>([])
   const selectedJobGroups = ref<Array<string | number>>([])
@@ -161,19 +167,6 @@ export function useJobFilters(model?: Ref<JobFiltersModel>) {
     )
   })
 
-  async function loadLookups() {
-    const response = await api.get<ApiResponse<Record<string, ISelectItem[]>>>(
-      '/lookups?keys=all',
-    )
-    const data = response.data ?? {}
-
-    jobTitles.value = data.job_titles ?? []
-    employmentTypes.value = data.employment_types ?? []
-    experienceLevels.value = data.experience_levels ?? []
-    salaryRanges.value = data.salary_ranges ?? []
-    benefits.value = data.benefits ?? []
-  }
-
   function clearFilters() {
     selectedJobTypes.value = []
     jobTitleSearch.value = ''
@@ -297,10 +290,6 @@ export function useJobFilters(model?: Ref<JobFiltersModel>) {
       selectedProvinces.value = selectedProvinces.value.filter((id) => id !== provinceId)
     }
   }
-
-  onMounted(() => {
-    loadLookups()
-  })
 
   return {
     jobTitleSearch,

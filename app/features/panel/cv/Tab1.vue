@@ -281,17 +281,19 @@ import { profileImageValidation } from "~/validations/profileImage";
 const api = useApi();
 const loading = api.loading;
 const hasRegions = ref(false);
-const lookups = ref<Record<string, any[]>>({});
 const editMode = ref(false);
 const imageBase64 = ref<string | null>(null);
 const currentUser = ref<any>(null);
-const jobTitles = ref<ISelectItem[]>([]);
-const experiences = ref<ISelectItem[]>([]);
-const salaries = ref<ISelectItem[]>([]);
-const years = ref<ISelectItem[]>([]);
-const militaryStatuses = ref<ISelectItem[]>([]);
 const cities = ref<ISelectItem[]>([]);
 const regions = ref<ISelectItem[]>([]);
+const { items: lookupItems } = useLookups(
+  "job_titles,experience_levels,salary_ranges,birth_years,military_statuses",
+);
+const jobTitles = lookupItems("job_titles");
+const experiences = lookupItems("experience_levels");
+const salaries = lookupItems("salary_ranges");
+const years = lookupItems("birth_years");
+const militaryStatuses = lookupItems("military_statuses");
 
 // Form
 const formSchema = Yup.object({
@@ -460,18 +462,6 @@ onMounted(async () => {
   const currentUser = useSanctumUser<any>();
   // const res = await api.get<any>("/user");
   //currentUser.value = res?.data ?? null;
-
-  //Get lookups
-  const response = (await api.get(
-    "lookups?keys=job_titles,experience_levels,salary_ranges,birth_years,military_statuses",
-  )) as any;
-
-  lookups.value = response.data ?? response;
-  jobTitles.value = lookups.value?.job_titles ?? [];
-  experiences.value = lookups.value?.experience_levels ?? [];
-  salaries.value = lookups.value?.salary_ranges ?? [];
-  years.value = lookups.value?.birth_years ?? [];
-  militaryStatuses.value = lookups.value?.military_statuses ?? [];
 
   setValues({
     name: currentUser.value.data.name ?? "",

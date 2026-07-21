@@ -12,7 +12,7 @@
         variant === 'card'
           ? [
               'max-h-[48px] cursor-pointer rounded-xl p-3',
-              isSelected(option) ? 'bg-[#F6F8FE]' : 'bg-surface-50',
+              isSelected(option) ? 'bg-surface-soft' : 'bg-surface-50',
             ]
           : ''
       "

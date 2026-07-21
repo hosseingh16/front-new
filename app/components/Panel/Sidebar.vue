@@ -31,10 +31,12 @@
       <div class="flex gap-2 px-4 pt-3">
         <Avatar />
         <div class="flex flex-col gap-3">
-          <span class="font-semibold text-text-tertiary">آرمان علیمرادی</span>
+          <span class="font-semibold text-text-tertiary">{{ userName }}</span>
           <button class="flex items-center">
-            <Icon name="svg:settings" />
-            <span class="text-sm font-normal text-text-passive">تنظیمات</span>
+            <!-- <Icon name="svg:settings" /> -->
+            <span class="text-sm font-normal text-text-passive">{{
+              cellphone
+            }}</span>
           </button>
         </div>
       </div>
@@ -44,6 +46,7 @@
 
 <script setup lang="ts">
 import type { MenuItem } from "~/types/panel-config";
+import { useCurrentUser } from "~/composables/useCurrentUser";
 import SidebarMenuItem from "./SidebarMenuItem.vue";
 
 const props = defineProps<{
@@ -53,6 +56,7 @@ const props = defineProps<{
 const route = useRoute();
 const openKey = ref<string | null>(null);
 const { collapsed } = useDashboardSidebar();
+const { name: userName, cellphone } = useCurrentUser();
 
 const topMenu = computed(() =>
   props.sidebarMenu.filter((item) => item.placement !== "bottom"),

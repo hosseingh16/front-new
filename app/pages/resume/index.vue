@@ -4,7 +4,7 @@
       class="mx-auto flex max-w-[920px] flex-col overflow-hidden rounded-xl bg-white shadow-sm md:flex-row md:min-h-[1100px]"
     >
       <!-- Sidebar -->
-      <aside class="flex w-full shrink-0 flex-col bg-[#F6F8FE] p-4 md:w-[300px] border-l border-l-surface-200">
+      <aside class="flex w-full shrink-0 flex-col bg-surface-soft p-4 md:w-[300px] border-l border-l-surface-200">
         <div
           class="mx-auto h-[92px] w-[92px] overflow-hidden rounded-2xl bg-[#b8d4f0]"
         >

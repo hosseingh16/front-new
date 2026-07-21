@@ -55,7 +55,11 @@ export function useCreateAdForm(
   const loadingAd = ref(false)
   const editingAd = ref<Ad | null>(null)
 
-  const { items, loading: lookupsLoading } = useLookups(LOOKUP_KEYS)
+  const {
+    items,
+    loading: lookupsLoading,
+    ready: lookupsReady,
+  } = useLookups(LOOKUP_KEYS)
 
   const jobTitles = items('job_titles')
   const employmentTypes = items('employment_types')
@@ -231,7 +235,7 @@ export function useCreateAdForm(
   // mapping stored labels back to option values needs the lookups.
   let prefilled = false
   watchEffect(() => {
-    if (prefilled || !editingAd.value || lookupsLoading.value) return
+    if (prefilled || !editingAd.value || !lookupsReady.value) return
     prefilled = true
     applyAdToForm(editingAd.value)
   })

@@ -3,7 +3,7 @@
     <Titr :with-icon="false">پیش‌نمایش کارت</Titr>
 
     <div class="mt-6 rounded-lg bg-white p-1 shadow-sm">
-      <div class="rounded-lg bg-[#F6F8FE] p-3">
+      <div class="rounded-lg bg-surface-soft p-3">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2">
             <div

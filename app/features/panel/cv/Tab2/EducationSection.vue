@@ -85,17 +85,16 @@
 </template>
 
 <script setup lang="ts">
-import type { ISelectItem } from "~/types/select-item.js";
 import EducationModal from "./EducationModal.vue";
 
 // Variabels
-//const levels = ref<ISelectItem[]>([{ label: 'کارشناسی', value: '1' }]); //Gets From API
-const levels = ref<ISelectItem[]>([]);
-//const years = ref<ISelectItem[]>([{ label: '1400', value: '1' }]); //Gets From API
-const years = ref<ISelectItem[]>([]);
 const educationItems = ref<any[]>([]);
-const lookups = ref<Record<string, any[]>>({});
 const api = useApi();
+const { items: lookupItems } = useLookups(
+  "education_levels,graduation_years",
+);
+const levels = lookupItems("education_levels");
+const years = lookupItems("graduation_years");
 
 async function addEducation(item: any) {
   educationItems.value.push(item);
@@ -135,15 +134,5 @@ onMounted(async () => {
       description: item.description,
     }),
   );
-
-  //Get lookups
-  const response = (await api.get(
-    "lookups?keys=education_levels, graduation_years",
-  )) as any;
-
-  lookups.value = response.data ?? response;
-
-  levels.value = lookups.value.education_levels || [];
-  years.value = lookups.value.graduation_years || [];
 });
 </script>

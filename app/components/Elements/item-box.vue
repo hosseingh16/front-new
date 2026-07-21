@@ -1,7 +1,7 @@
 <template>
   <div class="rounded-lg bg-white p-1">
     <template v-if="loading">
-      <div class="bg-[#F6F8FE] rounded-lg p-3">
+      <div class="bg-surface-soft rounded-lg p-3">
         <div class="flex justify-between items-center">
           <div class="flex items-center gap-2">
             <div
@@ -45,7 +45,7 @@
         <div
           :class="[
             'rounded-lg p-3',
-            variant === 'project' ? 'bg-[#FCF7F3] ' : 'bg-[#F6F8FE]',
+            variant === 'project' ? 'bg-[#FCF7F3] ' : 'bg-surface-soft',
           ]"
         >
           <div class="flex justify-between items-center">

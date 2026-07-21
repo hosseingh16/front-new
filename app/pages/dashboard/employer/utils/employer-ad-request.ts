@@ -95,20 +95,46 @@ function resolveLookupLabel(
   const text = String(value).trim()
   if (!text) return fallback
 
-  const match = options.find((item) => String(item.value) === text)
+  const match = options.find(
+    (item) =>
+      String(item.value) === text ||
+      item.label.trim() === text,
+  )
   return match?.label ?? text
+}
+
+function resolveFirstLookupLabel(
+  options: ISelectItem[],
+  values: Array<string | null | undefined>,
+  fallback = '—',
+) {
+  const normalized = values
+    .map((value) => String(value ?? '').trim())
+    .filter(Boolean)
+
+  if (!normalized.length) return fallback
+
+  for (const value of normalized) {
+    const match = options.find(
+      (item) =>
+        String(item.value) === value ||
+        item.label.trim() === value,
+    )
+    if (match) return match.label
+  }
+
+  return normalized[0] ?? fallback
 }
 
 export function getAdRequestJobTitle(
   request: EmployerAdRequest,
   jobTitles: ISelectItem[] = [],
 ) {
-  const raw =
-    request.user?.personal?.job_title ||
-    request.requested_job_title ||
-    request.user?.personal?.wanted_job
-
-  return resolveLookupLabel(jobTitles, raw)
+  return resolveFirstLookupLabel(jobTitles, [
+    request.requested_job_title,
+    request.user?.personal?.job_title,
+    request.user?.personal?.wanted_job,
+  ])
 }
 export function getAdRequestEmploymentType(request: EmployerAdRequest) {
   const status = request.user?.personal?.job_status
