@@ -75,7 +75,9 @@
       </div>
     </div>
 
-    <div class="mt-2 flex items-center justify-between gap-2 px-2">
+    <div
+      class="mt-2 flex flex-col gap-2 px-2 sm:flex-row sm:items-center sm:justify-between"
+    >
       <AdRequestStatusBadge :request="request" />
 
       <div class="flex items-center justify-end gap-2">
@@ -118,6 +120,9 @@ const props = defineProps<{
   actionLoading?: boolean;
 }>();
 
+const { items: lookupItems } = useLookups("job_titles");
+const jobTitleOptions = lookupItems("job_titles");
+
 const emit = defineEmits<{
   view: [];
   confirm: [];
@@ -127,7 +132,9 @@ const emit = defineEmits<{
 
 const name = computed(() => props.request.user?.name || "—");
 const avatar = computed(() => props.request.user?.avatar || null);
-const jobTitle = computed(() => getAdRequestJobTitle(props.request));
+const jobTitle = computed(() =>
+  getAdRequestJobTitle(props.request, jobTitleOptions.value),
+);
 const displayItems = computed(() => getAdRequestDisplayItems(props.request));
 
 const statusKey = computed(() => resolveAdRequestStatusKey(props.request));

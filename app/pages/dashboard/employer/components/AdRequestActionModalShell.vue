@@ -9,7 +9,7 @@
       <div class="modal-backdrop absolute inset-0" @click="handleClose" />
 
       <div
-        class="relative w-full max-w-[420px] overflow-visible rounded-2xl border border-gray-default bg-white shadow-xl"
+        class="relative w-full max-w-[720px] overflow-visible rounded-2xl border border-gray-default bg-white shadow-xl"
         role="dialog"
         aria-modal="true"
         :aria-labelledby="titleId"
@@ -36,7 +36,7 @@
           <img
             :src="asidePattern"
             alt=""
-            class="ad-request-action-modal-pattern pointer-events-none absolute -top-5 left-0 w-full origin-top"
+            class="ad-request-action-modal-pattern pointer-events-none absolute -top-5 left-0 w-full origin-top scale-[0.5]"
             aria-hidden="true"
           />
 
@@ -62,6 +62,30 @@
             >
               {{ name }}
             </h3>
+
+            <div
+              v-if="detailRows.length"
+              class="mt-5 flex flex-wrap gap-x-4 gap-y-6 text-sm text-text-secondary"
+            >
+              <div
+                v-for="item in detailRows"
+                :key="item.key"
+                class="flex w-full items-center justify-between gap-3 sm:w-[calc(50%-8px)]"
+              >
+                <div class="flex min-w-0 items-center gap-1.5">
+                  <Icon
+                    :name="item.icon"
+                    size="18"
+                    class="shrink-0 text-text-passive"
+                  />
+                  <span class="shrink-0">{{ item.label }}</span>
+                </div>
+
+                <span class="truncate text-left text-text-tertiary">
+                  {{ item.value }}
+                </span>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -82,6 +106,11 @@
 <script setup lang="ts">
 import asidePattern from "~/assets/vectors/aside-pattern.svg?url";
 import type { EmployerAdRequest } from "~/types/employer-ad-request";
+import {
+  getAdRequestJobTitle,
+  getAdRequestPhone,
+  getAdRequestRequestDate,
+} from "~/pages/dashboard/employer/utils/employer-ad-request";
 
 const props = defineProps<{
   open: boolean;
@@ -90,6 +119,9 @@ const props = defineProps<{
   request: EmployerAdRequest | null;
   loading?: boolean;
 }>();
+
+const { items: lookupItems } = useLookups("job_titles");
+const jobTitleOptions = lookupItems("job_titles");
 
 const emit = defineEmits<{
   "update:open": [value: boolean];
@@ -101,6 +133,30 @@ const userInitial = computed(() => {
   const value = name.value.trim();
   if (!value || value === "—") return "؟";
   return value.charAt(0);
+});
+const detailRows = computed(() => {
+  if (!props.request) return [];
+
+  return [
+    {
+      key: "jobTitle",
+      label: "شغل مورد تقاضا",
+      value: getAdRequestJobTitle(props.request, jobTitleOptions.value),
+      icon: "ph:suitcase-simple-light",
+    },
+    {
+      key: "phone",
+      label: "شماره تماس",
+      value: getAdRequestPhone(props.request),
+      icon: "lucide:smartphone",
+    },
+    {
+      key: "createdAt",
+      label: "تاریخ درخواست",
+      value: getAdRequestRequestDate(props.request),
+      icon: "lucide:calendar-days",
+    },
+  ].filter((item) => item.value && item.value !== "—");
 });
 
 function handleClose() {

@@ -32,6 +32,7 @@ export interface EmployerAdRequest {
   id: number
   user?: EmployerAdRequestUser
   requested_job_title?: string
+  created_at?: string
   status?: string
   seen?: string
   work_experience?: string

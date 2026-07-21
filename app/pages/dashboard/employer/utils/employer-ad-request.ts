@@ -1,4 +1,6 @@
 import type { EmployerAdRequest } from '~/types/employer-ad-request'
+import type { ISelectItem } from '~/types/select-item'
+import { formatJalaliDate } from '~/utils/format-jalali-date'
 
 export type AdRequestStatusKey =
   | 'sent'
@@ -83,17 +85,39 @@ function displayValue(value?: string | number | null, fallback = '—') {
   return text || fallback
 }
 
-export function getAdRequestJobTitle(request: EmployerAdRequest) {
-  return (
-    request.user?.personal?.job_title ||
-    request.requested_job_title ||
-    request.user?.personal?.wanted_job ||
-    '—'
-  )
+function resolveLookupLabel(
+  options: ISelectItem[],
+  value?: string | null,
+  fallback = '—',
+) {
+  if (value == null) return fallback
+
+  const text = String(value).trim()
+  if (!text) return fallback
+
+  const match = options.find((item) => String(item.value) === text)
+  return match?.label ?? text
 }
 
+export function getAdRequestJobTitle(
+  request: EmployerAdRequest,
+  jobTitles: ISelectItem[] = [],
+) {
+  const raw =
+    request.user?.personal?.job_title ||
+    request.requested_job_title ||
+    request.user?.personal?.wanted_job
+
+  return resolveLookupLabel(jobTitles, raw)
+}
 export function getAdRequestEmploymentType(request: EmployerAdRequest) {
-  return displayValue(request.user?.personal?.job_status, '')
+  const status = request.user?.personal?.job_status
+
+  if (status == null || status == undefined) return ''
+  if (Number(status) == 0) return 'جویای کار'
+  if (Number(status) == 1) return 'شاغل'
+
+  return ''
 }
 
 export function getAdRequestSalary(request: EmployerAdRequest) {
@@ -122,6 +146,10 @@ export function getAdRequestPhone(request: EmployerAdRequest) {
     request.user?.phone || request.user?.personal?.cellphone,
     '',
   )
+}
+
+export function getAdRequestRequestDate(request: EmployerAdRequest) {
+  return displayValue(formatJalaliDate(request.created_at), '')
 }
 
 export function getAdRequestLocation(request: EmployerAdRequest) {

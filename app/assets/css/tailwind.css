@@ -1,4 +1,4 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 @theme {
   --breakpoint-440: 440px;
   --breakpoint-600: 600px;
@@ -9,8 +9,8 @@
   --text-caption: 13px;
   --text-h1: 28px;
 
-  --font-yb-bold: 'yekanBakh-bold';
-  --font-yb-extraBold: 'yekanBakh-extraBold';
+  --font-yb-bold: "yekanBakh-bold";
+  --font-yb-extraBold: "yekanBakh-extraBold";
 
   --color-primary-900: #292f7f;
   --color-primary-500: #4864e1;
@@ -90,4 +90,7 @@
 
 .custom-pad {
   @apply px-5 lg:px-37.5;
+}
+.dark p {
+  color: #d4d4d4;
 }

@@ -323,7 +323,6 @@ import {
   getResumePersonal,
   getResumeSalary,
   maskResumeEmail,
-  maskResumePhone,
 } from "../utils/user-resume";
 
 type UserResumeTab = "basic" | "job";
@@ -423,7 +422,7 @@ const personalSidebarItems = computed<SidebarItem[]>(() => [
 const contactSidebarItems = computed<SidebarItem[]>(() => [
   {
     label: "شماره همراه",
-    value: maskResumePhone(personal.value?.cellphone || props.user?.phone),
+    value: displayResumeValue(personal.value?.cellphone || props.user?.phone),
     icon: "lucide:smartphone",
     ltr: true,
   },
