@@ -12,7 +12,9 @@
 
           <div class="max-lg:hidden">
             <h1 class="font-semibold text-text-tertiary">های‌حساب</h1>
-            <h2 class="text-caption text-text-secondary">خانه حسابداران با تجربه</h2>
+            <h2 class="text-caption text-text-secondary">
+              خانه حسابداران با تجربه
+            </h2>
           </div>
         </NuxtLink>
         <div class="flex items-center gap-2 max-lg:hidden mr-8">
@@ -38,7 +40,7 @@
       <button class="btn btn-ghost w-12 h-12 p-0">
         <Icon name="svg:search-1" size="24" />
       </button>
-      <button class="btn btn-ghost w-12 h-12 p-0 max-lg:-mr-3">
+      <button class="btn btn-ghost w-12 h-12 p-0">
         <Icon name="svg:bell" size="24" />
       </button>
       <m-dropdown>
@@ -80,11 +82,11 @@
 </template>
 
 <script setup lang="ts">
-const { collapsed, toggle } = useDashboardSidebar()
+const { collapsed, toggle } = useDashboardSidebar();
 
 const createMenuItems = [
-  { title: 'آگهی تمام وقت', to: '#', icon: 'svg:new-briefcase' },
-  { title: 'آگهی نیمه وقت', to: '#', icon: 'svg:new-briefcase' },
-  { title: 'پروژه', to: '#', icon: 'svg:new-notepad-text' },
-]
+  { title: "آگهی تمام وقت", to: "#", icon: "svg:new-briefcase" },
+  { title: "آگهی نیمه وقت", to: "#", icon: "svg:new-briefcase" },
+  { title: "پروژه", to: "#", icon: "svg:new-notepad-text" },
+];
 </script>
