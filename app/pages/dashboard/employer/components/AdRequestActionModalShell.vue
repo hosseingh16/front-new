@@ -81,7 +81,21 @@
                   <span class="shrink-0">{{ item.label }}</span>
                 </div>
 
-                <span class="truncate text-left text-text-tertiary">
+                <button
+                  v-if="item.copyable"
+                  type="button"
+                  class="flex min-w-0 max-w-[60%] cursor-pointer items-center gap-1 truncate text-left text-text-tertiary transition-opacity hover:opacity-80"
+                  :title="`کپی ${item.label}`"
+                  @click="copyDetailValue(item.value)"
+                >
+                  <span class="truncate">{{ item.value }}</span>
+                  <Icon
+                    name="svg:copy"
+                    size="14"
+                    class="shrink-0 text-text-passive"
+                  />
+                </button>
+                <span v-else class="truncate text-left text-text-tertiary">
                   {{ item.value }}
                 </span>
               </div>
@@ -127,6 +141,8 @@ const emit = defineEmits<{
   "update:open": [value: boolean];
 }>();
 
+const { $toast } = useNuxtApp();
+
 const name = computed(() => props.request?.user?.name || "—");
 const avatar = computed(() => props.request?.user?.avatar || null);
 const userInitial = computed(() => {
@@ -143,21 +159,35 @@ const detailRows = computed(() => {
       label: "شغل مورد تقاضا",
       value: getAdRequestJobTitle(props.request, jobTitleOptions.value),
       icon: "ph:suitcase-simple-light",
+      copyable: false,
     },
     {
       key: "phone",
       label: "شماره تماس",
       value: getAdRequestPhone(props.request),
       icon: "lucide:smartphone",
+      copyable: true,
     },
     {
       key: "createdAt",
       label: "تاریخ درخواست",
       value: getAdRequestRequestDate(props.request),
       icon: "lucide:calendar-days",
+      copyable: false,
     },
   ].filter((item) => item.value && item.value !== "—");
 });
+
+async function copyDetailValue(value: string) {
+  if (!import.meta.client || !value) return;
+
+  try {
+    await navigator.clipboard.writeText(value);
+    $toast.success("شماره تماس کپی شد");
+  } catch {
+    $toast.error("کپی شماره تماس انجام نشد");
+  }
+}
 
 function handleClose() {
   if (props.loading) return;

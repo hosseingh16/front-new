@@ -8,7 +8,7 @@
       @change="onSelect"
     />
     <div
-      class="flex cursor-pointer items-center gap-3 rounded-lg border-2 border-dashed border-gray-default bg-[repeating-linear-gradient(60deg,#FCFCFC_0px,#FCFCFC_35px,white_6px,white_70px)] p-6"
+      class="upload-dropzone-bg flex cursor-pointer items-center gap-3 rounded-lg border-2 border-dashed border-gray-default p-6"
       @click="inputRef?.click()"
     >
       <Icon name="svg:upload" size="28" class="shrink-0 text-primary-500" />

@@ -28,6 +28,11 @@
   --color-info-500: #0098e7;
 
   --color-warning-500: #b95c04;
+  --color-warning-400: #c56a1a;
+  --color-warning-300: #f0c9a8;
+  --color-warning-200: #f5d5b8;
+  --color-warning-100: #fff4ec;
+  --color-warning-50: #fff8f2;
 
   --color-danger-500: #ef4035;
   --color-danger-200: #f7a09a;
@@ -47,6 +52,8 @@
   --color-surface-200: #e8e8e8;
   --color-surface-soft: #f6f8fe;
   --color-surface-card: #ffffff;
+  --color-upload-stripe-a: #fcfcfc;
+  --color-upload-stripe-b: #ffffff;
 
   --color-base-100: #ffffff;
   --color-base-200: #f2f2f2;
@@ -79,12 +86,21 @@
   --color-surface-200: #2a2a2a;
   --color-surface-soft: #1a1f2e;
   --color-surface-card: #1a1a1a;
+  --color-upload-stripe-a: #1f1f1f;
+  --color-upload-stripe-b: #161616;
 
   --color-base-100: #1a1a1a;
   --color-base-200: #242424;
   --color-base-300: #3a3a3a;
 
   --color-danger-100: #3a1f1f;
+
+  --color-warning-500: #f0a060;
+  --color-warning-400: #e8a05a;
+  --color-warning-300: #6b4a35;
+  --color-warning-200: #5c4030;
+  --color-warning-100: #2a1f14;
+  --color-warning-50: #32281c;
 
   --color-success-500: #34d399;
   --color-success-400: #6ee7b7;
@@ -124,4 +140,14 @@
 
 .custom-pad {
   @apply px-5 lg:px-37.5;
+}
+
+.upload-dropzone-bg {
+  background-image: repeating-linear-gradient(
+    60deg,
+    var(--color-upload-stripe-a) 0px,
+    var(--color-upload-stripe-a) 35px,
+    var(--color-upload-stripe-b) 6px,
+    var(--color-upload-stripe-b) 70px
+  );
 }

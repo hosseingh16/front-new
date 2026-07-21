@@ -61,17 +61,36 @@
       </div>
 
       <div class="mt-3 flex gap-1 overflow-x-auto text-sm no-scrollbar">
-        <div
-          v-for="item in displayItems"
-          :key="item.key"
-          class="flex shrink-0 items-center gap-2 rounded-full border border-gray-default bg-surface-50 px-3 py-1"
-        >
-          <Icon
-            :name="item.icon"
-            class="ma-auto shrink-0 text-text-passive"
-          />
-          <span class="text-text-tertiary">{{ item.label }}</span>
-        </div>
+        <template v-for="item in displayItems" :key="item.key">
+          <button
+            v-if="item.copyable"
+            type="button"
+            class="flex shrink-0 cursor-pointer items-center gap-2 rounded-full border border-gray-default bg-surface-50 px-3 py-1 transition-opacity hover:opacity-80"
+            title="کپی شماره تماس"
+            @click="copyPhone(item.label)"
+          >
+            <Icon
+              :name="item.icon"
+              class="ma-auto shrink-0 text-text-passive"
+            />
+            <span class="text-text-tertiary">{{ item.label }}</span>
+            <Icon
+              name="svg:copy"
+              size="14"
+              class="shrink-0 text-text-passive"
+            />
+          </button>
+          <div
+            v-else
+            class="flex shrink-0 items-center gap-2 rounded-full border border-gray-default bg-surface-50 px-3 py-1"
+          >
+            <Icon
+              :name="item.icon"
+              class="ma-auto shrink-0 text-text-passive"
+            />
+            <span class="text-text-tertiary">{{ item.label }}</span>
+          </div>
+        </template>
       </div>
     </div>
 
@@ -130,6 +149,8 @@ const emit = defineEmits<{
   bookmarkChange: [value: boolean];
 }>();
 
+const { $toast } = useNuxtApp();
+
 const name = computed(() => props.request.user?.name || "—");
 const avatar = computed(() => props.request.user?.avatar || null);
 const jobTitle = computed(() =>
@@ -142,6 +163,17 @@ const statusKey = computed(() => resolveAdRequestStatusKey(props.request));
 const isApproved = computed(() => statusKey.value === "approved");
 
 const isRejected = computed(() => statusKey.value === "rejected");
+
+async function copyPhone(value: string) {
+  if (!import.meta.client || !value) return;
+
+  try {
+    await navigator.clipboard.writeText(value);
+    $toast.success("شماره تماس کپی شد");
+  } catch {
+    $toast.error("کپی شماره تماس انجام نشد");
+  }
+}
 
 function onBookmarkChange(value: boolean) {
   props.request.is_bookmarked = value;

@@ -147,11 +147,25 @@ export function getAdRequestEmploymentType(request: EmployerAdRequest) {
 }
 
 export function getAdRequestSalary(request: EmployerAdRequest) {
-  return displayValue(
+  const salary =
     request.user?.personal?.salary_range ||
-      request.user?.personal?.desired_salary,
-    '',
-  )
+    request.user?.personal?.desired_salary;
+
+  if (
+    typeof salary === "string" &&
+    salary.trim() === "حقوق پایه"
+  ) {
+    return salary; // If it's exactly "حقوق پایه", return as is
+  }
+
+  if (
+    typeof salary === "string" &&
+    (salary.trim() === "" || salary.trim() === "توافقی")
+  ) {
+    return "توافقی";
+  }
+
+  return displayValue(salary, "") + " میلیون تومان";
 }
 
 export function getAdRequestExperience(request: EmployerAdRequest) {
@@ -227,11 +241,23 @@ export function getAdRequestDisplayItems(request: EmployerAdRequest) {
       ? { key: 'experience', label: experience, icon: 'svg:work-history' }
       : null,
     age ? { key: 'age', label: age, icon: 'svg:timer' } : null,
-    phone ? { key: 'phone', label: phone, icon: 'lucide:smartphone' } : null,
+    phone
+      ? {
+          key: 'phone',
+          label: phone,
+          icon: 'lucide:smartphone',
+          copyable: true,
+        }
+      : null,
     location
       ? { key: 'location', label: location, icon: 'lucide:calendar-clock' }
       : null,
-  ].filter(Boolean) as Array<{ key: string; label: string; icon: string }>
+  ].filter(Boolean) as Array<{
+    key: string
+    label: string
+    icon: string
+    copyable?: boolean
+  }>
 }
 
 export function getAdRequestMobileTags(request: EmployerAdRequest) {
