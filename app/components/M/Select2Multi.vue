@@ -6,8 +6,8 @@
     </p>
     <div v-if="isClient" ref="dropDownRef" class="relative inline-block w-full">
       <div
-        class="box-border flex h-10 max-h-10 min-h-10 w-full items-center gap-2 overflow-hidden rounded-lg border border-gray-300 bg-white pr-2 pl-2"
-        :style="`border-color:${error ? '#f7a09a' : borderColor}`"
+        class="box-border flex h-10 max-h-10 min-h-10 w-full items-center gap-2 overflow-hidden rounded-lg border border-gray-default bg-white pr-2 pl-2"
+        :style="`border-color:${error ? 'var(--color-danger-200)' : borderColor}`"
         @click="focusInput"
       >
         <div
@@ -35,7 +35,11 @@
             :readonly="!open || !search"
             :placeholder="inputPlaceholder"
             class="h-6 min-h-0 shrink-0 border-0 bg-transparent py-0 text-sm leading-5 font-normal outline-none placeholder:text-text-muted"
-            :class="selectedItems.length && !open ? 'w-px min-w-0 max-w-px opacity-0' : 'min-w-12 flex-1'"
+            :class="
+              selectedItems.length && !open
+                ? 'w-px min-w-0 max-w-px opacity-0'
+                : 'min-w-12 flex-1'
+            "
             @focus="openDropdown"
             @click.stop="openDropdown"
             @input="onSearchInput"
@@ -90,9 +94,9 @@
 </template>
 
 <script setup lang="ts">
-import type { ISelectItem } from '~/types/select-item'
+import type { ISelectItem } from "~/types/select-item";
 
-const model = defineModel<Array<string | number>>({ default: () => [] })
+const model = defineModel<Array<string | number>>({ default: () => [] });
 
 const props = defineProps({
   label: { type: String },
@@ -102,112 +106,112 @@ const props = defineProps({
     type: Array as () => ISelectItem[],
     default: () => [],
   },
-  borderColor: { type: String, default: '#E8E8E8' },
+  borderColor: { type: String, default: "var(--color-gray-default)" },
   error: { type: Boolean },
   disabled: { type: Boolean },
   search: { type: Boolean, default: true },
-})
+});
 
-const open = ref(false)
-const isClient = ref(false)
-const allOptions = ref<ISelectItem[]>([])
-const keyword = ref('')
-const dropDownRef = ref<HTMLElement | null>(null)
-const inputRef = ref<HTMLInputElement | null>(null)
+const open = ref(false);
+const isClient = ref(false);
+const allOptions = ref<ISelectItem[]>([]);
+const keyword = ref("");
+const dropDownRef = ref<HTMLElement | null>(null);
+const inputRef = ref<HTMLInputElement | null>(null);
 
 const selectedItems = computed(() =>
   model.value.map((value) => ({
     value,
     label: getItemLabel(value),
   })),
-)
+);
 
 const filteredOptions = computed(() => {
-  if (!props.search || !keyword.value.trim()) return allOptions.value
-  return allOptions.value.filter((item) => item.label.includes(keyword.value))
-})
+  if (!props.search || !keyword.value.trim()) return allOptions.value;
+  return allOptions.value.filter((item) => item.label.includes(keyword.value));
+});
 
 const inputPlaceholder = computed(() => {
-  if (open.value && props.search) return 'جستجو'
-  if (!model.value.length) return props.placeholder || 'انتخاب کنید'
-  return ''
-})
+  if (open.value && props.search) return "جستجو";
+  if (!model.value.length) return props.placeholder || "انتخاب کنید";
+  return "";
+});
 
 watch(
   () => props.options,
   (options) => {
-    allOptions.value = options
+    allOptions.value = options;
   },
   { immediate: true },
-)
+);
 
 function getItemLabel(value: string | number) {
   const match = props.options.find(
     (item) => String(item.value) === String(value),
-  )
-  return match?.label ?? String(value)
+  );
+  return match?.label ?? String(value);
 }
 
 function isSelected(item: ISelectItem) {
-  return model.value.some((value) => String(value) === String(item.value))
+  return model.value.some((value) => String(value) === String(item.value));
 }
 
 function removeItem(value: string | number) {
-  if (props.disabled) return
-  model.value = model.value.filter((item) => String(item) !== String(value))
+  if (props.disabled) return;
+  model.value = model.value.filter((item) => String(item) !== String(value));
 }
 
 function focusInput() {
-  if (props.disabled) return
-  inputRef.value?.focus()
-  openDropdown()
+  if (props.disabled) return;
+  inputRef.value?.focus();
+  openDropdown();
 }
 
 function openDropdown() {
-  if (props.disabled) return
+  if (props.disabled) return;
   if (!open.value) {
-    open.value = true
-    keyword.value = ''
+    open.value = true;
+    keyword.value = "";
   }
-  nextTick(() => inputRef.value?.focus())
+  nextTick(() => inputRef.value?.focus());
 }
 
 function toggleDropdown() {
-  if (props.disabled) return
+  if (props.disabled) return;
 
   if (open.value) {
-    closeDropdown()
-    return
+    closeDropdown();
+    return;
   }
 
-  openDropdown()
+  openDropdown();
 }
 
 function closeDropdown() {
-  open.value = false
-  keyword.value = ''
+  open.value = false;
+  keyword.value = "";
 }
 
 function onSearchInput(event: Event) {
-  if (!props.search || !open.value) return
-  keyword.value = (event.target as HTMLInputElement).value
+  if (!props.search || !open.value) return;
+  keyword.value = (event.target as HTMLInputElement).value;
 }
 
 function handleClickOutside(e: MouseEvent) {
-  if (!open.value) return
+  if (!open.value) return;
 
-  const target = e.target as Node
+  const target = e.target as Node;
   if (dropDownRef.value && !dropDownRef.value.contains(target)) {
-    closeDropdown()
+    closeDropdown();
   }
 }
 
 onMounted(() => {
-  isClient.value = true
-  document.addEventListener('click', handleClickOutside, true)
-})
+  isClient.value = true;
+  document.addEventListener("click", handleClickOutside, true);
+});
 
 onBeforeUnmount(() => {
-  document.removeEventListener('click', handleClickOutside, true)
-})
+  document.removeEventListener("click", handleClickOutside, true);
+});
 </script>

@@ -2,7 +2,7 @@
   <!-- FORM MODE -->
   <Field v-if="name" :name="name" v-slot="{ value, setValue, errorMessage }">
     <div
-      class="gap-1 bg-surface-100 p-1 rounded-xl [&>.btn]:text-sm [&>.btn]:h-8"
+      class="gap-1 rounded-xl border border-gray-default bg-surface-soft p-1 [&>.btn]:h-8 [&>.btn]:text-sm"
       :class="sameWidth ? 'grid' : 'flex'"
       :style="sameWidth ? gridStyle : ''"
     >
@@ -13,8 +13,8 @@
         class="btn btn-ghost text-caption"
         :class="
           value === item.value
-            ? 'bg-white text-text-primary'
-            : 'bg-surface-100 text-text-passive'
+            ? 'border border-gray-default bg-white text-text-tertiary shadow-sm'
+            : 'text-text-passive hover:text-text-secondary'
         "
         @click="setValue(item.value)"
       >
@@ -26,7 +26,7 @@
       {{ errorMessage }}
     </div> -->
     <ErrorMessage :name="name" v-slot="{ message }">
-      <div class="mt-1 text-xs text-text-passive flex items-center">
+      <div class="mt-1 flex items-center text-xs text-text-passive">
         <icons-close color="#EF4035" />
         <span>{{ message }}</span>
       </div>
@@ -36,7 +36,7 @@
   <!-- STANDALONE MODE -->
   <div
     v-else
-    class="gap-1 bg-surface-100 p-1 rounded-xl [&>.btn]:text-sm [&>.btn]:h-8"
+    class="gap-1 rounded-xl border border-gray-default bg-surface-soft p-1 [&>.btn]:h-8 [&>.btn]:text-sm"
     :class="sameWidth ? 'grid' : 'flex'"
     :style="sameWidth ? gridStyle : ''"
   >
@@ -47,8 +47,8 @@
       class="btn btn-ghost text-caption"
       :class="
         model === item.value
-          ? 'bg-white text-text-primary'
-          : 'bg-surface-100 text-text-passive'
+          ? 'border border-gray-default bg-white text-text-tertiary shadow-sm'
+          : 'text-text-passive hover:text-text-secondary'
       "
       @click="model = item.value"
     >

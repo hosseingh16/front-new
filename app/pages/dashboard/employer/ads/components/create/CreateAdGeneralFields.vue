@@ -286,18 +286,22 @@ const selectedRegion = computed({
 });
 
 watch(
-  [() => props.genders, () => props.form.gender],
-  ([genders, gender]) => {
-    if (gender) return;
+  () => props.genders,
+  (genders) => {
+    const currentInOptions = genders.some(
+      (item) => String(item.value) === String(props.form.gender),
+    );
+    if (props.form.gender && currentInOptions) return;
 
     const defaultOption =
       genders.find((item) => String(item.value) === "any") ??
-      genders.find((item) => /هر دو|مهم/.test(item.label));
+      genders.find((item) => /هر دو|مهم/.test(item.label)) ??
+      genderItems.value.find((item) => /هر دو|مهم/.test(item.title));
 
     props.form.gender = defaultOption
       ? String(defaultOption.value)
       : "مهم نیست";
   },
-  { immediate: true, deep: true },
+  { immediate: true },
 );
 </script>

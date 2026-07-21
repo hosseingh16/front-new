@@ -42,7 +42,7 @@
               />
               <span class="mr-2 text-text-secondary">{{ item.title }}</span>
             </div>
-            <icons-chevron v-if="item.children" />
+            <Icon name="lucide:chevron-left" size="12" v-if="item.children" />
           </button>
         </NuxtLink>
       </div>

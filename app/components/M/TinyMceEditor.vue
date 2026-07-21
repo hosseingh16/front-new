@@ -3,6 +3,7 @@
     <component
       :is="Editor"
       v-if="ready"
+      :key="themeKey"
       v-model="model"
       :init="editorInit"
       license-key="gpl"
@@ -33,6 +34,9 @@ const props = withDefaults(
   },
 )
 
+const { isDark } = useAppTheme()
+const themeKey = computed(() => (isDark.value ? 'dark' : 'light'))
+
 const Editor = shallowRef<Component | null>(null)
 const ready = ref(false)
 
@@ -47,8 +51,8 @@ const editorInit = computed(() => ({
   promotion: false,
   placeholder: props.placeholder,
   statusbar: false,
-  skin: 'oxide',
-  content_css: 'default',
+  skin: isDark.value ? 'oxide-dark' : 'oxide',
+  content_css: isDark.value ? 'dark' : 'default',
 }))
 
 async function setupTinyMce() {
@@ -60,7 +64,9 @@ async function setupTinyMce() {
   // @ts-expect-error language pack has no type declarations
   await import('tinymce-i18n/langs8/fa')
   await import('tinymce/skins/ui/oxide/skin.js')
+  await import('tinymce/skins/ui/oxide-dark/skin.js')
   await import('tinymce/skins/content/default/content.js')
+  await import('tinymce/skins/content/dark/content.js')
 
   const module = await import('@tinymce/tinymce-vue')
   Editor.value = module.default

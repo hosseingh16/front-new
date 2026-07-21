@@ -9,8 +9,8 @@
         role="combobox"
         :aria-expanded="open"
         :tabindex="disabled ? -1 : 0"
-        class="bg-white cursor-pointer h-10 w-full rounded-lg border border-gray-300 flex justify-between items-center gap-2 pr-2 pl-2 focus:outline-none focus:ring-2 focus:ring-primary-500/25"
-        :style="`border-color:${error ? '#f7a09a' : borderColor}`"
+        class="bg-white cursor-pointer h-10 w-full rounded-lg border border-gray-default flex justify-between items-center gap-2 pr-2 pl-2 focus:outline-none focus:ring-2 focus:ring-primary-500/25"
+        :style="`border-color:${error ? 'var(--color-danger-200)' : borderColor}`"
         @click="toggleDropdown"
         @keydown="onTriggerKeydown"
       >
@@ -44,14 +44,19 @@
               clearable
             />
           </div>
-          <div v-if="options2.length > 0" ref="optionsContainerRef" class="mx-2">
+          <div
+            v-if="options2.length > 0"
+            ref="optionsContainerRef"
+            class="mx-2"
+          >
             <p
               v-for="(item, index) in options2"
               :data-index="index"
               @click="selectItem(item)"
               class="px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg"
               :class="{
-                'bg-gray-200 font-semibold': String(item.value) === String(model),
+                'bg-gray-200 font-semibold':
+                  String(item.value) === String(model),
                 'bg-gray-100': index === highlightedIndex,
               }"
             >
@@ -86,7 +91,7 @@ const props = defineProps({
     type: Array as () => ISelectItem[],
     default: [],
   },
-  borderColor: { type: String, default: "#E8E8E8" },
+  borderColor: { type: String, default: "var(--color-gray-default)" },
   error: { type: Boolean },
   disabled: { type: Boolean },
   search: { type: Boolean },
@@ -102,9 +107,7 @@ const dropDownRef = ref<HTMLElement | null>(null);
 const optionsContainerRef = ref<HTMLElement | null>(null);
 const highlightedIndex = ref(-1);
 
-const hasModelValue = computed(
-  () => model.value != null && model.value !== "",
-);
+const hasModelValue = computed(() => model.value != null && model.value !== "");
 
 // Watches
 watch(
