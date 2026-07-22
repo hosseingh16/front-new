@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1 class="font-yb-bold text-2xl text-text-tertiary">ایجاد آگهی</h1>
+    <h1 class="font-yb-bold text-2xl text-text-tertiary">{{ pageTitle }}</h1>
 
     <div class="mt-5 grid items-start gap-4 lg:grid-cols-8">
       <div class="space-y-4 lg:col-span-6">
@@ -57,17 +57,17 @@
 </template>
 
 <script setup lang="ts">
-import CreateAdBenefitsSection from './components/create/CreateAdBenefitsSection.vue'
-import CreateAdGeneralFields from './components/create/CreateAdGeneralFields.vue'
-import CreateAdInvoiceSidebar from './components/create/CreateAdInvoiceSidebar.vue'
-import CreateAdPreviewCard from './components/create/CreateAdPreviewCard.vue'
-import CreateAdRequirementsEditor from './components/create/CreateAdRequirementsEditor.vue'
-import CreateAdSpecializedFields from './components/create/CreateAdSpecializedFields.vue'
-import CreateAdWorkingHoursSection from './components/create/CreateAdWorkingHoursSection.vue'
+import CreateAdBenefitsSection from "./components/create/CreateAdBenefitsSection.vue";
+import CreateAdGeneralFields from "./components/create/CreateAdGeneralFields.vue";
+import CreateAdInvoiceSidebar from "./components/create/CreateAdInvoiceSidebar.vue";
+import CreateAdPreviewCard from "./components/create/CreateAdPreviewCard.vue";
+import CreateAdRequirementsEditor from "./components/create/CreateAdRequirementsEditor.vue";
+import CreateAdSpecializedFields from "./components/create/CreateAdSpecializedFields.vue";
+import CreateAdWorkingHoursSection from "./components/create/CreateAdWorkingHoursSection.vue";
 
 definePageMeta({
-  layout: 'dashboard',
-})
+  layout: "dashboard",
+});
 
 const {
   form,
@@ -94,9 +94,27 @@ const {
   loadRegions,
   saveDraft,
   publish,
-} = useCreateAdForm()
+} = useCreateAdForm();
+
+const route = useRoute();
+
+const pageTitle = computed(() => {
+  const raw = route.query.employment_type;
+  const employmentType = Array.isArray(raw) ? raw[0] : raw;
+
+  switch (employmentType) {
+    case "full_time":
+      return "ایجاد آگهی تمام وقت";
+    case "part_time":
+      return "ایجاد آگهی نیمه وقت";
+    case "project_based":
+      return "ایجاد آگهی پروژه ای";
+    default:
+      return "ایجاد آگهی";
+  }
+});
 
 useSeoMeta({
-  title: 'ایجاد آگهی',
-})
+  title: pageTitle,
+});
 </script>

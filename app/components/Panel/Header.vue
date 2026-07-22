@@ -85,8 +85,20 @@
 const { collapsed, toggle } = useDashboardSidebar();
 
 const createMenuItems = [
-  { title: "آگهی تمام وقت", to: "#", icon: "svg:new-briefcase" },
-  { title: "آگهی نیمه وقت", to: "#", icon: "svg:new-briefcase" },
-  { title: "پروژه", to: "#", icon: "svg:new-notepad-text" },
+  {
+    title: "آگهی تمام وقت",
+    to: "/dashboard/employer/ads/create?employment_type=full_time",
+    icon: "svg:new-briefcase",
+  },
+  {
+    title: "آگهی نیمه وقت",
+    to: "/dashboard/employer/ads/create?employment_type=part_time",
+    icon: "svg:new-briefcase",
+  },
+  {
+    title: "آگهی پروژه ای",
+    to: "/dashboard/employer/ads/create?employment_type=project_based",
+    icon: "svg:new-notepad-text",
+  },
 ];
 </script>

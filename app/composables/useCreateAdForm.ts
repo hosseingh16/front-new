@@ -42,6 +42,7 @@ export function useCreateAdForm(
   options: { adId?: MaybeRef<string | number | null> } = {},
 ) {
   const api = useApi()
+  const route = useRoute()
   const router = useRouter()
   const { $toast } = useNuxtApp()
 
@@ -70,6 +71,21 @@ export function useCreateAdForm(
   const educationLevels = items('education_levels')
   const genders = items('genders')
   const accountingPrograms = items('accounting_programs')
+
+  function applyEmploymentTypeFromQuery() {
+    if (isEdit.value) return
+
+    const raw = route.query.employment_type
+    const value = Array.isArray(raw) ? raw[0] : raw
+    if (!value) return
+
+    const match = employmentTypes.value.find(
+      (item) => String(item.value) === String(value),
+    )
+    if (!match) return
+
+    form.value.employment_type = String(match.value)
+  }
 
   const cityOptions = ref<ISelectItem[]>([])
   const regionOptions = ref<ISelectItem[]>([])
@@ -240,6 +256,14 @@ export function useCreateAdForm(
     applyAdToForm(editingAd.value)
   })
 
+  watch(
+    [lookupsReady, () => route.query.employment_type],
+    ([ready]) => {
+      if (!ready) return
+      applyEmploymentTypeFromQuery()
+    },
+    { immediate: true },
+  )
   function restoreDraft() {
     if (!import.meta.client) return
 
