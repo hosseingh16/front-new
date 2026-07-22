@@ -28,7 +28,7 @@
           title="اظهارنامه عملکرد"
           :subtitle="performanceSubtitle"
           icon="svg:illust-create-account"
-          disabled
+          to="/dashboard/tax-returns"
         />
       </div>
     </section>
@@ -73,6 +73,8 @@ useSeoMeta({
 const BANNER_STORAGE_KEY = "employer-dashboard-company-banner-dismissed";
 
 const { ads, adGroups, loading, initialized } = useEmployerAds();
+const { total: taxReturnTotal, initialized: taxReturnsInitialized } =
+  useTaxReturns();
 
 const showCompanyBanner = ref(true);
 
@@ -133,7 +135,10 @@ const shortcutCards = computed(() => [
   },
 ]);
 
-const performanceSubtitle = "۰ ثبت شده";
+const performanceSubtitle = computed(() => {
+  if (!taxReturnsInitialized.value) return "۰ ثبت شده";
+  return `${toPersianDigits(taxReturnTotal.value)} ثبت شده`;
+});
 
 function toPersianDigits(value: number) {
   return String(value).replace(/\d/g, (d) => "۰۱۲۳۴۵۶۷۸۹"[Number(d)]!);

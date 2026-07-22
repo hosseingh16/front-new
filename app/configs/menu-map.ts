@@ -267,4 +267,21 @@ export const menuMap: Record<string, MenuMeta> = {
     to: '/dashboard/employer/company',
     placement: 'bottom',
   },
+
+  create_tax_return: {
+    label: 'ثبت درخواست اظهارنامه',
+    icon: 'lucide:file-plus-corner',
+    to: '/dashboard/tax-returns/create',
+  },
+  tax_return_management: {
+    label: 'درخواست های من',
+    icon: 'lucide:history',
+    to: '/dashboard/tax-returns',
+  },
+
+  tax_returns: {
+    label: 'درخواست های اظهارنامه',
+    icon: 'lucide:notepad-text',
+    to: '/dashboard/tax-returns',
+  },
 } as const

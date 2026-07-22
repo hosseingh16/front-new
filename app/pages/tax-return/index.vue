@@ -33,10 +33,12 @@
           درخواست خود را ثبت کنید تا حسابدار متخصص، انجام اظهارنامه مالیاتی شما را
           پیگیری کند.
         </p>
-        <button class="btn btn-primary mt-8 gap-2 px-6">
+        <button
+          class="btn btn-primary mt-8 gap-2 px-6"
+          @click="navigateTo('/dashboard/tax-returns/create')"
+        >
           <Icon name="lucide:pen-line" size="18" class="text-white" />
           <span>ثبت درخواست اظهارنامه</span>
-   
         </button>
 
         <img
@@ -207,8 +209,10 @@
         <p class="text-center font-yb-bold text-lg text-white md:text-right md:text-xl">
           همین حالا درخواست اظهارنامه خود را ثبت کنید
         </p>
-        <button class="btn btn-primary shrink-0 gap-2 px-6">
-
+        <button
+          class="btn btn-primary shrink-0 gap-2 px-6"
+          @click="navigateTo('/dashboard/tax-returns/create')"
+        >
           <Icon name="lucide:pen-line" size="18" class="text-white" />
           ثبت درخواست اظهارنامه
         </button>
