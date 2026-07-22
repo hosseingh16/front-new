@@ -74,17 +74,30 @@ function toggleOpen(key: string) {
   openKey.value = openKey.value === key ? null : key;
 }
 
+function findOpenKeyForPath(path: string) {
+  for (const [index, item] of topMenu.value.entries()) {
+    if (!item.children?.length) continue;
+    const childActive = item.children.some(
+      (child) => child.to && (path === child.to || path.startsWith(`${child.to}/`)),
+    );
+    if (childActive) return itemKey(item, "top", index);
+  }
+
+  for (const [index, item] of bottomMenu.value.entries()) {
+    if (!item.children?.length) continue;
+    const childActive = item.children.some(
+      (child) => child.to && (path === child.to || path.startsWith(`${child.to}/`)),
+    );
+    if (childActive) return itemKey(item, "bottom", index);
+  }
+
+  return null;
+}
+
 watch(
-  topMenu,
-  (items) => {
-    const firstWithChildren = items.find((item) => item.children?.length);
-    if (firstWithChildren) {
-      openKey.value = itemKey(
-        firstWithChildren,
-        "top",
-        items.indexOf(firstWithChildren),
-      );
-    }
+  [() => route.path, topMenu, bottomMenu],
+  () => {
+    openKey.value = findOpenKeyForPath(route.path);
   },
   { immediate: true },
 );
