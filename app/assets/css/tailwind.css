@@ -42,6 +42,8 @@
   --color-success-400: #34d399;
   --color-success-100: #e6f6f0;
   --color-success-50: #d8f0e8;
+  --color-success-soft: #f5fffb;
+  --color-success-outline: #a0f8d5;
 
   --color-avatar-from: #c5dff5;
   --color-avatar-to: #9ec5e8;
@@ -106,6 +108,8 @@
   --color-success-400: #6ee7b7;
   --color-success-100: #0f2a22;
   --color-success-50: #14352b;
+  --color-success-soft: #0f2a22;
+  --color-success-outline: #1f6b52;
 
   --color-avatar-from: #2a3f55;
   --color-avatar-to: #1f3347;
