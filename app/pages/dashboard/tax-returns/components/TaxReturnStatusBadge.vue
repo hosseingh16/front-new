@@ -12,11 +12,11 @@
 </template>
 
 <script setup lang="ts">
-import { getTaxReturnStatusMeta } from '../utils/tax-return-status'
+import { getTaxReturnStatusMeta } from "../utils/tax-return-status";
 
 const props = defineProps<{
-  status?: string | null
-}>()
+  status?: string | null;
+}>();
 
-const meta = computed(() => getTaxReturnStatusMeta(props.status))
+const meta = computed(() => getTaxReturnStatusMeta(props.status));
 </script>

@@ -3,7 +3,12 @@
     <div class="overflow-x-auto">
       <table class="w-full min-w-[640px] border-collapse text-sm">
         <thead>
-          <tr class="border-b border-gray-default bg-surface-50 text-text-passive">
+          <tr
+            class="border-b border-gray-default bg-surface-50 text-text-passive"
+          >
+            <th class="px-4 py-3 text-right font-semibold whitespace-nowrap">
+              شماره درخواست
+            </th>
             <th class="px-4 py-3 text-right font-semibold whitespace-nowrap">
               نوع فعالیت
             </th>
@@ -23,7 +28,12 @@
               <div class="h-7 w-20 animate-pulse rounded-lg bg-surface-200" />
             </td>
             <td class="px-4 py-4">
-              <div class="ms-auto h-9 w-40 animate-pulse rounded-lg bg-surface-200" />
+              <div
+                class="ms-auto h-9 w-40 animate-pulse rounded-lg bg-surface-200"
+              />
+            </td>
+            <td class="px-4 py-4">
+              <div class="h-7 w-20 animate-pulse rounded-lg bg-surface-200" />
             </td>
           </tr>
         </tbody>
@@ -35,7 +45,10 @@
             class="border-b border-gray-default last:border-b-0 hover:bg-surface-50"
           >
             <td class="px-4 py-4 font-semibold text-text-tertiary">
-              {{ item.activity_type || '—' }}
+              {{ item.id || "—" }}
+            </td>
+            <td class="px-4 py-4 font-semibold text-text-tertiary">
+              {{ item.activity_type || "—" }}
             </td>
             <td class="px-4 py-4">
               <TaxReturnStatusBadge :status="item.status" />
@@ -52,13 +65,14 @@
                   لغو درخواست
                 </button>
 
-                <NuxtLink
-                  :to="`/dashboard/tax-returns/${item.id}`"
+                <button
+                  type="button"
                   class="inline-flex h-9 items-center gap-1 rounded-lg bg-[#EEF1FC] px-3 text-sm font-semibold text-primary-500 transition-opacity hover:opacity-80"
+                  @click="emit('detail', item)"
                 >
                   جزئیات
                   <Icon name="lucide:chevron-left" size="16" />
-                </NuxtLink>
+                </button>
               </div>
             </td>
           </tr>
@@ -80,18 +94,19 @@
 </template>
 
 <script setup lang="ts">
-import NoResult from '~/components/Elements/NoResult.vue'
-import type { TaxReturnListItem } from '~/types/tax-return'
-import { canCancelTaxReturn } from '../utils/tax-return-status'
-import TaxReturnStatusBadge from './TaxReturnStatusBadge.vue'
+import NoResult from "~/components/Elements/NoResult.vue";
+import type { TaxReturnListItem } from "~/types/tax-return";
+import { canCancelTaxReturn } from "../utils/tax-return-status";
+import TaxReturnStatusBadge from "./TaxReturnStatusBadge.vue";
 
 defineProps<{
-  items: TaxReturnListItem[]
-  loading?: boolean
-  initialized?: boolean
-}>()
+  items: TaxReturnListItem[];
+  loading?: boolean;
+  initialized?: boolean;
+}>();
 
 const emit = defineEmits<{
-  cancel: [item: TaxReturnListItem]
-}>()
+  cancel: [item: TaxReturnListItem];
+  detail: [item: TaxReturnListItem];
+}>();
 </script>

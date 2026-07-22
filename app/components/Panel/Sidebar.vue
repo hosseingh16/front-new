@@ -1,6 +1,6 @@
 <template>
   <aside
-    class="fixed top-0 right-0 flex h-full w-72 flex-col border-l-2 border-t-2 border-gray-default bg-surface-50 px-4 py-5 transition-transform duration-300 max-lg:hidden [&_button]:text-sm [&_button]:font-normal"
+    class="fixed top-0 right-0 flex h-full w-72 flex-col border-l-2 border-t-2 border-gray-default bg-base-100 px-4 py-5 transition-transform duration-300 max-lg:hidden [&_button]:text-sm [&_button]:font-normal"
     :class="collapsed ? 'translate-x-full' : 'translate-x-0'"
   >
     <div class="flex min-h-0 flex-1 flex-col pt-16">
@@ -30,7 +30,7 @@
     <div class="flex flex-col gap-y-2 border-t border-gray-default">
       <div class="flex gap-2 px-4 pt-3">
         <Avatar />
-        <div class="flex flex-col gap-3">
+        <div class="flex flex-col gap-1">
           <span class="font-semibold text-text-tertiary">{{ userName }}</span>
           <button class="flex items-center">
             <!-- <Icon name="svg:settings" /> -->
@@ -78,7 +78,8 @@ function findOpenKeyForPath(path: string) {
   for (const [index, item] of topMenu.value.entries()) {
     if (!item.children?.length) continue;
     const childActive = item.children.some(
-      (child) => child.to && (path === child.to || path.startsWith(`${child.to}/`)),
+      (child) =>
+        child.to && (path === child.to || path.startsWith(`${child.to}/`)),
     );
     if (childActive) return itemKey(item, "top", index);
   }
@@ -86,7 +87,8 @@ function findOpenKeyForPath(path: string) {
   for (const [index, item] of bottomMenu.value.entries()) {
     if (!item.children?.length) continue;
     const childActive = item.children.some(
-      (child) => child.to && (path === child.to || path.startsWith(`${child.to}/`)),
+      (child) =>
+        child.to && (path === child.to || path.startsWith(`${child.to}/`)),
     );
     if (childActive) return itemKey(item, "bottom", index);
   }

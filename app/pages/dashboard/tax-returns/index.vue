@@ -25,6 +25,7 @@
         :loading="loading"
         :initialized="initialized"
         @cancel="openCancelDialog"
+        @detail="openDetailModal"
       />
 
       <Pagination
@@ -47,6 +48,8 @@
       @confirm="handleCancelConfirm"
       @cancel="pendingCancel = null"
     />
+
+    <TaxReturnDetailModal ref="detailModalRef" />
   </div>
 </template>
 
@@ -54,6 +57,7 @@
 import ConfirmDialog from '~/components/M/ConfirmDialog.vue'
 import Pagination from '~/components/Elements/Pagination.vue'
 import type { TaxReturnListItem } from '~/types/tax-return'
+import TaxReturnDetailModal from './components/TaxReturnDetailModal.vue'
 import TaxReturnListTable from './components/TaxReturnListTable.vue'
 
 definePageMeta({
@@ -77,11 +81,18 @@ const {
 } = useTaxReturns()
 
 const confirmDialogRef = ref<InstanceType<typeof ConfirmDialog> | null>(null)
+const detailModalRef = ref<InstanceType<typeof TaxReturnDetailModal> | null>(
+  null,
+)
 const pendingCancel = ref<TaxReturnListItem | null>(null)
 
 function openCancelDialog(item: TaxReturnListItem) {
   pendingCancel.value = item
   confirmDialogRef.value?.showModal()
+}
+
+function openDetailModal(item: TaxReturnListItem) {
+  detailModalRef.value?.open(item.id)
 }
 
 function handleCancelConfirm() {

@@ -1,22 +1,22 @@
 <template>
   <aside class="space-y-4 lg:sticky lg:top-24">
-    <div class="rounded-2xl border-2 border-[#A0F8D5] bg-[#F5FFFB] p-4">
+    <div class="rounded-2xl border-2 border-success-outline bg-success-soft p-4">
       <Titr>فاکتور</Titr>
 
       <div class="mt-6 flex flex-col items-start text-sm">
         <span class="text-text-passive">هزینه قابل پرداخت:</span>
-        <span class="my-4 font-yb-bold text-2xl text-[#009F65]">
+        <span class="my-4 font-yb-bold text-2xl text-success-500">
           {{ formattedPrice }}
         </span>
       </div>
 
       <div
-        class="flex items-start gap-2 rounded-xl border border-[#F5E6C8] bg-[#FFF8EB] p-3 text-xs leading-6 text-text-tertiary"
+        class="flex items-start gap-2 rounded-xl border border-warning-200 bg-warning-50 p-3 text-xs leading-6 text-text-tertiary"
       >
         <Icon
           name="lucide:info"
           size="16"
-          class="mt-0.5 shrink-0 text-[#C9A227]"
+          class="mt-0.5 shrink-0 text-warning-400"
         />
         <p>
           این مبلغ بابت بررسی اولیه درخواست و اتصال شما به حسابدار دریافت

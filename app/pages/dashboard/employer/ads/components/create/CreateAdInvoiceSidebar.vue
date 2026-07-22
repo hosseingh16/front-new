@@ -1,12 +1,12 @@
 <template>
   <aside class="space-y-4 lg:sticky lg:top-24">
     <div class="">
-      <div class="rounded-2xl border-2 border-[#A0F8D5] bg-[#F5FFFB] p-4">
+      <div class="rounded-2xl border-2 border-success-outline bg-success-soft p-4">
         <Titr>فاکتور</Titr>
 
         <div class="mt-6 flex flex-col items-start justify-between text-sm">
           <span class="text-text-passive">هزینه قابل پرداخت</span>
-          <span class="my-4 font-yb-bold text-lg text-[#009F65]">رایگان</span>
+          <span class="my-4 font-yb-bold text-lg text-success-500">رایگان</span>
         </div>
 
         <button

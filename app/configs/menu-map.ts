@@ -282,6 +282,6 @@ export const menuMap: Record<string, MenuMeta> = {
   tax_returns: {
     label: 'درخواست های اظهارنامه',
     icon: 'lucide:notepad-text',
-    to: '/dashboard/tax-returns',
+    to: '/dashboard/tax-returns-management',
   },
 } as const
