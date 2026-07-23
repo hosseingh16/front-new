@@ -280,12 +280,32 @@ const props = defineProps<{
   user: UserResume;
 }>();
 
+const { items: lookupItems } = useLookups(
+  "job_titles,employment_types,education_levels,graduation_years,prior_years",
+);
+const jobTitles = lookupItems("job_titles");
+const employmentTypes = lookupItems("employment_types");
+const educationLevels = lookupItems("education_levels");
+const graduationYears = lookupItems("graduation_years");
+const priorYears = lookupItems("prior_years");
+
 const educationItems = computed(() =>
-  (props.user.resume_educations ?? []).map(getResumeEducationItem),
+  (props.user.resume_educations ?? []).map((education) =>
+    getResumeEducationItem(education, {
+      educationLevels: educationLevels.value,
+      graduationYears: graduationYears.value,
+    }),
+  ),
 );
 
 const workItems = computed(() =>
-  (props.user.resume_priors ?? []).map(getResumePriorItem),
+  (props.user.resume_priors ?? []).map((prior) =>
+    getResumePriorItem(prior, {
+      jobTitles: jobTitles.value,
+      employmentTypes: employmentTypes.value,
+      years: priorYears.value,
+    }),
+  ),
 );
 
 const softwareItems = computed(() => getResumeSoftwareItems(props.user));

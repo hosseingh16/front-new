@@ -4,11 +4,29 @@ import type {
   UserResumePersonal,
   UserResumePrior,
 } from '~/types/user-resume'
+import type { ISelectItem } from '~/types/select-item'
 
 export function displayResumeValue(value?: string | number | null, fallback = '—') {
   if (value == null) return fallback
   const text = String(value).trim()
   return text || fallback
+}
+
+export function resolveResumeLookupLabel(
+  options: ISelectItem[] = [],
+  value?: string | number | null,
+  fallback = '—',
+) {
+  if (value == null) return fallback
+
+  const text = String(value).trim()
+  if (!text) return fallback
+
+  const match = options.find(
+    (item) => String(item.value) === text || item.label.trim() === text,
+  )
+
+  return match?.label ?? text
 }
 
 export function getResumePersonal(user: UserResume | null | undefined) {
@@ -20,16 +38,22 @@ export function getResumeFullName(user: UserResume | null | undefined) {
   return displayResumeValue(personal?.name || user?.name)
 }
 
-export function getResumeJobTitle(user: UserResume | null | undefined) {
+export function getResumeJobTitle(
+  user: UserResume | null | undefined,
+  jobTitles: ISelectItem[] = [],
+) {
   const personal = getResumePersonal(user)
-  return displayResumeValue(
-    personal?.job_title || personal?.wanted_job || user?.job_title,
-  )
+  const raw = personal?.job_title || personal?.wanted_job || user?.job_title
+  return resolveResumeLookupLabel(jobTitles, raw)
 }
 
-export function getResumeSalary(user: UserResume | null | undefined) {
+export function getResumeSalary(
+  user: UserResume | null | undefined,
+  salaryRanges: ISelectItem[] = [],
+) {
   const personal = getResumePersonal(user)
-  return displayResumeValue(personal?.salary_range || personal?.desired_salary)
+  const raw = personal?.salary_range || personal?.desired_salary
+  return resolveResumeLookupLabel(salaryRanges, raw)
 }
 
 export function getResumeEmploymentStatus(user: UserResume | null | undefined) {
@@ -48,9 +72,33 @@ export function getResumeGenderLabel(gender?: string | number | null) {
   const value = String(gender).trim().toLowerCase()
 
   if (value === 'male' || value === '1') return 'آقا'
-  if (value === 'female' || value === '0') return 'خانم'
+  if (value === 'female' || value === '0' || value === '2') return 'خانم'
 
   return displayResumeValue(gender)
+}
+
+export function getResumeMaritalStatusLabel(status?: string | number | null) {
+  if (status == null || status === '') return '—'
+
+  const value = String(status).trim()
+  if (value === 'single' || value === '0') return 'مجرد'
+  if (value === 'married' || value === '1') return 'متأهل'
+
+  return displayResumeValue(status)
+}
+
+export function getResumeWorkExperienceLabel(
+  value?: string | number | null,
+  experienceLevels: ISelectItem[] = [],
+) {
+  return resolveResumeLookupLabel(experienceLevels, value)
+}
+
+export function getResumeMilitaryStatusLabel(
+  value?: string | number | null,
+  militaryStatuses: ISelectItem[] = [],
+) {
+  return resolveResumeLookupLabel(militaryStatuses, value)
 }
 
 export function getResumeLocationLabel(personal?: UserResumePersonal | null) {
@@ -95,9 +143,12 @@ export function getResumeBirthYearLabel(birthdate?: string | number | null) {
   return yearMatch[1]
 }
 
-export function getResumeHighestDegree(educations: UserResumeEducation[] = []) {
+export function getResumeHighestDegree(
+  educations: UserResumeEducation[] = [],
+  educationLevels: ISelectItem[] = [],
+) {
   if (!educations.length) return '—'
-  return displayResumeValue(educations[0]?.degree)
+  return resolveResumeLookupLabel(educationLevels, educations[0]?.degree)
 }
 
 export function maskResumePhone(phone?: string | null) {
@@ -135,21 +186,37 @@ export function formatResumePeriod(
   return `تا ${end}`
 }
 
-export function getResumePriorTitle(prior: UserResumePrior) {
-  return displayResumeValue(prior.title)
+export function getResumePriorTitle(
+  prior: UserResumePrior,
+  jobTitles: ISelectItem[] = [],
+) {
+  return resolveResumeLookupLabel(jobTitles, prior.title)
 }
 
-export function getResumePriorSubtitle(prior: UserResumePrior) {
-  const type = displayResumeValue(prior.employment_type, '')
+export function getResumePriorSubtitle(
+  prior: UserResumePrior,
+  options: {
+    jobTitles?: ISelectItem[]
+    employmentTypes?: ISelectItem[]
+    years?: ISelectItem[]
+  } = {},
+) {
+  const type = resolveResumeLookupLabel(
+    options.employmentTypes,
+    prior.employment_type,
+    '',
+  )
   const company = displayResumeValue(prior.company_name, '')
   const period = formatResumePeriod(
-    prior.start_year,
-    prior.end_year,
+    resolveResumeLookupLabel(options.years, prior.start_year, ''),
+    resolveResumeLookupLabel(options.years, prior.end_year, ''),
     prior.still_busy,
   )
 
   const parts = [company, period].filter((part) => part && part !== '—')
-  const title = [getResumePriorTitle(prior), type].filter(Boolean).join(' · ')
+  const title = [getResumePriorTitle(prior, options.jobTitles), type]
+    .filter(Boolean)
+    .join(' · ')
 
   return {
     title,
@@ -157,13 +224,27 @@ export function getResumePriorSubtitle(prior: UserResumePrior) {
   }
 }
 
-export function getResumeEducationSubtitle(education: UserResumeEducation) {
-  const degree = displayResumeValue(education.degree, '')
+export function getResumeEducationSubtitle(
+  education: UserResumeEducation,
+  options: {
+    educationLevels?: ISelectItem[]
+    graduationYears?: ISelectItem[]
+  } = {},
+) {
+  const degree = resolveResumeLookupLabel(
+    options.educationLevels,
+    education.degree,
+    '',
+  )
   const major = displayResumeValue(education.major, '')
   const university = displayResumeValue(education.university, '')
   const period = education.stillbusy
     ? `تا الان`
-    : displayResumeValue(education.enddate, '')
+    : resolveResumeLookupLabel(
+        options.graduationYears,
+        education.enddate,
+        '',
+      )
 
   return {
     title: [degree, major].filter(Boolean).join(' · ') || '—',
@@ -182,13 +263,26 @@ export function toResumeScore(value?: string | number | null) {
   return toResumePercent(value)
 }
 
-export function getResumeEducationItem(education: UserResumeEducation) {
-  const degree = displayResumeValue(education.degree, '')
+export function getResumeEducationItem(
+  education: UserResumeEducation,
+  options: {
+    educationLevels?: ISelectItem[]
+    graduationYears?: ISelectItem[]
+  } = {},
+) {
+  const degree = resolveResumeLookupLabel(
+    options.educationLevels,
+    education.degree,
+    '',
+  )
   const major = displayResumeValue(education.major, '')
   const university = displayResumeValue(education.university)
   const period = education.stillbusy
     ? 'مشغول به تحصیل'
-    : displayResumeValue(education.enddate, '—')
+    : resolveResumeLookupLabel(
+        options.graduationYears,
+        education.enddate,
+      )
 
   return {
     id: education.id,
@@ -199,13 +293,24 @@ export function getResumeEducationItem(education: UserResumeEducation) {
   }
 }
 
-export function getResumePriorItem(prior: UserResumePrior) {
-  const title = displayResumeValue(prior.title, '')
-  const type = displayResumeValue(prior.employment_type, '')
+export function getResumePriorItem(
+  prior: UserResumePrior,
+  options: {
+    jobTitles?: ISelectItem[]
+    employmentTypes?: ISelectItem[]
+    years?: ISelectItem[]
+  } = {},
+) {
+  const title = resolveResumeLookupLabel(options.jobTitles, prior.title, '')
+  const type = resolveResumeLookupLabel(
+    options.employmentTypes,
+    prior.employment_type,
+    '',
+  )
   const company = displayResumeValue(prior.company_name)
   const period = formatResumePeriod(
-    prior.start_year,
-    prior.end_year,
+    resolveResumeLookupLabel(options.years, prior.start_year, ''),
+    resolveResumeLookupLabel(options.years, prior.end_year, ''),
     prior.still_busy,
   )
 

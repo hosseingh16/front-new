@@ -320,8 +320,11 @@ import {
   getResumeHighestDegree,
   getResumeJobTitle,
   getResumeLocationLabel,
+  getResumeMaritalStatusLabel,
+  getResumeMilitaryStatusLabel,
   getResumePersonal,
   getResumeSalary,
+  getResumeWorkExperienceLabel,
   maskResumeEmail,
 } from "../utils/user-resume";
 
@@ -335,9 +338,20 @@ const props = defineProps<{
 
 const activeTab = ref<UserResumeTab>("basic");
 
+const { items: lookupItems } = useLookups(
+  "job_titles,experience_levels,salary_ranges,military_statuses,education_levels",
+);
+const jobTitles = lookupItems("job_titles");
+const experienceLevels = lookupItems("experience_levels");
+const salaryRanges = lookupItems("salary_ranges");
+const militaryStatuses = lookupItems("military_statuses");
+const educationLevels = lookupItems("education_levels");
+
 const personal = computed(() => getResumePersonal(props.user));
 const fullName = computed(() => getResumeFullName(props.user));
-const jobTitle = computed(() => getResumeJobTitle(props.user));
+const jobTitle = computed(() =>
+  getResumeJobTitle(props.user, jobTitles.value),
+);
 const avatar = computed(() => props.user?.avatar || null);
 const aboutMe = computed(
   () => personal.value?.about?.trim() || props.user?.description?.trim() || "",
@@ -348,11 +362,14 @@ const userInitial = computed(() => fullName.value.charAt(0) || "ک");
 const basicInfoFields = computed(() => [
   { label: "نام کامل:", value: fullName.value },
   { label: "وضعیت اشتغال:", value: getResumeEmploymentStatus(props.user) },
-  { label: "حقوق درخواستی:", value: getResumeSalary(props.user) },
+  {
+    label: "حقوق درخواستی:",
+    value: getResumeSalary(props.user, salaryRanges.value),
+  },
   { label: "جنسیت:", value: getResumeGenderLabel(personal.value?.gender) },
   {
     label: "وضعیت تاهل:",
-    value: displayResumeValue(personal.value?.marital_status),
+    value: getResumeMaritalStatusLabel(personal.value?.marital_status),
   },
   { label: "استان:", value: displayResumeValue(personal.value?.province_name) },
   { label: "شهر:", value: displayResumeValue(personal.value?.city_name) },
@@ -360,7 +377,10 @@ const basicInfoFields = computed(() => [
   { label: "عنوان شغلی:", value: jobTitle.value },
   {
     label: "سابقه کار:",
-    value: displayResumeValue(personal.value?.work_experience),
+    value: getResumeWorkExperienceLabel(
+      personal.value?.work_experience,
+      experienceLevels.value,
+    ),
   },
   {
     label: "سال تولد / سن:",
@@ -370,7 +390,10 @@ const basicInfoFields = computed(() => [
   },
   {
     label: "وضعیت خدمت سربازی:",
-    value: displayResumeValue(personal.value?.military_service_status),
+    value: getResumeMilitaryStatusLabel(
+      personal.value?.military_service_status,
+      militaryStatuses.value,
+    ),
   },
 ]);
 
@@ -389,7 +412,10 @@ const personalSidebarItems = computed<SidebarItem[]>(() => [
   },
   {
     label: "مدرک تحصیلی",
-    value: getResumeHighestDegree(props.user?.resume_educations),
+    value: getResumeHighestDegree(
+      props.user?.resume_educations,
+      educationLevels.value,
+    ),
     icon: "svg:edu-item",
   },
   {
@@ -409,12 +435,15 @@ const personalSidebarItems = computed<SidebarItem[]>(() => [
   },
   {
     label: "وضعیت خدمت",
-    value: displayResumeValue(personal.value?.military_service_status),
+    value: getResumeMilitaryStatusLabel(
+      personal.value?.military_service_status,
+      militaryStatuses.value,
+    ),
     icon: "lucide:shield",
   },
   {
     label: "وضعیت تاهل",
-    value: displayResumeValue(personal.value?.marital_status),
+    value: getResumeMaritalStatusLabel(personal.value?.marital_status),
     icon: "lucide:heart",
   },
 ]);
@@ -442,12 +471,15 @@ const salarySidebarItems = computed<SidebarItem[]>(() => [
   },
   {
     label: "حقوق درخواستی",
-    value: getResumeSalary(props.user),
+    value: getResumeSalary(props.user, salaryRanges.value),
     icon: "svg:wallet",
   },
   {
     label: "سابقه کار",
-    value: displayResumeValue(personal.value?.work_experience),
+    value: getResumeWorkExperienceLabel(
+      personal.value?.work_experience,
+      experienceLevels.value,
+    ),
     icon: "svg:work-history",
   },
 ]);
