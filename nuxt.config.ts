@@ -50,7 +50,7 @@ export default defineNuxtConfig({
     },
     redirect: {
       onLogin: "/",
-      onLogout: "/login",
+      onLogout: "/account/sign-in",
     },
   },
   site: {

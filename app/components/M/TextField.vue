@@ -53,6 +53,8 @@
       <textarea
         v-else
         v-model="model"
+        id="model"
+        resize="none"
         :placeholder="placeholder"
         class="textarea w-full border-0 shadow-none focus:outline-none p-0 placeholder:text-gray-default"
         rows="4"

@@ -253,3 +253,8 @@ button:disabled {
 .modal-backdrop {
   @apply bg-black/40 backdrop-blur-[3px];
 }
+
+textarea {
+  resize: none;
+  overflow: auto;
+}

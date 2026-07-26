@@ -17,7 +17,9 @@
       </div>
       <div class="flex items-center gap-12 max-lg:hidden">
         <NuxtLink to="/" class="text-sm hover:opacity-80">خانه</NuxtLink>
-        <NuxtLink to="/employers" class="text-sm hover:opacity-80">کارفرمایان</NuxtLink>
+        <NuxtLink to="/employers" class="text-sm hover:opacity-80"
+          >کارفرمایان</NuxtLink
+        >
         <NuxtLink to="/jobs" class="text-sm hover:opacity-80"
           >فرصت‌های شغلی</NuxtLink
         >
@@ -34,7 +36,15 @@
       <button class="btn border-none">
         <icons-search2 color="#4A4A4A" />
       </button>
-      <NuxtLink to="/account">
+
+      <NuxtLink v-if="isAuthenticated" to="/dashboard">
+        <button class="btn btn-primary">
+          <Icon name="lucide:gauge" size="24" />
+          داشبورد
+        </button>
+      </NuxtLink>
+
+      <NuxtLink v-else to="/account">
         <button class="btn btn-primary">
           <Icon name="svg:user-plus-white" size="24" />
           ورود | ثبت نام
@@ -43,3 +53,7 @@
     </div>
   </header>
 </template>
+
+<script setup lang="ts">
+const { isAuthenticated } = useSanctumAuth();
+</script>

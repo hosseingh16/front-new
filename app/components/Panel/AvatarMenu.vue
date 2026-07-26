@@ -1,5 +1,7 @@
 <template>
-  <div class="bg-surface-100 max-lg:h-[110%] max-lg:overflow-scroll max-lg:p-1">
+  <div
+    class="bg-surface-100 z-100 max-lg:h-[110%] max-lg:overflow-scroll max-lg:p-1"
+  >
     <div
       class="flex flex-col items-center gap-y-3 rounded-lg bg-surface-50 p-6"
     >
@@ -82,6 +84,8 @@
         <button
           type="button"
           class="btn btn-block btn-ghost flex justify-start hover:bg-gray-100 dark:hover:bg-surface-200"
+          :disabled="loggingOut"
+          @click="handleLogout"
         >
           <div class="flex items-center justify-start">
             <Icon name="svg:log-out" class="text-danger-500" size="16" />
@@ -104,6 +108,19 @@ import { useCurrentUser } from "~/composables/useCurrentUser";
 
 const route = useRoute();
 const { name: userName, cellphone } = useCurrentUser();
+const { logout } = useSanctumAuth();
+
+const loggingOut = ref(false);
+
+async function handleLogout() {
+  if (loggingOut.value) return;
+  loggingOut.value = true;
+  try {
+    await logout();
+  } finally {
+    loggingOut.value = false;
+  }
+}
 
 const menus1 = [
   { title: "پیشخوان", to: "/dashboard", icon: "gauge-1" },
