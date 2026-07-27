@@ -40,9 +40,25 @@
       <button class="btn btn-ghost w-12 h-12 p-0">
         <Icon name="svg:search-1" size="24" />
       </button>
-      <button class="btn btn-ghost w-12 h-12 p-0">
-        <Icon name="svg:bell" size="24" />
-      </button>
+      <m-dropdown>
+        <template #btn>
+          <button
+            class="btn btn-ghost relative w-12 h-12 p-0"
+            aria-label="اعلان‌ها"
+          >
+            <Icon name="svg:bell" size="24" />
+            <span
+              v-if="unreadCount > 0"
+              class="absolute top-2 left-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-danger-500 px-1 text-[10px] font-semibold text-white"
+            >
+              {{ unreadCount > 99 ? '99+' : unreadCount }}
+            </span>
+          </button>
+        </template>
+        <template #content>
+          <panel-notifications-menu />
+        </template>
+      </m-dropdown>
       <m-dropdown>
         <template #btn>
           <button class="btn btn-ghost w-12 h-12 p-0 max-lg:hidden">
@@ -83,6 +99,11 @@
 
 <script setup lang="ts">
 const { collapsed, toggle } = useDashboardSidebar();
+const { unreadCount, fetchNotifications } = useNotifications();
+
+onMounted(() => {
+  fetchNotifications();
+});
 
 const createMenuItems = [
   {

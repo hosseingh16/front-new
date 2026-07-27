@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="dropdown dropdown-start mx-1"
-    :class="{ 'dropdown-hover': hover }"
-  >
+  <div class="dropdown dropdown-start ml-1" :class="{ 'dropdown-hover': hover }">
     <div :tabindex="Math.round(1)">
       <slot name="btn" />
     </div>
