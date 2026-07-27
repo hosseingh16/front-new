@@ -1,6 +1,6 @@
 <template>
   <div
-    class="bg-surface-100 z-100 max-lg:h-[110%] max-lg:overflow-scroll max-lg:p-1"
+    class="bg-surface-100 z-100 max-lg:h-[110%] max-lg:overflow-scroll max-lg:p-1 rounded-xl"
   >
     <div
       class="flex flex-col items-center gap-y-3 rounded-lg bg-surface-50 p-6"

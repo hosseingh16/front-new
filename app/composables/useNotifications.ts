@@ -60,7 +60,14 @@ function unwrapList(raw: unknown): AppNotification[] {
     source = raw
   } else if (raw && typeof raw === 'object') {
     const obj = raw as Record<string, unknown>
-    if (Array.isArray(obj.notifications)) {
+    const nested =
+      obj.data && typeof obj.data === 'object'
+        ? (obj.data as Record<string, unknown>)
+        : null
+
+    if (nested && Array.isArray(nested.notifications)) {
+      source = nested.notifications
+    } else if (Array.isArray(obj.notifications)) {
       source = obj.notifications
     } else if (Array.isArray(obj.data)) {
       source = obj.data

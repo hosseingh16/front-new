@@ -8,7 +8,6 @@ export interface NotificationPayload {
   url?: string
   link?: string
   action_url?: string
-  [key: string]: unknown
 }
 
 export interface AppNotification {
@@ -23,8 +22,12 @@ export interface AppNotification {
 }
 
 export interface NotificationsResponse {
-  notifications: AppNotification[]
-  wallet?: unknown
+  success?: boolean
+  data?: {
+    notifications?: AppNotification[]
+  }
+  notifications?: AppNotification[]
+  meta?: unknown
 }
 
 function cleanText(value: unknown): string | null {
@@ -79,8 +82,12 @@ export function getNotificationMessage(notification: AppNotification): string | 
 export function getNotificationLink(notification: AppNotification): string | null {
   const { data } = notification
   return (
-    cleanText(data.url) ??
     cleanText(data.link) ??
+    cleanText(data.url) ??
     cleanText(data.action_url)
   )
+}
+
+export function isExternalNotificationLink(link: string): boolean {
+  return /^https?:\/\//i.test(link) || link.startsWith('//')
 }

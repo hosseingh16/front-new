@@ -1,5 +1,5 @@
 <template>
-  <div class="w-80 max-w-[calc(100vw-2rem)] bg-surface-50">
+  <div class="w-80 max-w-[calc(100vw-2rem)] bg-surface-50 rounded-lg">
     <div
       class="flex items-center justify-between gap-3 border-b border-gray-default px-4 py-3"
     >
@@ -50,8 +50,11 @@
         <li v-for="item in items" :key="item.id">
           <button
             type="button"
-            class="flex w-full gap-3 px-4 py-3 text-right transition-colors hover:bg-surface-100"
-            :class="{ 'bg-primary-50/60': !item.read_at }"
+            class="flex w-full items-start gap-3 px-4 py-3 text-right transition-colors hover:bg-surface-100"
+            :class="[
+              !item.read_at ? 'bg-primary-50/60' : '',
+              getNotificationLink(item) ? 'cursor-pointer' : 'cursor-default',
+            ]"
             @click="onSelect(item)"
           >
             <span
@@ -79,6 +82,12 @@
                 {{ formatDate(item.created_at) }}
               </span>
             </span>
+            <Icon
+              v-if="getNotificationLink(item)"
+              name="svg:open-link"
+              size="16"
+              class="mt-0.5 shrink-0 text-text-passive"
+            />
           </button>
         </li>
       </ul>
@@ -91,6 +100,7 @@ import {
   getNotificationLink,
   getNotificationMessage,
   getNotificationTitle,
+  isExternalNotificationLink,
   type AppNotification,
 } from "~/types/notification";
 import { formatJalaliDate } from "~/utils/format-jalali-date";
@@ -130,8 +140,20 @@ async function onSelect(item: AppNotification) {
     }
   }
 
-  if (link) {
-    await navigateTo(link);
+  if (!link) return;
+
+  // Close daisyUI dropdown before navigating
+  if (document.activeElement instanceof HTMLElement) {
+    document.activeElement.blur();
   }
+
+  // If the link is a relative path (like /dashboard/employer/company), navigate internally
+  if (isExternalNotificationLink(link)) {
+    await navigateTo(link, { external: true });
+    return;
+  }
+
+  // Ensures internal navigation for links like /dashboard/employer/company
+  await navigateTo(link, { replace: false });
 }
 </script>
