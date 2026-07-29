@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p class="mb-2 text-base">موقعیت روی نقشه:</p>
+    <p class="mb-2 text-base">موقعیت تقریبی روی نقشه:</p>
 
     <ClientOnly>
       <div

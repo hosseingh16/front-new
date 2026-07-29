@@ -4,53 +4,154 @@
     <section
       class="bg-[url('/images/bg-5.png')] bg-no-repeat bg-top pb-10 md:pb-16"
     >
-    <div class="custom-pad pt-6">
-      <nav class="text-sm text-text-passive">
-        <NuxtLink to="/" class="hover:text-primary-500 transition-colors">
-          <Icon name="svg:home" size="16" />
-        </NuxtLink>
-        <span class="mx-2">/</span>
-        <span>خدمات</span>
-        <span class="mx-2">/</span>
-        <span class="text-text-tertiary">اظهارنامه عملکرد</span>
-      </nav>
-    </div>
+      <div class="custom-pad pt-6">
+        <nav class="text-sm text-text-passive">
+          <NuxtLink to="/" class="hover:text-primary-500 transition-colors">
+            <Icon name="svg:home" size="16" />
+          </NuxtLink>
+          <span class="mx-2">/</span>
+          <span class="text-text-tertiary">اظهارنامه</span>
+        </nav>
+      </div>
 
-      <div class="custom-pad flex flex-col items-center pt-8 md:pt-12">
-        <span
-          class="inline-flex items-center rounded-xl bg-accent-300 px-4 py-2 text-sm font-semibold text-accent-500"
-        >
-          خدمات های‌حساب
-        </span>
-        <h1
-          class="mt-6 max-w-4xl text-center font-yb-bold text-2xl leading-10 text-text-tertiary md:text-h1"
-        >
-          اظهارنامه عملکرد خود را به حسابداران تاییدشده بسپارید
-        </h1>
-        <p
-          class="mt-4 max-w-3xl text-center text-base font-semibold leading-8 text-text-tertiary md:text-lg"
-        >
-          درخواست خود را ثبت کنید تا حسابدار متخصص، انجام اظهارنامه مالیاتی شما را
-          پیگیری کند.
-        </p>
-        <button
-          class="btn btn-primary mt-8 gap-2 px-6"
-          @click="navigateTo('/dashboard/tax-returns/create')"
-        >
-          <Icon name="lucide:pen-line" size="18" class="text-white" />
-          <span>ثبت درخواست اظهارنامه</span>
-        </button>
+      <div
+        class="custom-pad mt-8 grid items-start gap-10 lg:mt-10 lg:grid-cols-2 lg:gap-12"
+      >
+        <!-- Info -->
+        <div class="flex flex-col items-start">
+          <span
+            class="inline-flex items-center rounded-xl bg-accent-300 px-4 py-2 text-sm font-semibold text-accent-500"
+          >
+            خدمات های‌حساب
+          </span>
 
-        <img
-          :src="heroMobile"
-          alt="تقویم مهلت ارسال اظهارنامه عملکرد"
-          class="mt-10 w-full max-w-md md:hidden"
-        />
-        <img
-          :src="heroDesktop"
-          alt="تقویم مهلت ارسال اظهارنامه عملکرد"
-          class="mt-12 hidden w-full max-w-5xl md:block"
-        />
+          <h1
+            class="relative isolate mt-5 inline-block font-yb-bold text-2xl leading-10 text-text-tertiary md:text-[2rem] md:leading-12"
+          >
+            <span
+              class="absolute inset-x-0 bottom-1 -z-10 h-[55%] rounded-xl bg-accent-300"
+              aria-hidden="true"
+            />
+            فرم درخواست ثبت اظهارنامه
+          </h1>
+
+          <p
+            class="mt-4 max-w-md text-base font-semibold leading-8 text-text-tertiary"
+          >
+            اطلاعات اولیه را وارد کنید تا مشاور تاییدشده های‌حساب با شما تماس
+            بگیرد و مسیر انجام اظهارنامه را شروع کند.
+          </p>
+
+          <div class="mt-8 flex flex-col items-start gap-3">
+            <div
+              v-for="item in heroFeatures"
+              :key="item.label"
+              class="inline-flex items-center gap-2.5 rounded-full px-4 py-2.5 text-sm font-semibold"
+              :class="item.className"
+            >
+              <span>{{ item.label }}</span>
+              <Icon :name="item.icon" size="18" class="shrink-0" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Form -->
+        <div
+          class="rounded-2xl bg-white p-5 shadow-[0px_4px_24px_0px_#00000014] md:p-6"
+        >
+          <form class="space-y-8" @submit.prevent="submitHeroForm">
+            <div>
+              <div class="mb-2 flex items-center gap-2">
+                <span
+                  class="h-1 w-2 shrink-0 rounded-full bg-linear-to-b from-[#3B6EF8] to-primary-500"
+                  aria-hidden="true"
+                />
+                <h2 class="font-yb-bold text-base text-primary-500">
+                  اطلاعات هویتی و تماس
+                </h2>
+              </div>
+
+              <div class="mt-5 grid gap-4 sm:grid-cols-2">
+                <m-text-field
+                  v-model="heroForm.firstName"
+                  label="نام"
+                  required
+                  placeholder="نام خود را وارد کنید"
+                  :error="Boolean(heroErrors.firstName)"
+                />
+                <m-text-field
+                  v-model="heroForm.lastName"
+                  label="نام خانوادگی"
+                  required
+                  placeholder="نام خانوادگی خود را وارد کنید"
+                  :error="Boolean(heroErrors.lastName)"
+                />
+              </div>
+              <div class="mt-4">
+                <m-text-field
+                  v-model="heroForm.cellphone"
+                  label="شماره تماس همراه"
+                  required
+                  placeholder="۰۹۱۲۳۴۵۶۷۸"
+                  :error="Boolean(heroErrors.cellphone)"
+                />
+              </div>
+            </div>
+
+            <div>
+              <div class="mb-2 flex items-center gap-2">
+                <span
+                  class="h-1 w-2 shrink-0 rounded-full bg-linear-to-b from-[#3B6EF8] to-primary-500"
+                  aria-hidden="true"
+                />
+                <h2 class="font-yb-bold text-base text-primary-500">
+                  نوع فعالیت
+                </h2>
+              </div>
+
+              <div class="mt-5 space-y-4">
+                <m-select2
+                  v-model="heroForm.activityType"
+                  label="نوع فعالیت"
+                  required
+                  :options="activityOptions"
+                  placeholder="نوع فعالیت خود را انتخاب کنید"
+                  :error="Boolean(heroErrors.activityType)"
+                />
+                <div>
+                  <m-text-field
+                    v-model="heroForm.desc"
+                    multiline
+                    label="شرح فعالیت:"
+                    placeholder="شرح فعالیت خود را وارد کنید"
+                    :error="Boolean(heroErrors.desc)"
+                  />
+                  <p class="mt-1 text-left text-xs text-text-passive">
+                    {{ heroForm.desc.length }} / {{ TAX_RETURN_DESC_MAX }}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <button
+                type="submit"
+                class="btn btn-primary h-12 w-full gap-2 rounded-xl font-yb-bold"
+                :disabled="heroSubmitting"
+              >
+                <Icon name="lucide:pen-line" size="18" class="text-white" />
+                <span v-if="heroSubmitting">در حال ثبت...</span>
+                <span v-else>ثبت درخواست و دریافت راهنمایی</span>
+              </button>
+              <p
+                class="mt-3 text-center text-xs leading-6 text-text-passive"
+              >
+                ثبت اولیه درخواست رایگان است و به‌معنای شروع فوری خدمات یا پرداخت
+                هزینه نیست.
+              </p>
+            </div>
+          </form>
+        </div>
       </div>
     </section>
 
@@ -226,8 +327,6 @@
 </template>
 
 <script setup lang="ts">
-import heroDesktop from '~/assets/vectors/pages/tax-return/hero-image.svg'
-import heroMobile from '~/assets/vectors/pages/tax-return/hero-image-mobile.svg'
 import seprator from '~/assets/vectors/pages/tax-return/seprator.svg'
 import step0 from '~/assets/vectors/pages/tax-return/step0.webp'
 import step1 from '~/assets/vectors/pages/tax-return/step1.webp'
@@ -236,6 +335,90 @@ import step3 from '~/assets/vectors/pages/tax-return/step3.webp'
 import bannerMobile from '~/assets/vectors/pages/tax-return/banner-mobile.webp'
 import banner from '~/assets/vectors/pages/tax-return/banner.webp'
 import FaqSection from '~/components/Elements/FaqSection.vue'
+import {
+  TAX_RETURN_ACTIVITY_OPTIONS,
+  TAX_RETURN_DESC_MAX,
+} from '~/types/tax-return-form'
+import type { ISelectItem } from '~/types/select-item'
+
+const heroFeatures = [
+  {
+    label: 'شروع سریع فرایند',
+    icon: 'lucide:pen-line',
+    className: 'bg-success-50 text-success-500',
+  },
+  {
+    label: 'ارتباط با مشاور تایید شده',
+    icon: 'lucide:user',
+    className: 'bg-primary-50 text-primary-500',
+  },
+  {
+    label: 'پاسخ‌گویی در کمتر از ۲۴ ساعت',
+    icon: 'lucide:clock',
+    className: 'bg-warning-100 text-warning-500',
+  },
+]
+
+const activityOptions: ISelectItem[] = TAX_RETURN_ACTIVITY_OPTIONS.map(
+  (item) => ({
+    label: item.label,
+    value: item.value,
+  }),
+)
+
+const heroForm = reactive({
+  firstName: '',
+  lastName: '',
+  cellphone: '',
+  activityType: '' as string,
+  desc: '',
+})
+
+const heroErrors = reactive({
+  firstName: '',
+  lastName: '',
+  cellphone: '',
+  activityType: '',
+  desc: '',
+})
+
+const heroSubmitting = ref(false)
+
+function validateHeroForm() {
+  heroErrors.firstName = heroForm.firstName.trim()
+    ? ''
+    : 'نام الزامی است.'
+  heroErrors.lastName = heroForm.lastName.trim()
+    ? ''
+    : 'نام خانوادگی الزامی است.'
+  heroErrors.cellphone = heroForm.cellphone.trim()
+    ? ''
+    : 'شماره تماس الزامی است.'
+  heroErrors.activityType = heroForm.activityType
+    ? ''
+    : 'نوع فعالیت الزامی است.'
+  heroErrors.desc =
+    heroForm.desc.trim().length > TAX_RETURN_DESC_MAX
+      ? `شرح فعالیت نباید بیشتر از ${TAX_RETURN_DESC_MAX} کاراکتر باشد.`
+      : ''
+
+  return !Object.values(heroErrors).some(Boolean)
+}
+
+async function submitHeroForm() {
+  if (!validateHeroForm()) {
+    const { $toast } = useNuxtApp()
+    $toast.error('لطفا فیلدهای الزامی را تکمیل کنید')
+    return
+  }
+
+  heroSubmitting.value = true
+  try {
+    await navigateTo('/dashboard/tax-returns/create')
+  } finally {
+    heroSubmitting.value = false
+  }
+}
 
 const audienceItems = [
   { label: 'کسب‌وکارهای تولیدی', icon: 'svg:buildings-3' },

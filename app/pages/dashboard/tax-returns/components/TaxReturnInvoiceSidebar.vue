@@ -1,13 +1,18 @@
 <template>
   <aside class="space-y-4 lg:sticky lg:top-24">
-    <div class="rounded-2xl border-2 border-success-outline bg-success-soft p-4">
+    <div
+      class="rounded-2xl border-2 border-success-outline bg-success-soft p-4"
+    >
       <Titr>فاکتور</Titr>
 
       <div class="mt-6 flex flex-col items-start text-sm">
         <span class="text-text-passive">هزینه قابل پرداخت:</span>
-        <span class="my-4 font-yb-bold text-2xl text-success-500">
-          {{ formattedPrice }}
-        </span>
+        <div class="flex items-center">
+          <span class="my-4 font-yb-bold text-2xl text-success-500">
+            {{ formattedPrice }}
+          </span>
+          <small class="text-success-500 mx-1"> تومان </small>
+        </div>
       </div>
 
       <div
@@ -38,24 +43,24 @@
 </template>
 
 <script setup lang="ts">
-import Titr from '~/features/panel/cv/Titr.vue'
-import { TAX_RETURN_PAYABLE_PRICE } from '~/types/tax-return-form'
-import { formatPayablePrice } from '~/utils/tax-return-payload'
+import Titr from "~/features/panel/cv/Titr.vue";
+import { TAX_RETURN_PAYABLE_PRICE } from "~/types/tax-return-form";
+import { formatPayablePrice } from "~/utils/tax-return-payload";
 
 withDefaults(
   defineProps<{
-    submitting?: boolean
-    canSubmit?: boolean
+    submitting?: boolean;
+    canSubmit?: boolean;
   }>(),
   {
     submitting: false,
     canSubmit: false,
   },
-)
+);
 
 const emit = defineEmits<{
-  submit: []
-}>()
+  submit: [];
+}>();
 
-const formattedPrice = formatPayablePrice(TAX_RETURN_PAYABLE_PRICE)
+const formattedPrice = formatPayablePrice(TAX_RETURN_PAYABLE_PRICE);
 </script>

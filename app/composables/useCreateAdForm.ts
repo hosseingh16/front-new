@@ -329,7 +329,11 @@ export function useCreateAdForm(
       })
       type PublishResponse = ApiResponse<{
         ad: Ad
-        payment?: { redirect_url?: string } | null
+        payment?: {
+          redirect_url?: string
+          action?: string
+          payment_id?: number
+        } | null
       }>
 
       const result = isEdit.value
@@ -347,9 +351,8 @@ export function useCreateAdForm(
         isEdit.value ? 'آگهی با موفقیت ویرایش شد' : 'آگهی با موفقیت ثبت شد',
       )
 
-      const paymentUrl = result.data?.payment?.redirect_url
-      if (paymentUrl && import.meta.client) {
-        window.location.href = paymentUrl
+      if (result.data?.payment?.payment_id) {
+        await navigateTo(`/r/${result.data.payment.payment_id}`)
         return true
       }
 

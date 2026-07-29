@@ -84,10 +84,11 @@ export function useTaxReturnForm() {
 
       $toast.success('درخواست اظهارنامه با موفقیت ثبت شد')
 
-      const payment = result.data?.payment
-      const paymentUrl = payment?.redirect_url || payment?.action
-      if (paymentUrl && import.meta.client) {
-        window.location.href = paymentUrl
+      const payment = result.data?.payment as
+        | (TaxReturnPayment & { payment_id?: number })
+        | undefined
+      if (payment?.payment_id) {
+        await navigateTo(`/r/${payment.payment_id}`)
         return true
       }
 

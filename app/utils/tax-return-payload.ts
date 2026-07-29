@@ -45,7 +45,7 @@ export function validateTaxReturnForm(
   }
 
   if (form.lat == null || form.long == null) {
-    errors.location = 'موقعیت روی نقشه را انتخاب کنید.'
+    errors.location = 'موقعیت تقریبی روی نقشه را انتخاب کنید.'
   }
 
   return errors

@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-6 flex items-center gap-2">
+  <div class="mt-6 flex items-center justify-end gap-2">
     <button
       type="button"
       class="btn btn-primary h-10 rounded-lg px-6 text-sm"
@@ -11,24 +11,24 @@
       <span v-else>ثبت و ذخیره</span>
     </button>
 
-    <button
+    <!-- <button
       type="button"
       class="btn btn-ghost h-10 rounded-lg text-sm text-text-passive"
       @click="emit('cancel')"
     >
       <Icon name="svg:close" size="16" />
       انصراف
-    </button>
+    </button> -->
   </div>
 </template>
 
 <script setup lang="ts">
 defineProps<{
-  saving?: boolean
-}>()
+  saving?: boolean;
+}>();
 
 const emit = defineEmits<{
-  save: []
-  cancel: []
-}>()
+  save: [];
+  cancel: [];
+}>();
 </script>
