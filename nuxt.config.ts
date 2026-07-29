@@ -84,6 +84,9 @@ export default defineNuxtConfig({
 
   icon: {
     size: "20",
+    clientBundle: {
+      icons: ["lucide:check-check"],
+    },
     customCollections: [
       {
         prefix: "svg",

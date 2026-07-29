@@ -38,8 +38,8 @@
           <p
             class="mt-4 max-w-md text-base font-semibold leading-8 text-text-tertiary"
           >
-            اطلاعات اولیه را وارد کنید تا مشاور تاییدشده های‌حساب با شما تماس
-            بگیرد و مسیر انجام اظهارنامه را شروع کند.
+            اطلاعات اولیه را وارد کنید تا مشاور تأییدشده های‌حساب برای ادامه
+            فرایند با شما تماس بگیرد.
           </p>
 
           <div class="mt-8 flex flex-col items-start gap-3">
@@ -123,6 +123,7 @@
                     v-model="heroForm.desc"
                     multiline
                     label="شرح فعالیت:"
+                    required
                     placeholder="شرح فعالیت خود را وارد کنید"
                     :error="Boolean(heroErrors.desc)"
                   />
@@ -143,11 +144,9 @@
                 <span v-if="heroSubmitting">در حال ثبت...</span>
                 <span v-else>ثبت درخواست و دریافت راهنمایی</span>
               </button>
-              <p
-                class="mt-3 text-center text-xs leading-6 text-text-passive"
-              >
-                ثبت اولیه درخواست رایگان است و به‌معنای شروع فوری خدمات یا پرداخت
-                هزینه نیست.
+              <p class="mt-3 text-center text-xs leading-6 text-text-passive">
+                ثبت درخواست اولیه رایگان است و به‌معنای شروع قطعی یا پرداخت
+                هزینه نیست
               </p>
             </div>
           </form>
@@ -158,10 +157,11 @@
     <!-- Target Audience -->
     <section class="custom-pad py-3 md:py-3">
       <div class="flex justify-center">
-        <h2 class="flex items-center justify-center gap-3 text-center font-yb-bold text-xl md:text-xl bg-white text-text-tertiary py-2 px-6 rounded-full shadow-lg w-fit mx-auto">
+        <h2
+          class="flex items-center justify-center gap-3 text-center font-yb-bold text-xl md:text-xl bg-white text-text-tertiary py-2 px-6 rounded-full shadow-lg w-fit mx-auto"
+        >
           چه کسانی می‌توانند ثبت درخواست کنند؟
         </h2>
-
       </div>
       <div
         class="mt-2 flex flex-col items-stretch sm:flex-row sm:flex-wrap sm:justify-center"
@@ -180,23 +180,16 @@
             alt="separator"
             class="w-4 h-4"
           />
-  
         </div>
       </div>
     </section>
 
     <!-- Pain Points -->
-    <section class="custom-pad pb-12 md:pb-16 text-center flex flex-col items-center">
-      <img
-        :src="bannerMobile"
-        alt=""
-        class="mt-10 w-full md:hidden mx-auto"
-      />
-      <img
-        :src="banner"
-        alt=""
-        class="mt-12 hidden w-full md:block mx-auto"
-      />
+    <section
+      class="custom-pad pb-12 md:pb-16 text-center flex flex-col items-center"
+    >
+      <img :src="bannerMobile" alt="" class="mt-10 w-full md:hidden mx-auto" />
+      <img :src="banner" alt="" class="mt-12 hidden w-full md:block mx-auto" />
     </section>
 
     <!-- How It Works -->
@@ -215,7 +208,9 @@
         </h2>
       </div>
 
-      <div class="custom-pad relative z-10 mt-10 grid gap-8 lg:grid-cols-2 lg:items-center lg:gap-16">
+      <div
+        class="custom-pad relative z-10 mt-10 grid gap-8 lg:grid-cols-2 lg:items-center lg:gap-16"
+      >
         <div class="space-y-2">
           <div
             v-for="(step, index) in processSteps"
@@ -226,7 +221,9 @@
             <div class="flex items-center justify-between gap-4">
               <div class="flex items-center gap-3">
                 <Icon name="svg:plus" size="16" />
-                <p class="font-semibold text-sm text-text-tertiary md:text-base">
+                <p
+                  class="font-semibold text-sm text-text-tertiary md:text-base"
+                >
                   {{ index + 1 }} : {{ step.title }}
                 </p>
               </div>
@@ -307,7 +304,9 @@
       <div
         class="flex flex-col items-center justify-between gap-6 rounded-2xl bg-[#161929] px-6 py-8 md:flex-row md:px-10 md:py-10"
       >
-        <p class="text-center font-yb-bold text-lg text-white md:text-right md:text-xl">
+        <p
+          class="text-center font-yb-bold text-lg text-white md:text-right md:text-xl"
+        >
           همین حالا درخواست اظهارنامه خود را ثبت کنید
         </p>
         <button
@@ -323,219 +322,345 @@
     <!-- FAQ -->
     <FaqSection :categories="faqCategories" :items="faqs" />
 
+    <!-- Success modal -->
+    <dialog
+      ref="successDialogRef"
+      class="modal"
+      @click="onSuccessDialogBackdrop"
+    >
+      <div
+        class="modal-box relative w-full max-w-[420px] rounded-2xl p-6 pt-10 text-center"
+        @click.stop
+      >
+        <button
+          type="button"
+          class="absolute left-4 top-4 flex h-8 w-8 items-center justify-center text-text-passive transition-opacity hover:opacity-70"
+          aria-label="بستن"
+          @click="closeSuccessModal"
+        >
+          <Icon name="svg:close" size="20" />
+        </button>
+
+        <Icon name="svg:illust-consulting-user" size="200" class="mx-auto" />
+
+        <h2 class="mt-2 font-yb-bold text-xl text-text-tertiary md:text-2xl">
+          درخواست شما با موفقیت ثبت شد
+        </h2>
+        <p class="mt-3 text-sm leading-7 text-text-passive">
+          اطلاعات شما برای بررسی اولیه ارسال شد. نتیجه و ادامه مراحل از طریق تماس
+          یا پیامک به شما اطلاع داده می‌شود
+        </p>
+
+        <button
+          type="button"
+          class="btn btn-primary mt-8 h-11 w-full rounded-xl font-yb-bold"
+          @click="closeSuccessModal"
+        >
+          باشه فهمیدم
+        </button>
+      </div>
+    </dialog>
   </div>
 </template>
 
 <script setup lang="ts">
-import seprator from '~/assets/vectors/pages/tax-return/seprator.svg'
-import step0 from '~/assets/vectors/pages/tax-return/step0.webp'
-import step1 from '~/assets/vectors/pages/tax-return/step1.webp'
-import step2 from '~/assets/vectors/pages/tax-return/step2.webp'
-import step3 from '~/assets/vectors/pages/tax-return/step3.webp'
-import bannerMobile from '~/assets/vectors/pages/tax-return/banner-mobile.webp'
-import banner from '~/assets/vectors/pages/tax-return/banner.webp'
-import FaqSection from '~/components/Elements/FaqSection.vue'
+import seprator from "~/assets/vectors/pages/tax-return/seprator.svg";
+import step0 from "~/assets/vectors/pages/tax-return/step0.webp";
+import step1 from "~/assets/vectors/pages/tax-return/step1.webp";
+import step2 from "~/assets/vectors/pages/tax-return/step2.webp";
+import step3 from "~/assets/vectors/pages/tax-return/step3.webp";
+import bannerMobile from "~/assets/vectors/pages/tax-return/banner-mobile.webp";
+import banner from "~/assets/vectors/pages/tax-return/banner.webp";
+import FaqSection from "~/components/Elements/FaqSection.vue";
+import type { ApiResponse } from "~/types/api";
+import type { ISelectItem } from "~/types/select-item";
+import type { TaxReturnActivityType } from "~/types/tax-return-form";
 import {
   TAX_RETURN_ACTIVITY_OPTIONS,
   TAX_RETURN_DESC_MAX,
-} from '~/types/tax-return-form'
-import type { ISelectItem } from '~/types/select-item'
+} from "~/types/tax-return-form";
+
+type TaxReturnPayment = {
+  redirect_url?: string
+  action?: string
+  payment_id?: number
+} | null
+
+type StoreTaxReturnResponse = ApiResponse<{
+  taxReturn?: unknown
+  payment?: TaxReturnPayment
+}>
+
+const api = useApi()
+const { $toast } = useNuxtApp()
 
 const heroFeatures = [
   {
-    label: 'شروع سریع فرایند',
-    icon: 'lucide:pen-line',
-    className: 'bg-success-50 text-success-500',
+    label: "شروع سریع فرایند",
+    icon: "lucide:pen-line",
+    className: "bg-success-50 text-success-500",
   },
   {
-    label: 'ارتباط با مشاور تایید شده',
-    icon: 'lucide:user',
-    className: 'bg-primary-50 text-primary-500',
+    label: "ارتباط با مشاور تایید شده",
+    icon: "lucide:user",
+    className: "bg-primary-50 text-primary-500",
   },
   {
-    label: 'پاسخ‌گویی در کمتر از ۲۴ ساعت',
-    icon: 'lucide:clock',
-    className: 'bg-warning-100 text-warning-500',
+    label: "پاسخ‌گویی در کمتر از ۲۴ ساعت",
+    icon: "lucide:clock",
+    className: "bg-warning-100 text-warning-500",
   },
-]
+];
 
 const activityOptions: ISelectItem[] = TAX_RETURN_ACTIVITY_OPTIONS.map(
   (item) => ({
     label: item.label,
     value: item.value,
   }),
-)
+);
 
 const heroForm = reactive({
-  firstName: '',
-  lastName: '',
-  cellphone: '',
-  activityType: '' as string,
-  desc: '',
-})
+  firstName: "",
+  lastName: "",
+  cellphone: "",
+  activityType: "" as TaxReturnActivityType | "",
+  desc: "",
+});
 
 const heroErrors = reactive({
-  firstName: '',
-  lastName: '',
-  cellphone: '',
-  activityType: '',
-  desc: '',
-})
+  firstName: "",
+  lastName: "",
+  cellphone: "",
+  activityType: "",
+  desc: "",
+});
 
-const heroSubmitting = ref(false)
+const heroSubmitting = ref(false);
+const successDialogRef = ref<HTMLDialogElement | null>(null);
+
+function showSuccessModal() {
+  successDialogRef.value?.showModal();
+}
+
+function closeSuccessModal() {
+  successDialogRef.value?.close();
+}
+
+function onSuccessDialogBackdrop(event: MouseEvent) {
+  if (event.target === event.currentTarget) {
+    closeSuccessModal();
+  }
+}
+
+function resetHeroForm() {
+  heroForm.firstName = "";
+  heroForm.lastName = "";
+  heroForm.cellphone = "";
+  heroForm.activityType = "";
+  heroForm.desc = "";
+  heroErrors.firstName = "";
+  heroErrors.lastName = "";
+  heroErrors.cellphone = "";
+  heroErrors.activityType = "";
+  heroErrors.desc = "";
+}
 
 function validateHeroForm() {
-  heroErrors.firstName = heroForm.firstName.trim()
-    ? ''
-    : 'نام الزامی است.'
+  heroErrors.firstName = heroForm.firstName.trim() ? "" : "نام الزامی است.";
   heroErrors.lastName = heroForm.lastName.trim()
-    ? ''
-    : 'نام خانوادگی الزامی است.'
+    ? ""
+    : "نام خانوادگی الزامی است.";
   heroErrors.cellphone = heroForm.cellphone.trim()
-    ? ''
-    : 'شماره تماس الزامی است.'
+    ? ""
+    : "شماره تماس الزامی است.";
   heroErrors.activityType = heroForm.activityType
-    ? ''
-    : 'نوع فعالیت الزامی است.'
-  heroErrors.desc =
-    heroForm.desc.trim().length > TAX_RETURN_DESC_MAX
-      ? `شرح فعالیت نباید بیشتر از ${TAX_RETURN_DESC_MAX} کاراکتر باشد.`
-      : ''
+    ? ""
+    : "نوع فعالیت الزامی است.";
 
-  return !Object.values(heroErrors).some(Boolean)
+  const desc = heroForm.desc.trim()
+  if (!desc) {
+    heroErrors.desc = "شرح فعالیت الزامی است.";
+  } else if (desc.length > TAX_RETURN_DESC_MAX) {
+    heroErrors.desc = `شرح فعالیت نباید بیشتر از ${TAX_RETURN_DESC_MAX} کاراکتر باشد.`;
+  } else {
+    heroErrors.desc = "";
+  }
+
+  return !Object.values(heroErrors).some(Boolean);
 }
 
 async function submitHeroForm() {
   if (!validateHeroForm()) {
-    const { $toast } = useNuxtApp()
-    $toast.error('لطفا فیلدهای الزامی را تکمیل کنید')
-    return
+    $toast.error("لطفا فیلدهای الزامی را تکمیل کنید");
+    return;
   }
 
-  heroSubmitting.value = true
+  heroSubmitting.value = true;
   try {
-    await navigateTo('/dashboard/tax-returns/create')
+    const name = `${heroForm.firstName.trim()} ${heroForm.lastName.trim()}`.trim()
+    const result = await api.post<StoreTaxReturnResponse>("/tax-returns", {
+      name,
+      cellphone: heroForm.cellphone.trim(),
+      activity_type: heroForm.activityType,
+      desc: heroForm.desc.trim(),
+    })
+
+    const payment = result.data?.payment
+    if (payment?.payment_id) {
+      await navigateTo(`/r/${payment.payment_id}`)
+      return
+    }
+
+    resetHeroForm()
+    showSuccessModal()
+  } catch (err: unknown) {
+    const apiErrors =
+      err && typeof err === "object" && "errors" in err
+        ? (err as { errors?: Record<string, string[] | string> }).errors
+        : undefined
+
+    if (apiErrors && typeof apiErrors === "object") {
+      const fieldMap: Record<string, keyof typeof heroErrors> = {
+        name: "firstName",
+        cellphone: "cellphone",
+        activity_type: "activityType",
+        desc: "desc",
+      }
+
+      for (const [key, value] of Object.entries(apiErrors)) {
+        const message = Array.isArray(value) ? value[0] : value
+        const localKey = fieldMap[key]
+        if (localKey && typeof message === "string") {
+          heroErrors[localKey] = message
+        }
+      }
+    }
+
+    const message =
+      err && typeof err === "object" && "message" in err
+        ? String((err as { message?: string }).message)
+        : "ثبت درخواست با خطا مواجه شد"
+    $toast.error(message)
   } finally {
-    heroSubmitting.value = false
+    heroSubmitting.value = false;
   }
 }
 
 const audienceItems = [
-  { label: 'کسب‌وکارهای تولیدی', icon: 'svg:buildings-3' },
-  { label: 'کسب‌وکارهای بازرگانی', icon: 'svg:bag-1' },
-  { label: 'کسب‌وکارهای خدماتی', icon: 'svg:people' },
-]
+  { label: "کسب‌وکارهای تولیدی", icon: "svg:buildings-3" },
+  { label: "کسب‌وکارهای بازرگانی", icon: "svg:bag-1" },
+  { label: "کسب‌وکارهای خدماتی", icon: "svg:people" },
+];
 
 const painPoints = [
-  'نگرانی از جریمه و پلمپ دفاتر به‌دلیل تأخیر در ارسال اظهارنامه',
-  'نداشتن زمان کافی برای پیگیری فرآیندهای مالیاتی',
-  'عدم دسترسی به حسابدار متخصص و آشنا به قوانین روز',
-  'پیچیدگی فرم‌ها و مدارک مورد نیاز سامانه مالیاتی',
-  'هزینه بالای خدمات مشاوره و تنظیم اظهارنامه',
-]
+  "نگرانی از جریمه و پلمپ دفاتر به‌دلیل تأخیر در ارسال اظهارنامه",
+  "نداشتن زمان کافی برای پیگیری فرآیندهای مالیاتی",
+  "عدم دسترسی به حسابدار متخصص و آشنا به قوانین روز",
+  "پیچیدگی فرم‌ها و مدارک مورد نیاز سامانه مالیاتی",
+  "هزینه بالای خدمات مشاوره و تنظیم اظهارنامه",
+];
 
 const processSteps = [
   {
-    title: 'فرم را تکمیل کنید',
+    title: "فرم را تکمیل کنید",
     description:
-      'اطلاعات کسب‌وکار و جزئیات مورد نیاز برای اظهارنامه عملکرد را در فرم آنلاین وارد کنید.',
+      "اطلاعات کسب‌وکار و جزئیات مورد نیاز برای اظهارنامه عملکرد را در فرم آنلاین وارد کنید.",
   },
   {
-    title: 'درخواست شما بررسی می‌شود',
+    title: "درخواست شما بررسی می‌شود",
     description:
-      'تیم های‌حساب درخواست شما را بررسی کرده و مناسب‌ترین حسابدار متخصص را معرفی می‌کند.',
+      "تیم های‌حساب درخواست شما را بررسی کرده و مناسب‌ترین حسابدار متخصص را معرفی می‌کند.",
   },
   {
-    title: 'حسابدار با شما تماس می‌گیرد',
+    title: "حسابدار با شما تماس می‌گیرد",
     description:
-      'حسابدار تاییدشده با شما هماهنگ کرده و فرآیند تنظیم و ارسال اظهارنامه را آغاز می‌کند.',
+      "حسابدار تاییدشده با شما هماهنگ کرده و فرآیند تنظیم و ارسال اظهارنامه را آغاز می‌کند.",
   },
-]
+];
 
-const processIllustrations = [step0, step1, step2, step3]
+const processIllustrations = [step0, step1, step2, step3];
 
 const benefits = [
   {
-    title: 'حسابداران تایید شده',
+    title: "حسابداران تایید شده",
     description:
-      'پروژه‌های اظهارنامه در های‌حساب تنها توسط حسابداران و مشاوران مالیاتی بررسی‌شده انجام می‌شوند تا با اطمینان بیشتری همکاری کنید.',
+      "پروژه‌های اظهارنامه در های‌حساب تنها توسط حسابداران و مشاوران مالیاتی بررسی‌شده انجام می‌شوند تا با اطمینان بیشتری همکاری کنید.",
   },
   {
-    title: 'همکاری با متخصصان مالیاتی',
+    title: "همکاری با متخصصان مالیاتی",
     description:
-      'درخواست شما به افرادی ارجاع داده می‌شود که تجربه انجام پروژه‌های مالیاتی و اظهارنامه را به‌صورت تخصصی دارند.',
+      "درخواست شما به افرادی ارجاع داده می‌شود که تجربه انجام پروژه‌های مالیاتی و اظهارنامه را به‌صورت تخصصی دارند.",
   },
   {
-    title: 'حفظ محرمانگی اطلاعات',
+    title: "حفظ محرمانگی اطلاعات",
     description:
-      'اطلاعات مالی و اسناد شما با رعایت اصول محرمانگی بررسی شده و تنها در اختیار متخصص مربوط به پروژه قرار می‌گیرد.',
+      "اطلاعات مالی و اسناد شما با رعایت اصول محرمانگی بررسی شده و تنها در اختیار متخصص مربوط به پروژه قرار می‌گیرد.",
   },
   {
-    title: 'پشتیبانی در فرآیند انجام کار',
+    title: "پشتیبانی در فرآیند انجام کار",
     description:
-      'از زمان ثبت درخواست تا انجام نهایی اظهارنامه، تیم‌های های‌حساب در کنار شماست تا فرآیند همکاری سریع‌تر و شفاف‌تر پیش برود.',
+      "از زمان ثبت درخواست تا انجام نهایی اظهارنامه، تیم‌های های‌حساب در کنار شماست تا فرآیند همکاری سریع‌تر و شفاف‌تر پیش برود.",
   },
-]
+];
 
 const faqCategories = [
-  { id: 1, label: 'ثبت اظهارنامه' },
-  { id: 2, label: 'عمومی' },
-]
+  { id: 1, label: "ثبت اظهارنامه" },
+  { id: 2, label: "عمومی" },
+];
 
 const faqs = [
   {
     type: 1,
-    question: 'چه مدارکی برای ثبت درخواست اظهارنامه لازم است؟',
+    question: "چه مدارکی برای ثبت درخواست اظهارنامه لازم است؟",
     answer:
-      'اطلاعات هویتی کسب‌وکار، کد اقتصادی، سوابق مالی سال قبل و دسترسی به سامانه مالیاتی از جمله موارد مورد نیاز است. پس از ثبت درخواست، حسابدار لیست دقیق مدارک را اعلام می‌کند.',
+      "اطلاعات هویتی کسب‌وکار، کد اقتصادی، سوابق مالی سال قبل و دسترسی به سامانه مالیاتی از جمله موارد مورد نیاز است. پس از ثبت درخواست، حسابدار لیست دقیق مدارک را اعلام می‌کند.",
   },
   {
     type: 1,
-    question: 'چقدر طول می‌کشد تا اظهارنامه من آماده شود؟',
+    question: "چقدر طول می‌کشد تا اظهارنامه من آماده شود؟",
     answer:
-      'بسته به حجم فعالیت و تکمیل بودن مدارک، معمولاً بین ۳ تا ۱۰ روز کاری زمان نیاز است. حسابدار پس از بررسی اولیه، زمان‌بندی دقیق را اعلام می‌کند.',
+      "بسته به حجم فعالیت و تکمیل بودن مدارک، معمولاً بین ۳ تا ۱۰ روز کاری زمان نیاز است. حسابدار پس از بررسی اولیه، زمان‌بندی دقیق را اعلام می‌کند.",
   },
   {
     type: 1,
-    question: 'هزینه تنظیم اظهارنامه چگونه محاسبه می‌شود؟',
+    question: "هزینه تنظیم اظهارنامه چگونه محاسبه می‌شود؟",
     answer:
-      'هزینه بر اساس نوع کسب‌وکار، حجم عملکرد و پیچیدگی پرونده تعیین می‌شود. پس از بررسی درخواست، پیش‌فاکتور شفاف قبل از شروع کار ارائه می‌گردد.',
+      "هزینه بر اساس نوع کسب‌وکار، حجم عملکرد و پیچیدگی پرونده تعیین می‌شود. پس از بررسی درخواست، پیش‌فاکتور شفاف قبل از شروع کار ارائه می‌گردد.",
   },
   {
     type: 1,
-    question: 'آیا می‌توانم وضعیت درخواست خود را پیگیری کنم؟',
+    question: "آیا می‌توانم وضعیت درخواست خود را پیگیری کنم؟",
     answer:
-      'بله. پس از ثبت درخواست، از طریق پنل کاربری یا تماس با پشتیبانی می‌توانید وضعیت پیگیری پرونده را مشاهده کنید.',
+      "بله. پس از ثبت درخواست، از طریق پنل کاربری یا تماس با پشتیبانی می‌توانید وضعیت پیگیری پرونده را مشاهده کنید.",
   },
   {
     type: 2,
-    question: 'های‌حساب چه خدماتی ارائه می‌دهد؟',
+    question: "های‌حساب چه خدماتی ارائه می‌دهد؟",
     answer:
-      'های‌حساب پلتفرم تخصصی استخدام حسابدار، ساخت رزومه، ثبت آگهی استخدام و خدمات مالیاتی از جمله تنظیم اظهارنامه عملکرد است.',
+      "های‌حساب پلتفرم تخصصی استخدام حسابدار، ساخت رزومه، ثبت آگهی استخدام و خدمات مالیاتی از جمله تنظیم اظهارنامه عملکرد است.",
   },
   {
     type: 2,
-    question: 'آیا اطلاعات من محرمانه باقی می‌ماند؟',
+    question: "آیا اطلاعات من محرمانه باقی می‌ماند؟",
     answer:
-      'بله. تمامی اطلاعات مطابق سیاست حریم خصوصی های‌حساب محافظت شده و فقط در اختیار حسابدار مسئول پرونده قرار می‌گیرد.',
+      "بله. تمامی اطلاعات مطابق سیاست حریم خصوصی های‌حساب محافظت شده و فقط در اختیار حسابدار مسئول پرونده قرار می‌گیرد.",
   },
-]
+];
 
-const expandedProcessStep = ref(-1)
+const expandedProcessStep = ref(-1);
 
 const activeProcessIllustration = computed(() => {
-  if (expandedProcessStep.value < 0) return step0
-  return processIllustrations[expandedProcessStep.value + 1] ?? step0
-})
-
+  if (expandedProcessStep.value < 0) return step0;
+  return processIllustrations[expandedProcessStep.value + 1] ?? step0;
+});
 
 function toggleProcessStep(index: number) {
-  expandedProcessStep.value = expandedProcessStep.value === index ? -1 : index
+  expandedProcessStep.value = expandedProcessStep.value === index ? -1 : index;
 }
 
 useSeoMeta({
-  title: 'اظهارنامه عملکرد',
+  title: "اظهارنامه عملکرد",
   description:
-    'ثبت درخواست اظهارنامه عملکرد با حسابداران تاییدشده های‌حساب — مشاوره رایگان و پیگیری تخصصی',
-})
+    "ثبت درخواست اظهارنامه عملکرد با حسابداران تاییدشده های‌حساب — مشاوره رایگان و پیگیری تخصصی",
+});
 </script>

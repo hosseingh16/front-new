@@ -1,9 +1,12 @@
 import Vue3Toastify, { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
 import { h, type FunctionalComponent } from 'vue';
-import { Icon } from '#components';
 
-/** Green circle with lucide:check-check — matches AdRequestCard + design toast */
+/**
+ * lucide:check-check — inlined because Nuxt Icon does not reliably
+ * mount inside vue3-toastify's portal (async client fetch).
+ * Path from @iconify-json/lucide icons.json
+ */
 const SuccessIcon: FunctionalComponent = () =>
   h(
     'span',
@@ -22,10 +25,27 @@ const SuccessIcon: FunctionalComponent = () =>
       },
     },
     [
-      h(Icon, {
-        name: 'lucide:check-check',
-        size: '16',
-      }),
+      h(
+        'svg',
+        {
+          xmlns: 'http://www.w3.org/2000/svg',
+          width: '16',
+          height: '16',
+          viewBox: '0 0 24 24',
+          fill: 'none',
+          'aria-hidden': 'true',
+        },
+        [
+          h('path', {
+            d: 'M18 6L7 17l-5-5m20-2l-7.5 7.5L13 16',
+            fill: 'none',
+            stroke: 'currentColor',
+            'stroke-linecap': 'round',
+            'stroke-linejoin': 'round',
+            'stroke-width': '2',
+          }),
+        ],
+      ),
     ],
   );
 

@@ -3,7 +3,7 @@
     dir="rtl"
     class="flex min-h-screen items-center justify-center bg-surface-100 px-4 py-10"
   >
-    <div class="w-full max-w-110">
+    <div class="w-full max-w-120">
       <NuxtLink
         to="/"
         class="mb-8 flex items-center justify-center gap-2.5 transition-opacity hover:opacity-80"
