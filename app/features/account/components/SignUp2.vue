@@ -5,7 +5,7 @@
       <img :src="`/images/2-3.png`" width="54" />
     </div>
 
-    <p class="mt-4 text-2xl sm:text-h1 font-yb-bold">تکیمل حساب کاربری</p>
+    <p class="mt-4 text-2xl sm:text-h1 font-yb-bold">تکمیل حساب کاربری</p>
 
     <p class="mt-4 text-base">تصویر پروفایل:</p>
 
@@ -94,17 +94,17 @@
 </template>
 
 <script setup lang="ts">
-import { convertImageToBase64 } from '~/libs/utils';
-import type { DirectionT } from '../types';
-import { useForm } from 'vee-validate';
-import * as Yup from 'yup';
+import { convertImageToBase64 } from "~/libs/utils";
+import type { DirectionT } from "../types";
+import { useForm } from "vee-validate";
+import * as Yup from "yup";
 
 // Model
 const model = defineModel({
   default: {
     profile: null as File | null,
-    fullName: '',
-    password: '',
+    fullName: "",
+    password: "",
   },
 });
 
@@ -115,9 +115,9 @@ const props = defineProps<{
 
 // Emits
 const emits = defineEmits<{
-  (e: 'passwordStrength', value: number): void;
-  (e: 'onChangeStep', step: number): void;
-  (e: 'onChangeDirection', step: DirectionT): void;
+  (e: "passwordStrength", value: number): void;
+  (e: "onChangeStep", step: number): void;
+  (e: "onChangeDirection", step: DirectionT): void;
 }>();
 
 // Variables
@@ -128,16 +128,18 @@ const passwordStrength = ref(0);
 
 // Form
 const formSchema = Yup.object({
-  fullName: Yup.string().required('نام وارد نشده است'),
-  password: Yup.string().required('رمز عبور وارد نشده است'),
+  fullName: Yup.string().required("نام وارد نشده است"),
+  password: Yup.string().required("رمز عبور وارد نشده است"),
 });
-const { handleSubmit, values, setValues } = useForm<Yup.InferType<typeof formSchema>>({
+const { handleSubmit, values, setValues } = useForm<
+  Yup.InferType<typeof formSchema>
+>({
   validationSchema: formSchema,
 });
 
 // Computeds
 const strength = computed(() => {
-  const password = values.password || '';
+  const password = values.password || "";
   let score = 0;
   if (password.length >= 8) score++;
   if (/\d/.test(password)) score++;
@@ -163,14 +165,14 @@ watch(
 
 // Functions
 function goBack() {
-  emits('onChangeDirection', 'back');
-  emits('onChangeStep', props.step > 3 ? props.step - 1 : 1);
+  emits("onChangeDirection", "back");
+  emits("onChangeStep", props.step > 3 ? props.step - 1 : 1);
 }
 
 const onSubmit = handleSubmit(() => {
   model.value = { ...values, profile: model.value.profile };
-  emits('onChangeDirection', 'forward');
-  emits('onChangeStep', props.step + 1);
+  emits("onChangeDirection", "forward");
+  emits("onChangeStep", props.step + 1);
 });
 
 async function onSelectImage(event: Event) {
