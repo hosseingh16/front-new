@@ -6,18 +6,18 @@
           اولین پلتفرم تخصصی استخدام حسابدار در ایران
         </p>
         <p class="mt-5 text-surface-50 leading-8">
-          انتخاب حسابدار، به‌دلیل نقش تأثیرگذار او در ساختار مالی شرکت، فرایندی حساس و
-          نیازمند دقت است.<br />های‌حساب با ارائه رزومه‌های تخصصی و جامعه‌ای از حسابداران
-          حرفه‌ای، این مسیر را برای کارفرمایان مطمئن‌تر می‌کند.هم‌زمان، حسابداران نیز
-          می‌توانند با رزومه استاندارد و فرصت‌های شغلی متنوع، مسیر رشد شغلی و افزایش درآمد
-          خود را هموارتر سازند.
+          انتخاب حسابدار، به‌دلیل نقش تأثیرگذار او در ساختار مالی شرکت، فرایندی
+          حساس و نیازمند دقت است.<br />های‌حساب با ارائه رزومه‌های تخصصی و
+          جامعه‌ای از حسابداران حرفه‌ای، این مسیر را برای کارفرمایان مطمئن‌تر
+          می‌کند.هم‌زمان، حسابداران نیز می‌توانند با رزومه استاندارد و فرصت‌های
+          شغلی متنوع، مسیر رشد شغلی و افزایش درآمد خود را هموارتر سازند.
         </p>
       </div>
     </section>
     <div
-      class="custom-pad bg-surface-100 pt-12 text-sm font-semibold flex flex-col md:flex-row flex-wrap items-center md:items-start justify-between gap-12 pb-20"
+      class="custom-pad bg-surface-100 pt-12 text-sm font-semibold grid md:grid-cols-6 gap-8 pb-20"
     >
-      <div class="flex flex-col gap-4 max-md:hidden">
+      <div class="flex flex-col gap-3 max-md:hidden">
         <NuxtLink to="/">حسابدار</NuxtLink>
         <NuxtLink to="/">رزومه‌ساز</NuxtLink>
         <NuxtLink to="/">جست‌وجوی فرصت‌های‌ شغلی</NuxtLink>
@@ -25,7 +25,7 @@
         <NuxtLink to="/faq">سوالات متداول</NuxtLink>
       </div>
 
-      <div class="flex flex-col gap-4 max-md:hidden">
+      <div class="flex flex-col gap-3 max-md:hidden">
         <NuxtLink to="/">کسب و کار</NuxtLink>
         <NuxtLink to="/">ایجاد آگهی استخدام</NuxtLink>
         <NuxtLink to="/">ایجاد پروژه حسابداری</NuxtLink>
@@ -34,7 +34,7 @@
         <NuxtLink to="/projects">پروژه های حسابداری</NuxtLink>
       </div>
 
-      <div class="flex flex-col gap-4 max-md:hidden">
+      <div class="flex flex-col gap-3 max-md:hidden">
         <NuxtLink to="/">درباره ما</NuxtLink>
         <NuxtLink to="/faq">سوالات متداول</NuxtLink>
         <NuxtLink to="/terms">قوانین و مقررات</NuxtLink>
@@ -43,13 +43,13 @@
         <NuxtLink to="/contact">تماس ما</NuxtLink>
       </div>
 
-      <div class="flex flex-col gap-4 max-md:hidden">
+      <div class="flex flex-col gap-3 max-md:hidden">
         <p>راه های ارتباطی</p>
         <p>(051)91012030</p>
         <p>(021)91300708</p>
       </div>
 
-      <div class="flex flex-col gap-4">
+      <div class="flex flex-col gap-3 max-md:hidden">
         <p>شبکه های اجتماعی</p>
         <div class="flex justify-center items-center gap-1">
           <NuxtLink
@@ -61,10 +61,21 @@
         </div>
       </div>
 
-      <div class="flex gap-3 flex-wrap justify-center">
-        <NuxtImg src="/images/footer-img-1.png" />
-        <NuxtImg src="/images/footer-img-2.png" />
-        <NuxtImg src="/images/footer-img-3.png" />
+      <div class="min-w-0 max-md:hidden">
+        <div class="flex gap-2 w-full">
+          <NuxtImg
+            src="/images/footer-img-1.png"
+            class="min-w-0 flex-1 h-auto object-contain"
+          />
+          <NuxtImg
+            src="/images/footer-img-2.png"
+            class="min-w-0 flex-1 h-auto object-contain"
+          />
+          <NuxtImg
+            src="/images/footer-img-3.png"
+            class="min-w-0 flex-1 h-auto object-contain"
+          />
+        </div>
       </div>
     </div>
   </footer>

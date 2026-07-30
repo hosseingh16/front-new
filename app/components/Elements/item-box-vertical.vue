@@ -1,5 +1,5 @@
 <template>
-  <div class="overflow-hidden rounded-xl bg-surface-50">
+  <div class="overflow-hidden rounded-xl bg-white">
     <template v-if="loading">
       <div
         class="p-4 m-2 rounded-xl"
@@ -24,7 +24,7 @@
       </div>
 
       <div
-        class="flex items-center justify-between gap-3 border-t border-surface-100 bg-surface-50 px-4 py-3"
+        class="flex items-center justify-between gap-3 border-t border-surface-100 bg-white px-4 py-3"
       >
         <div class="h-5 w-32 rounded bg-surface-200 animate-pulse" />
         <div class="h-8 w-20 rounded bg-surface-200 animate-pulse" />
@@ -68,7 +68,7 @@
 
         <div class="mt-3 flex flex-wrap gap-2 text-sm text-text-secondary">
           <span
-            class="inline-flex items-center gap-1 rounded-full border border-gray-default bg-surface-50 px-2.5 py-1"
+            class="inline-flex items-center gap-1 rounded-full border border-gray-default bg-white px-2.5 py-1"
           >
             <Icon
               :name="
@@ -81,13 +81,13 @@
             {{ type }}
           </span>
           <span
-            class="inline-flex items-center gap-1 rounded-full border border-gray-default bg-surface-50 px-2.5 py-1"
+            class="inline-flex items-center gap-1 rounded-full border border-gray-default bg-white px-2.5 py-1"
           >
             <Icon name="svg:location-4" size="14" />
             {{ location }}
           </span>
           <span
-            class="inline-flex items-center gap-1 rounded-full border border-gray-default bg-surface-50 px-2.5 py-1"
+            class="inline-flex items-center gap-1 rounded-full border border-gray-default bg-white px-2.5 py-1"
           >
             <Icon name="lucide:user" size="14" />
             {{ gender }}
@@ -96,7 +96,7 @@
       </div>
 
       <div
-        class="flex items-center justify-between gap-3 bg-surface-50 px-4 py-3"
+        class="flex items-center justify-between gap-3 bg-white px-4 py-3"
       >
         <div class="text-right">
           <p class="text-sm text-text-secondary">

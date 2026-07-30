@@ -40,9 +40,8 @@
           <div
             v-if="qualificationIntro"
             class="prose prose-sm mt-4 max-w-none text-sm leading-8 text-text-secondary"
-          >
-            {{ qualificationIntro }}
-          </div>
+            v-html="qualificationIntro"
+          ></div>
 
           <div
             v-if="qualificationItems.length"

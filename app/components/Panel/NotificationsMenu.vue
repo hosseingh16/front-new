@@ -71,13 +71,13 @@
               </span>
               <span
                 v-if="getNotificationMessage(item)"
-                class="mt-0.5 block line-clamp-2 text-caption text-text-passive"
+                class="mt-1 block line-clamp-2 text-sm text-justify font-normal text-text-passive"
               >
                 {{ getNotificationMessage(item) }}
               </span>
               <span
                 v-if="formatDate(item.created_at)"
-                class="mt-1 block text-xs font-normal text-text-passive"
+                class="mt-2 block text-xs font-normal text-text-passive"
               >
                 {{ formatDate(item.created_at) }}
               </span>
