@@ -1,6 +1,14 @@
 <template>
   <div>
-    <p v-if="label" class="mb-4">{{ label }}</p>
+    <div v-if="label" class="mb-4 flex items-center justify-between gap-2">
+      <p>{{ label }}</p>
+      <span
+        class="shrink-0 text-sm font-semibold tabular-nums"
+        :style="{ color: model > 0 ? colorForValue(Number(model)) : undefined }"
+      >
+        {{ model }}
+      </span>
+    </div>
     <div
       class="bg-surface-50 rounded-full py-3 px-1 md:px-1 flex items-center justify-center gap-px [&>div:nth-child(odd)]:cursor-pointer select-none"
       ref="root"

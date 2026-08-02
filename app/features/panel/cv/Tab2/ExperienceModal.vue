@@ -1,12 +1,7 @@
 <template>
   <div>
     <button
-      class="btn"
-      :class="
-        editMode
-          ? 'btn bg-white h-8 w-8 p-0 border-2 rounded-lg border-text-muted'
-          : 'btn-primary'
-      "
+      :class="editMode ? 'btn-cv-action' : 'btn btn-primary'"
       @click="showModal"
     >
       <div v-if="!editMode" class="flex items-center gap-2">
@@ -17,8 +12,8 @@
     </button>
 
     <m-dialog ref="experienceModalRef" :width="850">
-      <Titr>افزودن سابقه کاری</Titr>
-      <form @submit="onSubmit" class="mt-6">
+      <Titr>{{ modalTitle }}</Titr>
+      <form @submit.prevent="onSubmit" class="mt-6">
         <div class="grid md:grid-cols-2 gap-4">
           <m-form-select2
             name="title"
@@ -57,7 +52,7 @@
             <m-form-select2
               name="endYear"
               label="سال پایان اشتغال:"
-              required
+              :required="!values.stillBusy"
               :options="years"
               :disabled="isEndYearDisabled"
               placeholder="سال پایان اشتغال را انتخاب کنید"
@@ -68,7 +63,7 @@
                 type="checkbox"
                 class="checkbox"
                 :checked="values.stillBusy"
-                @click="setFieldValue('stillBusy', !values.stillBusy)"
+                @click="toggleStillBusy"
               />
               مشغول به کار هستم.
             </label>
@@ -95,7 +90,7 @@
           </div>
         </div>
         <div>
-          <div class="flex justify-end mt-4">
+          <div class="flex justify-end gap-2 mt-4">
             <button
               class="btn btn-ghost"
               type="button"
@@ -105,8 +100,8 @@
               انصراف
             </button>
             <m-button class="btn-primary" type="submit" :loading>
-              <Icon name="svg:plus-white" />
-              افزودن
+              <Icon :name="submitIcon" />
+              {{ submitLabel }}
             </m-button>
           </div>
         </div>
@@ -148,15 +143,17 @@ const experienceModalRef = ref<InstanceType<typeof Dialog> | null>(null);
 const api = useApi();
 const loading = api.loading;
 
+const nullableString = () => Yup.string().nullable();
+
 // Form
 const formSchema = Yup.object({
   title: Yup.string().required("عنوان شغلی انتخاب نشده است"),
-  employmentType: Yup.string(),
+  employmentType: nullableString(),
   companyName: Yup.string().required("نام سازمان وارد نشده است"),
   activityType: Yup.string().required("نوع فعالیت انتخاب نشده است"),
   startYear: Yup.string().required("سال شروع انتخاب نشده است"),
   stillBusy: Yup.bool(),
-  endYear: Yup.string()
+  endYear: nullableString()
     .when("stillBusy", {
       is: false,
       then: (schema) => schema.required("سال پایان انتخاب نشده است"),
@@ -173,9 +170,12 @@ const formSchema = Yup.object({
         return Number(endYear) >= Number(startYear);
       },
     ),
-  lastSalary: Yup.string(),
-  leavingReason: Yup.string(),
-  description: Yup.string().max(400, "توضیحات نباید بیشتر از 400 کاراکتر باشد"),
+  lastSalary: nullableString(),
+  leavingReason: nullableString(),
+  description: nullableString().max(
+    400,
+    "توضیحات نباید بیشتر از 400 کاراکتر باشد",
+  ),
 });
 const { handleSubmit, values, setFieldValue, resetForm, setValues } = useForm<
   Yup.InferType<typeof formSchema>
@@ -186,17 +186,55 @@ const { handleSubmit, values, setFieldValue, resetForm, setValues } = useForm<
   },
 });
 
+const nullableStringFields = [
+  "employmentType",
+  "endYear",
+  "lastSalary",
+  "leavingReason",
+  "description",
+] as const;
+
+function normalizeFormValues(item: Record<string, unknown>) {
+  const normalized = { ...item };
+
+  for (const field of nullableStringFields) {
+    if (normalized[field] == null) {
+      normalized[field] = "";
+    }
+  }
+
+  return normalized;
+}
+
 // Functions
 async function showModal() {
   resetForm();
   await nextTick();
   if (props.itemToEdit) {
-    setValues(props.itemToEdit);
+    setValues(normalizeFormValues(props.itemToEdit));
   }
   experienceModalRef.value?.showModal();
 }
 
+function toggleStillBusy() {
+  const nextValue = !values.stillBusy;
+  setFieldValue("stillBusy", nextValue);
+  if (nextValue) {
+    setFieldValue("endYear", "");
+  }
+}
+
 const isEndYearDisabled = computed(() => values.stillBusy);
+
+const modalTitle = computed(() =>
+  props.editMode ? "ویرایش سابقه کاری" : "افزودن سابقه کاری",
+);
+
+const submitLabel = computed(() => (props.editMode ? "ذخیره" : "افزودن"));
+
+const submitIcon = computed(() =>
+  props.editMode ? "svg:check-check" : "svg:plus-white",
+);
 
 const onSubmit = handleSubmit((data: Yup.InferType<typeof formSchema>) => {
   if (props.editMode) {

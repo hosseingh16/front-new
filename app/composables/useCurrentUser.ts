@@ -43,11 +43,35 @@ export function useCurrentUser() {
     return trimmed || '—'
   })
 
+  async function refreshUser() {
+    const api = useApi()
+
+    try {
+      const result = await api.get<any>('/user')
+      if (!result || typeof result !== 'object') return
+
+      if (result.data && typeof result.data === 'object') {
+        sanctumUser.value = result
+        return
+      }
+
+      sanctumUser.value = {
+        ...(sanctumUser.value && typeof sanctumUser.value === 'object'
+          ? sanctumUser.value
+          : {}),
+        data: result,
+      }
+    } catch {
+      // Keep the current user if refresh fails.
+    }
+  }
+
   return {
     sanctumUser,
     user,
     name,
     avatar,
     cellphone,
+    refreshUser,
   }
 }

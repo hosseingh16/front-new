@@ -47,7 +47,7 @@
           <p class="font-yb-bold text-xl">
             <span class="text-primary-500">-</span> میزان تکمیل رزومه
           </p>
-          <CvCompletion />
+          <CvCompletion :user="user" />
         </div>
         <div class="bg-white p-3 rounded-2xl border-2 border-gray-default mt-4">
           <p class="font-yb-bold text-xl">
@@ -89,9 +89,14 @@
           <div class="flex items-center gap-1">
             <div
               v-if="!expandedCvCompletion"
-              class="flex justify-center items-center bg-[#EF403514] h-6 w-8 text-danger-500 text-caption rounded-lg"
+              class="flex justify-center items-center h-6 w-8 text-caption rounded-lg"
+              :class="
+                totalPercent > 0
+                  ? 'bg-success/10 text-success'
+                  : 'bg-[#EF403514] text-danger-500'
+              "
             >
-              0%
+              {{ totalPercent }}%
             </div>
             <span v-if="!expandedCvCompletion" class="text-text-passive"
               >رزومه تکمیل شده</span
@@ -105,7 +110,7 @@
             :class="{ 'rotate-180': expandedCvCompletion }"
           />
         </div>
-        <CvCompletion v-if="expandedCvCompletion" />
+        <CvCompletion v-if="expandedCvCompletion" :user="user" />
       </div>
     </div>
   </div>
@@ -123,6 +128,8 @@ definePageMeta({
 
 // Variables
 const tab = ref(1);
+const { user } = useCurrentUser();
+const { totalPercent } = useCvCompletion(user);
 const { toClipboard } = useClipboard();
 const expandedCvCompletion = useState(
   "expandedCvCompletion_state",

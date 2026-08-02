@@ -22,9 +22,9 @@
           </button>
           <NuxtLink to="/jobs">
             <button class="btn btn-primary">
-            <Icon name="svg:user-plus-white" size="24" />
-            مشاهده فرصت های شغلی
-          </button>
+              <Icon name="svg:user-plus-white" size="24" />
+              مشاهده فرصت های شغلی
+            </button>
           </NuxtLink>
         </div>
         <HomeSearchBox />
@@ -89,7 +89,9 @@
       class="custom-pad mt-16 bg-[url('/images/bg-8.png')] lg:bg-[url('/images/bg-7.png')] bg-no-repeat bg-cover max-lg:pb-6 py-20"
     >
       <div class="grid lg:grid-cols-5 gap-12 items-center">
-        <div class="lg:col-span-2 text-white flex flex-col items-center lg:items-start">
+        <div
+          class="lg:col-span-2 text-white flex flex-col items-center lg:items-start"
+        >
           <div
             class="text-[#002E28] font-semibold text-sm flex justify-center items-center p-2 bg-[#67EEC7] rounded-xl"
           >
@@ -101,8 +103,8 @@
           <p
             class="text-base lg:text-[18px] font-semibold mt-6 leading-10 max-lg:text-center"
           >
-            استخدام حسابدار، پیدا کردن فرصت‌های شغلی و دریافت مشاوره تخصصی؛ هر کاری که در
-            مسیر شغلی و کاری‌ات داری، از همین‌جا شروع می‌شود.
+            استخدام حسابدار، پیدا کردن فرصت‌های شغلی و دریافت مشاوره تخصصی؛ هر
+            کاری که در مسیر شغلی و کاری‌ات داری، از همین‌جا شروع می‌شود.
           </p>
         </div>
         <div class="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -179,15 +181,26 @@
             <p class="font-semibold text-sm">
               {{ posts[0].title }}
             </p>
-            <p class="mt-3 text-caption text-text-muted" v-html="posts[0].excerpt"></p>
+            <p
+              class="mt-3 text-caption text-text-muted"
+              v-html="posts[0].excerpt"
+            ></p>
           </div>
           <div class="mt-3">
-            <NuxtImg :src="posts[0].image" :alt="posts[0].alt_text" class="w-full" />
+            <NuxtImg
+              :src="posts[0].image"
+              :alt="posts[0].alt_text"
+              class="w-full"
+            />
             <div class="text-left mt-2">
               <NuxtLink :to="posts[0].link" target="_blank">
                 <button class="btn btn-success text-text-secondary h-8 px-6">
                   ادامه مطلب
-                  <icons-arrow color="#121212" :size="16" class="mr-1 rotate-45" />
+                  <icons-arrow
+                    color="#121212"
+                    :size="16"
+                    class="mr-1 rotate-45"
+                  />
                 </button>
               </NuxtLink>
             </div>
@@ -218,7 +231,11 @@
                 <NuxtLink :to="post.link" target="_blank" v-if="post.link">
                   <button class="btn btn-success text-text-secondary h-8 px-6">
                     ادامه مطلب
-                    <icons-arrow color="#121212" :size="16" class="mr-1 rotate-45" />
+                    <icons-arrow
+                      color="#121212"
+                      :size="16"
+                      class="mr-1 rotate-45"
+                    />
                   </button>
                 </NuxtLink>
               </div>
@@ -231,173 +248,175 @@
 </template>
 
 <script setup lang="ts">
-import HomeSearchBox from '~/components/Elements/HomeSearchBox.vue';
-import ItemBox from '~/components/Elements/item-box.vue';
-import Testimonials from '~/components/Elements/Testimonials.vue';
-import TrustBar from '../components/Elements/TrustBar.vue';
-import type { Testimonial } from '~/components/Elements/Testimonials.vue';
-import type { AdList } from '~/types';
-import type { ApiResponse } from '~/types/api';
-import type { Opportunity } from '~/types/opportunity';
-import FaqSection from '~/components/Elements/FaqSection.vue';
+import HomeSearchBox from "~/components/Elements/HomeSearchBox.vue";
+import ItemBox from "~/components/Elements/item-box.vue";
+import Testimonials from "~/components/Elements/Testimonials.vue";
+import TrustBar from "../components/Elements/TrustBar.vue";
+import type { Testimonial } from "~/components/Elements/Testimonials.vue";
+import type { AdList } from "~/types";
+import type { ApiResponse } from "~/types/api";
+import type { Opportunity } from "~/types/opportunity";
+import FaqSection from "~/components/Elements/FaqSection.vue";
 
 // Variables
 const opportunities = ref<Opportunity[]>([]);
 const opportunitiesLoading = ref(false);
 const posts = ref<any[]>([]);
-const jobType = ref('همه');
+const jobType = ref("همه");
 const testimonials: Testimonial[] = [
   {
-    text: 'ما دنبال یک حسابدار دقیق و با‌تجربه بودیم. در این سایت خیلی راحت آگهی گذاشتیم. رزومه‌هایی که دریافت کردیم دقیق و فیلترشده بودند و سریع به نتیجه رسیدیم.',
-    name: 'فرزاد فرحزاد',
-    role: 'مدیر منابع انسانی موسسه کاسپین',
-    image: 'bank3.png',
-    avatarClass: 'from-[#FFE68C] to-[#FFF5CC] p-0',
+    text: "ما دنبال یک حسابدار دقیق و با‌تجربه بودیم. در این سایت خیلی راحت آگهی گذاشتیم. رزومه‌هایی که دریافت کردیم دقیق و فیلترشده بودند و سریع به نتیجه رسیدیم.",
+    name: "فرزاد فرحزاد",
+    role: "مدیر منابع انسانی موسسه کاسپین",
+    image: "bank3.png",
+    avatarClass: "from-[#FFE68C] to-[#FFF5CC] p-0",
   },
   {
-    text: 'فرآیند ثبت پروژه و دسترسی به نیروهای متخصص برای ما بسیار ساده و سریع بود. این پلتفرم کمک کرد در زمان کوتاه‌تری نیروی مناسب تیم مالی‌مان را پیدا کنیم.',
-    name: 'مریم یاوری',
-    role: 'مدیر ارشد منابع انسانی',
-    image: 'bank1.png',
-    avatarClass: 'from-[#AFAAD4] to-[#FFFFFF] p-2',
-    imageClass: 'w-[80%]',
+    text: "فرآیند ثبت پروژه و دسترسی به نیروهای متخصص برای ما بسیار ساده و سریع بود. این پلتفرم کمک کرد در زمان کوتاه‌تری نیروی مناسب تیم مالی‌مان را پیدا کنیم.",
+    name: "مریم یاوری",
+    role: "مدیر ارشد منابع انسانی",
+    image: "bank1.png",
+    avatarClass: "from-[#AFAAD4] to-[#FFFFFF] p-2",
+    imageClass: "w-[80%]",
   },
   {
-    text: 'با بانک رزومه های‌حساب توانستیم بدون آگهی‌نویسی، حسابدار مناسب شرکت را پیدا کنیم. فیلترهای تخصصی واقعاً در صرفه‌جویی زمان مؤثر بودند.',
-    name: 'مسعود شاه‌مرادی',
-    role: 'بنیان‌گذار خانومی',
-    image: 'bank2.png',
-    avatarClass: 'from-[#82E8F2] to-[#FFFFFF] p-2',
+    text: "با بانک رزومه های‌حساب توانستیم بدون آگهی‌نویسی، حسابدار مناسب شرکت را پیدا کنیم. فیلترهای تخصصی واقعاً در صرفه‌جویی زمان مؤثر بودند.",
+    name: "مسعود شاه‌مرادی",
+    role: "بنیان‌گذار خانومی",
+    image: "bank2.png",
+    avatarClass: "from-[#82E8F2] to-[#FFFFFF] p-2",
   },
 ];
 const services = [
   {
-    title1: 'استخدام',
-    title2: 'فرصت های شغلی حسابداری',
-    text: 'با ثبت رزومه و مشاهده پروژه‌ها، شانس خودت برای پیدا کردن کار افزایش بده.',
-    btnText: 'فرصت های شغلی',
+    title1: "استخدام",
+    title2: "فرصت های شغلی حسابداری",
+    text: "با ثبت رزومه و مشاهده پروژه‌ها، شانس خودت برای پیدا کردن کار افزایش بده.",
+    btnText: "فرصت های شغلی",
   },
   {
-    title1: 'مشاورجو',
-    title2: 'مشاور کسب و کار',
-    text: 'با ثبت رزومه و مشاهده پروژه‌ها، شانس خودت برای پیدا کردن کار افزایش بده.',
-    btnText: 'دریافت مشاوره',
+    title1: "مشاورجو",
+    title2: "مشاور کسب و کار",
+    text: "با ثبت رزومه و مشاهده پروژه‌ها، شانس خودت برای پیدا کردن کار افزایش بده.",
+    btnText: "دریافت مشاوره",
   },
   {
-    title1: 'پروژه',
-    title2: 'ایجاد پروژه',
-    text: 'با ثبت رزومه و مشاهده پروژه‌ها، شانس خودت برای پیدا کردن کار افزایش بده.',
-    btnText: 'ایجاد پروژه',
+    title1: "پروژه",
+    title2: "ایجاد پروژه",
+    text: "با ثبت رزومه و مشاهده پروژه‌ها، شانس خودت برای پیدا کردن کار افزایش بده.",
+    btnText: "ایجاد پروژه",
   },
   {
-    title1: 'استخدام نیرو',
-    title2: 'استخدام حسابدار',
-    text: 'با ثبت رزومه و مشاهده پروژه‌ها، شانس خودت برای پیدا کردن کار افزایش بده.',
-    btnText: 'استخدام حسابدار',
+    title1: "استخدام نیرو",
+    title2: "استخدام حسابدار",
+    text: "با ثبت رزومه و مشاهده پروژه‌ها، شانس خودت برای پیدا کردن کار افزایش بده.",
+    btnText: "استخدام حسابدار",
   },
 ];
 
 const faqCategories = [
-  { id: 1, label: 'عمومی' },
-  { id: 2, label: 'استخدام حسابدار' },
-  { id: 3, label: 'رزومه ساز' },
-  { id: 4, label: 'مشاور مالی' },
+  { id: 1, label: "عمومی" },
+  { id: 2, label: "استخدام حسابدار" },
+  { id: 3, label: "رزومه ساز" },
+  { id: 4, label: "مشاور مالی" },
 ];
 
 const faqs = [
   {
     type: 1,
-    question: 'های‌حساب چیست ؟',
+    question: "های‌حساب چیست ؟",
     answer:
-      'لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز',
+      "لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز",
   },
   {
     type: 1,
-    question: 'چگونه می‌توانم به آگهی های شغلی مناسب دسترسی پیدا کنم ؟',
+    question: "چگونه می‌توانم به آگهی های شغلی مناسب دسترسی پیدا کنم ؟",
     answer:
-      'لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز',
+      "لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز",
   },
   {
     type: 1,
-    question: 'آیا می‌توانم رزومه خود را برای چندین آگهی مختلف ارسال کنم ؟',
+    question: "آیا می‌توانم رزومه خود را برای چندین آگهی مختلف ارسال کنم ؟",
     answer:
-      'لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز',
+      "لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز",
   },
   {
     type: 1,
-    question: 'چگونه می توانم وضعیت رزومه های ارسال شده را پیگیری کنم ؟',
+    question: "چگونه می توانم وضعیت رزومه های ارسال شده را پیگیری کنم ؟",
     answer:
-      'لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز',
+      "لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز",
   },
   {
     type: 1,
-    question: 'آیا ارسال رزومه به چندین کارفرما تاثیر منفی دارد؟',
+    question: "آیا ارسال رزومه به چندین کارفرما تاثیر منفی دارد؟",
     answer:
-      'لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز',
+      "لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز",
   },
   {
     type: 1,
-    question: 'چگونه می‌توانم رزومه‌ام را برای هر آگهی سفارشی کنم؟',
+    question: "چگونه می‌توانم رزومه‌ام را برای هر آگهی سفارشی کنم؟",
     answer:
-      'لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز',
+      "لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز",
   },
   {
     type: 2,
-    question: 'چگونه می‌توانم حسابدار مناسب استخدام کنم؟',
+    question: "چگونه می‌توانم حسابدار مناسب استخدام کنم؟",
     answer:
-      'لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز',
+      "لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز",
   },
   {
     type: 2,
-    question: 'هزینه ثبت آگهی استخدام چقدر است؟',
+    question: "هزینه ثبت آگهی استخدام چقدر است؟",
     answer:
-      'لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز',
+      "لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز",
   },
   {
     type: 3,
-    question: 'رزومه‌ساز های‌حساب چه امکاناتی دارد؟',
+    question: "رزومه‌ساز های‌حساب چه امکاناتی دارد؟",
     answer:
-      'لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز',
+      "لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز",
   },
   {
     type: 3,
-    question: 'آیا می‌توانم رزومه خود را دانلود کنم؟',
+    question: "آیا می‌توانم رزومه خود را دانلود کنم؟",
     answer:
-      'لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز',
+      "لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز",
   },
   {
     type: 4,
-    question: 'مشاور مالی های‌حساب چه خدماتی ارائه می‌دهد؟',
+    question: "مشاور مالی های‌حساب چه خدماتی ارائه می‌دهد؟",
     answer:
-      'لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز',
+      "لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز",
   },
   {
     type: 4,
-    question: 'چگونه می‌توانم از مشاور مالی استفاده کنم؟',
+    question: "چگونه می‌توانم از مشاور مالی استفاده کنم؟",
     answer:
-      'لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز',
+      "لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز",
   },
 ];
 
 // Functions
 const api = useApi();
 const getPosts = async () => {
-  const result = await api.get<ApiResponse>('/posts');
+  const result = await api.get<ApiResponse>("/posts");
   posts.value = result.data;
 };
-function filterOpportunities(items: Opportunity[], type: string): Opportunity[] {
-  if (type === 'پروژه') {
-    return items.filter((item) => item.type === 'project');
+function filterOpportunities(
+  items: Opportunity[],
+  type: string,
+): Opportunity[] {
+  if (type === "پروژه") {
+    return items.filter((item) => item.type === "project");
   }
 
-  if (type === 'همه') {
+  if (type === "همه") {
     return items;
   }
 
   return items.filter(
     (item) =>
-      item.type === 'ad' &&
-      (item.item as AdList).employment_type === type,
+      item.type === "ad" && (item.item as AdList).employment_type === type,
   );
 }
 
@@ -407,13 +426,13 @@ const getOpportunities = async (type: string) => {
   try {
     const query: Record<string, string | undefined> = {};
 
-    if (type === 'پروژه') {
-      query.employment_type = 'project_based';
-    } else if (type !== 'همه') {
+    if (type === "پروژه") {
+      query.employment_type = "project_based";
+    } else if (type !== "همه") {
       query.employment_type = type;
     }
 
-    const result = await api.get<ApiResponse<Opportunity[]>>('/opportunities', {
+    const result = await api.get<ApiResponse<Opportunity[]>>("/opportunities", {
       query,
     });
 
@@ -432,8 +451,8 @@ watch(jobType, () => {
 });
 
 useSeoMeta({
-  title: 'سایت استخدام حسابدار و خدمات حسابداری',
+  title: "سایت استخدام حسابدار و خدمات حسابداری",
   description:
-    'فرصت های شغلی حسابداری، ثبت آگهی استخدام، پروژه های مالی و خدمات اظهارنامه مالیاتی برای کسب وکارها و حسابداران.',
+    "فرصت های شغلی حسابداری، ثبت آگهی استخدام، پروژه های مالی و خدمات اظهارنامه مالیاتی برای کسب وکارها و حسابداران.",
 });
 </script>

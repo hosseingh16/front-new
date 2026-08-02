@@ -67,57 +67,133 @@
             :item-to-edit="item"
             @item="updateEducation(index, $event)"
           />
-          <button
-            class="btn bg-white h-8 w-8 p-0 border-2 rounded-lg border-text-muted"
-          >
+          <button class="btn-cv-action">
             <Icon name="svg:dots" />
           </button>
           <button
-            class="btn bg-white h-8 w-8 p-0 border-2 rounded-lg border-text-muted"
-            @click="removeEducation(index)"
+            class="btn-cv-action"
+            @click="requestRemoveEducation(index)"
           >
             <Icon name="svg:trash" />
           </button>
         </div>
       </div>
     </div>
+
+    <RemoveItemModal
+      ref="removeModalRef"
+      title="حذف اطلاعات تحصیلی"
+      subtitle="آیا از حذف این مورد تحصیلی مطمئن هستید؟"
+      description="پس از حذف، این مورد از رزومه شما پاک می‌شود و قابل بازیابی نخواهد بود."
+      confirm-text="حذف"
+      cancel-text="انصراف"
+      icon="svg:delete"
+      :loading="removing"
+      @confirm="confirmRemoveEducation"
+      @cancel="handleRemoveCancel"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import EducationModal from "./EducationModal.vue";
+import RemoveItemModal from "~/components/M/RemoveItemModal.vue";
+import { getApiErrorMessage } from "~/utils/api-error";
+
+const MAX_EDUCATIONS = 5;
 
 // Variabels
 const educationItems = ref<any[]>([]);
 const api = useApi();
+const { $toast } = useNuxtApp();
+const { refreshUser } = useCurrentUser();
 const { items: lookupItems } = useLookups(
   "education_levels,graduation_years",
 );
 const levels = lookupItems("education_levels");
 const years = lookupItems("graduation_years");
+const removeModalRef = ref<InstanceType<typeof RemoveItemModal> | null>(null);
+const removingIndex = ref<number | null>(null);
+const removing = ref(false);
 
 async function addEducation(item: any) {
+  if (educationItems.value.length >= MAX_EDUCATIONS) {
+    $toast.error(
+      `نمی‌توانید بیش از ${MAX_EDUCATIONS} سابقه تحصیلی ثبت کنید.`,
+    );
+    return;
+  }
+
   educationItems.value.push(item);
-  await syncEducation();
+  const synced = await syncEducation();
+  if (!synced) {
+    educationItems.value.pop();
+  }
 }
 
 async function updateEducation(index: number, item: any) {
+  const previous = educationItems.value[index];
   educationItems.value[index] = item;
-  await syncEducation();
+  const synced = await syncEducation();
+  if (!synced) {
+    educationItems.value[index] = previous;
+  }
 }
 
-async function removeEducation(index: number) {
-  educationItems.value.splice(index, 1);
-  await syncEducation();
+function requestRemoveEducation(index: number) {
+  if (!import.meta.client) return;
+  removingIndex.value = index;
+  removeModalRef.value?.showModal();
 }
 
-async function syncEducation() {
+async function confirmRemoveEducation() {
+  if (removingIndex.value == null) return;
+
+  removing.value = true;
+  const index = removingIndex.value;
+  const removedItem = educationItems.value[index];
+
+  try {
+    educationItems.value.splice(index, 1);
+    const synced = await syncEducation("remove");
+    if (synced) {
+      removeModalRef.value?.closeModal();
+    } else {
+      educationItems.value.splice(index, 0, removedItem);
+    }
+  } finally {
+    removing.value = false;
+    removingIndex.value = null;
+  }
+}
+
+function handleRemoveCancel() {
+  removingIndex.value = null;
+}
+
+async function syncEducation(action: "save" | "remove" = "save") {
   try {
     await api.post("cv/sync-education", {
       education_items: educationItems.value,
     });
+    await refreshUser();
+    $toast.success(
+      action === "remove"
+        ? "اطلاعات تحصیلی با موفقیت حذف شد"
+        : "اطلاعات تحصیلی با موفقیت ذخیره شد",
+    );
+    return true;
   } catch (error) {
     console.error("Sync failed:", error);
+    $toast.error(
+      getApiErrorMessage(
+        error,
+        action === "remove"
+          ? "خطا در حذف اطلاعات تحصیلی"
+          : "خطا در ذخیره اطلاعات تحصیلی",
+      ),
+    );
+    return false;
   }
 }
 

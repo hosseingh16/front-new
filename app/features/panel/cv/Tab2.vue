@@ -9,23 +9,34 @@
     <div class="bg-white p-4 rounded-2xl mt-8">
       <Titr>مهارت‌ها</Titr>
       <div class="my-4 grid lg:grid-cols-2 gap-x-4 gap-y-12">
-        <Slider label="میزان آشنایی به نرم افزار اکسل:" />
         <Slider
+          v-model="skills.excelScore"
+          label="میزان آشنایی به نرم افزار اکسل:"
+        />
+        <Slider
+          v-model="skills.flatCost"
           label="میزان آشنایی به حسابداری بهای تمام شده:"
         />
         <Slider
+          v-model="skills.contractAccounting"
           label="میزان تجربه شما در حوزه حسابداری پیمان:"
         />
         <Slider
+          v-model="skills.standardStatements"
           label="میزان آشنایی با تهیه صورت مالی استاندارد:"
         />
       </div>
-      <div class="flex justify-end mt-9">
-        <button class="btn btn-ghost">
-          <Icon name="svg:close" />
-          انصراف
+      <div class="flex justify-end gap-2 mt-9">
+        <button class="btn btn-ghost" type="button" @click="resetSkills">
+          <Icon name="lucide:rotate-ccw" size="16" class="shrink-0" />
+          بازگردانی تغییرات
         </button>
-        <m-button class="btn-primary">
+        <m-button
+          class="btn-primary"
+          type="button"
+          :loading="savingSkills"
+          @click="saveSkills"
+        >
           <Icon name="svg:check-check" />
           ذخیره
         </m-button>
@@ -35,21 +46,34 @@
     <div class="bg-white p-4 rounded-2xl mt-8">
       <Titr>ارزیابی بیمه ای و مالیاتی</Titr>
       <div class="mt-4 grid lg:grid-cols-2 gap-x-4 gap-y-12">
-        <Slider label="میزان آشنایی با مالیات ارزش افزوده:" />
-        <Slider label="میزان آشنایی به مالیات عملکرد:" />
         <Slider
+          v-model="potential.valueAddedTaxScore"
+          label="میزان آشنایی با مالیات ارزش افزوده:"
+        />
+        <Slider
+          v-model="potential.performanceTaxScore"
+          label="میزان آشنایی به مالیات عملکرد:"
+        />
+        <Slider
+          v-model="potential.personalInsuranceScore"
           label="میزان آشنایی به بیمه های پرسنلی و قراردادی:"
         />
         <Slider
+          v-model="potential.terminals"
           label="میزان آشنایی به سامانه مودیان و پایانه های فروشگاهی:"
         />
       </div>
-      <div class="flex justify-end mt-9">
-        <button class="btn btn-ghost">
-          <Icon name="svg:close" />
-          انصراف
+      <div class="flex justify-end gap-2 mt-9">
+        <button class="btn btn-ghost" type="button" @click="resetPotential">
+          <Icon name="lucide:rotate-ccw" size="16" class="shrink-0" />
+          بازگردانی تغییرات
         </button>
-        <m-button class="btn-primary">
+        <m-button
+          class="btn-primary"
+          type="button"
+          :loading="savingPotential"
+          @click="savePotential"
+        >
           <Icon name="svg:check-check" />
           ذخیره
         </m-button>
@@ -57,13 +81,13 @@
     </div>
 
     <div class="bg-white p-4 rounded-2xl mt-8">
-      <Titr>فایل ضمیمه</Titr>>
+      <Titr>فایل ضمیمه</Titr>
       <div class="mt-5 flex gap-1 items-center">
         <icons-check color="#009F65" />
-        <span class="text-text-passive text-sm"
-          >در صورتی که فایل رزومه یا توضیحات جداگانه دارید میتوانید آن را اپلود
-          کنید. این فایل برای کارفرمایان قابل مشاهده است.</span
-        >
+        <span class="text-text-passive text-sm">
+          در صورتی که فایل رزومه یا توضیحات جداگانه دارید میتوانید آن را اپلود
+          کنید. این فایل برای کارفرمایان قابل مشاهده است.
+        </span>
       </div>
       <div class="mt-4">
         <m-upload-box
@@ -75,7 +99,7 @@
           :is-image="false"
         />
       </div>
-      <div class="flex justify-end mt-9">
+      <div class="flex justify-end gap-2 mt-9">
         <button class="btn btn-ghost">
           <Icon name="svg:close" />
           انصراف
@@ -109,19 +133,135 @@
 </template>
 
 <script setup lang="ts">
-import type { ISelectItem } from "~/types/select-item.js";
 import Slider from "./Slider.vue";
 import Titr from "./Titr.vue";
 import EducationSection from "./Tab2/EducationSection.vue";
 import ExperienceSection from "./Tab2/ExperienceSection.vue";
 import ProgramSection from "./Tab2/ProgramSection.vue";
+import { getApiErrorMessage } from "~/utils/api-error";
 
-// Variabels
-const levels = ref<ISelectItem[]>([]);
-const years = ref<ISelectItem[]>([]);
-const educationItems = ref<any[]>([]);
-const loading = ref(true);
-const loading2 = ref(false);
+type SkillForm = {
+  excelScore: number;
+  flatCost: number;
+  contractAccounting: number;
+  standardStatements: number;
+};
 
-onMounted(async () => {});
+type PotentialForm = {
+  valueAddedTaxScore: number;
+  performanceTaxScore: number;
+  personalInsuranceScore: number;
+  terminals: number;
+};
+
+const api = useApi();
+const { $toast } = useNuxtApp();
+const { refreshUser } = useCurrentUser();
+
+const skills = reactive<SkillForm>({
+  excelScore: 0,
+  flatCost: 0,
+  contractAccounting: 0,
+  standardStatements: 0,
+});
+
+const potential = reactive<PotentialForm>({
+  valueAddedTaxScore: 0,
+  performanceTaxScore: 0,
+  personalInsuranceScore: 0,
+  terminals: 0,
+});
+
+const savedSkills = ref<SkillForm>({ ...skills });
+const savedPotential = ref<PotentialForm>({ ...potential });
+const savingSkills = ref(false);
+const savingPotential = ref(false);
+
+function toSliderValue(value?: string | number | null) {
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric) || numeric <= 0) return 0;
+  if (numeric <= 10) return Math.round(numeric);
+  return Math.round(Math.max(0, Math.min(100, numeric)) / 10);
+}
+
+function loadSkillsFromUser(user: any) {
+  const resumeSkills = user?.resume_skills;
+  Object.assign(skills, {
+    excelScore: toSliderValue(resumeSkills?.excel_score),
+    flatCost: toSliderValue(resumeSkills?.flat_cost),
+    contractAccounting: toSliderValue(resumeSkills?.contract_accounting),
+    standardStatements: toSliderValue(resumeSkills?.standard_statements),
+  });
+  savedSkills.value = { ...skills };
+}
+
+function loadPotentialFromUser(user: any) {
+  const resumePotential = user?.resume_potential;
+  Object.assign(potential, {
+    valueAddedTaxScore: toSliderValue(resumePotential?.value_added_tax_score),
+    performanceTaxScore: toSliderValue(resumePotential?.performance_tax_score),
+    personalInsuranceScore: toSliderValue(
+      resumePotential?.personal_insurance_score,
+    ),
+    terminals: toSliderValue(resumePotential?.terminals),
+  });
+  savedPotential.value = { ...potential };
+}
+
+function resetSkills() {
+  Object.assign(skills, savedSkills.value);
+}
+
+function resetPotential() {
+  Object.assign(potential, savedPotential.value);
+}
+
+async function saveSkills() {
+  savingSkills.value = true;
+  try {
+    await api.post("cv/save-skills", {
+      excel_score: skills.excelScore,
+      flat_cost: skills.flatCost,
+      contract_accounting: skills.contractAccounting,
+      standard_statements: skills.standardStatements,
+    });
+    savedSkills.value = { ...skills };
+    await refreshUser();
+    $toast.success("مهارت‌ها با موفقیت ذخیره شد");
+  } catch (error) {
+    $toast.error(getApiErrorMessage(error, "خطا در ذخیره مهارت‌ها"));
+  } finally {
+    savingSkills.value = false;
+  }
+}
+
+async function savePotential() {
+  savingPotential.value = true;
+  try {
+    await api.post("cv/save-potentials", {
+      value_added_tax_score: potential.valueAddedTaxScore,
+      performance_tax_score: potential.performanceTaxScore,
+      personal_insurance_score: potential.personalInsuranceScore,
+      terminals: potential.terminals,
+    });
+    savedPotential.value = { ...potential };
+    await refreshUser();
+    $toast.success("ارزیابی بیمه‌ای و مالیاتی با موفقیت ذخیره شد");
+  } catch (error) {
+    $toast.error(
+      getApiErrorMessage(error, "خطا در ذخیره ارزیابی بیمه‌ای و مالیاتی"),
+    );
+  } finally {
+    savingPotential.value = false;
+  }
+}
+
+onMounted(() => {
+  const currentUser = useSanctumUser<any>();
+  const user = currentUser.value?.data;
+  if (!user) return;
+
+  loadSkillsFromUser(user);
+  loadPotentialFromUser(user);
+});
 </script>

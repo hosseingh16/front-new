@@ -83,28 +83,42 @@
             :item-to-edit="item"
             @item="updatePrior"
           />
-          <button
-            class="btn bg-white h-8 w-8 p-0 border-2 rounded-lg border-text-muted"
-          >
+          <button class="btn-cv-action">
             <Icon name="svg:dots" />
           </button>
           <button
-            class="btn bg-white h-8 w-8 p-0 border-2 rounded-lg border-text-muted"
-            @click="deletePrior(index, item.id)"
+            class="btn-cv-action"
+            @click="requestRemovePrior(index, item.id)"
           >
             <Icon name="svg:trash" />
           </button>
         </div>
       </div>
     </div>
+
+    <RemoveItemModal
+      ref="removeModalRef"
+      title="حذف سابقه کاری"
+      subtitle="آیا از حذف این سابقه کاری مطمئن هستید؟"
+      description="پس از حذف، این مورد از رزومه شما پاک می‌شود و قابل بازیابی نخواهد بود."
+      confirm-text="حذف"
+      cancel-text="انصراف"
+      icon="svg:delete"
+      :loading="removing"
+      @confirm="confirmRemovePrior"
+      @cancel="handleRemoveCancel"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import type { ISelectItem } from "~/types/select-item.js";
 import ExperienceModal from "./ExperienceModal.vue";
+import RemoveItemModal from "~/components/M/RemoveItemModal.vue";
 
 const api = useApi();
+const { $toast } = useNuxtApp();
+const { refreshUser } = useCurrentUser();
 
 // Variabels
 const experiencesItems = ref<any[]>([]);
@@ -117,6 +131,10 @@ const industries = lookupItems("industries");
 const salaries = lookupItems("salary_ranges");
 const reasons = lookupItems("leaving_reasons");
 const years = lookupItems("prior_years");
+const removeModalRef = ref<InstanceType<typeof RemoveItemModal> | null>(null);
+const removingIndex = ref<number | null>(null);
+const removingPriorId = ref<number | null>(null);
+const removing = ref(false);
 
 const addPrior = async (item: any) => {
   const exists = experiencesItems.value.some(
@@ -133,11 +151,19 @@ const addPrior = async (item: any) => {
   try {
     const response = await api.post<any>("cv/create-prior", item);
     experiencesItems.value.push(mapPrior(response));
+    await refreshUser();
+  } catch (error: any) {
+    if (error?.status === 422) {
+      const maxPriors = error?.data?.max_priors;
+      $toast.error(
+        maxPriors != null
+          ? `نمی توانید بیش از ${maxPriors} سابقه شغلی ایجاد کنید.`
+          : error?.message || "خطا در افزودن سابقه کاری",
+      );
+      return;
+    }
 
-    // اگر بک‌اند id برمی‌گردونه:
-    //experiencesItems.value.push(res.data);
-  } finally {
-    //loading.value = false;
+    $toast.error(error?.message || "خطا در افزودن سابقه کاری");
   }
 };
 
@@ -152,16 +178,45 @@ const updatePrior = async (item: any) => {
     if (index !== -1) {
       experiencesItems.value[index] = mapPrior(response);
     }
+    await refreshUser();
   } catch (error) {
     console.error(error);
   }
 };
 
-const deletePrior = async (index: number, id: number) => {
-  await api.delete(`cv/prior/${id}`);
+function requestRemovePrior(index: number, id: number) {
+  if (!import.meta.client) return;
+  removingIndex.value = index;
+  removingPriorId.value = id;
+  removeModalRef.value?.showModal();
+}
 
-  experiencesItems.value.splice(index, 1);
-};
+async function confirmRemovePrior() {
+  if (removingIndex.value == null || removingPriorId.value == null) return;
+
+  removing.value = true;
+  const index = removingIndex.value;
+  const id = removingPriorId.value;
+
+  try {
+    await api.delete(`cv/prior/${id}`);
+    experiencesItems.value.splice(index, 1);
+    await refreshUser();
+    removeModalRef.value?.closeModal();
+    $toast.success("سابقه کاری با موفقیت حذف شد");
+  } catch (error: any) {
+    $toast.error(error?.message || "خطا در حذف سابقه کاری");
+  } finally {
+    removing.value = false;
+    removingIndex.value = null;
+    removingPriorId.value = null;
+  }
+}
+
+function handleRemoveCancel() {
+  removingIndex.value = null;
+  removingPriorId.value = null;
+}
 
 const mapPrior = (item: any) => ({
   id: item.id,

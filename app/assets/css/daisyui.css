@@ -42,3 +42,8 @@
 @utility btn-error {
   @apply hover:bg-red-100 active:bg-red-200;
 }
+
+@utility btn-cv-action {
+  @apply btn bg-white h-8 w-8 p-0 border-2 rounded-lg border-text-muted
+    transition-colors duration-200 hover:border-primary-500;
+}
