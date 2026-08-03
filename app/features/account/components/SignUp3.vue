@@ -1,17 +1,25 @@
 <template>
   <DaisyCard class="w-full min-[1052px]:w-263">
     <div class="flex justify-between items-center">
-      <Icon name="svg:chevron-right" class="cursor-pointer" @click="goBack" />
-      <img :src="`/images/3-3.png`" width="54" />
+      <Icon
+        v-if="!forced"
+        name="svg:chevron-right"
+        class="cursor-pointer"
+        @click="goBack"
+      />
+      <span v-else />
+      <img src="/images/3-3.png" width="54" />
     </div>
 
     <p class="mt-4 text-2xl sm:text-h1 font-yb-bold">نوع درخواست جدید:</p>
 
     <div class="grid grid-cols-1 min-[1052px]:grid-cols-3 gap-4 mt-4">
       <div
-        v-for="(item, index) in items"
+        v-for="item in items"
+        :key="item.role"
         class="border border-gray-default hover:border-primary-500 rounded-2xl py-4 min-[1052px]:p-6 flex flex-row min-[1052px]:flex-col items-center group cursor-pointer"
-        @click="onChangeStep(index)"
+        :class="{ 'pointer-events-none opacity-60': loading }"
+        @click="onSelect(item.role)"
       >
         <NuxtImg
           :src="`/images/${item.image}`"
@@ -23,11 +31,19 @@
           </p>
           <p class="my-2 leading-7 max-[1052px]:text-sm">{{ item.description }}</p>
           <button
+            type="button"
             class="btn btn-soft group-hover:btn-primary h-10"
-            @click="onChangeStep(index)"
+            :disabled="loading"
+            @click.stop="onSelect(item.role)"
           >
-            <span :class="`icon-${item.icon}`" class="text-2xl"></span>
-            <span>{{ item.title }}</span>
+            <span
+              v-if="loading && pendingRole === item.role"
+              class="loading loading-spinner loading-sm"
+            />
+            <template v-else>
+              <span :class="`icon-${item.icon}`" class="text-2xl"></span>
+              <span>{{ item.title }}</span>
+            </template>
           </button>
         </div>
       </div>
@@ -36,48 +52,74 @@
 </template>
 
 <script setup lang="ts">
-import type { DirectionT } from '../types';
+import type { AccountRole, DirectionT } from '../types';
+import { paths } from '~/routes';
 
-// Props
-const props = defineProps<{
-  step: number;
-}>();
+const props = withDefaults(
+  defineProps<{
+    step: number;
+    /** When true, no back / auto-nav — parent handles next step after selected. */
+    forced?: boolean;
+  }>(),
+  { forced: false },
+);
 
-// Emits
 const emits = defineEmits<{
   (e: 'onChangeStep', step: number): void;
   (e: 'onChangeDirection', step: DirectionT): void;
+  (e: 'selected', role: AccountRole): void;
 }>();
 
-// Variables
-const items = [
+const { updateUserRole, loading } = useAccountAuth();
+const pendingRole = ref<AccountRole | null>(null);
+
+const items: Array<{
+  image: string;
+  title: string;
+  description: string;
+  icon: string;
+  role: AccountRole;
+}> = [
   {
     image: 'request-type-1.png',
     title: 'ایجاد آگهی',
     description: 'آگهی استخدامی یا پروژه ایجاد کنید و نیروی موردنظر را جذب کنید.',
     icon: 'bag-1',
+    role: 'employer',
   },
   {
     image: 'request-type-2.png',
     title: 'فرصت‌های شغلی',
     description: 'فرصت‌های شغلی را مشاهده کنید و رزومه خود را برای آن‌ها ارسال کنید.',
     icon: 'bag-2',
-  },
-  {
-    image: 'request-type-3.png',
-    title: 'دریافت مشاوره',
-    description: 'لیست مشاوران را ببینید و زمان مناسب برای مشاوره رزرو کنید.',
-    icon: 'users',
+    role: 'job_seeker',
   },
 ];
 
-// Functions
 function goBack() {
   emits('onChangeDirection', 'back');
-  emits('onChangeStep', 4);
+  emits('onChangeStep', props.step - 1);
 }
 
-function onChangeStep(index: number) {
-  if (index === 0) emits('onChangeStep', 6);
+async function onSelect(role: AccountRole) {
+  if (loading.value) return;
+
+  pendingRole.value = role;
+  try {
+    await updateUserRole(role);
+    emits('selected', role);
+
+    if (props.forced) return;
+
+    if (role === 'employer') {
+      emits('onChangeDirection', 'forward');
+      emits('onChangeStep', props.step + 1);
+      return;
+    }
+
+    navigateTo(paths.jobs.root);
+  } finally {
+    pendingRole.value = null;
+  }
 }
 </script>

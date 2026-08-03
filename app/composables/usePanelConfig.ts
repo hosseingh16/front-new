@@ -15,44 +15,39 @@ type PanelConfig = {
   permissions: string[]
 }
 
+const emptyConfig = (): PanelConfig => ({
+  navigation: {
+    sidebar: [],
+    userMenu: [],
+    shortcuts: [],
+  },
+  permissions: [],
+})
+
 export const usePanelConfig = () => {
   const api = useApi()
 
-  // -----------------------------
-  // SSR-safe state (prevents undefined crash)
-  // -----------------------------
-  const rawConfig = useState<PanelConfig>('panel-config', () => ({
-    navigation: {
-      sidebar: [],
-      userMenu: [],
-      shortcuts: [],
-    },
-    permissions: [],
-  }))
-
+  const rawConfig = useState<PanelConfig>('panel-config', emptyConfig)
   const initialized = useState('panel-initialized', () => false)
 
-  // -----------------------------
-  // Fetch bootstrap
-  // -----------------------------
-  const fetchMenu = async () => {
-   
-    initialized.value = false
-    if (initialized.value) return
-
-      const res = await api.get('/panel/bootstrap') as any
-
-  
-
-    rawConfig.value = res.panel
+  /**
+   * Fetch panel bootstrap. Returns false when the request fails
+   * (e.g. user has no role and PanelResolver throws).
+   */
+  const fetchMenu = async (): Promise<boolean> => {
+    try {
+      const res = (await api.get('/panel/bootstrap')) as any
+      rawConfig.value = res?.panel ?? emptyConfig()
       initialized.value = true
+      return true
+    } catch {
+      rawConfig.value = emptyConfig()
+      initialized.value = false
+      return false
     }
+  }
 
-  // -----------------------------
-  // Recursive resolver (backend tree → UI tree)
-  // -----------------------------
   const resolveMenuItem = (item: BackendMenuItem): MenuItem | null => {
-     
     const meta = menuMap[item.key]
     if (!meta) return null
 
@@ -70,55 +65,26 @@ export const usePanelConfig = () => {
     }
   }
 
-  // -----------------------------
-  // Sidebar
-  // -----------------------------
   const sidebarMenu = computed<MenuItem[]>(() => {
     const nav = rawConfig.value?.navigation
-
     if (!nav?.sidebar) return []
-
-    return nav.sidebar
-      .map(resolveMenuItem)
-      .filter(Boolean) as MenuItem[]
+    return nav.sidebar.map(resolveMenuItem).filter(Boolean) as MenuItem[]
   })
 
-  // -----------------------------
-  // User menu
-  // -----------------------------
   const userMenu = computed<MenuItem[]>(() => {
     const nav = rawConfig.value?.navigation
-
     if (!nav?.userMenu) return []
-
-    return nav.userMenu
-      .map(resolveMenuItem)
-      .filter(Boolean) as MenuItem[]
+    return nav.userMenu.map(resolveMenuItem).filter(Boolean) as MenuItem[]
   })
 
-  // -----------------------------
-  // Shortcuts
-  // -----------------------------
   const shortcuts = computed<MenuItem[]>(() => {
     const nav = rawConfig.value?.navigation
-
     if (!nav?.shortcuts) return []
-
-    return nav.shortcuts
-      .map(resolveMenuItem)
-      .filter(Boolean) as MenuItem[]
+    return nav.shortcuts.map(resolveMenuItem).filter(Boolean) as MenuItem[]
   })
 
-  // -----------------------------
-  // Permissions
-  // -----------------------------
-  const permissions = computed(() => {
-    return rawConfig.value?.permissions ?? []
-  })
+  const permissions = computed(() => rawConfig.value?.permissions ?? [])
 
-  // -----------------------------
-  // Public API
-  // -----------------------------
   return {
     fetchMenu,
     sidebarMenu,

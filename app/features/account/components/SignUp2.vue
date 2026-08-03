@@ -1,7 +1,13 @@
 <template>
   <DaisyCard class="w-full min-[560px]:w-140">
     <div class="flex justify-between items-center">
-      <Icon name="svg:chevron-right" class="cursor-pointer" @click="goBack" />
+      <Icon
+        v-if="!inline"
+        name="svg:chevron-right"
+        class="cursor-pointer"
+        @click="goBack"
+      />
+      <span v-else />
       <img :src="`/images/2-3.png`" width="54" />
     </div>
 
@@ -13,6 +19,7 @@
       type="file"
       class="hidden"
       ref="imageInputRef"
+      accept="image/jpeg,image/png,image/jpg,image/gif,image/svg+xml"
       @change="onSelectImage($event)"
     />
     <div
@@ -29,9 +36,10 @@
           <span class="font-semibold text-sm text-primary-500"
             >برای آپلود تصویر کلید کنید</span
           >
+          <span class="text-sm text-text-muted">(اختیاری)</span>
         </div>
         <p class="mt-1 text-sm text-text-muted">
-          حداکثر سایز فایل: 10MB، پسوند‌های مجاز: jpg. و png.
+          حداکثر سایز فایل: 2MB، پسوند‌های مجاز: jpg و png.
         </p>
       </div>
     </div>
@@ -49,17 +57,20 @@
         ></m-form-input>
         <m-form-input
           name="password"
-          label="رمز عبور:"
-          required
+          label="رمز عبور: (اختیاری)"
           placeholder="رمز عبور را وارد کنید"
           class="mt-4"
           :type="showPass ? 'text' : 'password'"
-          :hint="[
-            'شامل عدد',
-            'حداقل ۸ حرف',
-            'شامل علامت (!@#$%&*^)',
-            'شامل یک حرف بزرگ و کوچک',
-          ]"
+          :hint="
+            values.password
+              ? [
+                  'شامل عدد',
+                  'حداقل ۸ حرف',
+                  'شامل علامت (!@#$%&*^)',
+                  'شامل یک حرف بزرگ و کوچک',
+                ]
+              : []
+          "
         >
           <template #prefix><Icon name="svg:lock" size="24" /></template>
           <template #suffix
@@ -71,7 +82,7 @@
           /></template>
         </m-form-input>
 
-        <div class="grid grid-cols-4 gap-1 mt-2">
+        <div v-if="values.password" class="grid grid-cols-4 gap-1 mt-2">
           <div
             v-for="i in 4"
             class="h-1 rounded-lg"
@@ -82,11 +93,15 @@
 
       <button
         class="mt-4 w-full btn flex justify-center gap-2 h-10 max-sm:w-full"
-        :class="!buttonEnabled ? 'btn-disabled' : 'btn-primary'"
+        :class="!buttonEnabled || loading ? 'btn-disabled' : 'btn-primary'"
         type="submit"
+        :disabled="!buttonEnabled || loading"
       >
-        <Icon v-if="!buttonEnabled" name="svg:user-plus" size="24" />
-        <Icon v-else name="svg:user-plus-white" size="24" />
+        <span v-if="loading" class="loading loading-spinner loading-sm" />
+        <template v-else>
+          <Icon v-if="!buttonEnabled" name="svg:user-plus" size="24" />
+          <Icon v-else name="svg:user-plus-white" size="24" />
+        </template>
         <span>ثبت‌نام</span>
       </button>
     </form>
@@ -111,6 +126,8 @@ const model = defineModel({
 // Props
 const props = defineProps<{
   step: number;
+  /** When true, emit completed instead of navigating after profile submit. */
+  inline?: boolean;
 }>();
 
 // Emits
@@ -118,18 +135,24 @@ const emits = defineEmits<{
   (e: "passwordStrength", value: number): void;
   (e: "onChangeStep", step: number): void;
   (e: "onChangeDirection", step: DirectionT): void;
+  (e: "completed"): void;
 }>();
+
+// Auth
+const { completeProfile, loading } = useAccountAuth();
+const { $toast } = useNuxtApp();
 
 // Variables
 const showPass = ref(false);
 const imageInputRef = ref<any>(null);
 const imageBase64 = ref<any>(null);
 const passwordStrength = ref(0);
+const maxAvatarBytes = 2 * 1024 * 1024;
 
-// Form
+// Form — name required; avatar & password optional
 const formSchema = Yup.object({
   fullName: Yup.string().required("نام وارد نشده است"),
-  password: Yup.string().required("رمز عبور وارد نشده است"),
+  password: Yup.string().optional().nullable(),
 });
 const { handleSubmit, values, setValues } = useForm<
   Yup.InferType<typeof formSchema>
@@ -149,14 +172,13 @@ const strength = computed(() => {
   return score;
 });
 const buttonEnabled = computed(() => {
-  const { fullName, password } = values;
-  return fullName && password && passwordStrength.value === 4;
+  return !!values.fullName && !loading.value;
 });
 
 // Watches
 watch(
   () => model.value,
-  async (val) => {
+  async () => {
     if (model.value.profile)
       imageBase64.value = await convertImageToBase64(model.value.profile);
   },
@@ -169,24 +191,51 @@ function goBack() {
   emits("onChangeStep", props.step > 3 ? props.step - 1 : 1);
 }
 
-const onSubmit = handleSubmit(() => {
-  model.value = { ...values, profile: model.value.profile };
+const onSubmit = handleSubmit(async (data) => {
+  if (loading.value) return;
+
+  const password = data.password?.trim() || undefined;
+  if (password && passwordStrength.value < 4) {
+    $toast.error("رمز عبور به اندازه کافی قوی نیست");
+    return;
+  }
+
+  model.value = { ...data, profile: model.value.profile, password: password || "" };
+
+  await completeProfile({
+    name: data.fullName,
+    password,
+    avatar: model.value.profile || null,
+  });
+
+  emits("passwordStrength", passwordStrength.value);
   emits("onChangeDirection", "forward");
+  emits("completed");
+
+  if (props.inline) return;
+
+  // Next: role selection (SignUp3)
   emits("onChangeStep", props.step + 1);
 });
 
 async function onSelectImage(event: Event) {
   const target = event.target as HTMLInputElement;
   if (target.files && target.files.length > 0) {
-    const file = target.files[0];
-    model.value.profile = file!;
-    imageBase64.value = await convertImageToBase64(file!);
+    const file = target.files[0]!;
+
+    if (file.size > maxAvatarBytes) {
+      $toast.error("حجم تصویر نباید بیشتر از 2MB باشد");
+      target.value = "";
+      return;
+    }
+
+    model.value.profile = file;
+    imageBase64.value = await convertImageToBase64(file);
   }
 }
 
-//
 onMounted(() => {
-  if (model.value.fullName && model.value.password)
+  if (model.value.fullName || model.value.password)
     setValues({
       fullName: model.value.fullName,
       password: model.value.password,

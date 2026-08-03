@@ -44,7 +44,7 @@
         </button>
       </NuxtLink>
 
-      <NuxtLink v-else to="/account">
+      <NuxtLink v-else to="/login">
         <button class="btn btn-primary">
           <Icon name="svg:user-plus-white" size="24" />
           ورود | ثبت نام

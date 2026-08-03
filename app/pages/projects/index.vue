@@ -48,7 +48,7 @@
             <p class="mt-5 text-center font-light text-base text-text-tertiary md:text-md">
               پروژه خود را ثبت کنید و متخصص مناسب پیدا کنید.
             </p>
-            <NuxtLink to="/account" class="mt-auto pt-6 flex justify-center">
+            <NuxtLink to="/login" class="mt-auto pt-6 flex justify-center">
               <button class="btn btn-primary gap-2">
                 ثبت پروژه حسابداری
               </button>
@@ -75,7 +75,7 @@
             <p class="mt-5 text-center font-light text-base text-text-tertiary md:text-md">
 پروژه‌های جدید را مشاهده و درخواست همکاری ارسال کنید.
             </p>
-            <NuxtLink to="/account" class="mt-auto pt-6 flex justify-center">
+            <NuxtLink to="/login" class="mt-auto pt-6 flex justify-center">
               <button class="btn btn-primary gap-2">
                 مشاهده پروژه‌ها
               </button>
@@ -372,7 +372,7 @@ const posts = [
     badgeClass: "bg-[#FFF5EB] text-warning-500",
     badgeTitle: "اظهارنامه",
     btnText: 'اظهارنامه',
-    link: '/account',
+    link: '/login',
   },
   {
     title: 'رزومه ساز حسابداری',
@@ -382,7 +382,7 @@ const posts = [
     badgeClass: "bg-[#EBF0FC] text-primary-500",
     badgeTitle: "رزومه ساز",
     btnText: 'رزومه ساز',
-    link: '/account',
+    link: '/login',
   },
   {
     title: 'استخدام و جذب حسابدار',
@@ -392,7 +392,7 @@ const posts = [
     badgeClass: "bg-[#E6FAF3] text-accent-500",
     badgeTitle: "استخدام نیرو",
     btnText: 'استخدام حسابدار',
-    link: '/account',
+    link: '/login',
   },
 ];
 

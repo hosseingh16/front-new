@@ -43,11 +43,40 @@ export function useCurrentUser() {
     return trimmed || '—'
   })
 
+  const roleNames = computed(() => {
+    const raw = user.value?.roles
+    if (!Array.isArray(raw)) return [] as string[]
+    return raw
+      .map((entry) => {
+        if (typeof entry === 'string') return entry
+        if (entry && typeof entry === 'object' && typeof (entry as any).name === 'string') {
+          return (entry as any).name as string
+        }
+        return null
+      })
+      .filter((name): name is string => !!name)
+  })
+
+  const userType = computed(() => {
+    const value = user.value?.type
+    if (typeof value === 'string' && value.trim()) return value.trim()
+    if (value && typeof value === 'object' && typeof (value as any).value === 'string') {
+      return ((value as any).value as string).trim()
+    }
+    return null
+  })
+
+  /** True when Spatie roles or user.type is present. */
+  const hasRole = computed(() => roleNames.value.length > 0 || !!userType.value)
+
   return {
     sanctumUser,
     user,
     name,
     avatar,
     cellphone,
+    roleNames,
+    userType,
+    hasRole,
   }
 }

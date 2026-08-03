@@ -29,7 +29,7 @@ export function useApiClient() {
 
       if (status === 401) {
         user.value = null;      
-        await router.push(paths.account.signIn)
+        await router.push(paths.login)
       }
 
       const error: ApiError = {

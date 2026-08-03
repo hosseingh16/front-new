@@ -21,7 +21,11 @@
         <Icon name="svg:hint" />
         <p class="mr-1">
           با ورود یا ثبت نام در های‌حساب،
-          <span class="text-primary-500">شرایط و قوانین</span> را می پذیرم.
+          <NuxtLink to="/terms" class="text-primary-500" target="_blank"
+            >شرایط و قوانین</NuxtLink
+          >
+
+          را می پذیرم.
         </p>
       </div>
 
@@ -29,12 +33,14 @@
         id="btnSendMobile"
         class="mt-2 w-full btn flex justify-center gap-2 h-10"
         :class="{
-          'btn-disabled': !meta.valid,
-          'btn-primary': meta.valid,
+          'btn-disabled': !meta.valid || loading,
+          'btn-primary': meta.valid && !loading,
         }"
         type="submit"
+        :disabled="loading"
       >
-        <Icon name="svg:user-1" size="24" />
+        <span v-if="loading" class="loading loading-spinner loading-sm" />
+        <Icon v-else name="svg:user-1" size="24" />
         <span>ورود یا ثبت‌نام</span>
       </button>
     </form>
@@ -42,62 +48,35 @@
 </template>
 
 <script setup lang="ts">
-import { isMobile } from '~/libs/utils';
-import { useForm } from 'vee-validate';
-import * as Yup from 'yup';
+import { useForm } from "vee-validate";
+import * as Yup from "yup";
 
-// Model
-const model = defineModel({ default: '' });
+const model = defineModel({ default: "" });
 
-// Emits
 const emit = defineEmits<{
-  (e: 'onCompleted'): void;
+  (e: "onCompleted"): void;
 }>();
 
-// Form
+const { requestOtp, loading } = useAccountAuth();
+
 const formSchema = Yup.object({
   mobile: Yup.string()
-    .required('شماره همراه وارد نشده است')
-    .matches(RegExp('^09[0-9]\\d{8}$'), { message: 'شماره همراه معتبر نیست' }),
+    .required("شماره همراه وارد نشده است")
+    .matches(RegExp("^09[0-9]\\d{8}$"), { message: "شماره همراه معتبر نیست" }),
 });
-const { handleSubmit, meta, setValues } = useForm<Yup.InferType<typeof formSchema>>({
+
+const { handleSubmit, meta, setValues } = useForm<
+  Yup.InferType<typeof formSchema>
+>({
   validationSchema: formSchema,
 });
 
-// ============= Laravel API interaction =============
-const config = useRuntimeConfig();
-// const client = useSanctumClient();
-
-const onSubmit: any = handleSubmit(async (data: Yup.InferType<typeof formSchema>) => {
+const onSubmit = handleSubmit(async (data) => {
+  await requestOtp(data.mobile);
   model.value = data.mobile;
-  emit('onCompleted');
-  // const ok = await sendMobile(data.mobile);
-  // if (ok) emit('onCompleted');
+  emit("onCompleted");
 });
 
-const sendMobile = async (mobile: string): Promise<boolean> => {
-  if (!isMobile(mobile)) {
-    alert('شماره موبایل معتبر نیست');
-    return false;
-  }
-
-  return true;
-
-  // try {
-  //   const response = await client("/api/login-register", {
-  //     method: "POST",
-  //     body: {
-  //       cellphone: mobileNo.value,
-  //     },
-  //   });
-
-  //   return true;
-  // } catch (error) {
-  //   return false;
-  // }
-};
-
-//
 onMounted(() => {
   if (model.value) setValues({ mobile: model.value });
 });

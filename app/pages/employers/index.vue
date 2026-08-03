@@ -340,7 +340,7 @@ const serviceCards = [
     ctaClass: "bg-[#EBF0FC] text-primary-500",
     ctaArrowColor: "#4864e1",
     btnText: "ایجاد آگهی استخدام",
-    link: "/account",
+    link: "/login",
   },
   {
     featureTitle: "پروژه حسابداری رو ثبت کن",
@@ -354,7 +354,7 @@ const serviceCards = [
     ctaClass: "bg-[#E6FAF3] text-accent-500",
     ctaArrowColor: "#06c399",
     btnText: "ایجاد پروژه حسابداری",
-    link: "/account",
+    link: "/login",
   },
   {
     featureTitle: "درخواست انجام اظهارنامه مالیاتی",

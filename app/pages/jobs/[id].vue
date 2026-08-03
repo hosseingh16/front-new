@@ -151,7 +151,7 @@
       لطفا برای ارسال رزومه از طریق دکمه زیر وارد حساب کاربری خود شوید
     </p>
     <form method="dialog">
-      <NuxtLink to="/account" class="btn btn-primary mt-4 w-full">
+      <NuxtLink to="/login" class="btn btn-primary mt-4 w-full">
         ورود و ثبت‌نام
       </NuxtLink>
     </form>

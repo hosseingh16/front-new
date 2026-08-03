@@ -1,62 +1,72 @@
 <template>
   <div class="mt-2">
     <div v-if="showResend" class="flex justify-end items-center">
-      <button class="btn btn-info btn-soft text-primary-500 h-8" @click="resendCode">
-        <Icon name="svg:refresh" />
+      <button
+        type="button"
+        class="btn btn-info btn-soft text-primary-500 h-8"
+        :disabled="loading"
+        @click="resendCode"
+      >
+        <span v-if="loading" class="loading loading-spinner loading-xs" />
+        <Icon v-else name="svg:refresh" />
         <span class="mr-1 text-sm">ارسال مجدد کد</span>
       </button>
     </div>
-    <div v-else class="text-left text-sm text-[#4A4A4A]">
-      <span
-        >ارسال مجدد کد {{ time.m.toString().padStart(2, '0') }}:{{
-          time.s.toString().padStart(2, '0')
-        }}</span
-      >
+    <div v-else class="text-left text-sm text-[#4A4A4A]" aria-live="polite">
+      <span>ارسال مجدد کد تا {{ formatted }}</span>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-// Variables
-const showResend = ref(false);
-const interval = ref<any>(null);
-const time = reactive({
-  m: 1,
-  s: 10,
+const TOTAL_SECONDS = 70; // 1:10
+
+defineProps<{
+  loading?: boolean;
+}>();
+
+const emit = defineEmits<{
+  (e: 'resend'): void;
+}>();
+
+const remaining = ref(TOTAL_SECONDS);
+const showResend = computed(() => remaining.value <= 0);
+const formatted = computed(() => {
+  const m = Math.floor(remaining.value / 60);
+  const s = remaining.value % 60;
+  return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
 });
 
-// Functions
-function setCountDownTimer() {
-  time.m = 1;
-  time.s = 10;
-  interval.value = setInterval(() => {
-    showResend.value = false;
-    if (time.m >= 0 && time.s >= 0) {
-      if (time.s > 0) {
-        time.s--;
-      } else {
-        if (time.m === 0 && time.s === 0) {
-          showResend.value = true;
-          clearInterval(interval.value);
-        } else {
-          time.s = 10;
-          time.m--;
-        }
-      }
+let timer: ReturnType<typeof setInterval> | null = null;
+
+function clearTimer() {
+  if (timer) {
+    clearInterval(timer);
+    timer = null;
+  }
+}
+
+function startCountdown() {
+  clearTimer();
+  remaining.value = TOTAL_SECONDS;
+  timer = setInterval(() => {
+    if (remaining.value <= 1) {
+      remaining.value = 0;
+      clearTimer();
+      return;
     }
+    remaining.value--;
   }, 1000);
 }
 
 function resendCode() {
-  setCountDownTimer();
+  if (showResend.value === false) return;
+  emit('resend');
+  startCountdown();
 }
 
-//
-onMounted(() => {
-  setCountDownTimer();
-});
+onMounted(startCountdown);
+onUnmounted(clearTimer);
 
-onUnmounted(() => {
-  clearInterval(interval.value);
-});
+defineExpose({ startCountdown });
 </script>
