@@ -1,6 +1,7 @@
-import Vue3Toastify, { toast } from 'vue3-toastify';
-import 'vue3-toastify/dist/index.css';
-import { h, type FunctionalComponent } from 'vue';
+import Vue3Toastify, { toast } from "vue3-toastify";
+import "vue3-toastify/dist/index.css";
+import { h, type FunctionalComponent } from "vue";
+import { Icon } from "#components";
 
 /**
  * lucide:check-check — inlined because Nuxt Icon does not reliably
@@ -9,69 +10,52 @@ import { h, type FunctionalComponent } from 'vue';
  */
 const SuccessIcon: FunctionalComponent = () =>
   h(
-    'span',
+    "span",
     {
-      class: 'toast-success-icon',
+      class: "toast-success-icon",
       style: {
-        display: 'inline-flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: '28px',
-        height: '28px',
-        borderRadius: '9999px',
-        background: '#06c399',
-        color: '#fff',
-        flexShrink: '0',
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        width: "28px",
+        height: "28px",
+        borderRadius: "9999px",
+        background: "#06c399",
+        color: "#fff",
+        flexShrink: "0",
       },
     },
     [
-      h(
-        'svg',
-        {
-          xmlns: 'http://www.w3.org/2000/svg',
-          width: '16',
-          height: '16',
-          viewBox: '0 0 24 24',
-          fill: 'none',
-          'aria-hidden': 'true',
-        },
-        [
-          h('path', {
-            d: 'M18 6L7 17l-5-5m20-2l-7.5 7.5L13 16',
-            fill: 'none',
-            stroke: 'currentColor',
-            'stroke-linecap': 'round',
-            'stroke-linejoin': 'round',
-            'stroke-width': '2',
-          }),
-        ],
-      ),
+      h(Icon, {
+        name: "lucide:check-check",
+        size: "16",
+      }),
     ],
   );
 
 /** Red circle with white X — matches design error toast */
 const ErrorIcon: FunctionalComponent = () =>
   h(
-    'svg',
+    "svg",
     {
-      viewBox: '0 0 24 24',
-      width: '28',
-      height: '28',
-      fill: 'none',
-      'aria-hidden': 'true',
+      viewBox: "0 0 24 24",
+      width: "28",
+      height: "28",
+      fill: "none",
+      "aria-hidden": "true",
     },
     [
-      h('circle', {
-        cx: '12',
-        cy: '12',
-        r: '12',
-        fill: '#E11D48',
+      h("circle", {
+        cx: "12",
+        cy: "12",
+        r: "12",
+        fill: "#E11D48",
       }),
-      h('path', {
-        d: 'M8 8l8 8M16 8l-8 8',
-        stroke: '#fff',
-        'stroke-width': '2',
-        'stroke-linecap': 'round',
+      h("path", {
+        d: "M8 8l8 8M16 8l-8 8",
+        stroke: "#fff",
+        "stroke-width": "2",
+        "stroke-linecap": "round",
       }),
     ],
   );
@@ -79,32 +63,32 @@ const ErrorIcon: FunctionalComponent = () =>
 /** Brown circle with white "i" — matches design warning toast */
 const WarningIcon: FunctionalComponent = () =>
   h(
-    'svg',
+    "svg",
     {
-      viewBox: '0 0 24 24',
-      width: '28',
-      height: '28',
-      fill: 'none',
-      'aria-hidden': 'true',
+      viewBox: "0 0 24 24",
+      width: "28",
+      height: "28",
+      fill: "none",
+      "aria-hidden": "true",
     },
     [
-      h('circle', {
-        cx: '12',
-        cy: '12',
-        r: '12',
-        fill: '#8B5E3C',
+      h("circle", {
+        cx: "12",
+        cy: "12",
+        r: "12",
+        fill: "#8B5E3C",
       }),
-      h('circle', {
-        cx: '12',
-        cy: '8',
-        r: '1.35',
-        fill: '#fff',
+      h("circle", {
+        cx: "12",
+        cy: "8",
+        r: "1.35",
+        fill: "#fff",
       }),
-      h('path', {
-        d: 'M12 11.25v6',
-        stroke: '#fff',
-        'stroke-width': '2.2',
-        'stroke-linecap': 'round',
+      h("path", {
+        d: "M12 11.25v6",
+        stroke: "#fff",
+        "stroke-width": "2.2",
+        "stroke-linecap": "round",
       }),
     ],
   );
@@ -113,9 +97,9 @@ export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.use(Vue3Toastify, {
     autoClose: 5000,
     rtl: true,
-    position: 'bottom-left',
-    toastClassName: 'toast-custom',
-    theme: 'light',
+    position: "top-right",
+    toastClassName: "toast-custom",
+    theme: "light",
   });
 
   const originalSuccess = toast.success.bind(toast);
@@ -126,21 +110,21 @@ export default defineNuxtPlugin((nuxtApp) => {
     originalSuccess(message, {
       ...options,
       icon: SuccessIcon,
-      theme: 'light',
+      theme: "light",
     });
 
   const error: typeof toast.error = (message, options) =>
     originalError(message, {
       ...options,
       icon: ErrorIcon,
-      theme: 'light',
+      theme: "light",
     });
 
   const warning: typeof toast.warning = (message, options) =>
     originalWarning(message, {
       ...options,
       icon: WarningIcon,
-      theme: 'light',
+      theme: "light",
     });
 
   return {

@@ -8,6 +8,7 @@ export interface ApiError {
   status: number
   message?: string
   errors?: Record<string, any> | string
+  data?: Record<string, any>
 }
 
 export interface ApiResponse<T = any> {

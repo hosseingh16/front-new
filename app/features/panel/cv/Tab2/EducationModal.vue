@@ -1,12 +1,7 @@
 <template>
   <div>
     <button
-      class="btn"
-      :class="
-        editMode
-          ? 'btn bg-white h-8 w-8 p-0 border-2 rounded-lg border-text-muted'
-          : 'btn-primary'
-      "
+      :class="editMode ? 'btn-cv-action' : 'btn btn-primary'"
       @click="showModal"
     >
       <div v-if="!editMode" class="flex items-center gap-2">
@@ -17,7 +12,7 @@
     </button>
 
     <m-dialog ref="modalRef" :width="850">
-      <Titr>افزودن سابقه تحصیلی</Titr>
+      <Titr>{{ modalTitle }}</Titr>
       <form @submit.prevent="onSubmit" class="mt-6">
         <div class="grid md:grid-cols-2 gap-4">
           <m-form-select2
@@ -69,7 +64,7 @@
           </div>
         </div>
         <div>
-          <div class="flex justify-end mt-4">
+          <div class="flex justify-end gap-2 mt-4">
             <button
               class="btn btn-ghost"
               type="button"
@@ -79,8 +74,8 @@
               انصراف
             </button>
             <m-button type="submit" class="btn-primary" :loading>
-              <Icon name="svg:plus-white" />
-              افزودن
+              <Icon :name="submitIcon" />
+              {{ submitLabel }}
             </m-button>
           </div>
         </div>
@@ -160,6 +155,16 @@ async function showModal() {
 }
 
 const isGraduationDateDisabled = computed(() => values.stillbusy);
+
+const modalTitle = computed(() =>
+  props.editMode ? "ویرایش سابقه تحصیلی" : "افزودن سابقه تحصیلی",
+);
+
+const submitLabel = computed(() => (props.editMode ? "ذخیره" : "افزودن"));
+
+const submitIcon = computed(() =>
+  props.editMode ? "svg:check-check" : "svg:plus-white",
+);
 
 const onSubmit = handleSubmit((data: Yup.InferType<typeof formSchema>) => {
   emits("item", data);

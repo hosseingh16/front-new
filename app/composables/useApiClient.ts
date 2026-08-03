@@ -36,6 +36,7 @@ export function useApiClient() {
         status,
         message: data?.message ?? err?.message,
         errors: data?.errors,
+        data: data?.data,
       };
 
       throw error;

@@ -279,6 +279,8 @@ import { profileImageValidation } from "~/validations/profileImage";
 
 // Variables
 const api = useApi();
+const { $toast } = useNuxtApp();
+const { refreshUser } = useCurrentUser();
 const loading = api.loading;
 const hasRegions = ref(false);
 const editMode = ref(false);
@@ -403,9 +405,11 @@ const onSubmit = handleSubmit(async (data) => {
 
   try {
     await api.post("/cv/save-basics", payload);
+    await refreshUser();
     editMode.value = false;
+    $toast.success("اطلاعات پایه با موفقیت ذخیره شد");
   } catch (e) {
-    console.error(e);
+    $toast.error("خطا در ذخیره اطلاعات پایه");
   }
 
   //   await useSanctumFetch("/api/v1/cv/save-basics", {
@@ -445,11 +449,11 @@ const handleProfileImage = async (file: File | null) => {
 
     // 4. set uploaded file id into form
     setFieldValue("profileImage", res.data.id);
+    await refreshUser();
 
     // 5. optional: clear error after success
     setFieldError("profileImage", "");
   } catch (error) {
-    console.error(error);
     setFieldError("profileImage", "خطا در آپلود تصویر");
   }
 };
@@ -464,7 +468,7 @@ onMounted(async () => {
   //currentUser.value = res?.data ?? null;
 
   setValues({
-    name: currentUser.value.data.name ?? "",
+    name: currentUser.value.data.resume_personal?.name ?? "",
     jobTitle: currentUser.value.data.resume_personal?.job_title ?? "",
     jobStatus: String(
       currentUser.value.data.resume_personal?.job_status ?? "0",

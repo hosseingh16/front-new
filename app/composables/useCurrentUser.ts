@@ -69,6 +69,29 @@ export function useCurrentUser() {
   /** True when Spatie roles or user.type is present. */
   const hasRole = computed(() => roleNames.value.length > 0 || !!userType.value)
 
+  async function refreshUser() {
+    const api = useApi()
+
+    try {
+      const result = await api.get<any>('/user')
+      if (!result || typeof result !== 'object') return
+
+      if (result.data && typeof result.data === 'object') {
+        sanctumUser.value = result
+        return
+      }
+
+      sanctumUser.value = {
+        ...(sanctumUser.value && typeof sanctumUser.value === 'object'
+          ? sanctumUser.value
+          : {}),
+        data: result,
+      }
+    } catch {
+      // Keep the current user if refresh fails.
+    }
+  }
+
   return {
     sanctumUser,
     user,
@@ -78,5 +101,6 @@ export function useCurrentUser() {
     roleNames,
     userType,
     hasRole,
+    refreshUser,
   }
 }

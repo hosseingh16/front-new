@@ -1,7 +1,7 @@
 <template>
   <div>
-    <form action="" @submit.prevent="handleLogin">
-      <h1>Login Page</h1>
+    <h1>Login Page</h1>
+    <form @submit.prevent="handleLogin">
       <input type="email" placeholder="email" />
       <input type="password" placeholder="password" />
       <button type="submit">Login</button>
@@ -25,18 +25,17 @@ const { login } = useSanctumAuth();
 const config = useRuntimeConfig();
 const client = useSanctumClient();
 
-const api = useApi()
+const api = useApi();
 
 const getPing = async () => {
- //const result = await api.get<string>('/ping')
+  //const result = await api.get<string>('/ping')
   //console.log(text)
-  await $fetch('https://api.hihesab.test/api/user')
+  await $fetch("https://api.hihesab.test/api/user");
 };
-
 
 const handleLogin = async () => {
   await login({
-    username: '09020077714',    
+    username: "09020077714",
   });
 };
 </script>
