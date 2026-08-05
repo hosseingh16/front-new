@@ -18,67 +18,39 @@
       </div>
 
       <div class="lg:col-span-2">
-        <div class="flex items-center justify-between">
-          <p class="mb-2 text-base">آدرس:</p>
-          <button
-            v-if="!showCustomAddress"
-            type="button"
-            class="mb-3 font-semibold btn btn-ghost-primary text-sm max-lg:w-9 max-lg:h-9 max-lg:p-2"
-            @click="enableCustomAddress"
-          >
-            + آدرس جدید
-          </button>
-          <button
-            v-else-if="form.company_address"
-            type="button"
-            class="mb-3 font-semibold btn btn-ghost-primary text-sm max-lg:w-9 max-lg:h-9 max-lg:p-2"
-            @click="enableProfileAddress"
-          >
-            آدرس پیش‌فرض
-          </button>
-        </div>
+        <p class="mb-2 text-base">آدرس:</p>
 
-        <template v-if="!showCustomAddress">
-          <p class="mb-3 text-sm leading-7 text-text-passive">
-            <template v-if="form.company_address">
-              آدرس از پروفایل سازمان شما دریافت می‌شود. در صورت نیاز می‌توانید
-              آدرس دیگری انتخاب کنید.
-            </template>
-            <template v-else>
-              آدرس سازمان ثبت نشده است. برای انتخاب محل آگهی، آدرس جدید اضافه
-              کنید.
-            </template>
-          </p>
-          <div
-            v-if="form.company_address"
-            class="flex items-center gap-2 rounded-lg border border-dashed border-gray-default p-3"
-          >
-            <span class="text-sm text-text-secondary">{{
-              form.company_address
-            }}</span>
+        <div class="grid gap-6 lg:grid-cols-2">
+          <div>
+            <m-select2
+              v-model="selectedProvince"
+              label="استان:"
+              required
+              search
+              :options="provinceOptions"
+              placeholder="استان را انتخاب کنید"
+              :error="Boolean(errors.province)"
+            />
+            <p v-if="errors.province" class="mt-1 text-xs text-[#EF4035]">
+              {{ errors.province }}
+            </p>
           </div>
-        </template>
 
-        <div
-          v-else
-          class="mt-4 grid gap-6 rounded-lg border border-dashed border-gray-default p-3 lg:grid-cols-2"
-        >
-          <m-select2
-            v-model="selectedProvince"
-            label="استان:"
-            search
-            :options="provinceOptions"
-            placeholder="استان را انتخاب کنید"
-          />
-
-          <m-select2
-            v-model="selectedCity"
-            label="شهر:"
-            :options="cityOptions"
-            search
-            placeholder="شهر را انتخاب کنید"
-            :disabled="!form.province || citiesLoading"
-          />
+          <div>
+            <m-select2
+              v-model="selectedCity"
+              label="شهر:"
+              required
+              :options="cityOptions"
+              search
+              placeholder="شهر را انتخاب کنید"
+              :disabled="!form.province || citiesLoading"
+              :error="Boolean(errors.city)"
+            />
+            <p v-if="errors.city" class="mt-1 text-xs text-[#EF4035]">
+              {{ errors.city }}
+            </p>
+          </div>
 
           <m-select2
             v-model="selectedRegion"
@@ -189,50 +161,16 @@ const props = defineProps<{
 }>();
 
 const provinceOptions = provinces;
-const showCustomAddress = ref(false);
 const hasRegions = computed(() => props.regionOptions.length > 0);
 
-const paidCityName = computed(() => {
-  if (showCustomAddress.value) {
-    return findPaidAdCityName(props.form.city_name);
-  }
-
-  return findPaidAdCityName(props.form.company_address);
-});
-
-function clearLocationFields() {
-  props.form.province = null;
-  props.form.province_name = "";
-  props.form.city = null;
-  props.form.city_name = "";
-  props.form.region = null;
-  props.form.region_name = "";
-}
-
-function enableCustomAddress() {
-  showCustomAddress.value = true;
-  clearLocationFields();
-}
-
-function enableProfileAddress() {
-  showCustomAddress.value = false;
-  clearLocationFields();
-}
+const paidCityName = computed(() =>
+  findPaidAdCityName(props.form.city_name),
+);
 
 function clearRegionFields() {
   props.form.region = null;
   props.form.region_name = "";
 }
-
-watch(
-  () => [props.form.province, props.form.city, props.form.region] as const,
-  ([province, city, region]) => {
-    if (province != null || city != null || region != null) {
-      showCustomAddress.value = true;
-    }
-  },
-  { immediate: true },
-);
 
 const genderItems = computed(() => {
   if (props.genders.length) {

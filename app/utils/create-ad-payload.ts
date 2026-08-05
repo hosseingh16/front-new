@@ -46,6 +46,14 @@ export function validateCreateAdForm(
     errors.title = 'عنوان شغلی الزامی است'
   }
 
+  if (form.province == null) {
+    errors.province = 'استان الزامی است'
+  }
+
+  if (form.city == null) {
+    errors.city = 'شهر الزامی است'
+  }
+
   if (!form.employment_type.trim()) {
     errors.employment_type = 'نوع همکاری الزامی است'
   }

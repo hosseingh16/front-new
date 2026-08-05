@@ -60,6 +60,9 @@ export interface CreateAdFormModel {
 
 export interface CreateAdFormErrors {
   title?: string
+  province?: string
+  city?: string
+  region?: string
   employment_type?: string
   resume_terms?: string
   accounting_management?: string

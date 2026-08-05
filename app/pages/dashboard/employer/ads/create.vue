@@ -1,5 +1,10 @@
 <template>
   <div>
+    <CompanyBasicInfoModal
+      ref="companyBasicModalRef"
+      @completed="onCompanyBasicCompleted"
+    />
+
     <h1 class="font-yb-bold text-2xl text-text-tertiary">{{ pageTitle }}</h1>
 
     <div class="mt-5 grid items-start gap-4 lg:grid-cols-8">
@@ -64,6 +69,7 @@ import CreateAdPreviewCard from "./components/create/CreateAdPreviewCard.vue";
 import CreateAdRequirementsEditor from "./components/create/CreateAdRequirementsEditor.vue";
 import CreateAdSpecializedFields from "./components/create/CreateAdSpecializedFields.vue";
 import CreateAdWorkingHoursSection from "./components/create/CreateAdWorkingHoursSection.vue";
+import CompanyBasicInfoModal from "../company/components/CompanyBasicInfoModal.vue";
 
 definePageMeta({
   layout: "dashboard",
@@ -94,7 +100,20 @@ const {
   loadRegions,
   saveDraft,
   publish,
+  loadCompanyPreview,
 } = useCreateAdForm();
+
+const companyBasicModalRef = ref<InstanceType<typeof CompanyBasicInfoModal> | null>(
+  null,
+);
+
+onMounted(async () => {
+  await companyBasicModalRef.value?.checkAndOpen();
+});
+
+async function onCompanyBasicCompleted() {
+  await loadCompanyPreview();
+}
 
 const route = useRoute();
 

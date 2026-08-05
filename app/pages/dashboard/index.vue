@@ -1,12 +1,16 @@
 <template>
   <div class="space-y-8">
-    <EmployerDashboardBanner
-      v-if="showCompanyBanner"
-      @dismiss="dismissCompanyBanner"
-    />
-
     <section>
-      <h1 class="font-yb-bold text-xl text-text-tertiary md:text-2xl">
+      <DashboardStatusAlert
+        v-if="statusAlert"
+        v-bind="statusAlert"
+        @dismiss="dismissStatusAlert"
+      />
+
+      <h1
+        class="font-yb-bold text-xl text-text-tertiary md:text-2xl"
+        :class="{ 'mt-4': statusAlert }"
+      >
         پیشخوان
       </h1>
 
@@ -58,9 +62,10 @@
 </template>
 
 <script setup lang="ts">
-import EmployerDashboardBanner from "./components/EmployerDashboardBanner.vue";
+import DashboardStatusAlert from "./components/DashboardStatusAlert.vue";
 import EmployerDashboardShortcutCard from "./components/EmployerDashboardShortcutCard.vue";
 import EmployerDashboardAdsPanel from "./components/EmployerDashboardAdsPanel.vue";
+import type { DashboardStatusAlert as StatusAlert } from "~/utils/user-status-alerts";
 
 definePageMeta({
   layout: "dashboard",
@@ -70,24 +75,48 @@ useSeoMeta({
   title: "پیشخوان کارفرما",
 });
 
-const BANNER_STORAGE_KEY = "employer-dashboard-company-banner-dismissed";
-
+const { fetchStatus } = useUserStatus();
 const { ads, adGroups, loading, initialized } = useEmployerAds();
 const { total: taxReturnTotal, initialized: taxReturnsInitialized } =
   useTaxReturns();
 
-const showCompanyBanner = ref(true);
+const statusAlert = ref<Omit<StatusAlert, "id"> | null>(null);
+const statusAlertId = ref<string | null>(null);
 
-onMounted(() => {
+onMounted(async () => {
   if (!import.meta.client) return;
-  showCompanyBanner.value = localStorage.getItem(BANNER_STORAGE_KEY) !== "1";
+
+  const status = await fetchStatus();
+  if (!status) return;
+
+  const alert = getDashboardStatusAlert(status);
+  if (!alert) return;
+
+  if (alert.dismissible) {
+    const storageKey = getDashboardStatusAlertStorageKey(alert.id);
+    if (localStorage.getItem(storageKey) === "1") return;
+  }
+
+  statusAlertId.value = alert.id;
+  statusAlert.value = {
+    type: alert.type,
+    message: alert.message,
+    actionLabel: alert.actionLabel,
+    actionTo: alert.actionTo,
+    dismissible: alert.dismissible,
+  };
 });
 
-function dismissCompanyBanner() {
-  showCompanyBanner.value = false;
-  if (import.meta.client) {
-    localStorage.setItem(BANNER_STORAGE_KEY, "1");
+function dismissStatusAlert() {
+  if (statusAlertId.value) {
+    localStorage.setItem(
+      getDashboardStatusAlertStorageKey(statusAlertId.value),
+      "1",
+    );
   }
+
+  statusAlert.value = null;
+  statusAlertId.value = null;
 }
 
 const activeAdsCount = computed(() => adGroups.value.active.length);

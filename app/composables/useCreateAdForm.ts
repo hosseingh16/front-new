@@ -1,6 +1,7 @@
 import type { MaybeRef } from 'vue'
 import type { ApiResponse } from '~/types/api'
 import type { Ad } from '~/types/ad'
+import type { Company } from '~/types/company'
 import type { CreateAdFormErrors, CreateAdFormModel } from '~/types/create-ad-form'
 import {
   CREATE_AD_DRAFT_KEY,
@@ -12,6 +13,7 @@ import {
   validateCreateAdForm,
 } from '~/utils/create-ad-payload'
 import type { ISelectItem } from '~/types/select-item'
+import { provinces } from '~/feeders/provinces'
 
 const LOOKUP_KEYS =
   'job_titles,employment_types,experience_levels,salary_ranges,benefits,proficiencies,education_levels,genders,accounting_programs'
@@ -94,6 +96,76 @@ export function useCreateAdForm(
 
   const companyName = ref('شرکت شما')
   const companyLogo = ref('')
+
+  async function loadCompanyPreview() {
+    try {
+      const result = await api.get<
+        ApiResponse<{
+          company?: Company & {
+            province_id?: number | null
+            city_id?: number | null
+          }
+        }>
+      >('/user')
+      const company = result.data?.company
+      if (!company) return
+
+      if (company.name) companyName.value = company.name
+      if (company.logo && !company.logo.includes('company-default')) {
+        companyLogo.value = company.logo
+      }
+
+      if (company.address) {
+        form.value.company_address = company.address
+      }
+
+      // Prefer ad edit values; only prefill empty location from company.
+      if (isEdit.value || form.value.province != null) return
+
+      const provinceId =
+        company.province_id ??
+        (provinces.find((item) => item.label === company.province_name)
+          ?.value as number | undefined) ??
+        null
+
+      if (provinceId == null) {
+        if (company.province_name) {
+          form.value.province_name = company.province_name
+        }
+        if (company.city_name) {
+          form.value.city_name = company.city_name
+        }
+        return
+      }
+
+      form.value.province = provinceId
+      form.value.province_name =
+        provinces.find((item) => item.value === provinceId)?.label ??
+        company.province_name ??
+        ''
+
+      await loadCities(provinceId)
+
+      const cityId =
+        company.city_id ??
+        (cityOptions.value.find((item) => item.label === company.city_name)
+          ?.value as number | undefined) ??
+        null
+
+      if (cityId != null) {
+        form.value.city = cityId
+        form.value.city_name =
+          cityOptions.value.find((item) => item.value === cityId)?.label ??
+          company.city_name ??
+          ''
+        await loadRegions(cityId)
+      } else if (company.city_name) {
+        form.value.city_name = company.city_name
+      }
+    } catch {
+      // Keep defaults when company preview cannot be loaded.
+    }
+  }
 
   const isPartTime = computed(() => {
     const selected = employmentTypes.value.find(
@@ -373,6 +445,8 @@ export function useCreateAdForm(
   }
 
   onMounted(() => {
+    loadCompanyPreview()
+
     if (isEdit.value) {
       loadAdForEdit()
       return
@@ -408,5 +482,6 @@ export function useCreateAdForm(
     loadRegions,
     saveDraft,
     publish,
+    loadCompanyPreview,
   }
 }
