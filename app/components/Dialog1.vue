@@ -11,7 +11,7 @@
       <div class="text-center">
         <Icon :name="`svg:${type}`" size="48" />
       </div>
-      <div class="text-center px-4 md:px-12">
+      <div class="text-center">
         <h1 class="font-yb-bold leading-6! mb-4">{{ title }}</h1>
         <slot />
       </div>
@@ -23,7 +23,7 @@
 // Props
 defineProps({
   id: { type: String, required: true },
-  type: { type: String as PropType<'success' | 'warning'>, required: true },
+  type: { type: String as PropType<"success" | "warning">, required: true },
   title: String,
   width: { type: Number, default: 500 },
 });

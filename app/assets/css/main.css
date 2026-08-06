@@ -66,6 +66,21 @@ button:disabled {
   --toastify-icon-color-warning: #8b5e3c;
   --toastify-text-color-warning: #8b5e3c;
   --toastify-color-progress-warning: #8b5e3c;
+  --toastify-z-index: 100000;
+}
+
+/* Keep toasts above modal dialogs (top layer via popover in toast plugin) */
+.Toastify__toast-container[popover] {
+  inset: unset;
+  border: none;
+  background: transparent;
+  padding: 4px;
+  margin: 0;
+  overflow: visible;
+  width: var(--toastify-toast-width);
+  max-width: calc(100vw - 2rem);
+  height: fit-content;
+  position: fixed;
 }
 
 .Toastify__toast--success,

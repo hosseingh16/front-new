@@ -245,7 +245,15 @@
           </div>
         </dl>
 
+        <p
+          v-if="ad.has_applied"
+          class="mt-6 flex h-11 w-full items-center justify-center gap-2 text-sm font-semibold text-text-primay"
+        >
+          <Icon name="svg:hint" size="18" />
+          قبلا رزومه ارسال کرده‌اید
+        </p>
         <button
+          v-else
           type="button"
           class="btn btn-success mt-6 h-11 w-full gap-2"
           @click="emit('resume')"

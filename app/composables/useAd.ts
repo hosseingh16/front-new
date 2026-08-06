@@ -14,7 +14,7 @@ export function useAd(id: MaybeRef<string | number>) {
   const api = useApi()
   const idRef = toRef(id)
 
-  const { data, pending, error: fetchError, status } = useAsyncData(
+  const { data, pending, error: fetchError, status, refresh } = useAsyncData(
     () => `ad-${idRef.value}`,
     async () => {
       try {
@@ -48,11 +48,18 @@ export function useAd(id: MaybeRef<string | number>) {
     () => status.value === 'success' || status.value === 'error',
   )
 
+  function setHasApplied(value: boolean) {
+    if (!data.value) return
+    data.value = { ...data.value, has_applied: value }
+  }
+
   return {
     ad,
     loading: pending,
     initialized,
     error,
+    setHasApplied,
+    refresh,
   }
 }
 

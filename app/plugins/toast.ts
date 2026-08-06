@@ -100,36 +100,90 @@ export default defineNuxtPlugin((nuxtApp) => {
     position: "top-right",
     toastClassName: "toast-custom",
     theme: "light",
+    transition: "zoom",
   });
+
+  /**
+   * Modal dialogs opened with showModal() render in the browser top layer,
+   * which sits above any z-index. Promote the toast container into the top
+   * layer via the Popover API so toasts stay visible over modals.
+   */
+  function promoteToastContainer() {
+    if (!import.meta.client) return;
+
+    const containers = document.querySelectorAll<HTMLElement>(
+      ".Toastify__toast-container",
+    );
+
+    containers.forEach((container) => {
+      if (typeof container.showPopover !== "function") return;
+
+      if (container.getAttribute("popover") !== "manual") {
+        container.setAttribute("popover", "manual");
+      }
+
+      try {
+        if (!container.matches(":popover-open")) {
+          container.showPopover();
+        }
+      } catch {
+        // Older browsers / invalid state — leave normal stacking
+      }
+    });
+  }
 
   const originalSuccess = toast.success.bind(toast);
   const originalError = toast.error.bind(toast);
   const originalWarning = toast.warning.bind(toast);
+  const originalInfo = toast.info?.bind(toast);
 
-  const success: typeof toast.success = (message, options) =>
-    originalSuccess(message, {
+  const success: typeof toast.success = (message, options) => {
+    const id = originalSuccess(message, {
       ...options,
       icon: SuccessIcon,
       theme: "light",
     });
+    queueMicrotask(promoteToastContainer);
+    return id;
+  };
 
-  const error: typeof toast.error = (message, options) =>
-    originalError(message, {
+  const error: typeof toast.error = (message, options) => {
+    const id = originalError(message, {
       ...options,
       icon: ErrorIcon,
       theme: "light",
     });
+    queueMicrotask(promoteToastContainer);
+    return id;
+  };
 
-  const warning: typeof toast.warning = (message, options) =>
-    originalWarning(message, {
+  const warning: typeof toast.warning = (message, options) => {
+    const id = originalWarning(message, {
       ...options,
       icon: WarningIcon,
       theme: "light",
     });
+    queueMicrotask(promoteToastContainer);
+    return id;
+  };
+
+  const info: typeof toast.info = (message, options) => {
+    const id = originalInfo
+      ? originalInfo(message, options)
+      : toast(message, options);
+    queueMicrotask(promoteToastContainer);
+    return id;
+  };
 
   return {
     provide: {
-      toast: Object.assign(toast, { success, error, warning, warn: warning }),
+      toast: Object.assign(toast, {
+        success,
+        error,
+        warning,
+        warn: warning,
+        info,
+      }),
     },
   };
 });

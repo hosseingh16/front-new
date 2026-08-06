@@ -22,6 +22,7 @@ export interface AdList {
     publish_date: string
     placement?: string
     is_bookmarked?: boolean
+    has_applied?: boolean
 }
 
 export interface Ad {
@@ -82,4 +83,5 @@ export interface Ad {
     dynamic_need_hours?: number
     static_hours?: number
     is_bookmarked?: boolean
+    has_applied?: boolean
 }
