@@ -17,10 +17,17 @@ export async function convertImageToBase64(file: File) {
   });
 }
 
-const DEFAULT_AVATAR_MARKERS = ['default-avatar', 'image-default'];
+const DEFAULT_AVATAR_MARKERS = [
+  'default-avatar',
+  'image-default',
+  'company-default',
+];
 
-/** Shared placeholder for job seeker and employer when no custom photo exists. */
+/** Job seeker placeholder when no custom photo exists. */
 export const DEFAULT_AVATAR_SRC = '/images/default-avatar.png';
+
+/** Company / employer placeholder when no custom logo/photo exists. */
+export const DEFAULT_COMPANY_LOGO_SRC = '/images/company-default.png';
 
 /** True when avatar is a real uploaded photo (not the placeholder/default). */
 export function hasCustomAvatar(avatar: unknown): boolean {
@@ -78,10 +85,18 @@ export function resolveAvatarUrl(
   return `${origin}/${value.replace(/^\//, '')}`;
 }
 
-/** Always returns a displayable avatar URL (custom or shared default). */
+/** Always returns a displayable job-seeker avatar URL (custom or default). */
 export function resolveAvatarSrc(
   avatar: unknown,
   baseUrl?: string,
 ): string {
   return resolveAvatarUrl(avatar, baseUrl) ?? DEFAULT_AVATAR_SRC;
+}
+
+/** Always returns a displayable company logo URL (custom or company default). */
+export function resolveCompanyLogoSrc(
+  logo: unknown,
+  baseUrl?: string,
+): string {
+  return resolveAvatarUrl(logo, baseUrl) ?? DEFAULT_COMPANY_LOGO_SRC;
 }

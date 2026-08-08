@@ -39,28 +39,24 @@
               class="flex h-[74px] w-[74px] shrink-0 items-center justify-center overflow-hidden rounded-2xl border-4 border-white bg-[#ECF4D9]"
             >
               <NuxtLink
-                v-if="ad.company_logo && ad.company?.slug"
+                v-if="ad.company?.slug"
                 :to="`/companies/${ad.company.slug}`"
                 class="block h-full w-full"
                 tabindex="-1"
                 aria-label="نمایه شرکت"
               >
                 <img
-                  :src="ad.company_logo"
+                  :src="companyLogoSrc"
                   :alt="ad.company_name"
                   class="h-full w-full object-cover"
                 />
               </NuxtLink>
               <img
-                v-else-if="ad.company_logo"
-                :src="ad.company_logo"
+                v-else
+                :src="companyLogoSrc"
                 :alt="ad.company_name"
                 class="h-full w-full object-cover"
               />
-
-              <span v-else class="font-yb-bold text-xl text-text-tertiary">
-                {{ companyInitial }}
-              </span>
             </div>
             <div class="min-w-0">
               <p class="text-sm text-text-passive">{{ ad.company_name }}</p>
@@ -220,6 +216,7 @@ import AdDetailContent from "./components/AdDetailContent.vue";
 import ReportIssueModal from "./components/ReportIssueModal.vue";
 import { useAd, useSimilarAds } from "~/composables/useAd";
 import { formatJalaliDate } from "~/utils/format-jalali-date";
+import { resolveCompanyLogoDisplaySrc } from "~/utils/company-basic-info";
 import createAccountIllust from "~/assets/vectors/illustrations/create-account.svg";
 
 const route = useRoute();
@@ -236,7 +233,9 @@ const fastLoginRef = ref<InstanceType<typeof FastLoginModal> | null>(null);
 const successDialogRef = ref<HTMLDialogElement | null>(null);
 const applying = ref(false);
 
-const companyInitial = computed(() => ad.value?.company_name?.charAt(0) ?? "ش");
+const companyLogoSrc = computed(() =>
+  resolveCompanyLogoDisplaySrc(ad.value?.company_logo),
+);
 
 const coverImage = computed(
   () => ad.value?.company?.cover || "/images/ad-cover-bg.jpg",

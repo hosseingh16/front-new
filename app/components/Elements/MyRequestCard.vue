@@ -33,12 +33,10 @@
           class="flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-[#ECF4D9]"
         >
           <img
-            v-if="request.company_logo"
-            :src="request.company_logo"
+            :src="companyLogoSrc"
             :alt="request.company_name"
             class="size-14 rounded-2xl object-cover"
           />
-          <Icon v-else name="svg:buildings-4" size="28" class="text-primary-500" />
         </div>
       </div>
 
@@ -111,6 +109,7 @@ import BookmarkToggleButton from '~/components/Elements/BookmarkToggleButton.vue
 import MyRequestStatusBadge from '~/components/Elements/MyRequestStatusBadge.vue'
 import type { MyRequest } from '~/types/my-request'
 import { formatRelativeDate } from '~/utils/format-relative-date'
+import { resolveCompanyLogoDisplaySrc } from '~/utils/company-basic-info'
 
 const props = defineProps<{
   request: MyRequest
@@ -123,6 +122,9 @@ const emit = defineEmits<{
 }>()
 
 const relativeDate = computed(() => formatRelativeDate(props.request.created_at))
+const companyLogoSrc = computed(() =>
+  resolveCompanyLogoDisplaySrc(props.request.company_logo),
+)
 
 const locationLabel = computed(() => {
   const parts = [props.request.province_name, props.request.city_name].filter(Boolean)

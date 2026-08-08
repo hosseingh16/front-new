@@ -198,8 +198,7 @@
 <script setup lang="ts">
 import BookmarkToggleButton from "~/components/Elements/BookmarkToggleButton.vue";
 import type { CompanyList } from "~/types/company";
-import { DEFAULT_AVATAR_SRC } from "~/libs/utils";
-import { isDefaultCompanyLogo } from "~/utils/company-basic-info";
+import { resolveCompanyLogoDisplaySrc } from "~/utils/company-basic-info";
 
 const props = withDefaults(
   defineProps<{
@@ -229,9 +228,7 @@ const emit = defineEmits<{
 
 const name = computed(() => props.company?.name ?? props.name ?? "شرکت");
 const logo = computed(() => props.company?.logo ?? props.logo ?? null);
-const logoSrc = computed(() =>
-  isDefaultCompanyLogo(logo.value) ? DEFAULT_AVATAR_SRC : (logo.value as string),
-);
+const logoSrc = computed(() => resolveCompanyLogoDisplaySrc(logo.value));
 const size = computed(() => props.company?.size ?? props.size ?? "");
 const bookmarkTargetId = computed(
   () => props.company?.id ?? null,

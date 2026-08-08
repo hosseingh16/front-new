@@ -145,16 +145,9 @@
               class="flex size-[92px] items-center justify-center overflow-hidden rounded-[23px] bg-[#ECF4D9] shadow-[0px_2px_4px_0px_rgba(140,156,237,0.05),0px_4px_24px_0px_rgba(175,190,255,0.06)]"
             >
               <img
-                v-if="request.company_logo"
-                :src="request.company_logo"
+                :src="companyLogoSrc"
                 :alt="request.company_name"
                 class="size-[82px] rounded-[20px] object-cover"
-              />
-              <Icon
-                v-else
-                name="svg:buildings-4"
-                size="36"
-                class="text-primary-500"
               />
             </div>
           </div>
@@ -205,6 +198,7 @@ import Titr from '~/features/panel/cv/Titr.vue'
 import type { MyRequest, MyRequestTimelineActor } from '~/types/my-request'
 import { buildMyRequestTimeline } from '~/pages/dashboard/utils/my-request-timeline'
 import { formatJalaliDate } from '~/utils/format-jalali-date'
+import { resolveCompanyLogoDisplaySrc } from '~/utils/company-basic-info'
 import { useCurrentUser } from '~/composables/useCurrentUser'
 
 const props = withDefaults(
@@ -219,6 +213,10 @@ const props = withDefaults(
 
 const dialogRef = ref<HTMLDialogElement | null>(null)
 const { avatar: userAvatar } = useCurrentUser()
+
+const companyLogoSrc = computed(() =>
+  resolveCompanyLogoDisplaySrc(props.request?.company_logo),
+)
 
 const timeline = computed(() =>
   props.request ? buildMyRequestTimeline(props.request) : [],
@@ -310,7 +308,7 @@ function formatEventDate(date?: string | null) {
 }
 
 function actorImage(actor: MyRequestTimelineActor) {
-  if (actor === 'company') return props.request?.company_logo || null
+  if (actor === 'company') return companyLogoSrc.value
   if (actor === 'user') return userAvatar.value
   if (actor === 'platform') return '/images/logo.png'
   return null

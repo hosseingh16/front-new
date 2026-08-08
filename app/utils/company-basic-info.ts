@@ -1,4 +1,5 @@
 import type { CompanyProfileFormModel } from '~/types/company-profile-form'
+import { DEFAULT_COMPANY_LOGO_SRC } from '~/libs/utils'
 
 const DEFAULT_LOGO_MARKERS = [
   'company-default',
@@ -9,6 +10,14 @@ const DEFAULT_LOGO_MARKERS = [
 export function isDefaultCompanyLogo(url: string | null | undefined): boolean {
   if (!url) return true
   return DEFAULT_LOGO_MARKERS.some((marker) => url.includes(marker))
+}
+
+/** Display URL for a company logo (swaps API placeholders for the local company default). */
+export function resolveCompanyLogoDisplaySrc(
+  url: string | null | undefined,
+): string {
+  if (isDefaultCompanyLogo(url)) return DEFAULT_COMPANY_LOGO_SRC
+  return url as string
 }
 
 export function needsCompanyBasicInfoModal(

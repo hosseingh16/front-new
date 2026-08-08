@@ -82,8 +82,7 @@
               class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#4864E114] p-2"
             >
               <img
-                v-if="ad.company_logo"
-                :src="ad.company_logo"
+                :src="companyLogoSrc"
                 :alt="ad.company_name"
                 class="h-full w-full rounded object-cover"
               />
@@ -331,6 +330,7 @@ import {
 } from "../utils/ad-benefits";
 import { useLookups } from "~/composables/useLookups";
 import { formatJalaliDate } from "~/utils/format-jalali-date";
+import { resolveCompanyLogoDisplaySrc } from "~/utils/company-basic-info";
 
 type AdTab = "about" | "company" | "history" | "ads";
 
@@ -348,6 +348,10 @@ const emit = defineEmits<{
   resume: [];
   "report-issue": [];
 }>();
+
+const companyLogoSrc = computed(() =>
+  resolveCompanyLogoDisplaySrc(props.ad.company_logo),
+);
 
 const { items: lookupItems } = useLookups("proficiencies");
 const proficiencies = lookupItems("proficiencies");

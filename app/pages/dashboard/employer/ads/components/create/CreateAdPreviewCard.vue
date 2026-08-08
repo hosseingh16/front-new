@@ -10,12 +10,10 @@
               class="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#ECF4D9]"
             >
               <img
-                v-if="companyLogo"
-                :src="companyLogo"
+                :src="companyLogoSrc"
                 alt=""
                 class="h-full w-full rounded-2xl object-cover"
               />
-              <Icon v-else name="svg:buildings-4" size="28" />
             </div>
             <div class="text-sm">
               <p class="font-semibold text-text-tertiary dark:text-gray-100">
@@ -78,6 +76,7 @@
 import Titr from "~/features/panel/cv/Titr.vue";
 import type { CreateAdFormModel } from "~/types/create-ad-form";
 import type { ISelectItem } from "~/types/select-item";
+import { resolveCompanyLogoDisplaySrc } from "~/utils/company-basic-info";
 
 const props = defineProps<{
   form: CreateAdFormModel;
@@ -88,6 +87,10 @@ const props = defineProps<{
   genders: ISelectItem[];
   salaryRanges: ISelectItem[];
 }>();
+
+const companyLogoSrc = computed(() =>
+  resolveCompanyLogoDisplaySrc(props.companyLogo || null),
+);
 
 function resolveLabel(
   options: ISelectItem[],

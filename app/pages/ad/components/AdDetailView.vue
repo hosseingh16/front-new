@@ -36,14 +36,10 @@
                 class="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-[20px] border-4 border-white bg-[#ECF4D9]"
               >
                 <img
-                  v-if="ad.company_logo"
-                  :src="ad.company_logo"
+                  :src="companyLogoSrc"
                   :alt="ad.company_name"
                   class="h-full w-full object-cover"
                 />
-                <span v-else class="font-yb-bold text-xl text-text-tertiary">
-                  {{ companyInitial }}
-                </span>
               </div>
               <div class="min-w-0 text-right">
                 <p class="text-base text-text-secondary">{{ ad.company_name }}</p>
@@ -126,6 +122,7 @@ import ItemBox from '~/components/Elements/item-box.vue'
 import BookmarkToggleButton from '~/components/Elements/BookmarkToggleButton.vue'
 import AdDetailContent from '~/pages/jobs/components/AdDetailContent.vue'
 import { formatJalaliDate } from '~/utils/format-jalali-date'
+import { resolveCompanyLogoDisplaySrc } from '~/utils/company-basic-info'
 
 const props = withDefaults(
   defineProps<{
@@ -148,7 +145,9 @@ const adsListPath = computed(() =>
   props.embedded ? '/dashboard/ad' : '/ad',
 )
 
-const companyInitial = computed(() => props.ad.company_name?.charAt(0) ?? 'ش')
+const companyLogoSrc = computed(() =>
+  resolveCompanyLogoDisplaySrc(props.ad.company_logo),
+)
 
 const coverImage = computed(
   () => props.ad.company?.cover || '/images/ad-cover-bg.jpg',

@@ -205,14 +205,10 @@
                 class="flex h-[74px] w-[74px] items-center justify-center overflow-hidden rounded-2xl border-4 border-white bg-[#ECF4D9]"
               >
                 <img
-                  v-if="company.logo"
-                  :src="company.logo"
+                  :src="companyLogoSrc"
                   :alt="company.name"
                   class="h-full w-full object-cover"
                 />
-                <span v-else class="font-yb-bold text-xl text-text-tertiary">
-                  {{ companyInitial }}
-                </span>
               </div>
             </div>
 
@@ -397,6 +393,7 @@ import telegramIcon from "~/assets/vectors/social/telegram.svg?url";
 import twitterIcon from "~/assets/vectors/social/twitter.svg?url";
 import whatsappIcon from "~/assets/vectors/social/whatsapp.svg?url";
 import { formatRelativeDate } from "~/utils/format-relative-date";
+import { resolveCompanyLogoDisplaySrc } from "~/utils/company-basic-info";
 import type { Company } from "~/types/company";
 
 type CompanyTab = "about" | "ads";
@@ -450,7 +447,9 @@ function displayValue(value: string | null | undefined) {
   return value?.trim() ? value : "—";
 }
 
-const companyInitial = computed(() => props.company?.name?.charAt(0) ?? "ش");
+const companyLogoSrc = computed(() =>
+  resolveCompanyLogoDisplaySrc(props.company?.logo),
+);
 
 const locationLabel = computed(() => {
   const province = props.company?.province_name;
