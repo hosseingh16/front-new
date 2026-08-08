@@ -12,6 +12,7 @@
           <p class="font-semibold text-gray-700">{{ item.title }}</p>
           <button
             class="btn btn-ghost text-sm font-semibold text-primary-500 max-lg:underline max-lg:underline-offset-8"
+            @click="item.btn === 'فرصت های شغلی' && navigateTo('/ad')"
           >
             {{ item.btn }}
             <Icon name="svg:arrow-left-2" size="10" class="max-lg:hidden" />

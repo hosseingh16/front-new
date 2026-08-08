@@ -1,21 +1,30 @@
 <template>
   <div class="bg-surface-50 pb-12">
-    <section
-      class="bg-cover bg-center bg-no-repeat"
-      :style="{ backgroundImage: `url('${coverImage}')` }"
-    >
-      <div class="custom-pad pt-6 pb-12">
-        <nav class="text-sm text-text-passive">
-          <NuxtLink to="/" class="transition-colors hover:text-primary-500">
-            <Icon name="svg:home" size="16" />
-          </NuxtLink>
-          <span class="mx-2">/</span>
-          <NuxtLink to="/jobs" class="transition-colors hover:text-primary-500">
-            فرصت‌های شغلی
-          </NuxtLink>
-          <span class="mx-2">/</span>
-          <span class="text-text-tertiary">{{ ad?.title ?? "آگهی" }}</span>
-        </nav>
+  <section
+    class="bg-cover bg-center bg-no-repeat"
+    :style="{ backgroundImage: `url('${coverImage}')` }"
+  >
+    <div class="custom-pad pt-6 pb-12">
+      <nav class="text-sm text-text-passive">
+        <NuxtLink to="/" class="transition-colors hover:text-primary-500">
+          <Icon name="svg:home" size="16" />
+        </NuxtLink>
+        <span class="mx-2">/</span>
+        <NuxtLink to="/ad" class="transition-colors hover:text-primary-500">
+          فرصت‌های شغلی
+        </NuxtLink>
+        <span class="mx-2">/</span>
+        <span class="text-text-tertiary">{{ ad?.title ?? 'آگهی' }}</span>
+      </nav>
+    </div>
+
+    <div class="custom-pad pb-0">
+      <div
+        v-if="loading && !ad"
+        class="mt-4 animate-pulse rounded-t-2xl bg-surface-50 p-6"
+      >
+        <div class="h-20 rounded-xl bg-surface-200" />
+        <div class="mt-6 h-10 rounded bg-surface-200" />
       </div>
 
       <div class="custom-pad pb-0">

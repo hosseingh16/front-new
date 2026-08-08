@@ -201,9 +201,9 @@ async function confirmRemovePrior() {
   try {
     await api.delete(`cv/prior/${id}`);
     experiencesItems.value.splice(index, 1);
-    await refreshUser();
     removeModalRef.value?.closeModal();
     $toast.success("سابقه کاری با موفقیت حذف شد");
+    await refreshUser();
   } catch (error: any) {
     $toast.error(error?.message || "خطا در حذف سابقه کاری");
   } finally {

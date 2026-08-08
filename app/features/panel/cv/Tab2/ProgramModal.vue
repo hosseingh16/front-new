@@ -13,7 +13,7 @@
 
     <m-dialog ref="modalRef" :width="850">
       <Titr>{{ modalTitle }}</Titr>
-      <form @submit="onSubmit" class="mt-6">
+      <form @submit.prevent="onSubmit" class="mt-6">
         <div class="grid md:grid-cols-2 gap-x-4 gap-y-12">
           <m-form-select2
             name="programName"
@@ -146,7 +146,11 @@ function resetSkillFields(type: 0 | 1) {
 // Form
 const formSchema = Yup.object({
   programName: Yup.mixed<string | number>()
-    .required('نام نرم‌افزار حسابداری انتخاب نشده است'),
+    .test(
+      'required',
+      'نام نرم‌افزار حسابداری انتخاب نشده است',
+      (value) => value != null && value !== '',
+    ),
   programType: Yup.number(),
   generalSkill: Yup.number(),
   slider1: Yup.number(),

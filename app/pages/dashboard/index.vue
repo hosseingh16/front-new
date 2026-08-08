@@ -16,8 +16,8 @@
 
       <div class="mt-4 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-5">
         <EmployerDashboardShortcutCard
-          v-for="card in shortcutCards"
-          :key="card.id"
+          v-for="card in dashboardActionCards"
+          :key="card.key"
           :title="card.title"
           :subtitle="card.subtitle"
           :icon="card.icon"
@@ -79,32 +79,15 @@ const { fetchStatus } = useUserStatus();
 const { ads, adGroups, loading, initialized } = useEmployerAds();
 const { total: taxReturnTotal, initialized: taxReturnsInitialized } =
   useTaxReturns();
+const { dashboardActions, fetchMenu } = usePanelConfig();
 
 const statusAlert = ref<Omit<StatusAlert, "id"> | null>(null);
 const statusAlertId = ref<string | null>(null);
 
 onMounted(async () => {
   if (!import.meta.client) return;
-
-  const status = await fetchStatus();
-  if (!status) return;
-
-  const alert = getDashboardStatusAlert(status);
-  if (!alert) return;
-
-  if (alert.dismissible) {
-    const storageKey = getDashboardStatusAlertStorageKey(alert.id);
-    if (localStorage.getItem(storageKey) === "1") return;
-  }
-
-  statusAlertId.value = alert.id;
-  statusAlert.value = {
-    type: alert.type,
-    message: alert.message,
-    actionLabel: alert.actionLabel,
-    actionTo: alert.actionTo,
-    dismissible: alert.dismissible,
-  };
+  showCompanyBanner.value = localStorage.getItem(BANNER_STORAGE_KEY) !== "1";
+  await fetchMenu(true);
 });
 
 function dismissStatusAlert() {
@@ -121,48 +104,47 @@ function dismissStatusAlert() {
 
 const activeAdsCount = computed(() => adGroups.value.active.length);
 
-const shortcutCards = computed(() => [
-  {
-    id: "opportunities",
-    title: "فرصت‌های شغلی",
-    subtitle: "به زودی",
-    icon: "svg:illust-job-user",
-    to: "",
-    disabled: true,
-  },
-  {
-    id: "fulltime",
-    title: "آگهی تمام‌وقت",
-    subtitle: `${toPersianDigits(activeAdsCount.value)} آگهی`,
-    icon: "svg:illust-create-job",
-    to: "/dashboard/employer/ads/create",
-    disabled: false,
-  },
-  {
-    id: "parttime",
-    title: "آگهی نیمه‌وقت",
-    subtitle: "۰ آگهی",
-    icon: "svg:illust-create-bag",
-    to: "/dashboard/employer/ads/create",
-    disabled: false,
-  },
-  {
-    id: "project",
-    title: "پروژه حسابداری",
-    subtitle: "به زودی",
-    icon: "svg:illust-project-user",
-    to: "",
-    disabled: true,
-  },
-  {
-    id: "consulting",
-    title: "نوبت مشاوره",
-    subtitle: "به زودی",
-    icon: "svg:illust-consulting-user",
-    to: "",
-    disabled: true,
-  },
+const ADS_DASHBOARD_ACTION_KEYS = new Set([
+  "dashboard_action_opportunities",
+  "dashboard_action_ads",
 ]);
+
+const dashboardActionCards = computed(() =>
+  dashboardActions.value.map((action) => {
+    const isAdsAction =
+      action.key != null && ADS_DASHBOARD_ACTION_KEYS.has(action.key);
+
+    return {
+      key: action.key ?? action.label,
+      title: action.label,
+      subtitle: resolveDashboardSubtitle(action, isAdsAction),
+      icon: action.dashboardIcon ?? action.icon,
+      to: isAdsAction ? "/dashboard/ad" : action.disabled ? "" : action.to,
+      disabled: isAdsAction ? false : action.disabled,
+    };
+  }),
+);
+
+function resolveDashboardSubtitle(
+  action: (typeof dashboardActions.value)[number],
+  isAdsAction = false,
+) {
+  if (isAdsAction) return undefined;
+
+  if (action.disabled) {
+    return action.dashboardSubtitle ?? "به زودی";
+  }
+
+  if (action.key === "dashboard_action_create_fulltime_ad") {
+    return `${toPersianDigits(activeAdsCount.value)} آگهی`;
+  }
+
+  if (action.key === "dashboard_action_create_parttime_ad") {
+    return "۰ آگهی";
+  }
+
+  return action.dashboardSubtitle;
+}
 
 const performanceSubtitle = computed(() => {
   if (!taxReturnsInitialized.value) return "۰ ثبت شده";

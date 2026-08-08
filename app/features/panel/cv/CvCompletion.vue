@@ -15,15 +15,18 @@
       </div>
       <div
         class="flex justify-center items-center h-6 w-8 rounded-lg shrink-0"
-        :class="item.complete ? 'bg-success/10' : 'bg-[#EF403514]'"
+        :class="
+          item.complete
+            ? 'bg-success/10 text-[#009F65]'
+            : 'bg-[#EF403514] text-danger-500'
+        "
       >
         <Icon
           v-if="item.complete"
           name="lucide:check-check"
           size="16"
-          class="text-[#009F65]"
         />
-        <Icon v-else name="lucide:x" size="16" class="text-danger-500" />
+        <Icon v-else name="lucide:x" size="16" />
       </div>
     </div>
   </div>

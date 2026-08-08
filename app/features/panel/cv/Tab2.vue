@@ -226,8 +226,8 @@ async function saveSkills() {
       standard_statements: skills.standardStatements,
     });
     savedSkills.value = { ...skills };
-    await refreshUser();
     $toast.success("مهارت‌ها با موفقیت ذخیره شد");
+    await refreshUser();
   } catch (error) {
     $toast.error(getApiErrorMessage(error, "خطا در ذخیره مهارت‌ها"));
   } finally {
@@ -245,8 +245,8 @@ async function savePotential() {
       terminals: potential.terminals,
     });
     savedPotential.value = { ...potential };
-    await refreshUser();
     $toast.success("ارزیابی بیمه‌ای و مالیاتی با موفقیت ذخیره شد");
+    await refreshUser();
   } catch (error) {
     $toast.error(
       getApiErrorMessage(error, "خطا در ذخیره ارزیابی بیمه‌ای و مالیاتی"),

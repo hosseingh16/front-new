@@ -16,7 +16,7 @@
         {{ fullName }}
       </h1>
       <BookmarkToggleButton
-        v-if="user?.id"
+        v-if="user?.id && showBookmark"
         :target-id="user.id"
         type="users"
         label="نشان کردن"
@@ -30,104 +30,97 @@
     </div>
 
     <div
-      class="grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_300px]"
+      class="grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_272px]"
       :class="embedded ? 'gap-4' : 'mt-6 p-5'"
     >
       <div class="min-w-0 space-y-4">
-        <div class="flex items-center gap-6 border-b border-surface-200">
+        <div class="flex items-center gap-6 border-b border-gray-default px-6">
           <button
             type="button"
-            class="flex cursor-pointer items-center gap-2 border-b-2 pb-2 text-sm font-semibold transition-colors"
+            class="flex cursor-pointer items-center gap-2 border-b-2 pb-2 text-sm transition-colors"
             :class="
               activeTab === 'basic'
-                ? 'border-primary-500 text-primary-500'
-                : 'border-transparent text-text-passive'
+                ? 'border-primary-500 font-yb-bold text-primary-500'
+                : 'border-transparent font-normal text-text-primary'
             "
             @click="activeTab = 'basic'"
           >
-            <Icon name="lucide:user" size="16" />
+            <span
+              class="flex h-6 w-6 items-center justify-center rounded-full p-1"
+              :class="
+                activeTab === 'basic' ? 'bg-primary-500/8' : 'bg-gray-500/8'
+              "
+            >
+              <Icon name="lucide:user" size="16" />
+            </span>
             اطلاعات پایه
           </button>
           <button
             type="button"
-            class="flex cursor-pointer items-center gap-2 border-b-2 pb-2 text-sm font-semibold transition-colors"
+            class="flex cursor-pointer items-center gap-2 border-b-2 pb-2 text-sm transition-colors"
             :class="
               activeTab === 'job'
-                ? 'border-primary-500 text-primary-500'
-                : 'border-transparent text-text-passive'
+                ? 'border-primary-500 font-yb-bold text-primary-500'
+                : 'border-transparent font-normal text-text-primary'
             "
             @click="activeTab = 'job'"
           >
-            <Icon name="svg:bag-1" size="16" />
+            <span
+              class="flex h-6 w-6 items-center justify-center rounded-full p-1"
+              :class="
+                activeTab === 'job' ? 'bg-primary-500/8' : 'bg-gray-500/8'
+              "
+            >
+              <Icon name="svg:bag-1" size="16" />
+            </span>
             اطلاعات شغلی
           </button>
         </div>
 
-        <main v-if="activeTab === 'basic'" class="space-y-4">
-          <section class="rounded-2xl border border-gray-default bg-white p-5">
-            <div class="space-y-5">
-              <div class="flex w-full items-center gap-1">
-                <span
-                  class="h-1 w-2 shrink-0 rounded-full bg-linear-to-b from-[#3B6EF8] to-primary-500"
-                  aria-hidden="true"
-                />
-                <h2 class="font-yb-bold text-base text-text-primay">
-                  اطلاعات پایه
-                </h2>
-              </div>
-
-              <div class="flex justify-center">
-                <div
-                  class="h-28 w-28 overflow-hidden rounded-full border-4 border-white bg-[#ECF4D9] shadow-sm"
-                >
-                  <img
-                    v-if="avatar"
-                    :src="avatar"
-                    :alt="fullName"
-                    class="h-full w-full object-cover"
-                  />
-                  <div
-                    v-else
-                    class="flex h-full w-full items-end justify-center bg-linear-to-b from-[#c5dff5] to-[#9ec5e8]"
-                  >
-                    <span class="pb-4 font-yb-bold text-2xl text-text-tertiary">
-                      {{ userInitial }}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div class="grid gap-x-8 gap-y-4 sm:grid-cols-2">
-                <div
-                  v-for="field in basicInfoFields"
-                  :key="field.label"
-                  class="flex flex-col items-start gap-1"
-                >
-                  <span class="text-caption text-text-passive">{{
-                    field.label
-                  }}</span>
-                  <span class="font-yb-bold text-base text-text-primay">{{
-                    field.value
-                  }}</span>
-                </div>
-              </div>
-            </div>
-          </section>
-
+        <main v-if="activeTab === 'basic'" class="space-y-8">
           <section
-            v-if="aboutMe"
-            class="rounded-xl border border-surface-200 bg-white p-5"
+            v-if="avatar || visibleBasicInfoFields.length"
+            class="rounded-2xl bg-white p-6"
           >
             <div class="flex w-full items-center gap-1">
               <span
                 class="h-1 w-2 shrink-0 rounded-full bg-linear-to-b from-[#3B6EF8] to-primary-500"
                 aria-hidden="true"
               />
-              <h2 class="font-yb-bold text-base text-text-primay">درباره من</h2>
+              <h2 class="font-yb-bold text-base text-text-primay">
+                اطلاعات پایه
+              </h2>
             </div>
-            <p class="mt-4 text-sm leading-8 text-text-secondary">
-              {{ aboutMe }}
-            </p>
+
+            <div
+              v-if="avatar"
+              class="mt-4 flex flex-col items-center justify-center py-2"
+            >
+              <div
+                class="h-[92px] w-[92px] overflow-hidden rounded-full border-4 border-white bg-[#ECF4D9] shadow-sm"
+              >
+                <img
+                  :src="avatar"
+                  :alt="fullName"
+                  class="h-full w-full object-cover"
+                />
+              </div>
+              <span class="mt-2 text-base text-text-tertiary">تصویر پروفایل:</span>
+            </div>
+
+            <div
+              v-if="visibleBasicInfoFields.length"
+              class="grid gap-x-4 gap-y-8 sm:grid-cols-2"
+              :class="avatar ? 'mt-6' : 'mt-4'"
+            >
+              <ResumeReadOnlyField
+                v-for="field in visibleBasicInfoFields"
+                :key="field.label"
+                :label="field.label"
+                :value="field.value"
+                :class="field.fullWidth ? 'sm:col-span-2' : undefined"
+              />
+            </div>
           </section>
         </main>
 
@@ -173,7 +166,10 @@
               {{ jobTitle }}
             </p>
 
-            <div class="mt-10 flex w-full items-center gap-1">
+            <div
+              v-if="visiblePersonalSidebarItems.length"
+              class="mt-10 flex w-full items-center gap-1"
+            >
               <span
                 class="h-1 w-2 shrink-0 rounded-full bg-linear-to-b from-[#3B6EF8] to-primary-500"
                 aria-hidden="true"
@@ -182,9 +178,12 @@
                 مشخصات فردی
               </h3>
             </div>
-            <div class="mt-4 space-y-2 text-sm text-text-tertiary">
+            <div
+              v-if="visiblePersonalSidebarItems.length"
+              class="mt-4 space-y-2 text-sm text-text-tertiary"
+            >
               <div
-                v-for="item in personalSidebarItems"
+                v-for="item in visiblePersonalSidebarItems"
                 :key="item.label"
                 class="flex items-center justify-between gap-3 py-2"
               >
@@ -199,7 +198,7 @@
             </div>
 
             <div
-              v-if="showContactInfo"
+              v-if="visibleContactSidebarItems.length"
               class="mt-10 flex w-full items-center gap-1"
             >
               <span
@@ -211,13 +210,12 @@
               </h3>
             </div>
             <div
-              v-if="showContactInfo"
+              v-if="visibleContactSidebarItems.length"
               class="mt-4 space-y-3 text-sm text-text-tertiary"
             >
               <div
-                v-for="item in contactSidebarItems"
+                v-for="item in visibleContactSidebarItems"
                 :key="item.label"
-                v-show="item.value !== '—'"
                 class="flex items-center justify-between gap-3 py-2"
               >
                 <div class="flex items-center gap-2">
@@ -235,7 +233,10 @@
               </div>
             </div>
 
-            <div class="mt-10 flex w-full items-center gap-1">
+            <div
+              v-if="visibleSalarySidebarItems.length"
+              class="mt-10 flex w-full items-center gap-1"
+            >
               <span
                 class="h-1 w-2 shrink-0 rounded-full bg-linear-to-b from-[#3B6EF8] to-primary-500"
                 aria-hidden="true"
@@ -244,9 +245,12 @@
                 حقوق و سابقه کاری
               </h3>
             </div>
-            <div class="mt-4 space-y-2 text-sm text-text-tertiary">
+            <div
+              v-if="visibleSalarySidebarItems.length"
+              class="mt-4 space-y-2 text-sm text-text-tertiary"
+            >
               <div
-                v-for="item in salarySidebarItems"
+                v-for="item in visibleSalarySidebarItems"
                 :key="item.label"
                 class="flex items-center justify-between gap-3 py-2"
               >
@@ -303,6 +307,7 @@
 <script setup lang="ts">
 import UserResumeJobTab from "./UserResumeJobTab.vue";
 import BookmarkToggleButton from "~/components/Elements/BookmarkToggleButton.vue";
+import ResumeReadOnlyField from "~/components/Resume/ReadOnlyField.vue";
 import asidePattern from "~/assets/vectors/aside-pattern.svg?url";
 import linkIcon from "~/assets/vectors/social/link.svg?url";
 import linkedinIcon from "~/assets/vectors/social/linkedin.svg?url";
@@ -313,10 +318,11 @@ import type { UserResume } from "~/types/user-resume";
 import {
   displayResumeValue,
   getResumeAgeLabel,
-  getResumeBirthYearLabel,
+  getResumeBirthDateLabel,
   getResumeEmploymentStatus,
   getResumeFullName,
   getResumeGenderLabel,
+  hasResumeValue,
   getResumeHighestDegree,
   getResumeJobTitle,
   getResumeLocationLabel,
@@ -334,18 +340,21 @@ const props = defineProps<{
   user: UserResume | null;
   loading?: boolean;
   embedded?: boolean;
+  showBookmark?: boolean;
+  showFullContact?: boolean;
 }>();
 
 const activeTab = ref<UserResumeTab>("basic");
 
 const { items: lookupItems } = useLookups(
-  "job_titles,experience_levels,salary_ranges,military_statuses,education_levels",
+  "job_titles,experience_levels,salary_ranges,military_statuses,education_levels,birth_years",
 );
 const jobTitles = lookupItems("job_titles");
 const experienceLevels = lookupItems("experience_levels");
 const salaryRanges = lookupItems("salary_ranges");
 const militaryStatuses = lookupItems("military_statuses");
 const educationLevels = lookupItems("education_levels");
+const birthYears = lookupItems("birth_years");
 
 const personal = computed(() => getResumePersonal(props.user));
 const fullName = computed(() => getResumeFullName(props.user));
@@ -361,20 +370,8 @@ const userInitial = computed(() => fullName.value.charAt(0) || "ک");
 
 const basicInfoFields = computed(() => [
   { label: "نام کامل:", value: fullName.value },
-  { label: "وضعیت اشتغال:", value: getResumeEmploymentStatus(props.user) },
-  {
-    label: "حقوق درخواستی:",
-    value: getResumeSalary(props.user, salaryRanges.value),
-  },
-  { label: "جنسیت:", value: getResumeGenderLabel(personal.value?.gender) },
-  {
-    label: "وضعیت تاهل:",
-    value: getResumeMaritalStatusLabel(personal.value?.marital_status),
-  },
-  { label: "استان:", value: displayResumeValue(personal.value?.province_name) },
-  { label: "شهر:", value: displayResumeValue(personal.value?.city_name) },
-  { label: "محله:", value: displayResumeValue(personal.value?.region_name) },
   { label: "عنوان شغلی:", value: jobTitle.value },
+  { label: "وضعیت اشتغال:", value: getResumeEmploymentStatus(props.user) },
   {
     label: "سابقه کار:",
     value: getResumeWorkExperienceLabel(
@@ -383,11 +380,17 @@ const basicInfoFields = computed(() => [
     ),
   },
   {
-    label: "سال تولد / سن:",
-    value: `${getResumeBirthYearLabel(
-      personal.value?.birthdate,
-    )} / ${getResumeAgeLabel(personal.value?.birthdate)}`,
+    label: "حقوق درخواستی:",
+    value: getResumeSalary(props.user, salaryRanges.value),
   },
+  {
+    label: "سال تولد:",
+    value: getResumeBirthDateLabel(
+      personal.value?.birthdate,
+      birthYears.value,
+    ),
+  },
+  { label: "جنسیت:", value: getResumeGenderLabel(personal.value?.gender) },
   {
     label: "وضعیت خدمت سربازی:",
     value: getResumeMilitaryStatusLabel(
@@ -395,7 +398,28 @@ const basicInfoFields = computed(() => [
       militaryStatuses.value,
     ),
   },
+  {
+    label: "وضعیت تاهل:",
+    value: getResumeMaritalStatusLabel(personal.value?.marital_status),
+  },
+  {
+    label: "استان محل سکونت:",
+    value: displayResumeValue(personal.value?.province_name),
+  },
+  {
+    label: "شهر محل سکونت:",
+    value: displayResumeValue(personal.value?.city_name),
+  },
+  {
+    label: "منطقه محل سکونت:",
+    value: displayResumeValue(personal.value?.region_name),
+  },
+  { label: "درباره من:", value: aboutMe.value, fullWidth: true },
 ]);
+
+const visibleBasicInfoFields = computed(() =>
+  basicInfoFields.value.filter((field) => hasResumeValue(field.value)),
+);
 
 type SidebarItem = {
   label: string;
@@ -448,20 +472,37 @@ const personalSidebarItems = computed<SidebarItem[]>(() => [
   },
 ]);
 
-const contactSidebarItems = computed<SidebarItem[]>(() => [
-  {
-    label: "شماره همراه",
-    value: displayResumeValue(personal.value?.cellphone || props.user?.phone),
-    icon: "lucide:smartphone",
-    ltr: true,
-  },
-  {
-    label: "پست الکترونیکی",
-    value: maskResumeEmail(personal.value?.email || props.user?.email),
-    icon: "lucide:mail",
-    ltr: true,
-  },
-]);
+const visiblePersonalSidebarItems = computed(() =>
+  personalSidebarItems.value.filter((item) => hasResumeValue(item.value)),
+);
+
+const contactSidebarItems = computed<SidebarItem[]>(() => {
+  const phone = displayResumeValue(
+    personal.value?.cellphone || props.user?.phone,
+  );
+  const email = props.showFullContact
+    ? displayResumeValue(personal.value?.email || props.user?.email)
+    : maskResumeEmail(personal.value?.email || props.user?.email);
+
+  return [
+    {
+      label: "شماره همراه",
+      value: phone,
+      icon: "lucide:smartphone",
+      ltr: true,
+    },
+    {
+      label: "پست الکترونیکی",
+      value: email,
+      icon: "lucide:mail",
+      ltr: true,
+    },
+  ];
+});
+
+const visibleContactSidebarItems = computed(() =>
+  contactSidebarItems.value.filter((item) => hasResumeValue(item.value)),
+);
 
 const salarySidebarItems = computed<SidebarItem[]>(() => [
   {
@@ -484,10 +525,8 @@ const salarySidebarItems = computed<SidebarItem[]>(() => [
   },
 ]);
 
-const showContactInfo = computed(
-  () =>
-    Boolean(personal.value?.cellphone || props.user?.phone) ||
-    Boolean(personal.value?.email || props.user?.email),
+const visibleSalarySidebarItems = computed(() =>
+  salarySidebarItems.value.filter((item) => hasResumeValue(item.value)),
 );
 
 function getShareUrl() {

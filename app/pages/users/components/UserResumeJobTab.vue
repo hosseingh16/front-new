@@ -1,6 +1,9 @@
 <template>
   <div class="space-y-4">
-    <section class="rounded-2xl border border-gray-default bg-white p-4 md:p-5">
+    <section
+      v-if="educationItems.length"
+      class="rounded-2xl border border-gray-default bg-white p-4 md:p-5"
+    >
       <div class="flex w-full items-center gap-1">
         <span
           class="h-1 w-2 shrink-0 rounded-full bg-linear-to-b from-[#3B6EF8] to-primary-500"
@@ -9,9 +12,7 @@
         <h2 class="font-yb-bold text-base text-text-primay">اطلاعات تحصیلی</h2>
       </div>
 
-      <NoResult v-if="!educationItems.length" wrapper-class="py-10" />
-
-      <div v-else class="mt-4 space-y-4">
+      <div class="mt-4 space-y-4">
         <div
           v-for="item in educationItems"
           :key="item.id"
@@ -59,7 +60,10 @@
       </div>
     </section>
 
-    <section class="rounded-2xl border border-gray-default bg-white p-4 md:p-5">
+    <section
+      v-if="workItems.length"
+      class="rounded-2xl border border-gray-default bg-white p-4 md:p-5"
+    >
       <div class="flex w-full items-center gap-1">
         <span
           class="h-1 w-2 shrink-0 rounded-full bg-linear-to-b from-[#3B6EF8] to-primary-500"
@@ -68,9 +72,7 @@
         <h2 class="font-yb-bold text-base text-text-primay">سوابق کاری</h2>
       </div>
 
-      <NoResult v-if="!workItems.length" wrapper-class="py-10" />
-
-      <div v-else class="mt-4 space-y-4">
+      <div class="mt-4 space-y-4">
         <div
           v-for="item in workItems"
           :key="item.id"
@@ -171,7 +173,10 @@
       </div>
     </section>
 
-    <section class="rounded-2xl border border-gray-default bg-white p-4 md:p-5">
+    <section
+      v-if="hasSkillData"
+      class="rounded-2xl border border-gray-default bg-white p-4 md:p-5"
+    >
       <div class="flex w-full items-center gap-1">
         <span
           class="h-1 w-2 shrink-0 rounded-full bg-linear-to-b from-[#3B6EF8] to-primary-500"
@@ -184,7 +189,7 @@
         class="mt-4 grid grid-cols-1 gap-x-4 gap-y-6 md:grid-cols-2 md:gap-y-10"
       >
         <UserResumeSkillMeter
-          v-for="skill in skillItems"
+          v-for="skill in visibleSkillItems"
           :key="skill.label"
           :label="skill.label"
           :percent="skill.percent"
@@ -192,7 +197,10 @@
       </div>
     </section>
 
-    <section class="rounded-2xl border border-gray-default bg-white p-4 md:p-5">
+    <section
+      v-if="hasTaxSkillData"
+      class="rounded-2xl border border-gray-default bg-white p-4 md:p-5"
+    >
       <div class="flex w-full items-center gap-1">
         <span
           class="h-1 w-2 shrink-0 rounded-full bg-linear-to-b from-[#3B6EF8] to-primary-500"
@@ -207,7 +215,7 @@
         class="mt-4 grid grid-cols-1 gap-x-4 gap-y-6 md:grid-cols-2 md:gap-y-10"
       >
         <UserResumeSkillMeter
-          v-for="skill in taxSkillItems"
+          v-for="skill in visibleTaxSkillItems"
           :key="skill.label"
           :label="skill.label"
           :percent="skill.percent"
@@ -215,7 +223,10 @@
       </div>
     </section>
 
-    <section class="rounded-2xl border border-gray-default bg-white p-4 md:p-5">
+    <section
+      v-if="attachment"
+      class="rounded-2xl border border-gray-default bg-white p-4 md:p-5"
+    >
       <div class="flex w-full items-center gap-1">
         <span
           class="h-1 w-2 shrink-0 rounded-full bg-linear-to-b from-[#3B6EF8] to-primary-500"
@@ -224,20 +235,7 @@
         <h2 class="font-yb-bold text-base text-text-primay">فایل ضمیمه</h2>
       </div>
 
-      <div class="mt-4 flex items-start gap-2">
-        <Icon
-          name="lucide:check"
-          size="18"
-          class="mt-0.5 shrink-0 text-[#009F65]"
-        />
-        <p class="text-sm leading-7 text-text-passive">
-          در صورتی که فایل رزومه یا توضیحات جداگانه دارید می‌توانید آن را آپلود
-          کنید. این فایل برای کارفرمایان قابل مشاهده است.
-        </p>
-      </div>
-
       <div
-        v-if="attachment"
         class="mt-4 flex flex-col gap-3 rounded-xl border border-surface-200 bg-surface-50 p-4 sm:flex-row sm:items-center sm:justify-between"
       >
         <div class="flex min-w-0 items-center gap-3">
@@ -264,7 +262,6 @@
 </template>
 
 <script setup lang="ts">
-import NoResult from "~/components/Elements/NoResult.vue";
 import UserResumeSkillMeter from "./UserResumeSkillMeter.vue";
 import type { UserResume } from "~/types/user-resume";
 import {
@@ -312,4 +309,23 @@ const softwareItems = computed(() => getResumeSoftwareItems(props.user));
 const skillItems = computed(() => getResumeSkillItems(props.user));
 const taxSkillItems = computed(() => getResumeTaxSkillItems(props.user));
 const attachment = computed(() => resolveResumeAttachment(props.user));
+
+const visibleSkillItems = computed(() =>
+  skillItems.value.filter((item) => item.percent > 0),
+);
+
+const visibleTaxSkillItems = computed(() =>
+  taxSkillItems.value.filter((item) => item.percent > 0),
+);
+
+const hasSkillData = computed(
+  () =>
+    Boolean(props.user.resume_skills) && visibleSkillItems.value.length > 0,
+);
+
+const hasTaxSkillData = computed(
+  () =>
+    Boolean(props.user.resume_potential) &&
+    visibleTaxSkillItems.value.length > 0,
+);
 </script>

@@ -1,31 +1,59 @@
 <template>
   <div>
     <NuxtLink
+      v-if="!item.disabled && !item.children?.length"
+      :to="item.to"
       class="flex"
-      :to="item.children?.length ? '' : item.to"
-      @click="item.children?.length ? emit('toggle') : undefined"
     >
-      <button
+      <span
         class="btn btn-block btn-ghost flex"
-        :class="[
-          item.children ? 'items-center justify-between' : 'justify-start',
-          { 'bg-primary-50': activePath === item.to },
-          activePath !== item.to
-            ? 'hover:bg-gray-100 dark:hover:bg-surface-200'
-            : 'hover:bg-primary-50',
-        ]"
+        :class="itemButtonClass"
       >
         <div class="flex items-center justify-start">
-          <Icon :name="`${item.icon}`" class="text-text-passive" size="16" />
-          <span class="mr-2 text-text-secondary">{{ item.label }}</span>
+          <Icon
+            :name="`${item.icon}`"
+            class="text-text-passive"
+            size="16"
+          />
+          <span class="mr-2 text-text-secondary">
+            {{ item.label }}
+          </span>
+        </div>
+      </span>
+    </NuxtLink>
+
+    <div
+      v-else
+      class="flex"
+      @click="onItemClick"
+    >
+      <button
+        type="button"
+        class="btn btn-block btn-ghost flex"
+        :class="itemButtonClass"
+        :disabled="item.disabled"
+      >
+        <div class="flex items-center justify-start">
+          <Icon
+            :name="`${item.icon}`"
+            class="text-text-passive"
+            size="16"
+            :class="{ 'opacity-50': item.disabled }"
+          />
+          <span
+            class="mr-2 text-text-secondary"
+            :class="{ 'opacity-50': item.disabled }"
+          >
+            {{ item.label }}
+          </span>
         </div>
         <icons-chevron
-          v-if="item.children"
+          v-if="item.children?.length"
           class="transition-all duration-300"
-          :class="{ 'rotate-180': open }"
+          :class="{ 'rotate-180': open, 'opacity-50': item.disabled }"
         />
       </button>
-    </NuxtLink>
+    </div>
 
     <Transition name="accordion">
       <div v-if="item.children?.length && open" class="mr-6 flex text-sm">
@@ -42,30 +70,43 @@
           />
         </div>
         <div class="w-full">
-          <NuxtLink
-            v-for="child in item.children"
-            :key="child.key ?? child.to"
-            :to="child.to"
-          >
+          <template v-for="child in item.children" :key="child.key ?? child.to">
+            <NuxtLink v-if="!child.disabled" :to="child.to">
+              <span
+                class="btn btn-block btn-ghost my-2 flex justify-start pr-2"
+                :class="childButtonClass(child)"
+              >
+                <div class="flex items-center justify-start">
+                  <Icon
+                    :name="`${child.icon}`"
+                    size="16"
+                    class="text-text-passive"
+                  />
+                  <span class="mr-2 text-text-secondary">
+                    {{ child.label }}
+                  </span>
+                </div>
+              </span>
+            </NuxtLink>
             <button
-              class="btn btn-block btn-ghost flex justify-start pr-2 hover:bg-gray-100 dark:hover:bg-surface-200 my-2"
-              :class="[
-                { 'bg-primary-50': activePath === child.to },
-                activePath !== child.to
-                  ? 'hover:bg-gray-100 dark:hover:bg-surface-200'
-                  : 'hover:bg-primary-50',
-              ]"
+              v-else
+              type="button"
+              class="btn btn-block btn-ghost my-2 flex justify-start pr-2"
+              :class="childButtonClass(child)"
+              disabled
             >
               <div class="flex items-center justify-start">
                 <Icon
                   :name="`${child.icon}`"
                   size="16"
-                  class="text-text-passive"
+                  class="text-text-passive opacity-50"
                 />
-                <span class="mr-2 text-text-secondary">{{ child.label }}</span>
+                <span class="mr-2 text-text-secondary opacity-50">
+                  {{ child.label }}
+                </span>
               </div>
             </button>
-          </NuxtLink>
+          </template>
         </div>
       </div>
     </Transition>
@@ -75,7 +116,7 @@
 <script setup lang="ts">
 import type { MenuItem } from "~/types/panel-config";
 
-defineProps<{
+const props = defineProps<{
   item: MenuItem;
   activePath: string;
   open?: boolean;
@@ -84,4 +125,30 @@ defineProps<{
 const emit = defineEmits<{
   toggle: [];
 }>();
+
+const itemButtonClass = computed(() => [
+  props.item.children ? "items-center justify-between" : "justify-start",
+  { "bg-primary-50": !props.item.disabled && props.activePath === props.item.to },
+  props.item.disabled
+    ? "cursor-not-allowed opacity-55 hover:bg-transparent"
+    : props.activePath !== props.item.to
+      ? "hover:bg-gray-100 dark:hover:bg-surface-200"
+      : "hover:bg-primary-50",
+]);
+
+function childButtonClass(child: MenuItem) {
+  return [
+    { "bg-primary-50": !child.disabled && props.activePath === child.to },
+    child.disabled
+      ? "cursor-not-allowed opacity-55 hover:bg-transparent"
+      : props.activePath !== child.to
+        ? "hover:bg-gray-100 dark:hover:bg-surface-200"
+        : "hover:bg-primary-50",
+  ];
+}
+
+function onItemClick() {
+  if (props.item.disabled) return;
+  if (props.item.children?.length) emit("toggle");
+}
 </script>

@@ -176,12 +176,12 @@ async function syncEducation(action: "save" | "remove" = "save") {
     await api.post("cv/sync-education", {
       education_items: educationItems.value,
     });
-    await refreshUser();
     $toast.success(
       action === "remove"
         ? "اطلاعات تحصیلی با موفقیت حذف شد"
         : "اطلاعات تحصیلی با موفقیت ذخیره شد",
     );
+    await refreshUser();
     return true;
   } catch (error) {
     console.error("Sync failed:", error);

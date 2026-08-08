@@ -1,13 +1,13 @@
 <template>
-  <div class="flex items-center gap-3 rounded-xl px-3 py-3">
+  <div class="flex w-full items-center justify-start gap-2 rounded-full">
     <div
-      class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#E8F0FE] text-primary-500"
+      class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#4864E114] text-primary-500"
     >
       <Icon :name="icon" size="20" />
     </div>
-    <div class="min-w-0">
-      <p class="text-xs text-text-passive">{{ label }}</p>
-      <p class="mt-0.5 text-sm font-yb-bold text-text-tertiary">{{ value }}</p>
+    <div class="min-w-0 text-right">
+      <p class="text-sm text-text-passive">{{ label }}</p>
+      <p class="mt-0.5 text-base font-semibold text-text-secondary">{{ value }}</p>
     </div>
   </div>
 </template>

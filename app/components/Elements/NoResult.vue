@@ -1,6 +1,14 @@
 <template>
   <div class="py-12 text-center" :class="wrapperClass">
-    <Icon :name="icon" :size="iconSize" />
+    <img
+      v-if="iconSrc"
+      :src="iconSrc"
+      alt=""
+      class="mx-auto block object-contain"
+      :width="iconSize"
+      :height="iconSize"
+    />
+    <Icon v-else :name="icon" :size="iconSize" />
     <h5 :class="['font-yb-bold text-lg text-text-tertiary', { '-mt-[70px]': !!iconSize && iconSize >= 160 }]">
       {{ title }}
     </h5>
@@ -13,7 +21,12 @@
       :to="actionTo"
       class="btn btn-success mt-6 h-11 gap-2 px-8"
     >
-      <Icon v-if="actionIcon" :name="actionIcon" size="16" class="text-white" />
+      <Icon
+        v-if="actionIcon"
+        :name="actionIcon"
+        :size="actionIconSize"
+        class="shrink-0 brightness-0 invert"
+      />
       {{ actionLabel }}
     </NuxtLink>
     <button
@@ -22,7 +35,12 @@
       class="btn btn-success mt-6 h-11 gap-2 px-8"
       @click="emit('action')"
     >
-      <Icon v-if="actionIcon" :name="actionIcon" size="16" class="text-white" />
+      <Icon
+        v-if="actionIcon"
+        :name="actionIcon"
+        :size="actionIconSize"
+        class="shrink-0 brightness-0 invert"
+      />
       {{ actionLabel }}
     </button>
   </div>
@@ -36,9 +54,11 @@ withDefaults(
     iconSize?: number
     wrapperClass?: string
     icon?: string
+    iconSrc?: string
     actionLabel?: string
     actionTo?: string
     actionIcon?: string
+    actionIconSize?: number | string
   }>(),
   {
     title: 'فرصت شغلی موجود نیست',
@@ -46,9 +66,11 @@ withDefaults(
     iconSize: 240,
     wrapperClass: '',
     icon: 'svg:no-result',
+    iconSrc: '',
     actionLabel: '',
     actionTo: '',
     actionIcon: '',
+    actionIconSize: 16,
   },
 )
 

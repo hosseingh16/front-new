@@ -1,5 +1,5 @@
 <template>
-  <div class="my-5">
+  <div class="my-5 text-right">
     <p v-if="label" class="mb-4 text-sm font-semibold text-text-secondary">{{ label }}</p>
     <div
       class="flex items-center justify-center gap-px rounded-full px-1 py-3 select-none"

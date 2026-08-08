@@ -16,6 +16,15 @@ const BENEFIT_ICON_MAP: Record<string, string> = {
 
 export const PROFICIENCY_NO_NEED = 'no_need'
 
+export const DEFAULT_PROFICIENCY_STEPS = [
+  'عالی',
+  'خیلی خوب',
+  'خوب',
+  'متوسط',
+  'کم',
+  'تازه‌کار',
+]
+
 const ORANGE_PROFICIENCY_VALUES = new Set([
   PROFICIENCY_NO_NEED,
   'very_low',

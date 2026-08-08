@@ -2,7 +2,10 @@ import type {
   UserResume,
   UserResumeEducation,
   UserResumePersonal,
+  UserResumePotential,
   UserResumePrior,
+  UserResumeSkill,
+  UserResumeSoftware,
 } from '~/types/user-resume'
 import type { ISelectItem } from '~/types/select-item'
 
@@ -10,6 +13,12 @@ export function displayResumeValue(value?: string | number | null, fallback = '�
   if (value == null) return fallback
   const text = String(value).trim()
   return text || fallback
+}
+
+export function hasResumeValue(value?: string | number | null): boolean {
+  if (value == null) return false
+  const text = String(value).trim()
+  return Boolean(text) && text !== '—'
 }
 
 export function resolveResumeLookupLabel(
@@ -141,6 +150,49 @@ export function getResumeBirthYearLabel(birthdate?: string | number | null) {
   if (!yearMatch) return displayResumeValue(birthdate)
 
   return yearMatch[1]
+}
+
+export function getResumeBirthDateLabel(
+  birthdate?: string | number | null,
+  birthYears: ISelectItem[] = [],
+) {
+  if (birthdate == null || birthdate === '') return undefined
+
+  const yearLabel = resolveResumeLookupLabel(birthYears, birthdate)
+  const age = getResumeAgeLabel(birthdate)
+
+  if (yearLabel === '—') return undefined
+  if (age === '—') return yearLabel
+  return `${yearLabel} - ${age}`
+}
+
+export function mapCurrentUserToResume(
+  user: Record<string, unknown> | null | undefined,
+): UserResume | null {
+  if (!user) return null
+
+  const personal = user.resume_personal as UserResumePersonal | undefined
+
+  return {
+    id: Number(user.id) || 0,
+    name: String(personal?.name || user.name || ''),
+    email: String(personal?.email || user.email || ''),
+    phone: String(personal?.cellphone || user.phone || user.cellphone || ''),
+    avatar: typeof user.avatar === 'string' ? user.avatar : null,
+    description:
+      typeof user.description === 'string' ? user.description : undefined,
+    resume_personal: personal ?? null,
+    resume_educations:
+      (user.resume_educations as UserResumeEducation[] | undefined) ?? [],
+    resume_priors: (user.resume_priors as UserResumePrior[] | undefined) ?? [],
+    resume_softwares:
+      (user.resume_softwares as UserResumeSoftware[] | undefined) ?? [],
+    resume_skills: (user.resume_skills as UserResumeSkill | null) ?? null,
+    resume_potential:
+      (user.resume_potential as UserResumePotential | null) ?? null,
+    resume_file:
+      typeof user.resume_file === 'string' ? user.resume_file : null,
+  }
 }
 
 export function getResumeHighestDegree(

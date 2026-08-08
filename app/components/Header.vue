@@ -20,7 +20,7 @@
         <NuxtLink to="/employers" class="text-sm hover:opacity-80"
           >کارفرمایان</NuxtLink
         >
-        <NuxtLink to="/jobs" class="text-sm hover:opacity-80"
+        <NuxtLink to="/ad" class="text-sm hover:opacity-80"
           >فرصت‌های شغلی</NuxtLink
         >
         <NuxtLink to="/companies" class="text-sm hover:opacity-80"

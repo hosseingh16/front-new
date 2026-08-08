@@ -233,15 +233,15 @@
         />
         <InfoItem
           title="استان محل سکونت:"
-          :value="provinces.find((x) => x.value === values.province)?.label"
+          :value="provinces.find((x) => String(x.value) === String(values.province))?.label"
         />
         <InfoItem
           title="شهر محل سکونت:"
-          :value="cities.find((x) => x.value === values.city)?.label"
+          :value="cities.find((x) => String(x.value) === String(values.city))?.label"
         />
         <InfoItem
           title="منطقه محل سکونت:"
-          :value="regions.find((x) => x.value === values.region)?.label"
+          :value="regions.find((x) => String(x.value) === String(values.region))?.label"
         />
         <InfoItem
           title="درباره من:"
@@ -270,9 +270,6 @@ import * as Yup from "yup";
 import InfoItem from "./InfoItem.vue";
 import type { ISelectItem } from "~/types/select-item.js";
 
-//Import Feeders
-import { provinces } from "~/feeders/provinces";
-
 //Import Validation Rules
 import { fullNameValidation } from "~/validations/fullName";
 import { profileImageValidation } from "~/validations/profileImage";
@@ -280,7 +277,7 @@ import { profileImageValidation } from "~/validations/profileImage";
 // Variables
 const api = useApi();
 const { $toast } = useNuxtApp();
-const { refreshUser } = useCurrentUser();
+const { applyUserPayload, refreshUser } = useCurrentUser();
 const loading = api.loading;
 const hasRegions = ref(false);
 const editMode = ref(false);
@@ -289,13 +286,14 @@ const currentUser = ref<any>(null);
 const cities = ref<ISelectItem[]>([]);
 const regions = ref<ISelectItem[]>([]);
 const { items: lookupItems } = useLookups(
-  "job_titles,experience_levels,salary_ranges,birth_years,military_statuses",
+  "job_titles,experience_levels,salary_ranges,birth_years,military_statuses,provinces",
 );
 const jobTitles = lookupItems("job_titles");
 const experiences = lookupItems("experience_levels");
 const salaries = lookupItems("salary_ranges");
 const years = lookupItems("birth_years");
 const militaryStatuses = lookupItems("military_statuses");
+const provinces = lookupItems("provinces");
 
 // Form
 const formSchema = Yup.object({
@@ -391,8 +389,12 @@ const onSubmit = handleSubmit(async (data) => {
   //
 
   // پیدا کردن نام استان و شهر
-  const selectedProvince = provinces.find((p) => p.value === data.province);
-  const selectedCity = cities.value.find((c) => c.value === data.city);
+  const selectedProvince = provinces.value.find(
+    (p) => String(p.value) === String(data.province),
+  );
+  const selectedCity = cities.value.find(
+    (c) => String(c.value) === String(data.city),
+  );
 
   // اضافه کردن cityName به داده‌ها
   // const payload = {
@@ -404,10 +406,14 @@ const onSubmit = handleSubmit(async (data) => {
   // };
 
   try {
-    await api.post("/cv/save-basics", payload);
-    await refreshUser();
+    const result = await api.post<{ data?: Record<string, unknown> }>(
+      "/cv/save-basics",
+      payload,
+    );
+    applyUserPayload(result);
     editMode.value = false;
     $toast.success("اطلاعات پایه با موفقیت ذخیره شد");
+    await refreshUser();
   } catch (e) {
     $toast.error("خطا در ذخیره اطلاعات پایه");
   }

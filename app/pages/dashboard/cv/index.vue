@@ -1,8 +1,18 @@
 <template>
   <div :class="{ 'fixed left-4 right-4': expandedCvCompletion }">
+    <CvIncompleteBanner
+      v-if="showCvIncompleteBanner"
+      class="mb-5"
+      @dismiss="dismissCvIncompleteBanner"
+    />
+
     <div class="flex justify-between items-center">
       <p class="font-yb-bold text-2xl">رزومه من</p>
-      <button class="btn text-sm border-none text-primary-500 bg-[#4864E114]">
+      <button
+        class="btn text-sm border-none text-primary-500 bg-[#4864E114]"
+        type="button"
+        @click="navigateTo('/dashboard/my-resume')"
+      >
         <Icon name="svg:user-2" size="24" />
         از دید کارفرما
       </button>
@@ -118,13 +128,17 @@
 
 <script setup lang="ts">
 import CvCompletion from "@/features/panel/cv/CvCompletion.vue";
+import CvIncompleteBanner from "@/features/panel/cv/CvIncompleteBanner.vue";
 import useClipboard from "vue-clipboard3";
 import Tab1 from "~/features/panel/cv/Tab1.vue";
 import Tab2 from "~/features/panel/cv/Tab2.vue";
+import { isResumeBasicInfoComplete } from "~/utils/api-error";
 
 definePageMeta({
   layout: "dashboard",
 });
+
+const BANNER_STORAGE_KEY = "cv-incomplete-banner-dismissed";
 
 // Variables
 const tab = ref(1);
@@ -136,6 +150,34 @@ const expandedCvCompletion = useState(
   () => false,
 );
 const showBottomMenu = useState("showBottomMenu_state");
+const cvIncompleteBannerDismissed = ref(false);
+
+const showCvIncompleteBanner = computed(
+  () =>
+    !isResumeBasicInfoComplete(user.value) && !cvIncompleteBannerDismissed.value,
+);
+
+onMounted(() => {
+  if (!import.meta.client) return;
+  cvIncompleteBannerDismissed.value =
+    localStorage.getItem(BANNER_STORAGE_KEY) === "1";
+});
+
+function dismissCvIncompleteBanner() {
+  cvIncompleteBannerDismissed.value = true;
+  if (import.meta.client) {
+    localStorage.setItem(BANNER_STORAGE_KEY, "1");
+  }
+}
+
+watch(
+  () => isResumeBasicInfoComplete(user.value),
+  (complete) => {
+    if (!complete || !import.meta.client) return;
+    cvIncompleteBannerDismissed.value = false;
+    localStorage.removeItem(BANNER_STORAGE_KEY);
+  },
+);
 
 // Functions
 async function copy(text: string) {

@@ -20,7 +20,7 @@
       <div class="flex flex-col gap-3 max-md:hidden">
         <NuxtLink to="/">حسابدار</NuxtLink>
         <NuxtLink to="/">رزومه‌ساز</NuxtLink>
-        <NuxtLink to="/">جست‌وجوی فرصت‌های‌ شغلی</NuxtLink>
+        <NuxtLink to="/ad">جست‌وجوی فرصت‌های‌ شغلی</NuxtLink>
         <NuxtLink to="/">ایجاد پروژه حسابداری</NuxtLink>
         <NuxtLink to="/faq">سوالات متداول</NuxtLink>
       </div>

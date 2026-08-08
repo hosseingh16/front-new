@@ -3,51 +3,56 @@
     class="grid items-start gap-4 bg-surface-50 p-5 lg:grid-cols-[minmax(0,1fr)_300px]"
   >
     <main class="space-y-4">
-      <div class="flex gap-6 border-b border-gray-default px-5 md:px-6">
+      <div class="flex justify-start gap-6 overflow-x-auto border-b border-gray-default px-5 md:px-6">
         <button
           v-for="tab in tabs"
           :key="tab.id"
           type="button"
-          class="flex cursor-pointer items-center gap-2 border-b-2 py-3 text-sm font-semibold transition-colors"
+          class="flex shrink-0 cursor-pointer items-center gap-2 border-b-[1.5px] py-2 text-sm transition-colors"
           :class="
             activeTab === tab.id
-              ? 'border-primary-500 text-primary-500'
-              : 'border-transparent text-text-passive hover:text-text-secondary'
+              ? 'border-primary-500 font-semibold text-primary-500'
+              : 'border-transparent text-text-primary hover:text-text-secondary'
           "
           @click="activeTab = tab.id"
         >
+          {{ tab.label }}
           <div
-            class="flex h-7 w-7 items-center justify-center rounded-full bg-primary-300 p-1"
+            class="flex h-6 w-6 items-center justify-center rounded-full p-1"
             :class="
               activeTab === tab.id
-                ? 'bg-primary-500 text-white'
-                : 'bg-surface-200 text-text-passive'
+                ? 'bg-[#4864E114] text-primary-500'
+                : 'bg-[#4A4A4A14] text-text-passive'
             "
           >
             <Icon :name="tab.icon" size="16" />
           </div>
-          {{ tab.label }}
         </button>
       </div>
 
       <template v-if="activeTab === 'about'">
         <section
           v-if="showQualificationsSection"
-          class="rounded-2xl border border-gray-default bg-white p-5 md:p-6"
+          class="rounded-2xl border border-gray-default bg-white p-5 text-right md:p-6"
         >
           <AdSectionTitle title="شرایط احراز:" />
 
           <div
             v-if="qualificationIntro"
-            class="prose prose-sm mt-4 max-w-none text-sm leading-8 text-text-secondary"
+            class="prose prose-sm mt-4 max-w-none text-right text-sm leading-8 text-text-secondary"
             v-html="qualificationIntro"
           ></div>
 
           <div
             v-if="qualificationItems.length"
-            class="mt-4 space-y-2 pr-4"
-            v-html="qualificationItems"
-          ></div>
+            class="mt-4 text-sm leading-8 text-text-secondary"
+          >
+            <ul class="list-inside list-disc space-y-1 marker:text-text-secondary">
+              <li v-for="item in qualificationItems" :key="item">
+                {{ item }}
+              </li>
+            </ul>
+          </div>
 
           <div
             v-if="requirementStats.length"
@@ -65,25 +70,25 @@
 
         <section
           v-if="showSkillsSection"
-          class="rounded-2xl border border-gray-default bg-white p-5 md:p-6"
+          class="rounded-2xl border border-gray-default bg-white p-5 text-right md:p-6"
         >
           <AdSectionTitle title="مهارت فنی:" />
 
           <div
             v-if="ad.company_software"
-            class="mt-4 flex flex-wrap items-center gap-3 text-sm text-text-secondary"
+            class="mt-4 flex w-full flex-wrap items-center justify-start gap-3 text-sm text-text-secondary"
           >
             <div
-              class="flex items-center gap-2 rounded-lg border border-gray-default bg-surface-50 px-3 py-2"
+              class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#4864E114] p-2"
             >
               <img
                 v-if="ad.company_logo"
                 :src="ad.company_logo"
                 :alt="ad.company_name"
-                class="h-6 w-6 rounded object-cover"
+                class="h-full w-full rounded object-cover"
               />
             </div>
-            <div class="flex flex-col">
+            <div class="flex flex-col text-right">
               <span>نرم‌افزار حسابداری مورد استفاده در مجموعه:</span>
               <span class="font-yb-bold text-text-tertiary">{{
                 ad.company_software
@@ -105,7 +110,7 @@
 
         <section
           v-if="benefitItems.length"
-          class="rounded-2xl border border-gray-default bg-white p-5 md:p-6"
+          class="rounded-2xl border border-gray-default bg-white p-5 text-right md:p-6"
         >
           <AdSectionTitle title="مزایای سازمان:" />
 
@@ -113,16 +118,16 @@
             <div
               v-for="item in benefitItems"
               :key="item.label"
-              class="flex items-center justify-start gap-3 rounded-xl px-4 py-3"
+              class="flex w-full items-center justify-start gap-2 rounded-full px-1 py-1"
             >
               <span
-                class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#E8F0FE] text-primary-500"
+                class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#4864E114] text-primary-500"
               >
                 <Icon :name="item.icon" size="20" />
               </span>
-              <span class="text-sm font-semibold text-text-secondary">{{
-                item.label
-              }}</span>
+              <span class="text-base font-semibold text-text-secondary">
+                {{ item.label }}
+              </span>
             </div>
           </div>
         </section>
@@ -130,12 +135,12 @@
 
       <template v-else-if="activeTab === 'company'">
         <section
-          class="rounded-2xl border border-gray-default bg-white p-5 md:p-6"
+          class="rounded-2xl border border-gray-default bg-white p-5 text-right md:p-6"
         >
           <AdSectionTitle title="درباره سازمان" />
           <div
             v-if="ad.company?.intro"
-            class="prose prose-sm mt-4 max-w-none text-sm leading-8 text-text-secondary"
+            class="prose prose-sm mt-4 max-w-none text-right text-sm leading-8 text-text-secondary"
             v-html="ad.company.intro"
           />
           <p v-else class="mt-4 text-sm text-text-passive">
@@ -145,7 +150,7 @@
           <template v-if="ad.company?.culture">
             <AdSectionTitle class="mt-8" title="فرهنگ سازمانی" />
             <div
-              class="prose prose-sm mt-4 max-w-none text-sm leading-8 text-text-secondary"
+              class="prose prose-sm mt-4 max-w-none text-right text-sm leading-8 text-text-secondary"
               v-html="ad.company.culture"
             />
           </template>
@@ -153,7 +158,7 @@
           <template v-if="ad.company?.advantages">
             <AdSectionTitle class="mt-8" title="مزایای سازمان" />
             <div
-              class="prose prose-sm mt-4 max-w-none text-sm leading-8 text-text-secondary"
+              class="prose prose-sm mt-4 max-w-none text-right text-sm leading-8 text-text-secondary"
               v-html="ad.company.advantages"
             />
           </template>
@@ -175,7 +180,7 @@
           v-if="ad.company?.gallery?.length"
           class="rounded-xl border border-surface-200 bg-white p-5"
         >
-          <div class="flex w-full items-center gap-1">
+          <div class="flex w-full items-center justify-start gap-1 text-right">
             <span
               class="h-1 w-2 shrink-0 rounded-full bg-linear-to-b from-[#3B6EF8] to-primary-500"
               aria-hidden="true"
@@ -203,7 +208,7 @@
         </section>
       </template>
 
-      <template v-else>
+      <template v-else-if="activeTab === 'history'">
         <section
           class="rounded-2xl border border-gray-default bg-white p-5 py-12 md:p-6"
         >
@@ -213,13 +218,23 @@
           </p>
         </section>
       </template>
+
+      <template v-else>
+        <section
+          class="rounded-2xl border border-gray-default bg-white p-5 py-12 md:p-6"
+        >
+          <p class="mt-2 text-center text-sm text-text-passive">
+            سایر آگهی‌های این شرکت به‌زودی در این بخش نمایش داده می‌شود.
+          </p>
+        </section>
+      </template>
     </main>
 
     <aside class="lg:sticky lg:top-6">
       <div
         class="overflow-hidden rounded-2xl border border-gray-default bg-white p-5"
       >
-        <div class="flex w-full items-center gap-1">
+        <div class="flex w-full items-center justify-start gap-1">
           <span
             class="h-1 w-2 shrink-0 rounded-full bg-linear-to-b from-[#3B6EF8] to-primary-500"
             aria-hidden="true"
@@ -229,17 +244,18 @@
           </h2>
         </div>
 
-        <dl class="mt-4 space-y-3">
+        <dl class="mt-4 space-y-3 text-right">
           <div
             v-for="item in overviewItems"
             :key="item.label"
-            class="flex items-start justify-between gap-3 py-2 text-sm"
+            class="flex w-full items-center justify-start gap-2 py-1 text-sm"
           >
-            <dt class="flex items-center gap-2 text-text-passive">
-              <Icon :name="item.icon" size="16" />
-              {{ item.label }}
-            </dt>
-            <dd class="text-left font-semibold text-text-tertiary">
+            <Icon :name="item.icon" size="20" class="shrink-0 text-text-passive" />
+            <dt class="text-text-passive">{{ item.label }}:</dt>
+            <dd
+              class="font-semibold"
+              :class="item.link ? 'text-primary-500' : 'text-text-secondary'"
+            >
               {{ item.value }}
             </dd>
           </div>
@@ -308,13 +324,15 @@ import AdSectionTitle from "./AdSectionTitle.vue";
 import AdRequirementStat from "./AdRequirementStat.vue";
 import AdSkillLevelBar from "./AdSkillLevelBar.vue";
 import {
+  DEFAULT_PROFICIENCY_STEPS,
   getProficiencyLevel,
   getProficiencySteps,
   parseAdBenefits,
 } from "../utils/ad-benefits";
 import { useLookups } from "~/composables/useLookups";
+import { formatJalaliDate } from "~/utils/format-jalali-date";
 
-type AdTab = "about" | "company" | "history";
+type AdTab = "about" | "company" | "history" | "ads";
 
 type SkillBarItem = {
   label: string;
@@ -333,9 +351,10 @@ const emit = defineEmits<{
 
 const { items: lookupItems } = useLookups("proficiencies");
 const proficiencies = lookupItems("proficiencies");
-const proficiencySteps = computed(() =>
-  getProficiencySteps(proficiencies.value),
-);
+const proficiencySteps = computed(() => {
+  const steps = getProficiencySteps(proficiencies.value);
+  return steps.length ? steps : DEFAULT_PROFICIENCY_STEPS;
+});
 
 const activeTab = ref<AdTab>("about");
 const galleryDialogRef = ref<HTMLDialogElement | null>(null);
@@ -364,13 +383,14 @@ function handleGalleryBackdropClick(event: MouseEvent) {
 }
 
 const tabs: { id: AdTab; label: string; icon: string }[] = [
-  { id: "about", label: "درباره شغل", icon: "lucide:briefcase" },
+  { id: "about", label: "درباره استخدامی", icon: "lucide:briefcase" },
   {
     id: "company",
     label: "پروفایل سازمان",
     icon: "mdi:office-building-outline",
   },
   { id: "history", label: "سوابق ارسال", icon: "lucide:history" },
+  { id: "ads", label: "آگهی‌ها", icon: "lucide:layout-grid" },
 ];
 
 function displayValue(
@@ -401,27 +421,66 @@ const locationLabel = computed(() => {
   return province || city || "—";
 });
 
-const overviewItems = computed(() => [
-  { label: "نوع آگهی", value: "شغلی", icon: "svg:bag-1" },
-  {
-    label: "نوع همکاری",
-    value: displayValue(props.ad.employment_type),
-    icon: "ph:suitcase-simple-light",
-  },
-  {
-    label: "گروه شغلی",
-    value: displayValue(props.ad.category),
-    icon: "svg:bag-4",
-  },
-  { label: "موقعیت مکانی", value: locationLabel.value, icon: "svg:location-4" },
-  {
-    label: "سابقه کار",
-    value: workExperienceLabel.value,
-    icon: "svg:work-history",
-  },
-  { label: "حقوق", value: salaryLabel.value, icon: "svg:wallet" },
-  { label: "جنسیت", value: genderLabel.value, icon: "lucide:user" },
-]);
+const expireDateLabel = computed(() => {
+  const expireDate = (props.ad as { expire_date?: string }).expire_date;
+  if (!expireDate) return "—";
+  return formatJalaliDate(expireDate, "jD jMMMM");
+});
+
+const overviewItems = computed(() => {
+  const website = props.ad.company?.website;
+  const items = [
+    {
+      label: "نوع آگهی",
+      value: displayValue(props.ad.type, "استخدامی"),
+      icon: "svg:user-search-2",
+    },
+    {
+      label: "نوع قرارداد",
+      value: displayValue(props.ad.employment_type),
+      icon: "tabler:file-text",
+    },
+    {
+      label: "گروه شغلی",
+      value: displayValue(props.ad.category),
+      icon: "svg:bag-4",
+    },
+    ...(website
+      ? [
+          {
+            label: "وبسایت",
+            value: website,
+            icon: "lucide:laptop-minimal",
+            link: true,
+          },
+        ]
+      : []),
+    {
+      label: "موقعیت مکانی",
+      value: locationLabel.value,
+      icon: "svg:location-4",
+    },
+    { label: "حقوق", value: salaryLabel.value, icon: "svg:wallet" },
+    {
+      label: "سابقه کار",
+      value: workExperienceLabel.value,
+      icon: "svg:work-history",
+    },
+    {
+      label: "مدرک تحصیلی",
+      value: displayValue(props.ad.minimum_degree),
+      icon: "svg:edu-item",
+    },
+    { label: "جنسیت", value: genderLabel.value, icon: "lucide:user" },
+    {
+      label: "تاریخ انقضا",
+      value: expireDateLabel.value,
+      icon: "lucide:calendar-clock",
+    },
+  ];
+
+  return items.filter((item) => item.value !== "—");
+});
 
 const requirementStats = computed(() =>
   [

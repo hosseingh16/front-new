@@ -20,7 +20,7 @@
             <Icon name="svg:user-plus-white" size="24" />
             استخدام حسابدار
           </button>
-          <NuxtLink to="/jobs">
+          <NuxtLink to="/ad">
             <button class="btn btn-primary">
               <Icon name="svg:user-plus-white" size="24" />
               مشاهده فرصت های شغلی
@@ -129,7 +129,15 @@
             <p class="mt-4 text-sm">
               {{ item.text }}
             </p>
-            <button class="btn btn-ghost-primary mt-6 w-full text-sm">
+            <NuxtLink
+              v-if="item.btnText === 'فرصت های شغلی'"
+              to="/ad"
+              class="btn btn-ghost-primary mt-6 w-full text-sm"
+            >
+              <Icon name="svg:open-link" />
+              {{ item.btnText }}
+            </NuxtLink>
+            <button v-else class="btn btn-ghost-primary mt-6 w-full text-sm">
               <Icon name="svg:open-link" />
               {{ item.btnText }}
             </button>

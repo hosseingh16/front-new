@@ -1,19 +1,5 @@
-import { menuMap } from '~/configs/menu-map'
-import type { MenuItem } from '~/types/panel-config'
-
-type BackendMenuItem = {
-  key: string
-  children?: BackendMenuItem[]
-}
-
-type PanelConfig = {
-  navigation: {
-    sidebar: BackendMenuItem[]
-    userMenu: BackendMenuItem[]
-    shortcuts: BackendMenuItem[]
-  }
-  permissions: string[]
-}
+import { resolveMenuItems } from "~/configs/menu-map";
+import type { PanelConfig } from "~/types/panel-config";
 
 const emptyConfig = (): PanelConfig => ({
   navigation: {
@@ -22,74 +8,50 @@ const emptyConfig = (): PanelConfig => ({
     shortcuts: [],
   },
   permissions: [],
-})
+});
 
 export const usePanelConfig = () => {
-  const api = useApi()
+  const api = useApi();
 
-  const rawConfig = useState<PanelConfig>('panel-config', emptyConfig)
-  const initialized = useState('panel-initialized', () => false)
+  const rawConfig = useState<PanelConfig>("panel-config", () => ({
+    navigation: {
+      sidebar: [],
+      accountMenu: [],
+      dashboardActions: [],
+    },
+    permissions: [],
+  }));
 
-  /**
-   * Fetch panel bootstrap. Returns false when the request fails
-   * (e.g. user has no role and PanelResolver throws).
-   */
-  const fetchMenu = async (): Promise<boolean> => {
-    try {
-      const res = (await api.get('/panel/bootstrap')) as any
-      rawConfig.value = res?.panel ?? emptyConfig()
-      initialized.value = true
-      return true
-    } catch {
-      rawConfig.value = emptyConfig()
-      initialized.value = false
-      return false
-    }
-  }
+  const initialized = useState("panel-initialized", () => false);
 
-  const resolveMenuItem = (item: BackendMenuItem): MenuItem | null => {
-    const meta = menuMap[item.key]
-    if (!meta) return null
+  const fetchMenu = async (force = false) => {
+    if (initialized.value && !force) return;
 
-    const children = item.children
-      ?.map(resolveMenuItem)
-      .filter(Boolean) as MenuItem[] | undefined
+    const res = (await api.get("/panel/bootstrap")) as { panel: PanelConfig };
 
-    return {
-      key: item.key,
-      label: meta.label,
-      icon: meta.icon,
-      to: meta.to,
-      placement: meta.placement ?? 'top',
-      children: children?.length ? children : undefined,
-    }
-  }
+    rawConfig.value = res.panel;
+    initialized.value = true;
+  };
 
-  const sidebarMenu = computed<MenuItem[]>(() => {
-    const nav = rawConfig.value?.navigation
-    if (!nav?.sidebar) return []
-    return nav.sidebar.map(resolveMenuItem).filter(Boolean) as MenuItem[]
-  })
+  const sidebarMenu = computed(() =>
+    resolveMenuItems(rawConfig.value?.navigation?.sidebar),
+  );
 
-  const userMenu = computed<MenuItem[]>(() => {
-    const nav = rawConfig.value?.navigation
-    if (!nav?.userMenu) return []
-    return nav.userMenu.map(resolveMenuItem).filter(Boolean) as MenuItem[]
-  })
+  const accountMenu = computed(() =>
+    resolveMenuItems(rawConfig.value?.navigation?.accountMenu),
+  );
 
-  const shortcuts = computed<MenuItem[]>(() => {
-    const nav = rawConfig.value?.navigation
-    if (!nav?.shortcuts) return []
-    return nav.shortcuts.map(resolveMenuItem).filter(Boolean) as MenuItem[]
-  })
+  const dashboardActions = computed(() =>
+    resolveMenuItems(rawConfig.value?.navigation?.dashboardActions),
+  );
 
-  const permissions = computed(() => rawConfig.value?.permissions ?? [])
+  const permissions = computed(() => rawConfig.value?.permissions ?? []);
 
   return {
     fetchMenu,
     sidebarMenu,
-    userMenu,
-    shortcuts,
+    accountMenu,
+    dashboardActions,
     permissions,
-  }
-}
+  };
+};

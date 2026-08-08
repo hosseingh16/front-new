@@ -30,7 +30,7 @@
       icon="svg:no-result"
       :icon-size="180"
       action-label="مشاهده فرصت‌های شغلی"
-      action-to="/jobs"
+      action-to="/ad"
     />
 
     <template v-else>

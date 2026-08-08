@@ -271,9 +271,9 @@ async function addSoftware(item: ProgramItem) {
       "cv/create-software",
       toCreatePayload(item),
     );
+    $toast.success("نرم‌افزار حسابداری با موفقیت افزوده شد");
     await refreshUser();
     loadProgramsFromUser();
-    $toast.success("نرم‌افزار حسابداری با موفقیت افزوده شد");
   } catch (error: any) {
     if (error?.status === 422) {
       const maxSoftwares = error?.data?.max_softwares;
@@ -301,9 +301,9 @@ async function updateSoftware(index: number, item: ProgramItem) {
       `cv/update-software/${id}`,
       toCreatePayload(data),
     );
+    $toast.success("نرم‌افزار حسابداری با موفقیت ویرایش شد");
     await refreshUser();
     loadProgramsFromUser();
-    $toast.success("نرم‌افزار حسابداری با موفقیت ویرایش شد");
   } catch (error) {
     $toast.error(getApiErrorMessage(error, "خطا در ویرایش نرم‌افزار حسابداری"));
   } finally {
@@ -328,9 +328,9 @@ async function confirmRemoveSoftware() {
   try {
     await api.delete(`cv/software/${id}`);
     programsItems.value.splice(index, 1);
-    await refreshUser();
     removeModalRef.value?.closeModal();
     $toast.success("نرم‌افزار حسابداری با موفقیت حذف شد");
+    await refreshUser();
   } catch (error) {
     $toast.error(getApiErrorMessage(error, "خطا در حذف نرم‌افزار حسابداری"));
   } finally {
