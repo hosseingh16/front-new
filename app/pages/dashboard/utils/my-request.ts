@@ -20,25 +20,67 @@ const STATUS_META: Record<MyRequestStatus, MyRequestStatusMeta> = {
     dotClassName: 'bg-[#4a4a4a]',
   },
   priority: {
-    label: 'در حال بررسی',
+    label: 'مشاهده شده',
     className: 'bg-[rgba(0,152,231,0.08)] text-info-500',
     dotClassName: 'bg-info-500',
   },
   interview: {
     label: 'تأیید برای مصاحبه',
-    className: 'bg-success-100 text-success-500',
+    className: 'bg-[rgba(0,159,101,0.08)] text-success-500',
     dotClassName: 'bg-success-500',
   },
   rejected: {
     label: 'رد شده',
-    className: 'bg-danger-100 text-danger-500',
+    className: 'bg-[rgba(239,64,53,0.08)] text-danger-500',
     dotClassName: 'bg-danger-500',
   },
   pending: {
     label: 'در حال بررسی',
-    className: 'bg-warning-100 text-warning-500',
+    className: 'bg-[rgba(185,92,4,0.08)] text-warning-500',
     dotClassName: 'bg-warning-500',
   },
+}
+
+export interface EmploymentTypeMeta {
+  label: string
+  icon: string
+  className: string
+}
+
+export function getEmploymentTypeMeta(
+  type?: string | null,
+): EmploymentTypeMeta {
+  const normalized = (type ?? '').trim()
+  const key = normalized
+    .replace(/ي/g, 'ی')
+    .replace(/ك/g, 'ک')
+    .toLowerCase()
+
+  if (
+    key.includes('نیمه') ||
+    key.includes('پاره') ||
+    key.includes('part')
+  ) {
+    return {
+      label: normalized || 'نیمه وقت',
+      icon: 'svg:bag-parttime',
+      className: 'bg-[rgba(0,152,231,0.08)]',
+    }
+  }
+
+  if (key.includes('پروژه') || key.includes('project')) {
+    return {
+      label: normalized || 'پروژه',
+      icon: 'svg:notepad-text',
+      className: 'bg-[rgba(185,92,4,0.08)]',
+    }
+  }
+
+  return {
+    label: normalized || 'تمام وقت',
+    icon: 'svg:briefcase',
+    className: 'bg-[rgba(72,100,225,0.08)]',
+  }
 }
 
 export const MY_REQUEST_TABS: MyRequestTabConfig[] = [

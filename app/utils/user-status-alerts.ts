@@ -1,4 +1,5 @@
 import type { UserStatusPayload } from '~/types/user-status'
+import { isEmployerUser, isJobSeekerUser } from '~/utils/user-role'
 
 export type DashboardStatusAlertType = 'warning' | 'info' | 'error'
 
@@ -8,19 +9,28 @@ export type DashboardStatusAlert = {
   message: string
   actionLabel?: string
   actionTo?: string
+  actionIcon?: string
   dismissible?: boolean
 }
 
 function isEmployer(status: UserStatusPayload): boolean {
-  const { user } = status
-  return user.roles.includes('employer') || user.type === 'employer'
+  return isEmployerUser({
+    type: status.user.type,
+    roles: status.user.roles,
+  })
 }
 
 function isJobSeeker(status: UserStatusPayload): boolean {
-  const { user } = status
-  return user.roles.includes('jobseeker') || user.type === 'jobseeker'
+  return isJobSeekerUser({
+    type: status.user.type,
+    roles: status.user.roles,
+  })
 }
 
+/**
+ * Build the single dashboard status alert for the current role.
+ * Employer and jobseeker stacks are intentionally different.
+ */
 export function getDashboardStatusAlert(
   status: UserStatusPayload,
 ): DashboardStatusAlert | null {
@@ -33,26 +43,56 @@ export function getDashboardStatusAlert(
     }
   }
 
-  if (isEmployer(status) && status.company.completion < 100) {
-    return {
-      id: 'company-profile-incomplete',
-      type: 'warning',
-      message: 'با تکمیل «پروفایل سازمان»، از همه امکانات استفاده کنید.',
-      actionLabel: 'تکمیل پروفایل',
-      actionTo: '/dashboard/employer/company',
-      dismissible: true,
+  if (isEmployer(status)) {
+    if (status.company.completion < 100) {
+      return {
+        id: 'company-profile-incomplete',
+        type: 'warning',
+        message: 'با تکمیل «پروفایل سازمان»، از همه امکانات استفاده کنید.',
+        actionLabel: 'تکمیل پروفایل',
+        actionTo: '/dashboard/employer/company',
+        actionIcon: 'lucide:building',
+        dismissible: true,
+      }
     }
+
+    if (status.profile.completion < 100) {
+      return {
+        id: 'employer-profile-incomplete',
+        type: 'info',
+        message:
+          'برای استفاده بهتر از های‌حساب، اطلاعات حساب کاربری خود را تکمیل کنید.',
+        dismissible: true,
+      }
+    }
+
+    return null
   }
 
-  if (isJobSeeker(status) && status.resume.completion < 100) {
-    return {
-      id: 'resume-incomplete',
-      type: 'warning',
-      message: 'برای افزایش شانس استخدام، رزومه خود را تکمیل کنید.',
-      actionLabel: 'تکمیل رزومه',
-      actionTo: '/dashboard/cv',
-      dismissible: true,
+  if (isJobSeeker(status)) {
+    if (status.resume.completion < 100) {
+      return {
+        id: 'resume-incomplete',
+        type: 'warning',
+        message: 'برای افزایش شانس استخدام، رزومه خود را تکمیل کنید.',
+        actionLabel: 'تکمیل رزومه',
+        actionTo: '/dashboard/cv',
+        actionIcon: 'lucide:file-user',
+        dismissible: true,
+      }
     }
+
+    if (status.profile.completion < 100) {
+      return {
+        id: 'jobseeker-profile-incomplete',
+        type: 'info',
+        message:
+          'برای استفاده بهتر از های‌حساب، اطلاعات حساب کاربری خود را تکمیل کنید.',
+        dismissible: true,
+      }
+    }
+
+    return null
   }
 
   if (status.profile.completion < 100) {

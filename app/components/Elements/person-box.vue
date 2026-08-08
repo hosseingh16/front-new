@@ -35,19 +35,12 @@
       </div>
 
       <div class="flex flex-col items-center text-center">
-        <div class="h-16 w-16 overflow-hidden rounded-2xl bg-[#c5dff5]">
+        <div class="h-16 w-16 overflow-hidden rounded-2xl bg-[#8EA0B5]">
           <img
-            v-if="avatar"
-            :src="avatar"
+            :src="avatarSrc"
             :alt="name"
             class="h-full w-full object-cover"
           />
-          <div
-            v-else
-            class="flex h-full w-full items-end justify-center bg-gradient-to-b from-[#c5dff5] to-[#9ec5e8]"
-          >
-            <div class="h-[85%] w-[70%] rounded-t-full bg-[#e8a4a4]" />
-          </div>
         </div>
 
         <p class="mt-3 font-yb-bold text-base text-text-tertiary">{{ name }}</p>
@@ -126,6 +119,7 @@
 import BookmarkToggleButton, {
   type BookmarkType,
 } from "~/components/Elements/BookmarkToggleButton.vue";
+import { resolveAvatarSrc } from "~/libs/utils";
 
 const props = withDefaults(
   defineProps<{
@@ -155,6 +149,11 @@ const props = withDefaults(
 const emit = defineEmits<{
   bookmarkChange: [id: number | string, bookmarked: boolean];
 }>();
+
+const config = useRuntimeConfig();
+const avatarSrc = computed(() =>
+  resolveAvatarSrc(props.avatar, config.public.baseUrl as string),
+);
 
 const location = computed(() => {
   if (props.provinceName && props.cityName) {

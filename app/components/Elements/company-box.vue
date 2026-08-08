@@ -52,17 +52,13 @@
       <div class="flex items-start justify-between gap-4">
         <div class="flex min-w-0 flex-1 items-start gap-3">
           <div
-            class="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-[#ECF4D9]"
+            class="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-[#8EA0B5]"
           >
             <img
-              v-if="logo"
-              :src="logo"
+              :src="logoSrc"
               :alt="name"
               class="h-16 w-16 rounded-2xl object-cover"
             />
-            <span v-else class="font-yb-bold text-lg text-text-tertiary">
-              {{ name.charAt(0) }}
-            </span>
           </div>
 
           <div class="min-w-0 flex-1">
@@ -142,17 +138,13 @@
 
         <div class="flex flex-col items-center text-center">
           <div
-            class="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#ECF4D9]"
+            class="flex h-16 w-16 items-center justify-center overflow-hidden rounded-2xl bg-[#8EA0B5]"
           >
             <img
-              v-if="logo"
-              :src="logo"
+              :src="logoSrc"
               :alt="name"
               class="h-16 w-16 rounded-2xl object-cover"
             />
-            <span v-else class="font-yb-bold text-lg text-text-tertiary">
-              {{ name.charAt(0) }}
-            </span>
           </div>
 
           <p class="mt-3 font-yb-bold text-base text-text-tertiary">{{ name }}</p>
@@ -206,6 +198,8 @@
 <script setup lang="ts">
 import BookmarkToggleButton from "~/components/Elements/BookmarkToggleButton.vue";
 import type { CompanyList } from "~/types/company";
+import { DEFAULT_AVATAR_SRC } from "~/libs/utils";
+import { isDefaultCompanyLogo } from "~/utils/company-basic-info";
 
 const props = withDefaults(
   defineProps<{
@@ -235,6 +229,9 @@ const emit = defineEmits<{
 
 const name = computed(() => props.company?.name ?? props.name ?? "شرکت");
 const logo = computed(() => props.company?.logo ?? props.logo ?? null);
+const logoSrc = computed(() =>
+  isDefaultCompanyLogo(logo.value) ? DEFAULT_AVATAR_SRC : (logo.value as string),
+);
 const size = computed(() => props.company?.size ?? props.size ?? "");
 const bookmarkTargetId = computed(
   () => props.company?.id ?? null,

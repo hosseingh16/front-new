@@ -4,20 +4,13 @@
       <div class="flex items-start justify-between">
         <div class="flex min-w-0 flex-1 items-center gap-2">
           <div
-            class="h-16 w-16 shrink-0 overflow-hidden rounded-2xl bg-avatar-from"
+            class="h-16 w-16 shrink-0 overflow-hidden rounded-2xl bg-[#8EA0B5]"
           >
             <img
-              v-if="avatar"
-              :src="avatar"
+              :src="avatarSrc"
               :alt="name"
               class="h-full w-full object-cover"
             />
-            <div
-              v-else
-              class="flex h-full w-full items-end justify-center bg-linear-to-b from-avatar-from to-avatar-to"
-            >
-              <div class="h-[85%] w-[70%] rounded-t-full bg-avatar-skin" />
-            </div>
           </div>
 
           <div class="w-full text-sm">
@@ -128,6 +121,7 @@
 import AdRequestStatusBadge from "~/components/Elements/AdRequestStatusBadge.vue";
 import BookmarkToggleButton from "~/components/Elements/BookmarkToggleButton.vue";
 import type { EmployerAdRequest } from "~/types/employer-ad-request";
+import { resolveAvatarSrc } from "~/libs/utils";
 import {
   getAdRequestDisplayItems,
   getAdRequestJobTitle,
@@ -150,9 +144,15 @@ const emit = defineEmits<{
 }>();
 
 const { $toast } = useNuxtApp();
+const config = useRuntimeConfig();
 
 const name = computed(() => props.request.user?.name || "—");
-const avatar = computed(() => props.request.user?.avatar || null);
+const avatarSrc = computed(() =>
+  resolveAvatarSrc(
+    props.request.user?.avatar,
+    config.public.baseUrl as string,
+  ),
+);
 const jobTitle = computed(() =>
   getAdRequestJobTitle(props.request, jobTitleOptions.value),
 );

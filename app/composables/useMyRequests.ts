@@ -18,8 +18,9 @@ function getFetchErrorMessage(err: unknown) {
   return 'خطا در دریافت درخواست‌های شغلی'
 }
 
-export function useMyRequests() {
+export function useMyRequests(options: { immediate?: boolean } = {}) {
   const api = useApi()
+  const immediate = options.immediate ?? true
   const requests = ref<MyRequest[]>([])
   const loading = ref(false)
   const error = ref<string | null>(null)
@@ -93,7 +94,7 @@ export function useMyRequests() {
   })
 
   onMounted(() => {
-    fetchRequests()
+    if (immediate) fetchRequests()
   })
 
   return {

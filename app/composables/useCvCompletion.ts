@@ -1,5 +1,6 @@
 import type { MaybeRefOrGetter } from "vue";
 import { computed, toValue } from "vue";
+import { hasCustomAvatar } from "~/libs/utils";
 
 function isPresent(value: unknown): boolean {
   return value != null;
@@ -56,7 +57,7 @@ export function useCvCompletion(user: MaybeRefOrGetter<Record<string, unknown> |
       },
       {
         label: "تصویر پروفایل",
-        complete: hasNonEmptyString(data?.avatar),
+        complete: hasCustomAvatar(data?.avatar),
         percent: 10,
       },
     ];

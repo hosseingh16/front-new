@@ -25,7 +25,7 @@
           class="btn btn-ghost h-9 min-h-9 shrink-0 gap-2 px-3 text-sm font-semibold"
           :class="variantClasses.action"
         >
-          <Icon v-if="type === 'warning'" name="lucide:building" size="18" />
+          <Icon v-if="actionIcon" :name="actionIcon" size="18" />
           {{ actionLabel }}
         </NuxtLink>
 
@@ -52,6 +52,7 @@ const props = withDefaults(
     message: string
     actionLabel?: string
     actionTo?: string
+    actionIcon?: string
     dismissible?: boolean
   }>(),
   {

@@ -27,90 +27,81 @@
         <div class="mt-6 h-10 rounded bg-surface-200" />
       </div>
 
-      <div class="custom-pad pb-0">
+      <div
+        v-else-if="ad"
+        class="relative z-10 mt-4 rounded-t-2xl bg-surface-50"
+      >
         <div
-          v-if="loading && !ad"
-          class="mt-4 animate-pulse rounded-t-2xl bg-surface-50 p-6"
+          class="flex flex-wrap items-start justify-between gap-4 p-5 md:p-6"
         >
-          <div class="h-20 rounded-xl bg-surface-200" />
-          <div class="mt-6 h-10 rounded bg-surface-200" />
-        </div>
-
-        <div
-          v-else-if="ad"
-          class="relative z-10 mt-4 rounded-t-2xl bg-surface-50"
-        >
-          <div
-            class="flex flex-wrap items-start justify-between gap-4 p-5 md:p-6"
-          >
-            <div class="flex min-w-0 items-center gap-4">
-              <div
-                class="flex h-[74px] w-[74px] shrink-0 items-center justify-center overflow-hidden rounded-2xl border-4 border-white bg-[#ECF4D9]"
+          <div class="flex min-w-0 items-center gap-4">
+            <div
+              class="flex h-[74px] w-[74px] shrink-0 items-center justify-center overflow-hidden rounded-2xl border-4 border-white bg-[#ECF4D9]"
+            >
+              <NuxtLink
+                v-if="ad.company_logo && ad.company?.slug"
+                :to="`/companies/${ad.company.slug}`"
+                class="block h-full w-full"
+                tabindex="-1"
+                aria-label="نمایه شرکت"
               >
-                <NuxtLink
-                  v-if="ad.company_logo && ad.company?.slug"
-                  :to="`/companies/${ad.company.slug}`"
-                  class="block h-full w-full"
-                  tabindex="-1"
-                  aria-label="نمایه شرکت"
-                >
-                  <img
-                    :src="ad.company_logo"
-                    :alt="ad.company_name"
-                    class="h-full w-full object-cover"
-                  />
-                </NuxtLink>
                 <img
-                  v-else-if="ad.company_logo"
                   :src="ad.company_logo"
                   :alt="ad.company_name"
                   class="h-full w-full object-cover"
                 />
-
-                <span v-else class="font-yb-bold text-xl text-text-tertiary">
-                  {{ companyInitial }}
-                </span>
-              </div>
-              <div class="min-w-0">
-                <p class="text-sm text-text-passive">{{ ad.company_name }}</p>
-                <h1
-                  class="mt-1 font-yb-bold text-xl text-text-primay md:text-2xl"
-                >
-                  {{ ad.title }}
-                </h1>
-              </div>
-            </div>
-
-            <div class="flex items-center gap-4">
-              <p v-if="publishDateLabel" class="text-sm text-text-passive">
-                تاریخ انتشار:
-                <span class="text-text-passive">{{ publishDateLabel }}</span>
-              </p>
-
-              <button
-                type="button"
-                class="flex h-9 w-9 items-center justify-center rounded-lg border-2 cursor-pointer border-gray-default bg-white transition-opacity hover:opacity-80"
-                aria-label="اشتراک‌گذاری"
-                @click="shareAd"
-              >
-                <Icon name="material-symbols:share-outline" size="16" />
-              </button>
-              <BookmarkToggleButton
-                v-if="ad?.id"
-                :target-id="ad.id"
-                type="ads"
-                label="نشان کردن"
-                :initial-bookmarked="Boolean(ad.is_bookmarked)"
-                @update:bookmarked="
-                  (value) => {
-                    if (ad) ad.is_bookmarked = value;
-                  }
-                "
+              </NuxtLink>
+              <img
+                v-else-if="ad.company_logo"
+                :src="ad.company_logo"
+                :alt="ad.company_name"
+                class="h-full w-full object-cover"
               />
+
+              <span v-else class="font-yb-bold text-xl text-text-tertiary">
+                {{ companyInitial }}
+              </span>
             </div>
+            <div class="min-w-0">
+              <p class="text-sm text-text-passive">{{ ad.company_name }}</p>
+              <h1
+                class="mt-1 font-yb-bold text-xl text-text-primay md:text-2xl"
+              >
+                {{ ad.title }}
+              </h1>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-4">
+            <p v-if="publishDateLabel" class="text-sm text-text-passive">
+              تاریخ انتشار:
+              <span class="text-text-passive">{{ publishDateLabel }}</span>
+            </p>
+
+            <button
+              type="button"
+              class="flex h-9 w-9 items-center justify-center rounded-lg border-2 cursor-pointer border-gray-default bg-white transition-opacity hover:opacity-80"
+              aria-label="اشتراک‌گذاری"
+              @click="shareAd"
+            >
+              <Icon name="material-symbols:share-outline" size="16" />
+            </button>
+            <BookmarkToggleButton
+              v-if="ad?.id"
+              :target-id="ad.id"
+              type="ads"
+              label="نشان کردن"
+              :initial-bookmarked="Boolean(ad.is_bookmarked)"
+              @update:bookmarked="
+                (value) => {
+                  if (ad) ad.is_bookmarked = value;
+                }
+              "
+            />
           </div>
         </div>
       </div>
+    </div>
     </section>
 
     <div class="custom-pad">

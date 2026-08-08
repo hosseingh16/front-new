@@ -1,9 +1,13 @@
+import { resolveAvatarUrl } from "~/libs/utils";
+import { isEmployerUser, isJobSeekerUser } from "~/utils/user-role";
+
 /**
  * Resolves the authenticated user payload from nuxt-auth-sanctum.
  * API shape is usually `{ data: { name, ... } }` but may also be flat.
  */
 export function useCurrentUser() {
   const sanctumUser = useSanctumUser<any>();
+  const config = useRuntimeConfig();
 
   const user = computed(() => {
     const raw = sanctumUser.value;
@@ -29,7 +33,7 @@ export function useCurrentUser() {
       user.value?.avatar ??
       user.value?.profile_image ??
       user.value?.profileImage;
-    return typeof value === "string" && value.trim() ? value.trim() : null;
+    return resolveAvatarUrl(value, config.public.baseUrl as string);
   });
 
   const cellphone = computed(() => {
@@ -42,6 +46,9 @@ export function useCurrentUser() {
     const trimmed = String(value).trim();
     return trimmed || "—";
   });
+
+  const isEmployer = computed(() => isEmployerUser(user.value));
+  const isJobSeeker = computed(() => isJobSeekerUser(user.value));
 
   function applyUserPayload(payload: unknown) {
     if (!payload || typeof payload !== "object") return;
@@ -58,6 +65,32 @@ export function useCurrentUser() {
         ? sanctumUser.value
         : {}),
       data: root,
+    };
+  }
+
+  /** Shallow-merge fields into the current user `data` object. */
+  function patchUser(fields: Record<string, unknown>) {
+    const current = sanctumUser.value;
+    if (!current || typeof current !== "object") {
+      sanctumUser.value = { data: fields };
+      return;
+    }
+
+    const root = current as Record<string, unknown>;
+    if (root.data && typeof root.data === "object") {
+      sanctumUser.value = {
+        ...root,
+        data: {
+          ...(root.data as Record<string, unknown>),
+          ...fields,
+        },
+      };
+      return;
+    }
+
+    sanctumUser.value = {
+      ...root,
+      ...fields,
     };
   }
 
@@ -78,7 +111,10 @@ export function useCurrentUser() {
     name,
     avatar,
     cellphone,
+    isEmployer,
+    isJobSeeker,
     applyUserPayload,
+    patchUser,
     refreshUser,
   };
 }

@@ -111,7 +111,11 @@ export function useCreateAdForm(
       if (!company) return
 
       if (company.name) companyName.value = company.name
-      if (company.logo && !company.logo.includes('company-default')) {
+      if (
+        company.logo &&
+        !company.logo.includes('company-default') &&
+        !company.logo.includes('default-avatar')
+      ) {
         companyLogo.value = company.logo
       }
 

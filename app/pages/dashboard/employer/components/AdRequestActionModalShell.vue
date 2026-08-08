@@ -46,14 +46,10 @@
                 class="flex h-[74px] w-[74px] items-center justify-center overflow-hidden rounded-2xl border-4 border-white bg-[#ECF4D9]"
               >
                 <img
-                  v-if="avatar"
-                  :src="avatar"
+                  :src="avatarSrc"
                   :alt="name"
                   class="h-full w-full object-cover"
                 />
-                <span v-else class="font-yb-bold text-xl text-text-tertiary">
-                  {{ userInitial }}
-                </span>
               </div>
             </div>
 
@@ -125,6 +121,7 @@ import {
   getAdRequestPhone,
   getAdRequestRequestDate,
 } from "~/pages/dashboard/employer/utils/employer-ad-request";
+import { resolveAvatarSrc } from "~/libs/utils";
 
 const props = defineProps<{
   open: boolean;
@@ -142,14 +139,15 @@ const emit = defineEmits<{
 }>();
 
 const { $toast } = useNuxtApp();
+const config = useRuntimeConfig();
 
 const name = computed(() => props.request?.user?.name || "—");
-const avatar = computed(() => props.request?.user?.avatar || null);
-const userInitial = computed(() => {
-  const value = name.value.trim();
-  if (!value || value === "—") return "؟";
-  return value.charAt(0);
-});
+const avatarSrc = computed(() =>
+  resolveAvatarSrc(
+    props.request?.user?.avatar,
+    config.public.baseUrl as string,
+  ),
+);
 const detailRows = computed(() => {
   if (!props.request) return [];
 

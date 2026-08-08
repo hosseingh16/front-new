@@ -20,7 +20,6 @@ export const menuMap: Record<string, MenuMeta> = {
     label: "رزومه من",
     icon: "svg:work-history",
     to: "/dashboard/my-resume",
-    placement: "bottom",
   },
 
   resume_view: {
@@ -31,25 +30,25 @@ export const menuMap: Record<string, MenuMeta> = {
 
   resume_edit: {
     label: "ویرایش رزومه",
-    icon: "svg:eye",
+    icon: "svg:edit",
     to: "/dashboard/cv",
   },
 
   ads: {
     label: "فرصت های شغلی",
-    icon: "svg:eye",
+    icon: "svg:bag-1",
     to: "/dashboard/ad",
   },
 
   my_requests: {
     label: "درخواست های من",
-    icon: "svg:eye",
+    icon: "svg:receive-briefcase",
     to: "/dashboard/my-requests",
   },
 
   projects: {
     label: "پروژه ها",
-    icon: "svg:folder",
+    icon: "svg:projects",
     to: "/dashboard/ad",
   },
 
@@ -57,7 +56,6 @@ export const menuMap: Record<string, MenuMeta> = {
     label: "نشان شده ها",
     icon: "svg:bookmark-1",
     to: "/dashboard/bookmarks",
-    placement: "bottom",
   },
 
   emplopyer_ads: {
@@ -100,7 +98,6 @@ export const menuMap: Record<string, MenuMeta> = {
     label: "پروفایل سازمان",
     icon: "svg:buildings-5",
     to: "/dashboard/employer/company",
-    placement: "bottom",
   },
 
   user_dashboard: {
@@ -123,13 +120,13 @@ export const menuMap: Record<string, MenuMeta> = {
 
   user_create_project: {
     label: "ایجاد پروژه",
-    icon: "svg:folder",
+    icon: "svg:projects",
     to: "/dashboard/ad",
   },
 
   user_manage_projects: {
     label: "مدیریت پروژه ها",
-    icon: "svg:folder",
+    icon: "svg:projects",
     to: "/dashboard/ad",
   },
 
@@ -147,25 +144,25 @@ export const menuMap: Record<string, MenuMeta> = {
 
   user_edit_resume: {
     label: "ویرایش رزومه",
-    icon: "svg:eye",
+    icon: "svg:edit",
     to: "/dashboard/cv",
   },
 
   user_ads: {
     label: "فرصت های شغلی",
-    icon: "svg:jobs",
+    icon: "svg:bag-1",
     to: "/dashboard/ad",
   },
 
   user_requests: {
     label: "درخواست‌های من",
-    icon: "svg:eye",
+    icon: "svg:receive-briefcase",
     to: "/dashboard/my-requests",
   },
 
   user_projects: {
     label: "پروژه‌های من",
-    icon: "svg:folder",
+    icon: "svg:projects",
     to: "/dashboard/ad",
   },
 
@@ -173,14 +170,12 @@ export const menuMap: Record<string, MenuMeta> = {
     label: "نشان شده‌ها",
     icon: "svg:bookmark-1",
     to: "/dashboard/bookmarks",
-    placement: "bottom",
   },
 
   user_settings: {
     label: "تنظیمات",
     icon: "svg:settings",
     to: "/dashboard/settings",
-    placement: "bottom",
   },
 
   dashboard_action_opportunities: {
@@ -229,7 +224,7 @@ export const menuMap: Record<string, MenuMeta> = {
 
   dashboard_action_my_requests: {
     label: "درخواست‌های من",
-    icon: "svg:eye",
+    icon: "svg:receive-briefcase",
     dashboardIcon: "svg:illust-job-user",
     to: "/dashboard/my-requests",
   },
@@ -243,7 +238,7 @@ export const menuMap: Record<string, MenuMeta> = {
 
   dashboard_action_edit_resume: {
     label: "رزومه ساز",
-    icon: "svg:eye",
+    icon: "svg:edit",
     dashboardIcon: "svg:illust-create-account",
     to: "/dashboard/cv",
   },

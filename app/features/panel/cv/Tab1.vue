@@ -2,31 +2,34 @@
   <div class="bg-white p-4 rounded-2xl mt-5">
     <Titr :with-icon="editMode" class="mb-8">اطلاعات پایه</Titr>
     <form @submit="onSubmit">
-      <div v-show="editMode" class="grid lg:grid-cols-2 gap-x-4 gap-y-8">
-        <div class="lg:col-span-2">
-          <div>
-            <p class="relative">
-              تصویر پروفایل:
-              <span class="text-red-400 mb-4 absolute -top-2">*</span>
-            </p>
-            <Field name="profileImage">
-              <m-upload-box
-                subtitle="یا تصویر را بکشید و در این محل رها کنید"
-                :max-size="10"
-                :accept="['png', 'jpg']"
-                @update:model-value="handleProfileImage"
-                @update:base64="(v) => (imageBase64 = v)"
-              />
-            </Field>
+      <div class="mb-8">
+        <p class="relative">
+          تصویر پروفایل:
+          <span
+            v-if="editMode"
+            class="text-red-400 mb-4 absolute -top-2"
+          >*</span>
+        </p>
+        <Field name="profileImage">
+          <m-upload-box
+            subtitle="یا تصویر را بکشید و در این محل رها کنید"
+            :max-size="10"
+            :accept="['png', 'jpg']"
+            :preview-url="avatarPreview"
+            @update:model-value="handleProfileImage"
+            @update:base64="(v) => (imageBase64 = v)"
+            @delete="handleProfileImage(null)"
+          />
+        </Field>
+        <ErrorMessage name="profileImage" v-slot="{ message }">
+          <div class="mt-1 text-xs text-text-passive flex items-center">
+            <icons-close color="#EF4035" />
+            <span>{{ message }}</span>
           </div>
-          <ErrorMessage name="profileImage" v-slot="{ message }">
-            <div class="mt-1 text-xs text-text-passive flex items-center">
-              <icons-close color="#EF4035" />
-              <span>{{ message }}</span>
-            </div>
-          </ErrorMessage>
-        </div>
+        </ErrorMessage>
+      </div>
 
+      <div v-show="editMode" class="grid lg:grid-cols-2 gap-x-4 gap-y-8">
         <m-form-input
           name="name"
           label="نام کامل"
@@ -168,12 +171,6 @@
         </div>
       </div>
       <div v-show="!editMode" class="grid lg:grid-cols-2 gap-x-4 gap-y-8">
-        <div v-if="imageBase64" class="lg:col-span-2">
-          <p>تصویر پروفایل:</p>
-          <div class="mt-6 flex justify-center">
-            <img :src="imageBase64" class="w-24 h-24 rounded-full" />
-          </div>
-        </div>
         <InfoItem title="نام کامل:" :value="values.name" />
         <InfoItem
           title="عنوان شغلی:"
@@ -277,12 +274,13 @@ import { profileImageValidation } from "~/validations/profileImage";
 // Variables
 const api = useApi();
 const { $toast } = useNuxtApp();
-const { applyUserPayload, refreshUser } = useCurrentUser();
+const { applyUserPayload, patchUser, refreshUser, avatar: userAvatar } = useCurrentUser();
 const loading = api.loading;
 const hasRegions = ref(false);
 const editMode = ref(false);
 const imageBase64 = ref<string | null>(null);
-const currentUser = ref<any>(null);
+/** After local delete, don't fall back to the still-cached server avatar. */
+const keepServerPreview = ref(true);
 const cities = ref<ISelectItem[]>([]);
 const regions = ref<ISelectItem[]>([]);
 const { items: lookupItems } = useLookups(
@@ -295,10 +293,15 @@ const years = lookupItems("birth_years");
 const militaryStatuses = lookupItems("military_statuses");
 const provinces = lookupItems("provinces");
 
+const avatarPreview = computed(() => {
+  if (imageBase64.value) return imageBase64.value;
+  if (keepServerPreview.value) return userAvatar.value;
+  return null;
+});
+
 // Form
 const formSchema = Yup.object({
-  //profileImage: profileImageValidation,
-  profileImage: Yup.string().notRequired(),
+  profileImage: profileImageValidation,
   name: fullNameValidation,
   jobTitle: Yup.string().required("عنوان شغلی انتخاب نشده است"),
   jobStatus: Yup.string().required("وضعیت شغلی انتخاب نشده است"),
@@ -325,7 +328,6 @@ const {
   handleSubmit,
   setFieldValue,
   setFieldError,
-  validateField,
   setValues,
   values,
 } = useForm<Yup.InferType<typeof formSchema>>({
@@ -425,10 +427,29 @@ const onSubmit = handleSubmit(async (data) => {
 });
 
 const handleProfileImage = async (file: File | null) => {
-  if (!file) return;
+  if (!file) {
+    try {
+      const res = await api.delete<{ data?: { avatar?: string } }>(
+        "cv/profile-image",
+      );
+      setFieldValue("profileImage", undefined);
+      imageBase64.value = null;
+      keepServerPreview.value = false;
+      // Mark as default immediately so resume completion updates before refresh.
+      patchUser({
+        avatar: res?.data?.avatar ?? "files/default-avatar.png",
+      });
+      await refreshUser();
+      $toast.success("تصویر پروفایل حذف شد");
+    } catch {
+      setFieldError("profileImage", "خطا در حذف تصویر");
+      $toast.error("خطا در حذف تصویر");
+    }
+    return;
+  }
 
   // clear previous error
-  setFieldError("profileImage", "");
+  setFieldError("profileImage", undefined);
 
   // 1. validate type
   const isValidType = file.type === "image/png" || file.type === "image/jpeg";
@@ -447,55 +468,56 @@ const handleProfileImage = async (file: File | null) => {
   }
 
   try {
-    // 3. upload
+    // 3. upload — API returns { filename, url }
     const formData = new FormData();
     formData.append("profile_image", file);
 
-    const res = await api.post<any>("cv/upload/profile-image", formData);
+    const res = await api.post<{
+      data?: { filename?: string; url?: string };
+    }>("cv/upload/profile-image", formData);
 
-    // 4. set uploaded file id into form
-    setFieldValue("profileImage", res.data.id);
+    const uploaded = res?.data;
+    const filename = uploaded?.filename;
+    const url = uploaded?.url;
+
+    if (!filename && !url) {
+      setFieldError("profileImage", "خطا در آپلود تصویر");
+      return;
+    }
+
+    setFieldValue("profileImage", filename ?? url ?? "uploaded");
+    keepServerPreview.value = true;
+    if (url) {
+      imageBase64.value = url;
+    }
     await refreshUser();
-
-    // 5. optional: clear error after success
-    setFieldError("profileImage", "");
+    $toast.success("تصویر پروفایل با موفقیت آپلود شد");
   } catch (error) {
     setFieldError("profileImage", "خطا در آپلود تصویر");
+    $toast.error("خطا در آپلود تصویر");
   }
 };
 
 onMounted(async () => {
-  //   const bootstrap = ref()
-  //   bootstrap.value = await api.get('/panel/bootstrap')
-
-  //Load user data
   const currentUser = useSanctumUser<any>();
-  // const res = await api.get<any>("/user");
-  //currentUser.value = res?.data ?? null;
+  const personal = currentUser.value?.data?.resume_personal;
 
   setValues({
-    name: currentUser.value.data.resume_personal?.name ?? "",
-    jobTitle: currentUser.value.data.resume_personal?.job_title ?? "",
-    jobStatus: String(
-      currentUser.value.data.resume_personal?.job_status ?? "0",
-    ),
-    workExperience:
-      currentUser.value.data.resume_personal?.work_experience ?? "",
-    desiredSalary: currentUser.value.data.resume_personal?.desired_salary ?? "",
-    birthDate: Number(currentUser.value.data.resume_personal?.birthdate ?? ""),
-    gender: String(currentUser.value.data.resume_personal?.gender ?? ""),
-    militaryServiceStatus:
-      currentUser.value.data.resume_personal?.military_service_status ?? "",
-    maritalStatus: String(
-      currentUser.value.data.resume_personal?.marital_status ?? "",
-    ),
-    province: currentUser.value.data.resume_personal?.province_id ?? "",
-    city: currentUser.value.data.resume_personal?.city_id ?? "",
-    region: currentUser.value.data.resume_personal?.region_id ?? "",
-    about: currentUser.value.data.resume_personal?.about ?? "",
-
-    // about: user.resume_personal?.about ?? '',
-    // profileImage: user.resume_personal?.profile_image ?? '',
+    name: personal?.name ?? "",
+    jobTitle: personal?.job_title ?? "",
+    jobStatus: String(personal?.job_status ?? "0"),
+    workExperience: personal?.work_experience ?? "",
+    desiredSalary: personal?.desired_salary ?? "",
+    birthDate: Number(personal?.birthdate ?? ""),
+    gender: String(personal?.gender ?? ""),
+    militaryServiceStatus: personal?.military_service_status ?? "",
+    maritalStatus: String(personal?.marital_status ?? ""),
+    province: personal?.province_id ?? "",
+    city: personal?.city_id ?? "",
+    region: personal?.region_id ?? "",
+    about: personal?.about ?? "",
+    // Marker so required validation passes when avatar already exists
+    profileImage: userAvatar.value ? "existing" : undefined,
   });
 });
 </script>

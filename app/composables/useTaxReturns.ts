@@ -8,8 +8,9 @@ function getFetchErrorMessage(err: unknown) {
   return 'خطا در دریافت درخواست‌های اظهارنامه'
 }
 
-export function useTaxReturns() {
+export function useTaxReturns(options: { immediate?: boolean } = {}) {
   const api = useApi()
+  const immediate = options.immediate ?? true
 
   const items = ref<TaxReturnListItem[]>([])
   const loading = ref(false)
@@ -50,7 +51,7 @@ export function useTaxReturns() {
   }
 
   onMounted(() => {
-    fetchTaxReturns()
+    if (immediate) fetchTaxReturns()
   })
 
   return {

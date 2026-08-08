@@ -15,8 +15,9 @@ const emptyAdGroups = (): EmployerAdsData => ({
   total: [],
 })
 
-export function useEmployerAds() {
+export function useEmployerAds(options: { immediate?: boolean } = {}) {
   const api = useApi()
+  const immediate = options.immediate ?? true
 
   const adGroups = ref<EmployerAdsData>(emptyAdGroups())
   const loading = ref(false)
@@ -49,7 +50,7 @@ export function useEmployerAds() {
   }
 
   onMounted(() => {
-    fetchAds()
+    if (immediate) fetchAds()
   })
 
   async function deleteAd(id: number) {

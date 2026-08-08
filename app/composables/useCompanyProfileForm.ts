@@ -27,7 +27,11 @@ export interface UploadedMedia {
   file_name?: string
 }
 
-const DEFAULT_LOGO_MARKERS = ['company-default', 'images/company-default']
+const DEFAULT_LOGO_MARKERS = [
+  'company-default',
+  'images/company-default',
+  'default-avatar',
+]
 
 function isDefaultLogoUrl(url: string | null | undefined) {
   if (!url) return true

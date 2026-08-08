@@ -1,6 +1,10 @@
 import type { CompanyProfileFormModel } from '~/types/company-profile-form'
 
-const DEFAULT_LOGO_MARKERS = ['company-default', 'images/company-default']
+const DEFAULT_LOGO_MARKERS = [
+  'company-default',
+  'images/company-default',
+  'default-avatar',
+]
 
 export function isDefaultCompanyLogo(url: string | null | undefined): boolean {
   if (!url) return true
