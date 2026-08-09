@@ -42,7 +42,7 @@
         v-else-if="!items.length"
         class="flex flex-col items-center gap-2 px-4 py-10 text-center"
       >
-        <Icon name="svg:illust-bell" size="72" />
+        <Icon name="svg:illust-bell" size="250" />
         <p class="text-sm text-text-passive">اعلانی وجود ندارد</p>
       </div>
 

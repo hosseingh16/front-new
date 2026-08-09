@@ -87,6 +87,7 @@
               :target-id="ad.id"
               type="ads"
               label="نشان کردن"
+              :icon-only="isMobile"
               :initial-bookmarked="Boolean(ad.is_bookmarked)"
               @update:bookmarked="
                 (value) => {
@@ -232,6 +233,18 @@ const reportIssueModalRef = ref<InstanceType<typeof ReportIssueModal> | null>(
 const fastLoginRef = ref<InstanceType<typeof FastLoginModal> | null>(null);
 const successDialogRef = ref<HTMLDialogElement | null>(null);
 const applying = ref(false);
+const isMobile = ref(false);
+
+onMounted(() => {
+  const mediaQuery = window.matchMedia("(max-width: 767px)");
+  const syncIsMobile = () => {
+    isMobile.value = mediaQuery.matches;
+  };
+
+  syncIsMobile();
+  mediaQuery.addEventListener("change", syncIsMobile);
+  onUnmounted(() => mediaQuery.removeEventListener("change", syncIsMobile));
+});
 
 const companyLogoSrc = computed(() =>
   resolveCompanyLogoDisplaySrc(ad.value?.company_logo),

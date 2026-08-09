@@ -207,7 +207,7 @@ const itemUrl = computed(() => {
   }
   return isAuthenticated.value
     ? `/dashboard/ad/${props.item.id}`
-    : `/ad/${props.item.id}`;
+    : `/jobs/${props.item.id}`;
 });
 
 function onBookmarkChange(value: boolean) {

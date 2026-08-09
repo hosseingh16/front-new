@@ -2,13 +2,15 @@
   <div
     class="grid items-start gap-4 bg-surface-50 p-5 lg:grid-cols-[minmax(0,1fr)_300px]"
   >
-    <main class="space-y-4">
-      <div class="flex justify-start gap-6 overflow-x-auto border-b border-gray-default px-5 md:px-6">
+    <main class="min-w-0 space-y-4">
+      <div
+        class="no-scrollbar -mx-1 flex justify-start gap-3 overflow-x-auto overscroll-x-contain border-b border-gray-default sm:gap-4 md:gap-6"
+      >
         <button
           v-for="tab in tabs"
           :key="tab.id"
           type="button"
-          class="flex shrink-0 cursor-pointer items-center gap-2 border-b-[1.5px] py-2 text-sm transition-colors"
+          class="flex shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap border-b-[1.5px] py-2 text-xs transition-colors sm:gap-2 sm:text-sm"
           :class="
             activeTab === tab.id
               ? 'border-primary-500 font-semibold text-primary-500'
@@ -18,14 +20,14 @@
         >
           {{ tab.label }}
           <div
-            class="flex h-6 w-6 items-center justify-center rounded-full p-1"
+            class="flex h-5 w-5 items-center justify-center rounded-full p-0.5 sm:h-6 sm:w-6 sm:p-1"
             :class="
               activeTab === tab.id
                 ? 'bg-[#4864E114] text-primary-500'
                 : 'bg-[#4A4A4A14] text-text-passive'
             "
           >
-            <Icon :name="tab.icon" size="16" />
+            <Icon :name="tab.icon" class="size-3.5 sm:size-4" />
           </div>
         </button>
       </div>
