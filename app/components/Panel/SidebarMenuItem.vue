@@ -5,16 +5,9 @@
       :to="item.to"
       class="flex"
     >
-      <span
-        class="btn btn-block btn-ghost flex"
-        :class="itemButtonClass"
-      >
+      <span class="btn btn-block btn-ghost flex" :class="itemButtonClass">
         <div class="flex items-center justify-start">
-          <Icon
-            :name="`${item.icon}`"
-            class="text-text-passive"
-            size="16"
-          />
+          <Icon :name="`${item.icon}`" class="text-text-passive" size="16" />
           <span class="mr-2 text-text-secondary">
             {{ item.label }}
           </span>
@@ -22,11 +15,7 @@
       </span>
     </NuxtLink>
 
-    <div
-      v-else
-      class="flex"
-      @click="onItemClick"
-    >
+    <div v-else class="flex" @click="onItemClick">
       <button
         type="button"
         class="btn btn-block btn-ghost flex"
@@ -56,7 +45,7 @@
     </div>
 
     <Transition name="accordion">
-      <div v-if="item.children?.length && open" class="mr-6 flex text-sm">
+      <div v-if="item.children?.length && open" class="mr-6 flex">
         <div
           class="mb-4 w-3 rounded-br-full border-b-2 border-r-2 border-dotted border-[#cccccc] dark:border-surface-200"
         >
@@ -128,12 +117,14 @@ const emit = defineEmits<{
 
 const itemButtonClass = computed(() => [
   props.item.children ? "items-center justify-between" : "justify-start",
-  { "bg-primary-50": !props.item.disabled && props.activePath === props.item.to },
+  {
+    "bg-primary-50": !props.item.disabled && props.activePath === props.item.to,
+  },
   props.item.disabled
     ? "cursor-not-allowed opacity-55 hover:bg-transparent"
     : props.activePath !== props.item.to
-      ? "hover:bg-gray-100 dark:hover:bg-surface-200"
-      : "hover:bg-primary-50",
+    ? "hover:bg-gray-100 dark:hover:bg-surface-200"
+    : "hover:bg-primary-50",
 ]);
 
 function childButtonClass(child: MenuItem) {
@@ -142,8 +133,8 @@ function childButtonClass(child: MenuItem) {
     child.disabled
       ? "cursor-not-allowed opacity-55 hover:bg-transparent"
       : props.activePath !== child.to
-        ? "hover:bg-gray-100 dark:hover:bg-surface-200"
-        : "hover:bg-primary-50",
+      ? "hover:bg-gray-100 dark:hover:bg-surface-200"
+      : "hover:bg-primary-50",
   ];
 }
 

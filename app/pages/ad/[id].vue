@@ -39,12 +39,12 @@ const adId = computed(() => String(route.params.id ?? ''))
 const user = useSanctumUser()
 
 if (user.value) {
-  await navigateTo(`/dashboard/ad/${adId.value}`, { replace: true })
+  await navigateTo(`/jobs/${adId.value}`, { replace: true })
 }
 
 watch(user, (value) => {
   if (value) {
-    navigateTo(`/dashboard/ad/${adId.value}`, { replace: true })
+    navigateTo(`/jobs/${adId.value}`, { replace: true })
   }
 })
 

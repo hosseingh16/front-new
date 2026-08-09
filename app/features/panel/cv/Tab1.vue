@@ -274,7 +274,8 @@ import { profileImageValidation } from "~/validations/profileImage";
 // Variables
 const api = useApi();
 const { $toast } = useNuxtApp();
-const { applyUserPayload, patchUser, refreshUser, avatar: userAvatar } = useCurrentUser();
+const { applyUserPayload, patchUser, refreshUser, avatar: userAvatar, user } =
+  useCurrentUser();
 const loading = api.loading;
 const hasRegions = ref(false);
 const editMode = ref(false);
@@ -413,6 +414,14 @@ const onSubmit = handleSubmit(async (data) => {
       payload,
     );
     applyUserPayload(result);
+    patchUser({
+      name: data.name,
+      resume_personal: {
+        ...((user.value?.resume_personal as Record<string, unknown> | undefined) ??
+          {}),
+        name: data.name,
+      },
+    });
     editMode.value = false;
     $toast.success("اطلاعات پایه با موفقیت ذخیره شد");
     await refreshUser();

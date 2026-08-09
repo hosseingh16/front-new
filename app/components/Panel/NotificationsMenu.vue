@@ -42,8 +42,12 @@
         v-else-if="!items.length"
         class="flex flex-col items-center gap-2 px-4 py-10 text-center"
       >
-        <Icon name="svg:illust-bell" size="250" />
-        <p class="text-sm text-text-passive">اعلانی وجود ندارد</p>
+        <Icon
+          name="svg:illust-bell"
+          size="250"
+          class="mx-auto block object-contain"
+        />
+        <p class="text-sm text-text-passive -mt-[70px]">اعلانی وجود ندارد</p>
       </div>
 
       <ul v-else class="divide-y divide-gray-default">

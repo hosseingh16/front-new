@@ -41,7 +41,7 @@
       <div class="flex flex-1 flex-col items-center justify-center">
         <NoResult
           title="فرصت شغلی موجود نیست"
-          description="متاسفانه هیچ فرصت شغلی جهت نمایش موجود نیست!!!"
+          description="هنوز هیچ درخواستی برای فرصت‌های شغلی ارسال نکرده‌اید."
           :icon-src="noJobIllustration"
           :icon-size="240"
           action-label="فرصت‌های شغلی"
@@ -75,12 +75,13 @@
           >
             <Icon name="svg:search-1" size="24" />
           </button>
-          <NuxtLink
-            to="/dashboard/ad"
-            class="btn btn-success h-10 gap-2 px-4"
-          >
+          <NuxtLink to="/dashboard/ad" class="btn btn-success h-10 gap-2 px-4">
             فرصت‌های شغلی
-            <Icon name="svg:jobs" size="24" class="shrink-0 brightness-0 invert" />
+            <Icon
+              name="svg:jobs"
+              size="24"
+              class="shrink-0 brightness-0 invert"
+            />
           </NuxtLink>
         </div>
       </div>
@@ -110,7 +111,9 @@
           @click="activeTab = tab.id"
         >
           <span
-            v-if="tab.countBadgeClass && getMyRequestTabCount(requests, tab.id) > 0"
+            v-if="
+              tab.countBadgeClass && getMyRequestTabCount(requests, tab.id) > 0
+            "
             class="inline-flex size-6 items-center justify-center rounded-lg text-caption font-semibold"
             :class="tab.countBadgeClass"
           >
@@ -154,10 +157,7 @@
       />
     </template>
 
-    <MyRequestDetailModal
-      ref="detailModalRef"
-      :request="selectedRequest"
-    />
+    <MyRequestDetailModal ref="detailModalRef" :request="selectedRequest" />
 
     <ConfirmDialog
       ref="confirmDialogRef"
@@ -174,26 +174,26 @@
 </template>
 
 <script setup lang="ts">
-import ConfirmDialog from '~/components/M/ConfirmDialog.vue'
-import MyRequestCard from '~/components/Elements/MyRequestCard.vue'
-import NoResult from '~/components/Elements/NoResult.vue'
-import Pagination from '~/components/Elements/Pagination.vue'
-import MyRequestDetailModal from '~/pages/dashboard/components/MyRequestDetailModal.vue'
-import { toPersianDigits } from '~/composables/useCountUp'
-import type { MyRequest } from '~/types/my-request'
+import ConfirmDialog from "~/components/M/ConfirmDialog.vue";
+import MyRequestCard from "~/components/Elements/MyRequestCard.vue";
+import NoResult from "~/components/Elements/NoResult.vue";
+import Pagination from "~/components/Elements/Pagination.vue";
+import MyRequestDetailModal from "~/pages/dashboard/components/MyRequestDetailModal.vue";
+import { toPersianDigits } from "~/composables/useCountUp";
+import type { MyRequest } from "~/types/my-request";
 import {
   MY_REQUEST_TABS,
   getMyRequestTabCount,
-} from '~/pages/dashboard/utils/my-request'
-import noJobIllustration from '~/assets/vectors/illustrations/no-job-2.svg?url'
+} from "~/pages/dashboard/utils/my-request";
+import noJobIllustration from "~/assets/vectors/illustrations/no-job-2.svg?url";
 
 definePageMeta({
-  layout: 'dashboard',
-})
+  layout: "dashboard",
+});
 
 useSeoMeta({
-  title: 'درخواست‌های شغلی | های‌حساب',
-})
+  title: "درخواست‌های شغلی | های‌حساب",
+});
 
 const {
   requests,
@@ -210,44 +210,46 @@ const {
   goToPage,
   cancelRequest,
   updateBookmark,
-} = useMyRequests()
+} = useMyRequests();
 
-const confirmDialogRef = ref<InstanceType<typeof ConfirmDialog> | null>(null)
-const detailModalRef = ref<InstanceType<typeof MyRequestDetailModal> | null>(null)
-const pendingCancel = ref<MyRequest | null>(null)
-const selectedRequest = ref<MyRequest | null>(null)
+const confirmDialogRef = ref<InstanceType<typeof ConfirmDialog> | null>(null);
+const detailModalRef = ref<InstanceType<typeof MyRequestDetailModal> | null>(
+  null,
+);
+const pendingCancel = ref<MyRequest | null>(null);
+const selectedRequest = ref<MyRequest | null>(null);
 
 function openCancelDialog(request: MyRequest) {
-  pendingCancel.value = request
-  confirmDialogRef.value?.showModal()
+  pendingCancel.value = request;
+  confirmDialogRef.value?.showModal();
 }
 
 function openDetailsModal(request: MyRequest) {
-  selectedRequest.value = request
+  selectedRequest.value = request;
   nextTick(() => {
-    detailModalRef.value?.showModal()
-  })
+    detailModalRef.value?.showModal();
+  });
 }
 
 async function handleCancelConfirm() {
-  if (!pendingCancel.value) return
+  if (!pendingCancel.value) return;
 
-  const requestId = pendingCancel.value.id
+  const requestId = pendingCancel.value.id;
   try {
-    await cancelRequest(requestId)
-    pendingCancel.value = null
-    confirmDialogRef.value?.closeModal()
+    await cancelRequest(requestId);
+    pendingCancel.value = null;
+    confirmDialogRef.value?.closeModal();
   } catch (err: unknown) {
     const message =
-      err && typeof err === 'object' && 'message' in err
+      err && typeof err === "object" && "message" in err
         ? String((err as { message?: string }).message)
-        : 'خطا در لغو درخواست'
-    const { $toast } = useNuxtApp()
-    $toast.error(message)
+        : "خطا در لغو درخواست";
+    const { $toast } = useNuxtApp();
+    $toast.error(message);
   }
 }
 
 function onBookmarkChange(request: MyRequest, bookmarked: boolean) {
-  updateBookmark(request.id, bookmarked)
+  updateBookmark(request.id, bookmarked);
 }
 </script>

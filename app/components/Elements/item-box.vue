@@ -186,8 +186,6 @@ const props = withDefaults(
   },
 );
 
-const { isAuthenticated } = useSanctumAuth();
-
 const emit = defineEmits<{
   bookmarkChange: [id: number | string, bookmarked: boolean];
 }>();
@@ -205,9 +203,7 @@ const itemUrl = computed(() => {
   if (props.variant === "project") {
     return `/project/${props.item.id}`;
   }
-  return isAuthenticated.value
-    ? `/dashboard/ad/${props.item.id}`
-    : `/jobs/${props.item.id}`;
+  return `/jobs/${props.item.id}`;
 });
 
 function onBookmarkChange(value: boolean) {

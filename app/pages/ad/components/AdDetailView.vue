@@ -142,7 +142,7 @@ const emit = defineEmits<{
 }>()
 
 const adsListPath = computed(() =>
-  props.embedded ? '/dashboard/ad' : '/ad',
+  props.embedded ? '/dashboard/ad' : '/jobs',
 )
 
 const companyLogoSrc = computed(() =>

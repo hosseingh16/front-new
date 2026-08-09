@@ -22,7 +22,11 @@ export function useCurrentUser() {
   });
 
   const name = computed(() => {
-    const value = user.value?.name;
+    const personal = user.value?.resume_personal as
+      | Record<string, unknown>
+      | null
+      | undefined;
+    const value = user.value?.name ?? personal?.name;
     if (typeof value !== "string") return "—";
     const trimmed = value.trim();
     return trimmed || "—";
@@ -54,17 +58,39 @@ export function useCurrentUser() {
     if (!payload || typeof payload !== "object") return;
 
     const root = payload as Record<string, unknown>;
+    const current =
+      sanctumUser.value && typeof sanctumUser.value === "object"
+        ? (sanctumUser.value as Record<string, unknown>)
+        : {};
 
     if (root.data && typeof root.data === "object") {
-      sanctumUser.value = root;
+      const currentData =
+        current.data && typeof current.data === "object"
+          ? (current.data as Record<string, unknown>)
+          : {};
+
+      sanctumUser.value = {
+        ...current,
+        ...root,
+        data: {
+          ...currentData,
+          ...(root.data as Record<string, unknown>),
+        },
+      };
       return;
     }
 
+    const currentData =
+      current.data && typeof current.data === "object"
+        ? (current.data as Record<string, unknown>)
+        : {};
+
     sanctumUser.value = {
-      ...(sanctumUser.value && typeof sanctumUser.value === "object"
-        ? sanctumUser.value
-        : {}),
-      data: root,
+      ...current,
+      data: {
+        ...currentData,
+        ...root,
+      },
     };
   }
 

@@ -18,7 +18,6 @@
           "
           @click="activeTab = tab.id"
         >
-          {{ tab.label }}
           <div
             class="flex h-5 w-5 items-center justify-center rounded-full p-0.5 sm:h-6 sm:w-6 sm:p-1"
             :class="
@@ -29,6 +28,7 @@
           >
             <Icon :name="tab.icon" class="size-3.5 sm:size-4" />
           </div>
+          {{ tab.label }}
         </button>
       </div>
 
@@ -49,7 +49,9 @@
             v-if="qualificationItems.length"
             class="mt-4 text-sm leading-8 text-text-secondary"
           >
-            <ul class="list-inside list-disc space-y-1 marker:text-text-secondary">
+            <ul
+              class="list-inside list-disc space-y-1 marker:text-text-secondary"
+            >
               <li v-for="item in qualificationItems" :key="item">
                 {{ item }}
               </li>
@@ -251,7 +253,11 @@
             :key="item.label"
             class="flex w-full items-center justify-start gap-2 py-1 text-sm"
           >
-            <Icon :name="item.icon" size="20" class="shrink-0 text-text-passive" />
+            <Icon
+              :name="item.icon"
+              size="20"
+              class="shrink-0 text-text-passive"
+            />
             <dt class="text-text-passive">{{ item.label }}:</dt>
             <dd
               class="font-semibold"

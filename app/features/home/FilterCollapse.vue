@@ -9,7 +9,7 @@
       </div>
       <icons-chevron class="transition-all" :class="{ 'rotate-180': open }" />
     </div>
-    <div class="collapse-content text-sm px-3">
+    <div class="collapse-content px-3">
       <slot name="content" />
     </div>
   </div>
