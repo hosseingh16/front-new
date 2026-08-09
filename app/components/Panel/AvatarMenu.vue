@@ -16,7 +16,7 @@
 
     <div
       v-if="topMenu.length"
-      class="mt-1 bg-surface-50 px-3 py-3 hover:rounded-none lg:p-0 [&_button]:text-sm [&_button]:font-normal"
+      class="mt-1 bg-surface-50 px-3 py-3 hover:rounded-none lg:p-0 [&_.btn]:text-sm [&_.btn]:font-normal"
     >
       <div class="flex flex-col gap-y-2">
         <template v-for="item in topMenu" :key="item.key ?? item.label">
@@ -79,7 +79,7 @@
     </div>
 
     <div
-      class="mt-1 bg-surface-50 px-3 py-3 hover:rounded-none lg:p-0 [&_button]:text-sm [&_button]:font-normal"
+      class="mt-1 bg-surface-50 px-3 py-3 hover:rounded-none lg:p-0 [&_.btn]:text-sm [&_.btn]:font-normal"
     >
       <div class="flex flex-col gap-y-2">
         <template v-for="item in bottomMenu" :key="item.key ?? item.label">

@@ -20,6 +20,7 @@ export const menuMap: Record<string, MenuMeta> = {
     label: "رزومه من",
     icon: "svg:work-history",
     to: "/dashboard/my-resume",
+    placement: "bottom",
   },
 
   resume_view: {
@@ -56,6 +57,7 @@ export const menuMap: Record<string, MenuMeta> = {
     label: "نشان شده ها",
     icon: "svg:bookmark-1",
     to: "/dashboard/bookmarks",
+    placement: "bottom",
   },
 
   emplopyer_ads: {
@@ -98,6 +100,7 @@ export const menuMap: Record<string, MenuMeta> = {
     label: "پروفایل سازمان",
     icon: "svg:buildings-5",
     to: "/dashboard/employer/company",
+    placement: "bottom",
   },
 
   user_dashboard: {
@@ -170,12 +173,14 @@ export const menuMap: Record<string, MenuMeta> = {
     label: "نشان شده‌ها",
     icon: "svg:bookmark-1",
     to: "/dashboard/bookmarks",
+    placement: "bottom",
   },
 
   user_settings: {
     label: "تنظیمات",
     icon: "svg:settings",
     to: "/dashboard/settings",
+    placement: "bottom",
   },
 
   dashboard_action_opportunities: {

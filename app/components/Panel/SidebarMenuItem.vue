@@ -12,8 +12,8 @@
         <div class="flex items-center justify-start">
           <Icon
             :name="`${item.icon}`"
-            class="size-5 shrink-0 text-text-passive"
-            size="20"
+            class="text-text-passive"
+            size="16"
           />
           <span class="mr-2 text-text-secondary">
             {{ item.label }}
@@ -36,8 +36,8 @@
         <div class="flex items-center justify-start">
           <Icon
             :name="`${item.icon}`"
-            class="size-5 shrink-0 text-text-passive"
-            size="20"
+            class="text-text-passive"
+            size="16"
             :class="{ 'opacity-50': item.disabled }"
           />
           <span
@@ -79,8 +79,8 @@
                 <div class="flex items-center justify-start">
                   <Icon
                     :name="`${child.icon}`"
-                    size="20"
-                    class="size-5 shrink-0 text-text-passive"
+                    size="16"
+                    class="text-text-passive"
                   />
                   <span class="mr-2 text-text-secondary">
                     {{ child.label }}
@@ -98,8 +98,8 @@
               <div class="flex items-center justify-start">
                 <Icon
                   :name="`${child.icon}`"
-                  size="20"
-                  class="size-5 shrink-0 text-text-passive opacity-50"
+                  size="16"
+                  class="text-text-passive opacity-50"
                 />
                 <span class="mr-2 text-text-secondary opacity-50">
                   {{ child.label }}
