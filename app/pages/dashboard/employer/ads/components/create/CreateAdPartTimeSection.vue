@@ -70,28 +70,28 @@
 
         <div class="flex flex-wrap items-center gap-8">
           <label
-            v-for="option in collaborationOptions"
+            v-for="option in workHoursTypeOptions"
             :key="option.value"
             class="flex cursor-pointer items-center gap-2"
           >
             <input
-              v-model="form.collaboration_type"
+              v-model="form.work_hours_type"
               type="radio"
               class="radio radio-primary"
-              name="collaboration_type"
+              name="work_hours_type"
               :value="option.value"
             />
             <span class="text-sm">{{ option.label }}</span>
           </label>
         </div>
 
-        <p v-if="errors.collaboration_type" class="mt-1 text-xs text-[#EF4035]">
-          {{ errors.collaboration_type }}
+        <p v-if="errors.work_hours_type" class="mt-1 text-xs text-[#EF4035]">
+          {{ errors.work_hours_type }}
         </p>
       </div>
 
       <div
-        v-if="form.collaboration_type === 'floating'"
+        v-if="form.work_hours_type === 'dynamic'"
         class="grid gap-6 lg:grid-cols-2"
       >
         <div>
@@ -123,7 +123,7 @@
         </div>
       </div>
 
-      <div v-else-if="form.collaboration_type === 'fixed'">
+      <div v-else-if="form.work_hours_type === 'static'">
         <p class="relative mb-3 w-fit text-base">
           ساعت کاری:
           <span class="absolute -top-2 text-red-400">*</span>
@@ -242,9 +242,9 @@ const accountingGroups = [
   },
 ] as const;
 
-const collaborationOptions = [
-  { value: "floating", label: "ساعت کاری شناور" },
-  { value: "fixed", label: "ساعت کاری ثابت" },
+const workHoursTypeOptions = [
+  { value: "dynamic", label: "ساعت کاری شناور" },
+  { value: "static", label: "ساعت کاری ثابت" },
 ] as const;
 
 const FA_DIGITS = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];

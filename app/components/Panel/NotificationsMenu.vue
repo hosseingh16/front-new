@@ -47,7 +47,7 @@
           size="250"
           class="mx-auto block object-contain"
         />
-        <p class="text-sm text-text-passive -mt-[70px]">اعلانی وجود ندارد</p>
+        <p class="text-sm text-text-passive -mt-17.5">اعلانی وجود ندارد</p>
       </div>
 
       <ul v-else class="divide-y divide-gray-default">

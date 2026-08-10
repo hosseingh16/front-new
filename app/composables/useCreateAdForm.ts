@@ -264,6 +264,7 @@ export function useCreateAdForm(
         const parsed = JSON.parse(rawPartTime) as {
           accounting_management?: string
           accounting_needs?: string[]
+          work_hours_type?: string
           collaboration_type?: string
           days_per_week?: string | number
           hours_per_day?: string | number
@@ -274,7 +275,14 @@ export function useCreateAdForm(
         }
         next.accounting_management = parsed.accounting_management ?? ''
         next.accounting_needs = parsed.accounting_needs ?? []
-        next.collaboration_type = parsed.collaboration_type ?? ''
+        const legacyWorkHoursType =
+          parsed.collaboration_type === 'floating'
+            ? 'dynamic'
+            : parsed.collaboration_type === 'fixed'
+              ? 'static'
+              : parsed.collaboration_type
+        next.work_hours_type =
+          parsed.work_hours_type ?? legacyWorkHoursType ?? ''
         next.floating_days =
           parsed.days_per_week != null ? String(parsed.days_per_week) : ''
         next.floating_hours =
@@ -294,6 +302,16 @@ export function useCreateAdForm(
       } catch {
         // malformed conditions, keep defaults
       }
+    }
+
+    if (!next.work_hours_type && ad.work_hours_type) {
+      next.work_hours_type = ad.work_hours_type
+    }
+    if (!next.floating_days && ad.dynamic_need_days != null) {
+      next.floating_days = String(ad.dynamic_need_days)
+    }
+    if (!next.floating_hours && ad.dynamic_need_hours != null) {
+      next.floating_hours = String(ad.dynamic_need_hours)
     }
 
     form.value = next

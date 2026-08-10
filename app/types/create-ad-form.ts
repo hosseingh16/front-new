@@ -52,7 +52,7 @@ export interface CreateAdFormModel {
   travel_need: string
   accounting_management: string
   accounting_needs: string[]
-  collaboration_type: string
+  work_hours_type: string
   floating_days: string
   floating_hours: string
   fixed_schedule: PartTimeDaySchedule[]
@@ -66,7 +66,7 @@ export interface CreateAdFormErrors {
   employment_type?: string
   resume_terms?: string
   accounting_management?: string
-  collaboration_type?: string
+  work_hours_type?: string
   floating_days?: string
   floating_hours?: string
   fixed_schedule?: string
@@ -100,7 +100,7 @@ export function createEmptyCreateAdForm(): CreateAdFormModel {
     travel_need: '',
     accounting_management: '',
     accounting_needs: [],
-    collaboration_type: '',
+    work_hours_type: '',
     floating_days: '',
     floating_hours: '',
     fixed_schedule: createEmptyPartTimeWeekSchedule(),

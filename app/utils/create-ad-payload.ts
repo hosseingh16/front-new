@@ -68,16 +68,16 @@ export function validateCreateAdForm(
         'نحوه مدیریت حسابداری در سازمان الزامی است'
     }
 
-    if (!form.collaboration_type) {
-      errors.collaboration_type = 'نحوه همکاری الزامی است'
-    } else if (form.collaboration_type === 'floating') {
+    if (!form.work_hours_type) {
+      errors.work_hours_type = 'نحوه همکاری الزامی است'
+    } else if (form.work_hours_type === 'dynamic') {
       if (!form.floating_days) {
         errors.floating_days = 'تعداد روز مورد نیاز الزامی است'
       }
       if (!form.floating_hours) {
         errors.floating_hours = 'تعداد ساعت مورد نیاز الزامی است'
       }
-    } else if (form.collaboration_type === 'fixed') {
+    } else if (form.work_hours_type === 'static') {
       const hasCompleteDay = form.fixed_schedule.some(
         (day) =>
           day.enabled &&
@@ -176,16 +176,26 @@ export function buildCreateAdPayload(
   }
 
   if (/پاره\s*وقت/.test(employmentType)) {
+    if (form.work_hours_type) {
+      payload.work_hours_type = form.work_hours_type
+    }
+
     const partTime: Record<string, unknown> = {
       accounting_management: form.accounting_management,
       accounting_needs: form.accounting_needs,
-      collaboration_type: form.collaboration_type,
+      work_hours_type: form.work_hours_type,
     }
 
-    if (form.collaboration_type === 'floating') {
+    if (form.work_hours_type === 'dynamic') {
       partTime.days_per_week = form.floating_days
       partTime.hours_per_day = form.floating_hours
-    } else if (form.collaboration_type === 'fixed') {
+      if (form.floating_days) {
+        payload.dynamic_need_days = Number(form.floating_days)
+      }
+      if (form.floating_hours) {
+        payload.dynamic_need_hours = Number(form.floating_hours)
+      }
+    } else if (form.work_hours_type === 'static') {
       partTime.schedule = form.fixed_schedule
         .filter((day) => day.enabled)
         .map((day) => ({
