@@ -16,11 +16,22 @@
     >
       <div class="overflow-visible px-4 pb-5 pt-5 text-center sm:px-6 sm:pb-6 sm:pt-6">
         <div class="remove-item-modal-illustration relative overflow-visible">
-          <Icon
-            :name="icon"
-            :size="iconSize"
-            class="mx-auto block h-auto max-w-full"
-          />
+          <slot name="illustration">
+            <img
+              v-if="iconSrc"
+              :src="iconSrc"
+              alt=""
+              class="mx-auto block h-auto w-full max-w-[min(100%,256px)]"
+              :width="iconSize"
+              :height="iconSize"
+            />
+            <Icon
+              v-else
+              :name="icon"
+              :size="iconSize"
+              class="mx-auto block h-auto max-w-full"
+            />
+          </slot>
           <h2
             :id="titleId"
             class="relative z-10 -mt-[4.375rem] font-yb-bold text-xl text-text-tertiary sm:-mt-[4.5rem] sm:text-2xl"
@@ -84,6 +95,7 @@ const props = withDefaults(
     confirmText?: string;
     cancelText?: string;
     icon?: string;
+    iconSrc?: string;
     iconSize?: number | string;
     confirmIcon?: string;
     cancelIcon?: string;
@@ -98,6 +110,7 @@ const props = withDefaults(
     confirmText: "حذف",
     cancelText: "انصراف",
     icon: "svg:delete",
+    iconSrc: "",
     iconSize: 256,
     confirmIcon: "material-symbols:delete-outline",
     cancelIcon: "material-symbols:close-rounded",
@@ -165,13 +178,15 @@ defineExpose({
 </script>
 
 <style scoped>
-.remove-item-modal-illustration :deep(svg) {
+.remove-item-modal-illustration :deep(svg),
+.remove-item-modal-illustration img {
   height: auto;
   max-width: min(100%, 256px);
 }
 
 @media (max-width: 639px) {
-  .remove-item-modal-illustration :deep(svg) {
+  .remove-item-modal-illustration :deep(svg),
+  .remove-item-modal-illustration img {
     max-width: 200px;
   }
 }

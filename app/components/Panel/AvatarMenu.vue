@@ -132,7 +132,7 @@
           type="button"
           class="btn btn-block btn-ghost flex justify-start hover:bg-gray-100 dark:hover:bg-surface-200"
           :disabled="loggingOut"
-          @click="handleLogout"
+          @click="openLogoutConfirm"
         >
           <div class="flex items-center justify-start">
             <Icon name="svg:log-out" class="text-danger-500" size="16" />
@@ -147,12 +147,29 @@
         <panel-theme-settings />
       </div>
     </div>
+
+    <Teleport to="body">
+      <RemoveItemModal
+        ref="logoutModalRef"
+        title="خروج از حساب کاربری"
+        subtitle="آیا از خروج مطمئن هستید؟"
+        description="با خروج از حساب، برای دسترسی دوباره باید وارد شوید."
+        confirm-text="خروج"
+        cancel-text="انصراف"
+        :icon-src="logoutIllustration"
+        confirm-icon="material-symbols:logout"
+        :loading="loggingOut"
+        @confirm="confirmLogout"
+      />
+    </Teleport>
   </div>
 </template>
 
 <script setup lang="ts">
 import { useCurrentUser } from "~/composables/useCurrentUser";
 import type { MenuItem } from "~/types/panel-config";
+import RemoveItemModal from "~/components/M/RemoveItemModal.vue";
+import logoutIllustration from "~/assets/vectors/logout.svg?url";
 
 const route = useRoute();
 const { name: userName, cellphone } = useCurrentUser();
@@ -160,6 +177,7 @@ const { logout } = useSanctumAuth();
 const { accountMenu } = usePanelConfig();
 
 const loggingOut = ref(false);
+const logoutModalRef = ref<InstanceType<typeof RemoveItemModal> | null>(null);
 
 const topMenu = computed(() =>
   accountMenu.value.filter((item) => item.placement !== "bottom"),
@@ -169,11 +187,17 @@ const bottomMenu = computed(() =>
   accountMenu.value.filter((item) => item.placement === "bottom"),
 );
 
-async function handleLogout() {
+function openLogoutConfirm() {
+  if (loggingOut.value) return;
+  logoutModalRef.value?.showModal();
+}
+
+async function confirmLogout() {
   if (loggingOut.value) return;
   loggingOut.value = true;
   try {
     await logout();
+    logoutModalRef.value?.closeModal();
   } finally {
     loggingOut.value = false;
   }
