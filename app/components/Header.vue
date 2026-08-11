@@ -39,14 +39,14 @@
 
       <NuxtLink v-if="isAuthenticated" to="/dashboard">
         <button class="btn btn-primary">
-          <Icon name="lucide:gauge" size="24" />
-          داشبورد
+          <Icon name="lucide:home" size="16" />
+          پیشخوان
         </button>
       </NuxtLink>
 
       <NuxtLink v-else to="/login">
         <button class="btn btn-primary">
-          <Icon name="svg:user-plus-white" size="24" />
+          <Icon name="svg:user-plus-white" size="16" />
           ورود | ثبت نام
         </button>
       </NuxtLink>

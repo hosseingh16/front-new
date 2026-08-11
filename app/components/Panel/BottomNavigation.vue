@@ -46,7 +46,7 @@
                 : 'bg-primary-100 '
             "
           >
-            <Icon name="lucide:gauge" />
+            <Icon name="lucide:home" />
           </div>
         </NuxtLink>
       </template>

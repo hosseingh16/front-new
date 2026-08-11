@@ -23,3 +23,5 @@ logs
 .env.*
 !.env.example
 nuxt.config.ts
+.vercel
+.env*

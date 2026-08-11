@@ -30,7 +30,10 @@
             لطفا برای ارسال رزومه از طریق دکمه زیر وارد حساب کاربری خود شوید
           </p>
           <form method="dialog">
-            <button class="btn btn-primary w-full mt-4" onclick="modal_2.showModal()">
+            <button
+              class="btn btn-primary w-full mt-4"
+              onclick="modal_2.showModal()"
+            >
               ورود و ثبت‌نام
             </button>
           </form>
@@ -41,9 +44,9 @@
           type="success"
         >
           <p class="text-sm font-normal text-gray-600 px-8 leading-6!">
-            در صورت تایید یا رد رزومه شما توسط کارفرما از طریق پیامک به شما اطلاع داده
-            خواهد شد . همچنین می توانید نتیجه را در بخش “ درخواست من ” در پنل کاربری خود
-            مشاهده نمایید.
+            در صورت تایید یا رد رزومه شما توسط کارفرما از طریق پیامک به شما
+            اطلاع داده خواهد شد . همچنین می توانید نتیجه را در بخش “ درخواست من
+            ” در پیشخوان خود مشاهده نمایید.
           </p>
           <form method="dialog">
             <button class="btn btn-success w-full mt-4">فهمیدم</button>
@@ -57,7 +60,9 @@
         </div>
         <div class="flex flex-wrap items-center gap-2">
           <Icon name="svg:user-octagon" />
-          <span class="text-sm font-normal text-gray-800">نوع همکاری : پاره وقت</span>
+          <span class="text-sm font-normal text-gray-800"
+            >نوع همکاری : پاره وقت</span
+          >
           <span class="text-gray-300">|</span>
           <div
             class="px-[2px] h-6 flex justify-center items-center font-normal text-xs text-[rgba(25,118,210,1)] bg-[rgba(227,243,255,1)] w-fit"
@@ -71,10 +76,14 @@
         </div>
         <div class="flex items-center gap-2">
           <Icon name="svg:setting" />
-          <span class="text-sm font-normal text-gray-800">نرم‌افزار مجموعه: سپیدار</span>
+          <span class="text-sm font-normal text-gray-800"
+            >نرم‌افزار مجموعه: سپیدار</span
+          >
         </div>
       </div>
-      <div class="max-lg:hidden mt-6 flex items-center flex-wrap gap-2 justify-between">
+      <div
+        class="max-lg:hidden mt-6 flex items-center flex-wrap gap-2 justify-between"
+      >
         <div
           class="bg-gray-100 flex justify-center items-center text-xs text-gray-800 h-6 rounded-lg px-4"
         >
@@ -110,14 +119,14 @@
 </template>
 
 <script setup lang="ts">
-import SelectedJobTab1 from './SelectedJobTab1.vue';
-import SelectedJobTab2 from './SelectedJobTab2.vue';
+import SelectedJobTab1 from "./SelectedJobTab1.vue";
+import SelectedJobTab2 from "./SelectedJobTab2.vue";
 
 // Variables
-const title = ref('استخدام مدیر مالی (آقا)');
+const title = ref("استخدام مدیر مالی (آقا)");
 
 // Functions
 function showBookmarkModal() {
-  (document.getElementById('bookmarkModal') as HTMLDialogElement).showModal();
+  (document.getElementById("bookmarkModal") as HTMLDialogElement).showModal();
 }
 </script>

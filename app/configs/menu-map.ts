@@ -12,7 +12,7 @@ type MenuMeta = {
 export const menuMap: Record<string, MenuMeta> = {
   dashboard: {
     label: "پیشخوان",
-    icon: "svg:gauge-1",
+    icon: "lucide:home",
     to: "/dashboard",
   },
 
@@ -105,7 +105,7 @@ export const menuMap: Record<string, MenuMeta> = {
 
   user_dashboard: {
     label: "پیشخوان",
-    icon: "svg:gauge-1",
+    icon: "lucide:home",
     to: "/dashboard",
   },
 

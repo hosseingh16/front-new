@@ -1,27 +1,31 @@
 <template>
   <div class="pb-10">
     <section>
-      <div class="flex items-center justify-between gap-4">
-        <div class="flex items-center gap-2.5">
-          <h1 class="text-h1 font-yb-bold leading-[1.7] text-text-primary">
+      <div
+        class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
+      >
+        <div class="flex min-w-0 flex-wrap items-center gap-2">
+          <h1
+            class="text-[23px] font-yb-bold leading-10 text-text-primary lg:text-h1 lg:leading-[1.7]"
+          >
             فرصت های شغلی حسابداری
           </h1>
           <div
             v-if="initialized"
-            class="rounded-full border border-gray-default px-2 py-0.5 text-base text-text-passive"
+            class="shrink-0 rounded-full border border-gray-default px-2 py-0.5 text-sm text-text-passive sm:text-base"
           >
             {{ toPersianDigits(totalCount) }} آگهی
           </div>
         </div>
 
-        <AdsSortToggle v-model="sort" />
+        <AdsSortToggle v-model="sort" class="shrink-0 self-start" />
       </div>
     </section>
 
-    <div class="mt-4 grid items-start gap-4 md:grid-cols-7">
-      <JobFiltersSidebar v-model="jobFilters" class="col-span-full md:col-span-2" />
+    <div class="mt-4 grid min-w-0 items-start gap-4 md:grid-cols-7">
+      <JobFiltersSidebar v-model="jobFilters" class="col-span-full min-w-0 md:col-span-2" />
 
-      <div id="ads-results" class="col-span-full md:col-span-5">
+      <div id="ads-results" class="col-span-full min-w-0 md:col-span-5">
         <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
           <template v-if="loading">
             <ItemBox

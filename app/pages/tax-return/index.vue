@@ -347,8 +347,8 @@
           درخواست شما با موفقیت ثبت شد
         </h2>
         <p class="mt-3 text-sm leading-7 text-text-passive">
-          اطلاعات شما برای بررسی اولیه ارسال شد. نتیجه و ادامه مراحل از طریق تماس
-          یا پیامک به شما اطلاع داده می‌شود
+          اطلاعات شما برای بررسی اولیه ارسال شد. نتیجه و ادامه مراحل از طریق
+          تماس یا پیامک به شما اطلاع داده می‌شود
         </p>
 
         <button
@@ -381,18 +381,18 @@ import {
 } from "~/types/tax-return-form";
 
 type TaxReturnPayment = {
-  redirect_url?: string
-  action?: string
-  payment_id?: number
-} | null
+  redirect_url?: string;
+  action?: string;
+  payment_id?: number;
+} | null;
 
 type StoreTaxReturnResponse = ApiResponse<{
-  taxReturn?: unknown
-  payment?: TaxReturnPayment
-}>
+  taxReturn?: unknown;
+  payment?: TaxReturnPayment;
+}>;
 
-const api = useApi()
-const { $toast } = useNuxtApp()
+const api = useApi();
+const { $toast } = useNuxtApp();
 
 const heroFeatures = [
   {
@@ -477,7 +477,7 @@ function validateHeroForm() {
     ? ""
     : "نوع فعالیت الزامی است.";
 
-  const desc = heroForm.desc.trim()
+  const desc = heroForm.desc.trim();
   if (!desc) {
     heroErrors.desc = "شرح فعالیت الزامی است.";
   } else if (desc.length > TAX_RETURN_DESC_MAX) {
@@ -497,27 +497,28 @@ async function submitHeroForm() {
 
   heroSubmitting.value = true;
   try {
-    const name = `${heroForm.firstName.trim()} ${heroForm.lastName.trim()}`.trim()
+    const name =
+      `${heroForm.firstName.trim()} ${heroForm.lastName.trim()}`.trim();
     const result = await api.post<StoreTaxReturnResponse>("/tax-returns", {
       name,
       cellphone: heroForm.cellphone.trim(),
       activity_type: heroForm.activityType,
       desc: heroForm.desc.trim(),
-    })
+    });
 
-    const payment = result.data?.payment
+    const payment = result.data?.payment;
     if (payment?.payment_id) {
-      await navigateTo(`/r/${payment.payment_id}`)
-      return
+      await navigateTo(`/r/${payment.payment_id}`);
+      return;
     }
 
-    resetHeroForm()
-    showSuccessModal()
+    resetHeroForm();
+    showSuccessModal();
   } catch (err: unknown) {
     const apiErrors =
       err && typeof err === "object" && "errors" in err
         ? (err as { errors?: Record<string, string[] | string> }).errors
-        : undefined
+        : undefined;
 
     if (apiErrors && typeof apiErrors === "object") {
       const fieldMap: Record<string, keyof typeof heroErrors> = {
@@ -525,13 +526,13 @@ async function submitHeroForm() {
         cellphone: "cellphone",
         activity_type: "activityType",
         desc: "desc",
-      }
+      };
 
       for (const [key, value] of Object.entries(apiErrors)) {
-        const message = Array.isArray(value) ? value[0] : value
-        const localKey = fieldMap[key]
+        const message = Array.isArray(value) ? value[0] : value;
+        const localKey = fieldMap[key];
         if (localKey && typeof message === "string") {
-          heroErrors[localKey] = message
+          heroErrors[localKey] = message;
         }
       }
     }
@@ -539,8 +540,8 @@ async function submitHeroForm() {
     const message =
       err && typeof err === "object" && "message" in err
         ? String((err as { message?: string }).message)
-        : "ثبت درخواست با خطا مواجه شد"
-    $toast.error(message)
+        : "ثبت درخواست با خطا مواجه شد";
+    $toast.error(message);
   } finally {
     heroSubmitting.value = false;
   }
@@ -631,7 +632,7 @@ const faqs = [
     type: 1,
     question: "آیا می‌توانم وضعیت درخواست خود را پیگیری کنم؟",
     answer:
-      "بله. پس از ثبت درخواست، از طریق پنل کاربری یا تماس با پشتیبانی می‌توانید وضعیت پیگیری پرونده را مشاهده کنید.",
+      "بله. پس از ثبت درخواست، از طریق پیشخوان یا تماس با پشتیبانی می‌توانید وضعیت پیگیری پرونده را مشاهده کنید.",
   },
   {
     type: 2,

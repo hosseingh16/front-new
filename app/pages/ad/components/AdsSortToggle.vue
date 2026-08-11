@@ -1,6 +1,6 @@
 <template>
   <div
-    class="inline-flex h-8 items-center rounded-xl bg-surface-100 p-0.5"
+    class="inline-flex h-8 max-w-full items-center rounded-xl bg-surface-100 p-0.5"
     role="group"
     aria-label="مرتب‌سازی"
   >
@@ -8,7 +8,7 @@
       v-for="option in options"
       :key="option.value"
       type="button"
-      class="flex h-7 w-26.25 items-center justify-center rounded-[10px] px-2 text-xs font-semibold leading-none transition-colors"
+      class="flex h-7 min-w-0 flex-1 items-center justify-center rounded-[10px] px-2 text-xs font-semibold leading-none whitespace-nowrap transition-colors sm:w-26.25 sm:flex-none"
       :class="
         model === option.value
           ? 'bg-white text-text-primary'

@@ -1,7 +1,7 @@
 <template>
   <div class="w-full min-w-0">
     <div
-      class="-mx-5 flex w-auto min-w-0 flex-nowrap items-center gap-2 overflow-x-auto overscroll-x-contain px-5 pb-1 scrollbar-none [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden touch-pan-x"
+      class="-mx-4 flex w-auto min-w-0 flex-nowrap items-center gap-2 overflow-x-auto overscroll-x-contain px-4 pb-1 scrollbar-none [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden touch-pan-x"
       dir="rtl"
     >
       <button

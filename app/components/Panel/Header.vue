@@ -31,15 +31,29 @@
           <NuxtLink to="/" class="text-sm hover:opacity-80">
             <Icon name="svg:home" size="16" />
           </NuxtLink>
-          <span class="text-gray-default">/</span>
-          <span class="text-text-muted text-caption">پنل کاربری</span>
+          <template
+            v-for="(crumb, index) in breadcrumbs"
+            :key="`${crumb.label}-${index}`"
+          >
+            <span class="text-gray-default">/</span>
+            <NuxtLink
+              v-if="crumb.to"
+              :to="crumb.to"
+              class="text-text-muted text-caption hover:opacity-80"
+            >
+              {{ crumb.label }}
+            </NuxtLink>
+            <span v-else class="text-text-muted text-caption">
+              {{ crumb.label }}
+            </span>
+          </template>
         </div>
       </div>
     </div>
     <div class="flex items-center">
-      <button class="btn btn-ghost w-12 h-12 p-0">
+      <!-- <button class="btn btn-ghost w-12 h-12 p-0">
         <Icon name="svg:search-1" size="24" />
-      </button>
+      </button> -->
       <m-dropdown>
         <template #btn>
           <button
@@ -100,6 +114,7 @@
 <script setup lang="ts">
 const { collapsed, toggle } = useDashboardSidebar();
 const { unreadCount, fetchNotifications } = useNotifications();
+const { breadcrumbs } = useDashboardBreadcrumbs();
 
 onMounted(() => {
   fetchNotifications();
