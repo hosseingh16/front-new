@@ -104,16 +104,16 @@
               class="inline-flex h-8 items-center gap-1 rounded-md bg-[rgba(72,100,225,0.08)] px-3 text-sm font-semibold text-primary-500 transition-opacity hover:opacity-80"
               @click="emit('details', request)"
             >
+              <icons-chevron class="rotate-90" color="#4864e1" />
               جزئیات
-              <Icon name="svg:chevron-left" size="20" class="size-5 shrink-0" />
             </button>
             <button
               type="button"
               class="inline-flex h-8 items-center gap-1 rounded-md px-3 text-sm font-semibold text-danger-500 transition-opacity hover:opacity-80"
               @click="emit('cancel', request)"
             >
+              <Icon name="svg:close" class="size-5 shrink-0" />
               لغو درخواست
-              <Icon name="svg:close" size="20" class="size-5 shrink-0" />
             </button>
           </div>
         </div>

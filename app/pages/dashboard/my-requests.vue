@@ -56,26 +56,27 @@
     <template v-else-if="initialized && requests.length">
       <div class="flex flex-wrap items-center justify-between gap-4">
         <div class="flex items-center gap-2.5">
-          <span
-            class="rounded-full border border-gray-default px-2 py-0.5 text-base text-text-passive"
-          >
-            {{ toPersianDigits(totalCount) }} درخواست
-          </span>
           <h1 class="text-h1 font-yb-bold leading-[1.7] text-text-primary">
             درخواست‌های شغلی
           </h1>
+
+          <span
+            class="rounded-full border border-gray-default px-2 py-0.5 text-sm text-text-passive"
+          >
+            {{ toPersianDigits(totalCount) }} درخواست
+          </span>
         </div>
 
         <div class="flex items-center gap-2">
           <button
             type="button"
-            class="btn btn-ghost h-10 w-10 p-0"
+            class="btn btn-ghost h-9 w-9 p-0"
             aria-label="جستجو"
             @click="showSearch = !showSearch"
           >
             <Icon name="svg:search-1" size="24" />
           </button>
-          <NuxtLink to="/dashboard/ad" class="btn btn-success h-10 gap-2 px-4">
+          <NuxtLink to="/dashboard/ad" class="btn btn-success h-9 gap-2 px-4">
             فرصت‌های شغلی
             <Icon
               name="svg:jobs"
@@ -111,6 +112,14 @@
           @click="activeTab = tab.id"
         >
           <span
+            v-if="tab.icon"
+            class="inline-flex rounded-full bg-[rgba(74,74,74,0.08)] p-1"
+          >
+            <Icon :name="tab.icon" size="16" />
+          </span>
+          {{ tab.label }}
+
+          <span
             v-if="
               tab.countBadgeClass && getMyRequestTabCount(requests, tab.id) > 0
             "
@@ -118,13 +127,6 @@
             :class="tab.countBadgeClass"
           >
             {{ toPersianDigits(getMyRequestTabCount(requests, tab.id)) }}
-          </span>
-          {{ tab.label }}
-          <span
-            v-if="tab.icon"
-            class="inline-flex rounded-full bg-[rgba(74,74,74,0.08)] p-1"
-          >
-            <Icon :name="tab.icon" size="16" />
           </span>
         </button>
       </div>

@@ -105,7 +105,9 @@
                   class="h-full w-full object-cover"
                 />
               </div>
-              <span class="mt-2 text-base text-text-tertiary">تصویر پروفایل:</span>
+              <span class="mt-2 text-base text-text-tertiary"
+                >تصویر پروفایل:</span
+              >
             </div>
 
             <div
@@ -358,9 +360,7 @@ const birthYears = lookupItems("birth_years");
 
 const personal = computed(() => getResumePersonal(props.user));
 const fullName = computed(() => getResumeFullName(props.user));
-const jobTitle = computed(() =>
-  getResumeJobTitle(props.user, jobTitles.value),
-);
+const jobTitle = computed(() => getResumeJobTitle(props.user, jobTitles.value));
 const avatar = computed(() => props.user?.avatar || null);
 const aboutMe = computed(
   () => personal.value?.about?.trim() || props.user?.description?.trim() || "",
@@ -385,10 +385,7 @@ const basicInfoFields = computed(() => [
   },
   {
     label: "سال تولد:",
-    value: getResumeBirthDateLabel(
-      personal.value?.birthdate,
-      birthYears.value,
-    ),
+    value: getResumeBirthDateLabel(personal.value?.birthdate, birthYears.value),
   },
   { label: "جنسیت:", value: getResumeGenderLabel(personal.value?.gender) },
   {
