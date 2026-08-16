@@ -23,7 +23,10 @@
     </section>
 
     <div class="custom-pad mt-4 grid min-w-0 items-start gap-4 md:grid-cols-7">
-      <JobFiltersSidebar v-model="jobFilters" class="col-span-full min-w-0 md:col-span-2" />
+      <JobFiltersSidebar
+        v-model="jobFilters"
+        class="col-span-full min-w-0 md:col-span-2"
+      />
 
       <div id="ads-results" class="col-span-full min-w-0 md:col-span-5">
         <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -70,88 +73,86 @@
 </template>
 
 <script setup lang="ts">
-import ItemBox from '~/components/Elements/item-box.vue'
-import JobFiltersSidebar from '~/components/Elements/JobFiltersSidebar.vue'
-import NoResult from '~/components/Elements/NoResult.vue'
-import Pagination from '~/components/Elements/Pagination.vue'
-import { toPersianDigits } from '~/composables/useCountUp'
-import type { AdList } from '~/types/ad'
+import ItemBox from "~/components/Elements/item-box.vue";
+import JobFiltersSidebar from "~/components/Elements/JobFiltersSidebar.vue";
+import NoResult from "~/components/Elements/NoResult.vue";
+import Pagination from "~/components/Elements/Pagination.vue";
+import { toPersianDigits } from "~/composables/useCountUp";
+import type { AdList } from "~/types/ad";
 import {
   adsFiltersToRouteQuery,
   areRouteQueriesEqual,
   routeQueryToAdsFilters,
   type AdsSort,
-} from '~/utils/ads-filters-query'
-import AdsSortToggle from './components/AdsSortToggle.vue'
+} from "~/utils/ads-filters-query";
+import AdsSortToggle from "./components/AdsSortToggle.vue";
 
-const route = useRoute()
-const router = useRouter()
+const route = useRoute();
+const router = useRouter();
 
-const initialState = routeQueryToAdsFilters(route.query)
-const jobFilters = ref(initialState.filters)
-const page = ref(initialState.page)
-const sort = ref<AdsSort>(initialState.sort)
+const initialState = routeQueryToAdsFilters(route.query);
+const jobFilters = ref(initialState.filters);
+const page = ref(initialState.page);
+const sort = ref<AdsSort>(initialState.sort);
 
 const { opportunities, lastPage, loading, initialized, error } = useJobAds(
   jobFilters,
   page,
-)
+);
 
-let urlSyncTimer: ReturnType<typeof setTimeout> | null = null
-let syncingFromRoute = false
+let urlSyncTimer: ReturnType<typeof setTimeout> | null = null;
+let syncingFromRoute = false;
 
 const ads = computed(() =>
   opportunities.value
-    .filter((opportunity) => opportunity.type === 'ad')
+    .filter((opportunity) => opportunity.type === "ad")
     .map((opportunity) => opportunity.item),
-)
+);
 
 const sortedAds = computed(() => {
-  const list = [...ads.value]
+  const list = [...ads.value];
 
-  if (sort.value === 'salary') {
-    return list.sort((a, b) => Number(b.salary) - Number(a.salary))
+  if (sort.value === "salary") {
+    return list.sort((a, b) => Number(b.salary) - Number(a.salary));
   }
 
-  return list.sort(
-    (a, b) => Number(b.publish_date) - Number(a.publish_date),
-  )
-})
+  return list.sort((a, b) => Number(b.publish_date) - Number(a.publish_date));
+});
 
-const paginatedAds = computed<AdList[]>(() => sortedAds.value)
-const totalCount = computed(() => sortedAds.value.length)
+const paginatedAds = computed<AdList[]>(() => sortedAds.value);
+const totalCount = computed(() => sortedAds.value.length);
 
 function syncRouteQuery() {
-  if (syncingFromRoute) return
+  if (syncingFromRoute) return;
 
   const nextQuery = adsFiltersToRouteQuery(
     jobFilters.value,
     page.value,
     sort.value,
-  )
-  if (areRouteQueriesEqual(route.query, nextQuery)) return
+  );
+  if (areRouteQueriesEqual(route.query, nextQuery)) return;
 
-  syncingFromRoute = true
-  router.replace({ path: route.path, query: nextQuery })
+  syncingFromRoute = true;
+  router.replace({ path: route.path, query: nextQuery });
 }
 
 function onPageChange(nextPage: number) {
-  page.value = nextPage
+  page.value = nextPage;
 }
 
 watch(page, () => {
-  syncRouteQuery()
+  syncRouteQuery();
   nextTick(() => {
-    const el = document.getElementById('ads-results')
-    if (!el) return
-    const y = el.getBoundingClientRect().top + window.pageYOffset - 100
-    window.scrollTo({ top: y, behavior: 'smooth' })
-  })
-})
+    const el = document.getElementById("ads-results");
+    if (!el) return;
+    const y = el.getBoundingClientRect().top + window.pageYOffset - 100;
+    window.scrollTo({ top: y, behavior: "smooth" });
+  });
+});
 
 watch(sort, () => {
-  syncRouteQuery()
-})
+  syncRouteQuery();
+});
 
 watch(
   jobFilters,
@@ -161,56 +162,56 @@ watch(
       JSON.stringify(value) !== JSON.stringify(oldValue) &&
       page.value !== 1
     ) {
-      page.value = 1
+      page.value = 1;
     }
 
-    if (urlSyncTimer) clearTimeout(urlSyncTimer)
-    urlSyncTimer = setTimeout(syncRouteQuery, 300)
+    if (urlSyncTimer) clearTimeout(urlSyncTimer);
+    urlSyncTimer = setTimeout(syncRouteQuery, 300);
   },
   { deep: true },
-)
+);
 
 watch(
   () => route.query,
   () => {
     if (syncingFromRoute) {
-      syncingFromRoute = false
-      return
+      syncingFromRoute = false;
+      return;
     }
 
-    const next = routeQueryToAdsFilters(route.query)
-    const filtersJson = JSON.stringify(next.filters)
-    const currentJson = JSON.stringify(jobFilters.value)
+    const next = routeQueryToAdsFilters(route.query);
+    const filtersJson = JSON.stringify(next.filters);
+    const currentJson = JSON.stringify(jobFilters.value);
 
     if (
       filtersJson === currentJson &&
       next.page === page.value &&
       next.sort === sort.value
     ) {
-      return
+      return;
     }
 
-    syncingFromRoute = true
-    jobFilters.value = next.filters
-    page.value = next.page
-    sort.value = next.sort
+    syncingFromRoute = true;
+    jobFilters.value = next.filters;
+    page.value = next.page;
+    sort.value = next.sort;
     nextTick(() => {
-      syncingFromRoute = false
-    })
+      syncingFromRoute = false;
+    });
   },
-)
+);
 
 watch(lastPage, (value) => {
-  if (page.value > value) page.value = value
-})
+  if (page.value > value) page.value = value;
+});
 
 onUnmounted(() => {
-  if (urlSyncTimer) clearTimeout(urlSyncTimer)
-})
+  if (urlSyncTimer) clearTimeout(urlSyncTimer);
+});
 
 useSeoMeta({
-  title: 'فرصت های شغلی حسابداری | های‌حساب',
+  title: "استخدام حسابدار|جدیدترین فرصت‌های شغلی حسابداری",
   description:
-    'جدیدترین فرصت‌های شغلی حسابداری و آگهی‌های استخدام حسابدار را در های‌حساب ببینید.',
-})
+    "جدیدترین آگهی‌های استخدام حسابدار را ببینید، رزومه‌تان را در های‌حساب بسازید و برای فرصت شغلی مناسب درخواست بفرستید.",
+});
 </script>
