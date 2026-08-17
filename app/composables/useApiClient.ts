@@ -15,13 +15,14 @@ export function useApiClient() {
   const request = async <T>(url: string, options: any = {}): Promise<T> => {
     loading.value = true;    
     try {
+      const { headers, ...rest } = options;
       return await client<T>(url, {
-        baseURL, // 👈 اینجا استفاده می‌شود
+        baseURL,
+        ...rest,
         headers: {
           Accept: 'application/json',
-          ...(options.headers ?? {}),
+          ...(headers ?? {}),
         },
-        ...options,
       });
     } catch (err: any) {
       const status = err?.response?.status;

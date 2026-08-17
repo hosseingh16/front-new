@@ -12,6 +12,7 @@ export interface VerifyOtpResponse {
   status: AuthUserStatus
   user_id: string
   has_role: boolean
+  registration_token?: string
 }
 
 function getErrorMessage(err: any, fallback: string) {
@@ -20,12 +21,13 @@ function getErrorMessage(err: any, fallback: string) {
 
 export function useAccountAuth() {
   const client = useSanctumClient()
-  const { login, refreshIdentity } = useSanctumAuth()
+  const { login, refreshIdentity, isAuthenticated } = useSanctumAuth()
   const { $toast } = useNuxtApp()
 
   const mobile = useState('account.mobile', () => '')
   const requestId = useState('account.requestId', () => '')
   const userId = useState('account.userId', () => '')
+  const registrationToken = useState('account.registrationToken', () => '')
   const status = useState<AuthUserStatus | null>('account.status', () => null)
   const hasRole = useState<boolean | null>('account.hasRole', () => null)
   const selectedRole = useState<AccountRole | null>('account.selectedRole', () => null)
@@ -42,6 +44,7 @@ export function useAccountAuth() {
       requestId.value = res.request_id
       status.value = null
       userId.value = ''
+      registrationToken.value = ''
       hasRole.value = null
       selectedRole.value = null
       return res
@@ -71,6 +74,7 @@ export function useAccountAuth() {
       userId.value = res.user_id
       status.value = res.status
       hasRole.value = res.has_role
+      registrationToken.value = res.registration_token || ''
       return res
     } catch (err: any) {
       $toast.error(getErrorMessage(err, 'کد تایید نامعتبر است'))
@@ -81,7 +85,34 @@ export function useAccountAuth() {
   }
 
   /**
-   * Assign role only via PUT users/{user}.
+   * Session login via nuxt-auth-sanctum.
+   * Pass redirect=false during signup so onboarding can continue.
+   */
+  async function loginWithMobile(phone?: string, redirect = true) {
+    const username = phone || mobile.value
+    if (!username) {
+      $toast.error('شماره موبایل یافت نشد')
+      throw new Error('mobile missing')
+    }
+
+    loading.value = true
+    try {
+      if (!isAuthenticated.value) {
+        await login({ username })
+      }
+      if (redirect) {
+        await navigateTo('/')
+      }
+    } catch (err: any) {
+      $toast.error(getErrorMessage(err, 'ورود با خطا مواجه شد'))
+      throw err
+    } finally {
+      loading.value = false
+    }
+  }
+
+  /**
+   * Assign role only via PUT users/{user}. Requires an active Sanctum session.
    */
   async function updateUserRole(role: AccountRole) {
     const id = userId.value || useCurrentUser().user.value?.id
@@ -92,8 +123,10 @@ export function useAccountAuth() {
 
     loading.value = true
     try {
-      const api = useApi()
-      await api.put(`/users/${id}`, { role })
+      await client(`/api/v1/users/${id}`, {
+        method: 'PUT',
+        body: { role },
+      })
       selectedRole.value = role
       hasRole.value = true
       await refreshIdentity()
@@ -107,75 +140,46 @@ export function useAccountAuth() {
   }
 
   /**
-   * Session login via Sanctum (same as test.login.vue).
-   * Use redirect=false during signup so onboarding can continue.
-   */
-  async function loginWithMobile(phone?: string, redirect = true) {
-    const username = phone || mobile.value
-    if (!username) {
-      $toast.error('شماره موبایل یافت نشد')
-      throw new Error('mobile missing')
-    }
-
-    loading.value = true
-    try {
-      if (redirect) {
-        await login({ username })
-        return
-      }
-
-      await client('/api/login', {
-        method: 'POST',
-        body: { username },
-      })
-      await refreshIdentity()
-    } catch (err: any) {
-      $toast.error(getErrorMessage(err, 'ورود با خطا مواجه شد'))
-      throw err
-    } finally {
-      loading.value = false
-    }
-  }
-
-  /**
-   * Complete signup profile via PUT users/{user}.
-   * Name required; avatar and password optional.
-   * Uses POST + _method spoof so PHP can parse the multipart avatar.
+   * Complete signup profile, then create the Sanctum session.
    */
   async function completeProfile(payload: {
     name: string
     password?: string
     avatar?: File | null
   }) {
-    const id = userId.value || useCurrentUser().user.value?.id
-    if (!id) {
-      $toast.error('شناسه کاربر یافت نشد')
-      throw new Error('user_id missing')
+    if (!registrationToken.value) {
+      $toast.error('ابتدا کد تایید را وارد کنید')
+      throw new Error('registration_token missing')
     }
-
-    const formData = new FormData()
-    formData.append('name', payload.name)
-    if (payload.avatar) formData.append('avatar', payload.avatar)
-    if (payload.password) formData.append('password', payload.password)
-    formData.append('_method', 'PUT')
 
     loading.value = true
     try {
-      const api = useApi()
-      await api.post(`/users/${id}`, formData)
-      await refreshIdentity()
+      const formData = new FormData()
+      formData.append('registration_token', registrationToken.value)
+      formData.append('name', payload.name)
+      if (payload.avatar) formData.append('avatar', payload.avatar)
+      if (payload.password) formData.append('password', payload.password)
+
+      await client('/api/complete-registration', {
+        method: 'POST',
+        body: formData,
+      })
+      registrationToken.value = ''
     } catch (err: any) {
       $toast.error(getErrorMessage(err, 'تکمیل حساب با خطا مواجه شد'))
       throw err
     } finally {
       loading.value = false
     }
+
+    await loginWithMobile(mobile.value, false)
   }
 
   function reset() {
     mobile.value = ''
     requestId.value = ''
     userId.value = ''
+    registrationToken.value = ''
     status.value = null
     hasRole.value = null
     selectedRole.value = null
@@ -185,6 +189,7 @@ export function useAccountAuth() {
     mobile,
     requestId,
     userId,
+    registrationToken,
     status,
     hasRole,
     selectedRole,

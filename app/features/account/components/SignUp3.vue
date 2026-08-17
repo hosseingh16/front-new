@@ -16,33 +16,45 @@
     <div class="grid grid-cols-1 min-[1052px]:grid-cols-3 gap-4 mt-4">
       <div
         v-for="item in items"
-        :key="item.role"
-        class="border border-gray-default hover:border-primary-500 rounded-2xl py-4 min-[1052px]:p-6 flex flex-row min-[1052px]:flex-col items-center group cursor-pointer"
+        :key="item.id"
+        class="border border-gray-default hover:border-primary-500 rounded-2xl py-4 min-[1052px]:p-6 flex h-full flex-row min-[1052px]:flex-col items-center group cursor-pointer"
         :class="{ 'pointer-events-none opacity-60': loading }"
-        @click="onSelect(item.role)"
+        @click="onSelect(item)"
       >
         <NuxtImg
           :src="`/images/${item.image}`"
-          class="w-32 h-32 min-[1052px]:w-50 min-[1052px]:h-50"
+          class="w-32 h-32 min-[1052px]:w-50 min-[1052px]:h-50 shrink-0"
         />
-        <div class="min-[1052px]:text-center">
+        <div class="flex min-w-0 flex-1 flex-col min-[1052px]:w-full min-[1052px]:text-center">
           <p class="min-[1052px]:-mt-10 text-lg sm:text-xl font-yb-bold">
             {{ item.title }}
           </p>
-          <p class="my-2 leading-7 max-[1052px]:text-sm">{{ item.description }}</p>
+          <p class="my-2 leading-7 max-[1052px]:text-sm">
+            {{ item.description }}
+          </p>
           <button
             type="button"
-            class="btn btn-soft group-hover:btn-primary h-10"
+            class="request-type-btn btn btn-soft group-hover:btn-primary mt-auto inline-flex h-10 items-center justify-center gap-1"
             :disabled="loading"
-            @click.stop="onSelect(item.role)"
+            @click.stop="onSelect(item)"
           >
             <span
-              v-if="loading && pendingRole === item.role"
+              v-if="loading && pendingId === item.id"
               class="loading loading-spinner loading-sm"
             />
             <template v-else>
-              <span :class="`icon-${item.icon}`" class="text-2xl"></span>
-              <span>{{ item.title }}</span>
+              <Icon
+                v-if="item.icon.includes(':')"
+                :name="item.icon"
+                size="24"
+                class="size-6 shrink-0 text-inherit"
+              />
+              <span
+                v-else
+                :class="`icon-${item.icon}`"
+                class="text-2xl leading-none"
+              ></span>
+              <span>{{ item.buttonText }}</span>
             </template>
           </button>
         </div>
@@ -52,8 +64,8 @@
 </template>
 
 <script setup lang="ts">
-import type { AccountRole, DirectionT } from '../types';
-import { paths } from '~/routes';
+import type { AccountRole, DirectionT } from "../types";
+import { paths } from "~/routes";
 
 const props = withDefaults(
   defineProps<{
@@ -65,61 +77,83 @@ const props = withDefaults(
 );
 
 const emits = defineEmits<{
-  (e: 'onChangeStep', step: number): void;
-  (e: 'onChangeDirection', step: DirectionT): void;
-  (e: 'selected', role: AccountRole): void;
+  (e: "onChangeStep", step: number): void;
+  (e: "onChangeDirection", step: DirectionT): void;
+  (e: "selected", role: AccountRole): void;
 }>();
 
 const { updateUserRole, loading } = useAccountAuth();
-const pendingRole = ref<AccountRole | null>(null);
+const pendingId = ref<string | null>(null);
 
-const items: Array<{
+type RequestTypeItem = {
+  id: string;
   image: string;
   title: string;
   description: string;
   icon: string;
+  buttonText: string;
   role: AccountRole;
-}> = [
+  to?: string;
+};
+
+const items: RequestTypeItem[] = [
   {
-    image: 'request-type-1.png',
-    title: 'ایجاد آگهی',
-    description: 'آگهی استخدامی یا پروژه ایجاد کنید و نیروی موردنظر را جذب کنید.',
-    icon: 'bag-1',
-    role: 'employer',
+    id: "employer",
+    image: "request-type-1.png",
+    title: "ایجاد آگهی",
+    description:
+      "آگهی استخدامی یا پروژه ایجاد کنید و نیروی موردنظر را جذب کنید.",
+    icon: "bag-1",
+    buttonText: "ایجاد آگهی",
+    role: "employer",
   },
   {
-    image: 'request-type-2.png',
-    title: 'فرصت‌های شغلی',
-    description: 'فرصت‌های شغلی را مشاهده کنید و رزومه خود را برای آن‌ها ارسال کنید.',
-    icon: 'bag-2',
-    role: 'job_seeker',
+    id: "jobs",
+    image: "request-type-2.png",
+    title: "فرصت‌های شغلی",
+    description:
+      "فرصت‌های شغلی را مشاهده کنید و رزومه خود را برای آن‌ها ارسال کنید.",
+    icon: "bag-2",
+    buttonText: "فرصت‌های شغلی",
+    role: "job_seeker",
+    to: "/dashboard/ad",
+  },
+  {
+    id: "cv",
+    image: "request-type-3.png",
+    title: "ساخت رزومه حسابداری",
+    description: "ایجاد رزومه حرفه‌ای و ارسال آن برای کارفرما",
+    icon: "lucide:clipboard-list",
+    buttonText: "رزومه ساز",
+    role: "job_seeker",
+    to: "/dashboard/cv",
   },
 ];
 
 function goBack() {
-  emits('onChangeDirection', 'back');
-  emits('onChangeStep', props.step - 1);
+  emits("onChangeDirection", "back");
+  emits("onChangeStep", props.step - 1);
 }
 
-async function onSelect(role: AccountRole) {
+async function onSelect(item: RequestTypeItem) {
   if (loading.value) return;
 
-  pendingRole.value = role;
+  pendingId.value = item.id;
   try {
-    await updateUserRole(role);
-    emits('selected', role);
+    await updateUserRole(item.role);
+    emits("selected", item.role);
 
     if (props.forced) return;
 
-    if (role === 'employer') {
-      emits('onChangeDirection', 'forward');
-      emits('onChangeStep', props.step + 1);
+    if (item.role === "employer") {
+      emits("onChangeDirection", "forward");
+      emits("onChangeStep", props.step + 1);
       return;
     }
 
-    navigateTo(paths.jobs.root);
+    navigateTo(item.to || paths.jobs.root);
   } finally {
-    pendingRole.value = null;
+    pendingId.value = null;
   }
 }
 </script>

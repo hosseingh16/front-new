@@ -88,10 +88,9 @@ async function onSubmit(otpFromEvent?: string | Event) {
   }
 
   const res = await verifyOtp(otp);
-  await loginWithMobile(undefined, false);
 
   if (res.status === "existing_user" && res.has_role !== false) {
-    navigateTo("/");
+    await loginWithMobile(undefined, true);
     return;
   }
 

@@ -110,14 +110,13 @@ async function onPasswordLogin() {
 
 async function onOtpLogin(otp: string) {
   const res = await verifyOtp(otp);
-  await loginWithMobile(mobile.value || authMobile.value, false);
 
   if (res.status === "existing_user" && res.has_role !== false) {
-    navigateTo("/");
+    await loginWithMobile(mobile.value || authMobile.value, true);
     return;
   }
 
-  // New user, or existing user without role → continue wizard
+  // New user, or existing user without role → complete profile, then login
   onChangeStep(4);
 }
 
