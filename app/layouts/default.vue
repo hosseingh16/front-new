@@ -1,19 +1,19 @@
 <template>
   <div class="bg-surface-50">
-    <div dir="rtl" class="max-w-384 w-full m-auto">
+    <div class="max-w-384 w-full m-auto">
       <Header />
       <slot />
-      <Footer />
     </div>
+    <Footer />
   </div>
 </template>
 
 <script setup lang="ts">
-const { setForcedTheme } = useAppTheme()
+const { setForcedTheme } = useAppTheme();
 
-setForcedTheme('light')
+setForcedTheme("light");
 
 onUnmounted(() => {
-  setForcedTheme(null)
-})
+  setForcedTheme(null);
+});
 </script>

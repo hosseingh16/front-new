@@ -16,7 +16,7 @@
               />
             </div>
             <div class="text-sm">
-              <p class="font-semibold text-text-tertiary dark:text-gray-100">
+              <p class="font-semibold text-text-tertiary">
                 {{ titleLabel }}
               </p>
               <div

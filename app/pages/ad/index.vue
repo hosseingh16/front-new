@@ -12,7 +12,7 @@
           </h1>
           <div
             v-if="initialized"
-            class="shrink-0 rounded-full border border-gray-default px-2 py-0.5 text-sm text-text-passive sm:text-base"
+            class="rounded-full border border-gray-default px-2 py-0.5 text-sm text-text-passive"
           >
             {{ toPersianDigits(totalCount) }} آگهی
           </div>
