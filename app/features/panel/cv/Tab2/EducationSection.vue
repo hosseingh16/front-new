@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white p-4 rounded-2xl mt-5">
+  <div id="section-education" class="scroll-mt-24 bg-white p-4 rounded-2xl mt-5">
     <div class="flex justify-between items-center">
       <p class="font-yb-bold text-xl">
         <span class="text-primary-500">-</span> اطلاعات تحصیلی

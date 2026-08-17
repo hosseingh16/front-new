@@ -1,8 +1,8 @@
 <template>
-  <div class="bg-white p-4 rounded-2xl mt-5">
+  <div id="section-basic" class="scroll-mt-24 bg-white p-4 rounded-2xl mt-5">
     <Titr :with-icon="editMode" class="mb-8">اطلاعات پایه</Titr>
     <form @submit="onSubmit">
-      <div class="mb-8">
+      <div id="section-avatar" class="mb-8 scroll-mt-24">
         <p class="relative">
           تصویر پروفایل:
           <span
@@ -146,7 +146,10 @@
           :disabled="!hasRegions"
         />
 
-        <div class="lg:col-span-2">
+        <div
+          :id="editMode ? 'section-about' : undefined"
+          class="lg:col-span-2 scroll-mt-24"
+        >
           <m-form-input
             name="about"
             multiline
@@ -241,9 +244,10 @@
           :value="regions.find((x) => String(x.value) === String(values.region))?.label"
         />
         <InfoItem
+          :id="editMode ? undefined : 'section-about'"
+          class="lg:col-span-2 scroll-mt-24"
           title="درباره من:"
           :value="values.about"
-          class="lg:col-span-2"
         />
         <div class="lg:col-span-2 text-left mt-2">
           <button

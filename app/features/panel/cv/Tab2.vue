@@ -6,7 +6,7 @@
 
     <ProgramSection />
 
-    <div class="bg-white p-4 rounded-2xl mt-8">
+    <div id="section-skills" class="scroll-mt-24 bg-white p-4 rounded-2xl mt-8">
       <Titr>مهارت‌ها</Titr>
       <div class="my-4 grid lg:grid-cols-2 gap-x-4 gap-y-12">
         <Slider
@@ -43,7 +43,7 @@
       </div>
     </div>
 
-    <div class="bg-white p-4 rounded-2xl mt-8">
+    <div id="section-potential" class="scroll-mt-24 bg-white p-4 rounded-2xl mt-8">
       <Titr>ارزیابی بیمه ای و مالیاتی</Titr>
       <div class="mt-4 grid lg:grid-cols-2 gap-x-4 gap-y-12">
         <Slider

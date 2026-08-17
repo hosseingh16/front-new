@@ -50,37 +50,35 @@
         <Tab1 v-if="tab === 1" />
         <Tab2 v-if="tab === 2" />
       </div>
-      <div class="lg:col-span-2">
+      <aside class="space-y-4 lg:col-span-2 lg:sticky lg:top-24">
         <div
-          class="bg-white p-3 rounded-2xl border-2 border-gray-default max-lg:hidden"
+          class="rounded-2xl border border-gray-default bg-white p-4 max-lg:hidden"
         >
-          <p class="font-yb-bold text-xl">
-            <span class="text-primary-500">-</span> میزان تکمیل رزومه
-          </p>
-          <CvCompletion :user="user" />
+          <CvCompletion :user="user" @select="goToSection" />
         </div>
-        <div class="bg-white p-3 rounded-2xl border-2 border-gray-default mt-4">
-          <p class="font-yb-bold text-xl">
-            <span class="text-primary-500">-</span> آدرس رزومه‌ی شما
-          </p>
-          <p class="mt-4 text-sm text-text-passive leading-8">
+        <div class="rounded-2xl border border-gray-default bg-white p-4">
+          <Titr>آدرس رزومه‌ی شما</Titr>
+          <p class="mt-3 text-sm leading-7 text-text-passive">
             به کمک این آدرس یکتا می‌توانید رزومه خود را با دیگران به اشتراک
             بگذارید.
           </p>
           <div
-            class="mt-4 text-sm text-primary-500 font-semibold flex justify-end items-center gap-2"
+            class="mt-3 flex items-center justify-end gap-2 text-sm font-semibold text-primary-500"
           >
             <Icon
               name="svg:copy"
               class="cursor-pointer"
               @click="copy('Hihesab.com/d4ds54gd')"
             />
-            <span @click="copy('Hihesab.com/d4ds54gd')" class="cursor-pointer"
+            <span
+              dir="ltr"
+              class="cursor-pointer"
+              @click="copy('Hihesab.com/d4ds54gd')"
               >Hihesab.com/d4ds54gd</span
             >
           </div>
         </div>
-      </div>
+      </aside>
 
       <div
         v-if="expandedCvCompletion"
@@ -89,7 +87,7 @@
       ></div>
       <div
         v-if="!showBottomMenu"
-        class="lg:hidden fixed bottom-18 right-0 w-full bg-white px-5 py-4 border-t-2 border-gray-default rounded-t-2xl transition-all"
+        class="lg:hidden fixed bottom-18 right-0 w-full bg-white px-5 py-4 border-t-2 border-gray-default rounded-t-2xl transition-all overflow-y-auto"
         :class="expandedCvCompletion ? 'h-125' : 'h-14'"
       >
         <div
@@ -111,16 +109,19 @@
             <span v-if="!expandedCvCompletion" class="text-text-passive"
               >رزومه تکمیل شده</span
             >
-            <p v-else class="font-yb-bold">
-              <span class="text-primary-500">-</span> میزان تکمیل رزومه
-            </p>
+            <Titr v-else class="!mb-0">میزان تکمیل رزومه</Titr>
           </div>
           <icons-chevron
             class="transition-all"
             :class="{ 'rotate-180': expandedCvCompletion }"
           />
         </div>
-        <CvCompletion v-if="expandedCvCompletion" :user="user" />
+        <CvCompletion
+          v-if="expandedCvCompletion"
+          :user="user"
+          :show-title="false"
+          @select="goToSection"
+        />
       </div>
     </div>
   </div>
@@ -132,6 +133,8 @@ import CvIncompleteBanner from "@/features/panel/cv/CvIncompleteBanner.vue";
 import useClipboard from "vue-clipboard3";
 import Tab1 from "~/features/panel/cv/Tab1.vue";
 import Tab2 from "~/features/panel/cv/Tab2.vue";
+import Titr from "~/features/panel/cv/Titr.vue";
+import type { CvCompletionItem } from "~/composables/useCvCompletion";
 import { isResumeBasicInfoComplete } from "~/utils/api-error";
 
 definePageMeta({
@@ -179,7 +182,15 @@ watch(
   },
 );
 
-// Functions
+async function goToSection(item: CvCompletionItem) {
+  tab.value = item.tab;
+  expandedCvCompletion.value = false;
+  await nextTick();
+  document
+    .getElementById(`section-${item.key}`)
+    ?.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
 async function copy(text: string) {
   try {
     await toClipboard(text);
