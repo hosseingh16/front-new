@@ -227,6 +227,7 @@ import ReportIssueModal from "./components/ReportIssueModal.vue";
 import { useAd, useSimilarAds } from "~/composables/useAd";
 import { formatJalaliDate } from "~/utils/format-jalali-date";
 import { resolveCompanyLogoDisplaySrc } from "~/utils/company-basic-info";
+import { getAdDetailSeoMeta } from "~/utils/ad-seo";
 import createAccountIllust from "~/assets/vectors/illustrations/create-account.svg";
 import { paths } from "~/routes";
 
@@ -357,14 +358,10 @@ async function shareAd() {
   await navigator.clipboard.writeText(url);
 }
 
+const adSeo = computed(() => getAdDetailSeoMeta(ad.value));
+
 useSeoMeta({
-  title: () =>
-    ad.value?.title
-      ? `${ad.value.title} | ${ad.value.company_name}`
-      : "جزئیات آگهی شغلی",
-  description: () =>
-    ad.value?.job_description
-      ? ad.value.job_description.replace(/<[^>]+>/g, "").slice(0, 160)
-      : "جزئیات آگهی استخدام حسابدار",
+  title: () => adSeo.value.title,
+  description: () => adSeo.value.description,
 });
 </script>

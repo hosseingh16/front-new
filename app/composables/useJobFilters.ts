@@ -6,10 +6,8 @@ import {
   type ProvinceCheckState,
 } from '~/types/job-filters'
 import { normalizeFilterId } from '~/utils/job-filters-query'
-import type { ISelectItem } from '~/types/select-item'
 
 export function useJobFilters(model?: Ref<JobFiltersModel>) {
-  const api = useApi()
   const { items } = useLookups([
     'job_titles',
     'employment_types',
@@ -36,8 +34,8 @@ export function useJobFilters(model?: Ref<JobFiltersModel>) {
   const selectedBenefits = ref<Array<string | number>>([])
 
   const expandedProvinces = ref<number[]>([])
-  const citiesByProvince = ref<Record<number, ISelectItem[]>>({})
-  const citiesLoading = ref<Record<number, boolean>>({})
+  const { citiesByProvince, citiesLoading, ensureProvinceCities } =
+    useProvinceCities()
   const selectedCities = ref<Array<string | number>>([])
   const selectedProvinces = ref<number[]>([])
 
@@ -211,19 +209,6 @@ export function useJobFilters(model?: Ref<JobFiltersModel>) {
   function isProvinceExpanded(item: LocationTreeItem) {
     if (item.forceExpand) return true
     return expandedProvinces.value.includes(item.province.value as number)
-  }
-
-  async function ensureProvinceCities(provinceId: number) {
-    if (citiesByProvince.value[provinceId] || citiesLoading.value[provinceId]) return
-
-    citiesLoading.value[provinceId] = true
-    try {
-      citiesByProvince.value[provinceId] = await api.get<ISelectItem[]>(
-        `/cities/${provinceId}`,
-      )
-    } finally {
-      citiesLoading.value[provinceId] = false
-    }
   }
 
   async function toggleProvinceExpand(provinceId: number) {

@@ -85,6 +85,7 @@ import {
   routeQueryToAdsFilters,
   type AdsSort,
 } from "~/utils/ads-filters-query";
+import { getCityAdsListSeoMeta } from "~/utils/ad-seo";
 import AdsSortToggle from "./components/AdsSortToggle.vue";
 
 const route = useRoute();
@@ -209,9 +210,18 @@ onUnmounted(() => {
   if (urlSyncTimer) clearTimeout(urlSyncTimer);
 });
 
+const selectedLocationName = useAdsListLocationLabel(jobFilters, paginatedAds);
+
+const adsListSeo = computed(() =>
+  getCityAdsListSeoMeta(selectedLocationName.value, {
+    title: "استخدام حسابدار|جدیدترین فرصت‌های شغلی حسابداری",
+    description:
+      "جدیدترین آگهی‌های استخدام حسابدار را ببینید، رزومه‌تان را در های‌حساب بسازید و برای فرصت شغلی مناسب درخواست بفرستید.",
+  }),
+);
+
 useSeoMeta({
-  title: "استخدام حسابدار|جدیدترین فرصت‌های شغلی حسابداری",
-  description:
-    "جدیدترین آگهی‌های استخدام حسابدار را ببینید، رزومه‌تان را در های‌حساب بسازید و برای فرصت شغلی مناسب درخواست بفرستید.",
+  title: () => adsListSeo.value.title,
+  description: () => adsListSeo.value.description,
 });
 </script>

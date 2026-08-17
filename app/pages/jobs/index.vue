@@ -84,6 +84,7 @@ import {
   jobFiltersToRouteQuery,
   routeQueryToJobFilters,
 } from '~/utils/job-filters-query'
+import { getCityAdsListSeoMeta } from '~/utils/ad-seo'
 
 const route = useRoute()
 const router = useRouter()
@@ -206,9 +207,25 @@ const faqs = [
   },
 ]
 
+const selectedAds = computed(() =>
+  opportunities.value
+    .filter((opportunity) => opportunity.type === 'ad')
+    .map((opportunity) => opportunity.item),
+)
+
+const selectedLocationName = useAdsListLocationLabel(jobFilters, selectedAds)
+
+const jobsListSeo = computed(() =>
+  getCityAdsListSeoMeta(selectedLocationName.value, {
+    title:
+      'فرصت های شغلی حسابداری | آگهی استخدام حسابدار در شرکت‌های معتبر',
+    description:
+      'جدیدترین فرصت های شغلی حسابداری و آگهی‌های استخدام حسابدار تمام‌وقت، پاره‌وقت و پروژه‌ای را در های‌حساب ببینید و سریع‌تر موقعیت شغلی مناسب خود را پیدا کنید.',
+  }),
+)
+
 useSeoMeta({
-  title: 'فرصت های شغلی حسابداری | آگهی استخدام حسابدار در شرکت‌های معتبر | های‌حساب',
-  description:
-    'جدیدترین فرصت های شغلی حسابداری و آگهی‌های استخدام حسابدار تمام‌وقت، پاره‌وقت و پروژه‌ای را در های‌حساب ببینید و سریع‌تر موقعیت شغلی مناسب خود را پیدا کنید.',
+  title: () => jobsListSeo.value.title,
+  description: () => jobsListSeo.value.description,
 })
 </script>

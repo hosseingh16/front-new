@@ -33,6 +33,7 @@ import AdDetailView from './components/AdDetailView.vue'
 import ReportIssueModal from '~/pages/jobs/components/ReportIssueModal.vue'
 import { STATIC_ADS } from './data/static-ads'
 import { getStaticAdDetail } from './data/static-ad-details'
+import { getAdDetailSeoMeta } from '~/utils/ad-seo'
 
 const route = useRoute()
 const adId = computed(() => String(route.params.id ?? ''))
@@ -70,14 +71,10 @@ function showReportModal() {
   reportIssueModalRef.value?.showModal()
 }
 
+const adSeo = computed(() => getAdDetailSeoMeta(ad.value))
+
 useSeoMeta({
-  title: () =>
-    ad.value?.title
-      ? `${ad.value.title} | ${ad.value.company_name}`
-      : 'جزئیات آگهی شغلی',
-  description: () =>
-    ad.value?.job_description
-      ? ad.value.job_description.replace(/<[^>]+>/g, '').slice(0, 160)
-      : 'جزئیات آگهی استخدام حسابدار',
+  title: () => adSeo.value.title,
+  description: () => adSeo.value.description,
 })
 </script>

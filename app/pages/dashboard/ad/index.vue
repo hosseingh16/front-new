@@ -214,6 +214,6 @@ onUnmounted(() => {
 });
 
 useSeoMeta({
-  title: "فرصت های شغلی | های‌حساب",
+  title: "فرصت های شغلی",
 });
 </script>
