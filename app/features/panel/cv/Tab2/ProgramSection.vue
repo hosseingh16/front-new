@@ -28,11 +28,13 @@
         @item="addSoftware"
       />
     </div>
-    <div v-else class="mt-4 space-y-4">
+    <div v-else class="mt-4 space-y-4" :class="{ 'select-none': draggingIndex != null }">
       <div
         v-for="(item, index) in programsItems"
         :key="item.id ?? index"
+        :data-cv-sort-index="index"
         class="p-4 border-2 border-dashed border-gray-default rounded-lg flex justify-between"
+        :class="itemClass(index)"
       >
         <div>
           <p class="text-text-primay font-semibold">
@@ -77,7 +79,12 @@
             :item-to-edit="item"
             @item="updateSoftware(index, $event)"
           />
-          <button class="btn-cv-action">
+          <button
+            type="button"
+            class="btn-cv-action cursor-grab! touch-none active:cursor-grabbing!"
+            aria-label="جابه‌جایی"
+            @pointerdown="onHandlePointerDown(index, $event)"
+          >
             <Icon name="svg:dots" />
           </button>
           <button
@@ -135,6 +142,8 @@ const removingIndex = ref<number | null>(null);
 const removingSoftwareId = ref<number | null>(null);
 const removing = ref(false);
 const lastSubmittedItem = ref<ProgramItem | null>(null);
+const { draggingIndex, itemClass, onHandlePointerDown } =
+  useHandleReorder(programsItems);
 
 function resolveProgramType(program?: ISelectItem): 0 | 1 {
   return program?.type === 0 ? 0 : 1;

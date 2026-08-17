@@ -158,17 +158,21 @@
           ></m-form-input>
         </div>
 
-        <div class="lg:col-span-2 flex justify-end">
+        <div class="lg:col-span-2 mt-6 flex items-center justify-end gap-2">
           <button
-            class="btn btn-ghost"
+            class="btn btn-ghost h-10 rounded-lg text-sm text-text-passive"
             type="button"
             @click="changeEditMode(false)"
           >
-            <Icon name="svg:close" />
+            <Icon name="svg:close" size="16" />
             انصراف
           </button>
-          <m-button class="btn-primary" type="submit" :loading>
-            <Icon name="svg:check-check" />
+          <m-button
+            class="btn-primary h-10 rounded-lg px-6 text-sm"
+            type="submit"
+            :loading
+          >
+            <Icon name="svg:check-check" size="18" />
             ذخیره
           </m-button>
         </div>
@@ -251,11 +255,11 @@
         />
         <div class="lg:col-span-2 text-left mt-2">
           <button
-            class="btn text-sm border-none text-primary-500 bg-[#4864E114] max-md:btn-block"
+            class="btn h-10 border-none text-sm text-primary-500 bg-[#4864E114] max-md:btn-block"
             type="button"
             @click="changeEditMode(true)"
           >
-            <Icon name="svg:edit" size="24" />
+            <Icon name="svg:edit" size="18" />
             ویرایش
           </button>
         </div>

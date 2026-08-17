@@ -1,7 +1,7 @@
 <template>
   <div>
     <button
-      :class="editMode ? 'btn-cv-action' : 'btn btn-primary'"
+      :class="editMode ? 'btn-cv-action' : 'btn btn-primary h-10 rounded-lg px-6 text-sm'"
       @click="showModal"
     >
       <div v-if="!editMode" class="flex items-center gap-2">
@@ -64,17 +64,21 @@
           </div>
         </div>
         <div>
-          <div class="flex justify-end gap-2 mt-4">
+          <div class="mt-6 flex items-center justify-end gap-2">
             <button
-              class="btn btn-ghost"
+              class="btn btn-ghost h-10 rounded-lg text-sm text-text-passive"
               type="button"
               @click="modalRef?.closeModal()"
             >
-              <Icon name="svg:close" />
+              <Icon name="svg:close" size="16" />
               انصراف
             </button>
-            <m-button type="submit" class="btn-primary" :loading>
-              <Icon :name="submitIcon" />
+            <m-button
+              type="submit"
+              class="btn-primary h-10 rounded-lg px-6 text-sm"
+              :loading
+            >
+              <Icon :name="submitIcon" size="18" />
               {{ submitLabel }}
             </m-button>
           </div>
@@ -113,7 +117,8 @@ const modalRef = ref<InstanceType<typeof Dialog> | null>(null);
 const api = useApi();
 const loading = api.loading;
 
-// Form
+const nullableString = () => Yup.string().nullable();
+
 const formSchema = Yup.object({
   degree: Yup.string().required("مقطع تحصیلی انتخاب نشده است"),
   major: Yup.string()
@@ -123,12 +128,12 @@ const formSchema = Yup.object({
     .max(40, " نام آموزشگاه نباید بیشتر از 40 کاراکتر باشد")
     .required("آموزشگاه وارد نشده است"),
   stillbusy: Yup.bool(),
-  enddate: Yup.string().when("stillbusy", {
+  enddate: nullableString().when("stillbusy", {
     is: false,
     then: (schema) => schema.required("تاریخ فارغ‌التحصیلی انتخاب نشده است"),
     otherwise: (schema) => schema.optional(),
   }),
-  description: Yup.string(),
+  description: nullableString(),
 });
 const { handleSubmit, values, setFieldValue, resetForm, setValues } = useForm<
   Yup.InferType<typeof formSchema>
@@ -144,12 +149,20 @@ const { handleSubmit, values, setFieldValue, resetForm, setValues } = useForm<
   },
 });
 
-// Functions
+function normalizeFormValues(item: Record<string, unknown>) {
+  return {
+    ...item,
+    enddate: item.enddate ?? "",
+    description: item.description ?? "",
+    stillbusy: Boolean(item.stillbusy),
+  };
+}
+
 async function showModal() {
   resetForm();
   await nextTick();
   if (props.itemToEdit) {
-    setValues(props.itemToEdit);
+    setValues(normalizeFormValues(props.itemToEdit));
   }
   modalRef.value?.showModal();
 }
@@ -167,7 +180,13 @@ const submitIcon = computed(() =>
 );
 
 const onSubmit = handleSubmit((data: Yup.InferType<typeof formSchema>) => {
-  emits("item", data);
+  const payload = {
+    ...data,
+    description: data.description?.trim() ? data.description : null,
+    inStudy: Boolean(data.stillbusy),
+    ...(props.editMode ? { id: props.itemToEdit.id } : {}),
+  };
+  emits("item", payload);
   modalRef.value?.closeModal();
 });
 </script>

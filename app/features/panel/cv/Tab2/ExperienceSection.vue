@@ -43,10 +43,13 @@
         @item="addPrior"
       />
     </div>
-    <div v-else class="mt-4 space-y-4">
+    <div v-else class="mt-4 space-y-4" :class="{ 'select-none': draggingIndex != null }">
       <div
         v-for="(item, index) in experiencesItems"
+        :key="item.id ?? index"
+        :data-cv-sort-index="index"
         class="p-4 border-2 border-dashed border-gray-default rounded-lg flex justify-between"
+        :class="itemClass(index)"
       >
         <div class="flex items-start gap-4">
           <Icon name="svg:edu-item" size="28" />
@@ -83,7 +86,12 @@
             :item-to-edit="item"
             @item="updatePrior"
           />
-          <button class="btn-cv-action">
+          <button
+            type="button"
+            class="btn-cv-action cursor-grab! touch-none active:cursor-grabbing!"
+            aria-label="جابه‌جایی"
+            @pointerdown="onHandlePointerDown(index, $event)"
+          >
             <Icon name="svg:dots" />
           </button>
           <button
@@ -135,6 +143,8 @@ const removeModalRef = ref<InstanceType<typeof RemoveItemModal> | null>(null);
 const removingIndex = ref<number | null>(null);
 const removingPriorId = ref<number | null>(null);
 const removing = ref(false);
+const { draggingIndex, itemClass, onHandlePointerDown } =
+  useHandleReorder(experiencesItems);
 
 const addPrior = async (item: any) => {
   const exists = experiencesItems.value.some(

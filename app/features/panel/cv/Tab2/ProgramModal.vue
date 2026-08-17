@@ -1,7 +1,7 @@
 <template>
   <div>
     <button
-      :class="editMode ? 'btn-cv-action' : 'btn btn-primary'"
+      :class="editMode ? 'btn-cv-action' : 'btn btn-primary h-10 rounded-lg px-6 text-sm'"
       @click="showModal"
     >
       <div v-if="!editMode" class="flex items-center gap-2">
@@ -66,13 +66,20 @@
           </template>
         </div>
         <div class="mt-12">
-          <div class="flex justify-end gap-2 mt-4">
-            <button class="btn btn-ghost" type="button" @click="modalRef?.closeModal()">
-              <Icon name="svg:close" />
+          <div class="mt-6 flex items-center justify-end gap-2">
+            <button
+              class="btn btn-ghost h-10 rounded-lg text-sm text-text-passive"
+              type="button"
+              @click="modalRef?.closeModal()"
+            >
+              <Icon name="svg:close" size="16" />
               انصراف
             </button>
-            <m-button class="btn-primary" type="submit">
-              <Icon :name="submitIcon" />
+            <m-button
+              class="btn-primary h-10 rounded-lg px-6 text-sm"
+              type="submit"
+            >
+              <Icon :name="submitIcon" size="18" />
               {{ submitLabel }}
             </m-button>
           </div>

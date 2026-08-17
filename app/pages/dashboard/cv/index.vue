@@ -9,11 +9,11 @@
     <div class="flex justify-between items-center">
       <p class="font-yb-bold text-2xl">رزومه من</p>
       <button
-        class="btn text-sm border-none text-primary-500 bg-[#4864E114]"
+        class="btn h-10 border-none text-sm text-primary-500 bg-[#4864E114]"
         type="button"
         @click="navigateTo('/dashboard/my-resume')"
       >
-        <Icon name="svg:user-2" size="24" />
+        <Icon name="svg:user-2" size="18" />
         از دید کارفرما
       </button>
     </div>

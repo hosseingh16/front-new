@@ -26,18 +26,22 @@
           label="میزان آشنایی با تهیه صورت مالی استاندارد:"
         />
       </div>
-      <div class="flex justify-end gap-2 mt-9">
-        <button class="btn btn-ghost" type="button" @click="resetSkills">
+      <div class="mt-6 flex items-center justify-end gap-2">
+        <button
+          class="btn btn-ghost h-10 rounded-lg text-sm text-text-passive"
+          type="button"
+          @click="resetSkills"
+        >
           <Icon name="lucide:rotate-ccw" size="16" class="shrink-0" />
           بازگردانی تغییرات
         </button>
         <m-button
-          class="btn-primary"
+          class="btn-primary h-10 rounded-lg px-6 text-sm"
           type="button"
           :loading="savingSkills"
           @click="saveSkills"
         >
-          <Icon name="svg:check-check" />
+          <Icon name="svg:check-check" size="18" />
           ذخیره
         </m-button>
       </div>
@@ -63,18 +67,22 @@
           label="میزان آشنایی به سامانه مودیان و پایانه های فروشگاهی:"
         />
       </div>
-      <div class="flex justify-end gap-2 mt-9">
-        <button class="btn btn-ghost" type="button" @click="resetPotential">
+      <div class="mt-6 flex items-center justify-end gap-2">
+        <button
+          class="btn btn-ghost h-10 rounded-lg text-sm text-text-passive"
+          type="button"
+          @click="resetPotential"
+        >
           <Icon name="lucide:rotate-ccw" size="16" class="shrink-0" />
           بازگردانی تغییرات
         </button>
         <m-button
-          class="btn-primary"
+          class="btn-primary h-10 rounded-lg px-6 text-sm"
           type="button"
           :loading="savingPotential"
           @click="savePotential"
         >
-          <Icon name="svg:check-check" />
+          <Icon name="svg:check-check" size="18" />
           ذخیره
         </m-button>
       </div>
@@ -99,13 +107,13 @@
           :is-image="false"
         />
       </div>
-      <div class="flex justify-end gap-2 mt-9">
-        <button class="btn btn-ghost">
-          <Icon name="svg:close" />
+      <div class="mt-6 flex items-center justify-end gap-2">
+        <button class="btn btn-ghost h-10 rounded-lg text-sm text-text-passive">
+          <Icon name="svg:close" size="16" />
           انصراف
         </button>
-        <m-button class="btn-primary">
-          <Icon name="svg:check-check" />
+        <m-button class="btn-primary h-10 rounded-lg px-6 text-sm">
+          <Icon name="svg:check-check" size="18" />
           ذخیره
         </m-button>
       </div>

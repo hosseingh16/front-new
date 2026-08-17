@@ -35,10 +35,13 @@
         @item="addEducation"
       />
     </div>
-    <div v-else class="mt-4 space-y-4">
+    <div v-else class="mt-4 space-y-4" :class="{ 'select-none': draggingIndex != null }">
       <div
         v-for="(item, index) in educationItems"
+        :key="item.id ?? `${item.degree}-${item.major}-${index}`"
+        :data-cv-sort-index="index"
         class="p-4 border-2 border-dashed border-gray-default rounded-lg flex justify-between"
+        :class="itemClass(index)"
       >
         <div class="flex items-start gap-4">
           <Icon name="svg:edu-item" size="28" />
@@ -67,7 +70,12 @@
             :item-to-edit="item"
             @item="updateEducation(index, $event)"
           />
-          <button class="btn-cv-action">
+          <button
+            type="button"
+            class="btn-cv-action cursor-grab! touch-none active:cursor-grabbing!"
+            aria-label="جابه‌جایی"
+            @pointerdown="onHandlePointerDown(index, $event)"
+          >
             <Icon name="svg:dots" />
           </button>
           <button
@@ -171,16 +179,18 @@ function handleRemoveCancel() {
   removingIndex.value = null;
 }
 
-async function syncEducation(action: "save" | "remove" = "save") {
+async function syncEducation(action: "save" | "remove" | "reorder" = "save") {
   try {
     await api.post("cv/sync-education", {
       education_items: educationItems.value,
     });
-    $toast.success(
-      action === "remove"
-        ? "اطلاعات تحصیلی با موفقیت حذف شد"
-        : "اطلاعات تحصیلی با موفقیت ذخیره شد",
-    );
+    if (action !== "reorder") {
+      $toast.success(
+        action === "remove"
+          ? "اطلاعات تحصیلی با موفقیت حذف شد"
+          : "اطلاعات تحصیلی با موفقیت ذخیره شد",
+      );
+    }
     await refreshUser();
     return true;
   } catch (error) {
@@ -197,17 +207,25 @@ async function syncEducation(action: "save" | "remove" = "save") {
   }
 }
 
+const { draggingIndex, itemClass, onHandlePointerDown } = useHandleReorder(
+  educationItems,
+  () => syncEducation("reorder"),
+);
+
 onMounted(async () => {
   //Load user data
   const currentUser = useSanctumUser<any>();
 
   educationItems.value = (currentUser.value.data?.resume_educations ?? []).map(
     (item: any) => ({
+      id: item.id,
       degree: item.degree,
       major: item.major,
       university: item.university,
-      enddate: item.enddate,
-      description: item.description,
+      enddate: item.enddate ?? "",
+      stillbusy: Boolean(item.stillbusy),
+      inStudy: Boolean(item.stillbusy),
+      description: item.description ?? "",
     }),
   );
 });
