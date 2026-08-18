@@ -39,6 +39,7 @@
         v-else-if="step === 5"
         key="sign-up-3"
         :step
+        :forced="roleSelectionForced"
         @on-change-step="onChangeStep($event)"
       />
       <SignUp4
@@ -68,8 +69,11 @@ import type { DirectionT, SignUpProfile } from "~/features/account/types";
 
 definePageMeta({
   layout: "auth",
-  // middleware: 'sanctum:guest',
+  middleware: "login-guest",
 });
+
+const route = useRoute();
+const { isAuthenticated } = useSanctumAuth();
 
 const {
   mobile: authMobile,
@@ -80,6 +84,7 @@ const {
 } = useAccountAuth();
 
 const step = ref(1);
+const roleSelectionForced = computed(() => route.query.step === "5");
 const direction = ref<DirectionT>("forward");
 const mobile = ref("");
 const otpCode = ref(["", "", "", "", ""]);
@@ -127,6 +132,15 @@ watch(
   },
   { immediate: true },
 );
+
+async function ensureRoleSelectionStep() {
+  const stepFromQuery = Number(route.query.step);
+  if (stepFromQuery >= 1 && stepFromQuery <= 6) {
+    step.value = stepFromQuery;
+  }
+}
+
+await ensureRoleSelectionStep();
 </script>
 
 <style>

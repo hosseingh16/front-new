@@ -37,10 +37,20 @@
         <icons-search2 color="#4A4A4A" />
       </button>
 
-      <NuxtLink v-if="isAuthenticated" to="/dashboard">
+      <NuxtLink v-if="canAccessDashboard" to="/dashboard">
         <button class="btn btn-primary">
           <Icon name="lucide:home" size="16" />
           پیشخوان
+        </button>
+      </NuxtLink>
+
+      <NuxtLink
+        v-else-if="needsRoleSelection"
+        :to="{ path: '/login', query: { step: '5' } }"
+      >
+        <button class="btn btn-primary">
+          <Icon name="svg:user-plus-white" size="16" />
+          تکمیل ثبت‌نام
         </button>
       </NuxtLink>
 
@@ -55,5 +65,13 @@
 </template>
 
 <script setup lang="ts">
+import { resolvePrimaryRole } from "~/utils/user-role";
+
 const { isAuthenticated } = useSanctumAuth();
+const { user } = useCurrentUser();
+const { needsRoleSelection } = useRoleGate();
+
+const canAccessDashboard = computed(
+  () => isAuthenticated.value && resolvePrimaryRole(user.value) !== null,
+);
 </script>

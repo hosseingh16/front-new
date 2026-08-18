@@ -22,12 +22,14 @@
 import { useAppTheme } from "~/composables/useAppTheme";
 import { paths } from "~/routes";
 
+const route = useRoute();
 const { fetchMenu, sidebarMenu } = usePanelConfig();
 const { collapsed } = useDashboardSidebar();
 const { isDark } = useAppTheme();
 const { user } = useCurrentUser();
 const { userId } = useAccountAuth();
 const { isAuthenticated } = useSanctumAuth();
+const { needsRoleSelection } = useRoleGate();
 
 watch(
   user,
@@ -39,7 +41,13 @@ watch(
 
 if (!isAuthenticated.value) {
   await navigateTo(paths.login, { replace: true });
-} else {
+} else if (!needsRoleSelection.value) {
   await fetchMenu();
+} else {
+  // Role guard runs in dashboard-auth middleware; this is a safety net only.
+  await navigateTo(
+    { path: paths.login, query: { step: "5", redirect: route.fullPath } },
+    { replace: true },
+  );
 }
 </script>

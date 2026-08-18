@@ -1,5 +1,6 @@
 import { resolveMenuItems } from "~/configs/menu-map";
 import type { PanelConfig } from "~/types/panel-config";
+import type { ApiError } from "~/types/api";
 
 const emptyConfig = (): PanelConfig => ({
   navigation: {
@@ -27,10 +28,18 @@ export const usePanelConfig = () => {
   const fetchMenu = async (force = false) => {
     if (initialized.value && !force) return;
 
-    const res = (await api.get("/panel/bootstrap")) as { panel: PanelConfig };
+    try {
+      const res = (await api.get("/panel/bootstrap")) as { panel: PanelConfig };
+      rawConfig.value = res.panel;
+      initialized.value = true;
+    } catch (err) {
+      const error = err as ApiError;
+      if (error.status === 422) {
+        return false;
+      }
 
-    rawConfig.value = res.panel;
-    initialized.value = true;
+      throw err;
+    }
   };
 
   const sidebarMenu = computed(() =>

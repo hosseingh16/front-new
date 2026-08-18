@@ -86,6 +86,7 @@ const emits = defineEmits<{
 }>();
 
 const { updateUserRole, loading } = useAccountAuth();
+const route = useRoute();
 const pendingId = ref<string | null>(null);
 
 type RequestTypeItem = {
@@ -146,7 +147,21 @@ async function onSelect(item: RequestTypeItem) {
     await updateUserRole(item.role);
     emits("selected", item.role);
 
-    if (props.forced) return;
+    const redirect =
+      typeof route.query.redirect === "string" &&
+      route.query.redirect.startsWith("/")
+        ? route.query.redirect
+        : null;
+
+    if (props.forced) {
+      if (redirect) {
+        await navigateTo(redirect, { replace: true });
+        return;
+      }
+
+      await navigateTo(item.to || paths.dashboard, { replace: true });
+      return;
+    }
 
     if (item.role === "employer") {
       emits("onChangeDirection", "forward");
@@ -154,7 +169,7 @@ async function onSelect(item: RequestTypeItem) {
       return;
     }
 
-    navigateTo(item.to || paths.jobs.root);
+    await navigateTo(item.to || paths.jobs.root);
   } finally {
     pendingId.value = null;
   }

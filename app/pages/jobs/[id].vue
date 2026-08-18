@@ -235,6 +235,7 @@ const route = useRoute();
 const adId = computed(() => String(route.params.id ?? ""));
 
 const { isAuthenticated } = useSanctumAuth();
+const { needsRoleSelection, ensureRoleForAction } = useRoleGate();
 const { applyToAd, loading: applyLoading } = useApplyToAd();
 const { ad, loading, error, setHasApplied, refresh: refreshAd } = useAd(adId);
 const { similarAds, loadingSimilar } = useSimilarAds(adId);
@@ -246,17 +247,20 @@ const successDialogRef = ref<HTMLDialogElement | null>(null);
 const applying = ref(false);
 const isMobile = ref(false);
 
-const embedded = computed(() => isAuthenticated.value);
+/** Dashboard chrome only when the user has completed role selection. */
+const embedded = computed(
+  () => isAuthenticated.value && !needsRoleSelection.value,
+);
 const adsListPath = computed(() =>
   embedded.value ? "/dashboard/ad" : paths.jobs.root,
 );
 
-function syncLayout(authenticated: boolean) {
-  setPageLayout(authenticated ? "dashboard" : "default");
+function syncLayout(useDashboard: boolean) {
+  setPageLayout(useDashboard ? "dashboard" : "default");
 }
 
-syncLayout(isAuthenticated.value);
-watch(isAuthenticated, syncLayout);
+syncLayout(embedded.value);
+watch(embedded, (useDashboard) => syncLayout(useDashboard));
 
 onMounted(() => {
   const mediaQuery = window.matchMedia("(max-width: 767px)");
@@ -317,6 +321,9 @@ async function sendRequest() {
 
   applying.value = true;
   try {
+    const assigned = await ensureRoleForAction("job_seeker");
+    if (!assigned) return;
+
     await applyToAd(id);
     showSuccessModal();
   } catch {

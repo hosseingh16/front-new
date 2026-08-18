@@ -140,11 +140,11 @@ const {
   requestOtp,
   verifyOtp,
   loginWithMobile,
-  updateUserRole,
   reset: resetAuth,
 } = useAccountAuth()
 
 const { applyToAd, loading: applyLoading } = useApplyToAd()
+const { ensureRoleForAction } = useRoleGate()
 
 const phoneSchema = Yup.object({
   mobile: Yup.string()
@@ -261,17 +261,18 @@ async function onSubmitOtp(otpFromEvent?: string | Event) {
 
   applying.value = true
   try {
-    const res = await verifyOtp(otp)
+    await verifyOtp(otp)
     await loginWithMobile(undefined, false)
-
-    if (res.has_role === false) {
-      await updateUserRole('job_seeker')
-    }
 
     let applySucceeded = true
     if (props.adId) {
       try {
-        await applyToAd(props.adId)
+        const assigned = await ensureRoleForAction('job_seeker')
+        if (!assigned) {
+          applySucceeded = false
+        } else {
+          await applyToAd(props.adId)
+        }
       } catch {
         applySucceeded = false
       }

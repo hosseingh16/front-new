@@ -1,5 +1,9 @@
 import { paths } from '~/routes'
-import { isEmployerUser, isJobSeekerUser } from '~/utils/user-role'
+import {
+  isEmployerUser,
+  isJobSeekerUser,
+  resolvePrimaryRole,
+} from '~/utils/user-role'
 
 const EMPLOYER_ONLY_PREFIXES = [
   '/dashboard/employer',
@@ -45,18 +49,23 @@ export default defineNuxtRouteMiddleware(async (to) => {
     )
   }
 
+  const { resolveRoleAccess, ensureUserLoaded } = useRoleGate()
+  const { user } = useCurrentUser()
+
+  const access = await resolveRoleAccess(to.fullPath)
+  if (!access.allowed) {
+    return navigateTo(access.redirect, { replace: true })
+  }
+
+  await ensureUserLoaded()
+
   const needsRoleCheck =
     matchesPrefix(to.path, EMPLOYER_ONLY_PREFIXES) ||
     matchesPrefix(to.path, JOBSEEKER_ONLY_PREFIXES)
 
   if (!needsRoleCheck) return
 
-  const { user, isEmployer, isJobSeeker, refreshUser } = useCurrentUser()
-
-  // Ensure type/roles are present (older sessions may lack roles).
-  if (!user.value?.type && !Array.isArray(user.value?.roles)) {
-    await refreshUser()
-  }
+  const { isEmployer, isJobSeeker } = useCurrentUser()
 
   const employer = isEmployer.value || isEmployerUser(user.value)
   const jobseeker = isJobSeeker.value || isJobSeekerUser(user.value)
