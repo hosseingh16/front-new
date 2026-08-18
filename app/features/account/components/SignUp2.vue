@@ -1,14 +1,20 @@
 <template>
-  <DaisyCard class="w-full min-[560px]:w-140">
-    <div class="flex justify-between items-center">
+  <DaisyCard class="w-full">
+    <SignUpStepper :current="3" class="hidden min-[560px]:flex flex-1" />
+    <div class="flex items-center">
       <Icon
         v-if="!inline"
         name="svg:chevron-right"
-        class="cursor-pointer"
+        class="shrink-0 cursor-pointer"
         @click="goBack"
       />
-      <span v-else />
-      <img :src="`/images/2-3.png`" width="54" />
+      <span v-else class="hidden min-[560px]:block w-6 shrink-0" />
+      <img
+        :src="`/images/2-3.png`"
+        width="54"
+        class="ms-auto min-[560px]:hidden"
+      />
+      <span class="hidden min-[560px]:block w-6 shrink-0" />
     </div>
 
     <p class="mt-4 text-2xl sm:text-h1 font-yb-bold">تکمیل حساب کاربری</p>
@@ -110,6 +116,7 @@
 
 <script setup lang="ts">
 import { convertImageToBase64 } from "~/libs/utils";
+import SignUpStepper from "~/features/account/components/SignUpStepper.vue";
 import type { DirectionT } from "../types";
 import { useForm } from "vee-validate";
 import * as Yup from "yup";
@@ -200,7 +207,11 @@ const onSubmit = handleSubmit(async (data) => {
     return;
   }
 
-  model.value = { ...data, profile: model.value.profile, password: password || "" };
+  model.value = {
+    ...data,
+    profile: model.value.profile,
+    password: password || "",
+  };
 
   await completeProfile({
     name: data.fullName,

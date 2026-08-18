@@ -1,8 +1,18 @@
 <template>
-  <DaisyCard class="w-full min-[560px]:w-140">
-    <div class="flex justify-between items-center">
-      <Icon name="svg:chevron-right" class="cursor-pointer" @click="goBack" />
-      <img src="/images/1-3.png" width="54" />
+  <DaisyCard class="w-full">
+    <SignUpStepper :current="1" class="hidden min-[560px]:flex flex-1" />
+    <div class="flex items-center">
+      <Icon
+        name="svg:chevron-right"
+        class="shrink-0 cursor-pointer"
+        @click="goBack"
+      />
+      <img
+        src="/images/1-3.png"
+        width="54"
+        class="ms-auto min-[560px]:hidden"
+      />
+      <span class="hidden min-[560px]:block w-6 shrink-0" />
     </div>
 
     <p class="mt-4 text-2xl sm:text-h1 font-yb-bold">احراز هویت</p>
@@ -38,6 +48,7 @@
 <script setup lang="ts">
 import OtpButton from "~/features/account/components/OtpButton.vue";
 import OtpInput from "~/features/account/components/OtpInput.vue";
+import SignUpStepper from "~/features/account/components/SignUpStepper.vue";
 import type { DirectionT } from "../types";
 import type { AuthUserStatus } from "~/composables/useAccountAuth";
 

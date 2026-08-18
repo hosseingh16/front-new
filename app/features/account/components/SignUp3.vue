@@ -1,14 +1,16 @@
 <template>
   <DaisyCard class="w-full min-[1052px]:w-263">
-    <div class="flex justify-between items-center">
+    <SignUpStepper :current="3" class="hidden min-[560px]:flex flex-1" />
+    <div class="flex items-center">
       <Icon
         v-if="!forced"
         name="svg:chevron-right"
-        class="cursor-pointer"
+        class="shrink-0 cursor-pointer"
         @click="goBack"
       />
-      <span v-else />
-      <img src="/images/3-3.png" width="54" />
+      <span v-else class="hidden min-[560px]:block w-6 shrink-0" />
+      <img src="/images/3-3.png" width="54" class="ms-auto min-[560px]:hidden" />
+      <span class="hidden min-[560px]:block w-6 shrink-0" />
     </div>
 
     <p class="mt-4 text-2xl sm:text-h1 font-yb-bold">نوع درخواست جدید:</p>
@@ -64,6 +66,7 @@
 </template>
 
 <script setup lang="ts">
+import SignUpStepper from "~/features/account/components/SignUpStepper.vue";
 import type { AccountRole, DirectionT } from "../types";
 import { paths } from "~/routes";
 
