@@ -14,6 +14,10 @@ import {
 } from '~/utils/create-ad-payload'
 import type { ISelectItem } from '~/types/select-item'
 import { provinces } from '~/feeders/provinces'
+import {
+  isPaidAdCity,
+  PAID_AD_CITY_PRICE,
+} from '~/pages/dashboard/employer/ads/utils/paid-ad-cities'
 
 const LOOKUP_KEYS =
   'job_titles,employment_types,experience_levels,salary_ranges,benefits,proficiencies,education_levels,genders,accounting_programs'
@@ -175,6 +179,10 @@ export function useCreateAdForm(
     const label = selected?.label ?? form.value.employment_type
     return /پاره\s*وقت/.test(String(label))
   })
+
+  const payableAmount = computed(() =>
+    isPaidAdCity(form.value.city_name) ? PAID_AD_CITY_PRICE : 0,
+  )
 
   async function loadCities(provinceId: number) {
     citiesLoading.value = true
@@ -458,6 +466,7 @@ export function useCreateAdForm(
     form,
     errors,
     isPartTime,
+    payableAmount,
     isEdit,
     submitting,
     savingDraft,

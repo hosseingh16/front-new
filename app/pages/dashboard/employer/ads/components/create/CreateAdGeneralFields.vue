@@ -46,7 +46,32 @@
               placeholder="شهر را انتخاب کنید"
               :disabled="!form.province || citiesLoading"
               :error="Boolean(errors.city)"
-            />
+            >
+              <template #selected="{ item }">
+                <span
+                  v-if="item"
+                  class="flex w-full min-w-0 items-center justify-between gap-3"
+                >
+                  <span class="line-clamp-1 text-right">{{ item.label }}</span>
+                  <span
+                    v-if="!isPaidAdCity(item.label)"
+                    class="shrink-0 rounded-md bg-success-soft px-1.5 py-0.5 text-[10px] font-semibold leading-none text-success-500"
+                  >
+                    رایگان
+                  </span>
+                </span>
+                <span v-else class="line-clamp-1">شهر را انتخاب کنید</span>
+              </template>
+              <template #option="{ item }">
+                <span class="line-clamp-1 text-right">{{ item.label }}</span>
+                <span
+                  v-if="!isPaidAdCity(item.label)"
+                  class="shrink-0 rounded-md bg-success-soft px-1.5 py-0.5 text-[10px] font-semibold leading-none text-success-500"
+                >
+                  رایگان
+                </span>
+              </template>
+            </m-select2>
             <p v-if="errors.city" class="mt-1 text-xs text-[#EF4035]">
               {{ errors.city }}
             </p>
@@ -126,7 +151,7 @@
 import Titr from "~/features/panel/cv/Titr.vue";
 import CreateAdPartTimeSection from "./CreateAdPartTimeSection.vue";
 import { provinces } from "~/feeders/provinces";
-import { findPaidAdCityName } from "~/pages/dashboard/employer/ads/utils/paid-ad-cities";
+import { findPaidAdCityName, isPaidAdCity } from "~/pages/dashboard/employer/ads/utils/paid-ad-cities";
 import type {
   CreateAdFormErrors,
   CreateAdFormModel,

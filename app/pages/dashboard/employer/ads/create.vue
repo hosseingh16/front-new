@@ -51,6 +51,7 @@
         class="lg:col-span-2"
         :submitting="submitting"
         :saving-draft="savingDraft"
+        :payable-amount="payableAmount"
         @publish="publish"
         @save-draft="saveDraft"
       />
@@ -76,6 +77,7 @@ const {
   form,
   errors,
   isPartTime,
+  payableAmount,
   submitting,
   savingDraft,
   citiesLoading,

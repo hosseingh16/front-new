@@ -52,9 +52,11 @@
             <ul
               class="list-inside list-disc space-y-1 marker:text-text-secondary"
             >
-              <li v-for="item in qualificationItems" :key="item">
-                {{ item }}
-              </li>
+              <li
+                v-for="item in qualificationItems"
+                :key="item"
+                v-html="item"
+              ></li>
             </ul>
           </div>
 

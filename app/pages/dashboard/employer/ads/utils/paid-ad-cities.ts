@@ -1,4 +1,6 @@
-const PAID_AD_CITY_NAMES = ['مشهد'] as const
+const PAID_AD_CITY_NAMES = ['مشهد','تهران'] as const
+
+export const PAID_AD_CITY_PRICE = 345_000
 
 export function findPaidAdCityName(
   ...sources: Array<string | null | undefined>
@@ -12,4 +14,8 @@ export function findPaidAdCityName(
   }
 
   return null
+}
+
+export function isPaidAdCity(name?: string | null) {
+  return findPaidAdCityName(name) != null
 }

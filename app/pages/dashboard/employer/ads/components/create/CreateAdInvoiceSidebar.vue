@@ -6,7 +6,15 @@
 
         <div class="mt-6 flex flex-col items-start justify-between text-sm">
           <span class="text-text-passive">هزینه قابل پرداخت</span>
-          <span class="my-4 font-yb-bold text-lg text-success-500">رایگان</span>
+          <div v-if="payableAmount > 0" class="flex items-center">
+            <span class="my-4 font-yb-bold text-lg text-success-500">
+              {{ formattedPayableAmount }}
+            </span>
+            <small class="mx-1 text-success-500">تومان</small>
+          </div>
+          <span v-else class="my-4 font-yb-bold text-lg text-success-500">
+            رایگان
+          </span>
         </div>
 
         <button
@@ -38,16 +46,18 @@
 <script setup lang="ts">
 import Titr from "~/features/panel/cv/Titr.vue";
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     submitting?: boolean;
     savingDraft?: boolean;
     publishLabel?: string;
     showDraft?: boolean;
+    payableAmount?: number;
   }>(),
   {
     publishLabel: "انتشار آگهی",
     showDraft: true,
+    payableAmount: 0,
   },
 );
 
@@ -55,4 +65,8 @@ const emit = defineEmits<{
   publish: [];
   "save-draft": [];
 }>();
+
+const formattedPayableAmount = computed(() =>
+  props.payableAmount.toLocaleString("en-US"),
+);
 </script>

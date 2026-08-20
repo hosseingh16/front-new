@@ -55,6 +55,7 @@
         :submitting="submitting"
         publish-label="ثبت تغییرات"
         :show-draft="false"
+        :payable-amount="payableAmount"
         @publish="publish"
       />
     </div>
@@ -81,6 +82,7 @@ const {
   form,
   errors,
   isPartTime,
+  payableAmount,
   submitting,
   loadingAd,
   citiesLoading,

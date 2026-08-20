@@ -15,14 +15,14 @@
         @keydown="onTriggerKeydown"
       >
         <span
-          class="text-sm font-normal line-clamp-1"
+          class="flex w-full min-w-0 flex-1 items-center text-sm font-normal"
           :class="hasModelValue ? 'text-gray-700' : 'text-text-muted'"
         >
-          {{
-            options.find((x) => String(x.value) === String(model))?.label ||
-            placeholder ||
-            "انتخاب کنید"
-          }}
+          <slot name="selected" :item="selectedOption">
+            <span class="line-clamp-1">
+              {{ selectedOption?.label || placeholder || "انتخاب کنید" }}
+            </span>
+          </slot>
         </span>
         <icons-chevron-down
           color="#4864E1"
@@ -53,14 +53,16 @@
               v-for="(item, index) in options2"
               :data-index="index"
               @click="selectItem(item)"
-              class="px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg"
+              class="flex w-full items-center justify-between gap-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg"
               :class="{
                 'bg-gray-200 font-semibold':
                   String(item.value) === String(model),
                 'bg-gray-100': index === highlightedIndex,
               }"
             >
-              {{ item.label }}
+              <slot name="option" :item="item">
+                {{ item.label }}
+              </slot>
             </p>
           </div>
           <div
@@ -108,6 +110,11 @@ const optionsContainerRef = ref<HTMLElement | null>(null);
 const highlightedIndex = ref(-1);
 
 const hasModelValue = computed(() => model.value != null && model.value !== "");
+
+const selectedOption = computed(
+  () =>
+    props.options.find((x) => String(x.value) === String(model.value)) ?? null,
+);
 
 // Watches
 watch(
