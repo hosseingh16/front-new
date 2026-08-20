@@ -10,11 +10,22 @@
     <div class="relative z-10 mt-4">
       <m-tiny-mce-editor
         v-model="form.resume_terms"
+        headings
+        :max-length="RESUME_TERMS_MAX_LENGTH"
         placeholder="شرایط احراز را بنویسید..."
       />
-      <p v-if="errors.resume_terms" class="mt-1 text-xs text-[#EF4035]">
-        {{ errors.resume_terms }}
-      </p>
+      <div class="mt-1 flex items-start justify-between gap-3">
+        <p v-if="errors.resume_terms" class="text-xs text-[#EF4035]">
+          {{ errors.resume_terms }}
+        </p>
+        <p
+          class="ms-auto shrink-0 text-xs"
+          :class="isOverLimit ? 'text-[#EF4035]' : 'text-text-passive'"
+        >
+          {{ characterCount.toLocaleString('fa-IR') }} /
+          {{ RESUME_TERMS_MAX_LENGTH.toLocaleString('fa-IR') }} کاراکتر
+        </p>
+      </div>
     </div>
   </section>
 </template>
@@ -22,9 +33,20 @@
 <script setup lang="ts">
 import Titr from '~/features/panel/cv/Titr.vue'
 import type { CreateAdFormErrors, CreateAdFormModel } from '~/types/create-ad-form'
+import {
+  getResumeTermsPlainLength,
+  RESUME_TERMS_MAX_LENGTH,
+} from '~/utils/create-ad-payload'
 
-defineProps<{
+const props = defineProps<{
   form: CreateAdFormModel
   errors: CreateAdFormErrors
 }>()
+
+const characterCount = computed(() =>
+  getResumeTermsPlainLength(props.form.resume_terms),
+)
+const isOverLimit = computed(
+  () => characterCount.value > RESUME_TERMS_MAX_LENGTH,
+)
 </script>

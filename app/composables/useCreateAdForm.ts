@@ -90,9 +90,7 @@ export function useCreateAdForm(
   }
 
   const cityOptions = ref<ISelectItem[]>([])
-  const regionOptions = ref<ISelectItem[]>([])
   const citiesLoading = ref(false)
-  const regionsLoading = ref(false)
 
   const companyName = ref('شرکت شما')
   const companyLogo = ref('')
@@ -162,7 +160,6 @@ export function useCreateAdForm(
           cityOptions.value.find((item) => item.value === cityId)?.label ??
           company.city_name ??
           ''
-        await loadRegions(cityId)
       } else if (company.city_name) {
         form.value.city_name = company.city_name
       }
@@ -187,17 +184,6 @@ export function useCreateAdForm(
       cityOptions.value = []
     } finally {
       citiesLoading.value = false
-    }
-  }
-
-  async function loadRegions(cityId: number) {
-    regionsLoading.value = true
-    try {
-      regionOptions.value = await api.get<ISelectItem[]>(`/regions/${cityId}`)
-    } catch {
-      regionOptions.value = []
-    } finally {
-      regionsLoading.value = false
     }
   }
 
@@ -317,11 +303,7 @@ export function useCreateAdForm(
     form.value = next
 
     if (next.province) {
-      loadCities(next.province).then(() => {
-        if (next.city) {
-          loadRegions(next.city)
-        }
-      })
+      loadCities(next.province)
     }
   }
 
@@ -374,11 +356,7 @@ export function useCreateAdForm(
         form.value.minimum_work_experience = String(parsed.minimum_work_experience)
       }
       if (form.value.province) {
-        loadCities(form.value.province).then(() => {
-          if (form.value.city) {
-            loadRegions(form.value.city)
-          }
-        })
+        loadCities(form.value.province)
       }
       $toast.info('پیش‌نویس بازیابی شد')
     } catch {
@@ -486,8 +464,6 @@ export function useCreateAdForm(
     loadingAd,
     lookupsLoading,
     citiesLoading,
-    regionOptions,
-    regionsLoading,
     cityOptions,
     companyName,
     companyLogo,
@@ -501,7 +477,6 @@ export function useCreateAdForm(
     genders,
     accountingPrograms,
     loadCities,
-    loadRegions,
     saveDraft,
     publish,
     loadCompanyPreview,

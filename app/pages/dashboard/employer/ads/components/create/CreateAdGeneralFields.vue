@@ -51,15 +51,6 @@
               {{ errors.city }}
             </p>
           </div>
-
-          <m-select2
-            v-model="selectedRegion"
-            label="منطقه:"
-            :options="regionOptions"
-            search
-            placeholder="منطقه را انتخاب کنید"
-            :disabled="!form.city || regionsLoading || !hasRegions"
-          />
         </div>
 
         <div
@@ -153,24 +144,15 @@ const props = defineProps<{
   educationLevels: ISelectItem[];
   genders: ISelectItem[];
   cityOptions: ISelectItem[];
-  regionOptions: ISelectItem[];
   citiesLoading: boolean;
-  regionsLoading: boolean;
   loadCities: (provinceId: number) => Promise<void>;
-  loadRegions: (cityId: number) => Promise<void>;
 }>();
 
 const provinceOptions = provinces;
-const hasRegions = computed(() => props.regionOptions.length > 0);
 
 const paidCityName = computed(() =>
   findPaidAdCityName(props.form.city_name),
 );
-
-function clearRegionFields() {
-  props.form.region = null;
-  props.form.region_name = "";
-}
 
 const genderItems = computed(() => {
   if (props.genders.length) {
@@ -196,30 +178,17 @@ const selectedProvince = computed({
       provinceOptions.find((item) => item.value === provinceId)?.label ?? "";
     props.form.city = null;
     props.form.city_name = "";
-    clearRegionFields();
     if (provinceId) await props.loadCities(provinceId);
   },
 });
 
 const selectedCity = computed({
   get: () => props.form.city ?? undefined,
-  set: async (value: string | number | undefined) => {
+  set: (value: string | number | undefined) => {
     const cityId = value == null ? null : Number(value);
     props.form.city = cityId;
     props.form.city_name =
       props.cityOptions.find((item) => item.value === cityId)?.label ?? "";
-    clearRegionFields();
-    if (cityId) await props.loadRegions(cityId);
-  },
-});
-
-const selectedRegion = computed({
-  get: () => props.form.region ?? undefined,
-  set: (value: string | number | undefined) => {
-    const regionId = value == null ? null : Number(value);
-    props.form.region = regionId;
-    props.form.region_name =
-      props.regionOptions.find((item) => item.value === regionId)?.label ?? "";
   },
 });
 

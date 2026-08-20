@@ -13,7 +13,7 @@ export interface CreateAdPayloadContext {
 }
 
 function stripHtml(value: string) {
-  return value.replace(/<[^>]*>/g, '').trim()
+  return value.replace(/<[^>]*>/g, '').replace(/&nbsp;/gi, ' ').trim()
 }
 
 function resolveLabel(
@@ -31,6 +31,9 @@ function resolveLabels(
 ) {
   return values.map((value) => resolveLabel(options, value)).filter(Boolean)
 }
+
+export const RESUME_TERMS_MIN_LENGTH = 10
+export const RESUME_TERMS_MAX_LENGTH = 5000
 
 export function getResumeTermsPlainLength(value: string) {
   return stripHtml(value).length
@@ -58,8 +61,11 @@ export function validateCreateAdForm(
     errors.employment_type = 'نوع همکاری الزامی است'
   }
 
-  if (getResumeTermsPlainLength(form.resume_terms) < 10) {
+  const resumeTermsLength = getResumeTermsPlainLength(form.resume_terms)
+  if (resumeTermsLength < RESUME_TERMS_MIN_LENGTH) {
     errors.resume_terms = 'شرایط احراز باید حداقل ۱۰ کاراکتر باشد'
+  } else if (resumeTermsLength > RESUME_TERMS_MAX_LENGTH) {
+    errors.resume_terms = 'شرایط احراز نباید بیشتر از ۵۰۰۰ کاراکتر باشد'
   }
 
   if (options.isPartTime) {
@@ -125,8 +131,6 @@ export function buildCreateAdPayload(
 
   if (form.city != null) payload.city = form.city
   if (form.city_name.trim()) payload.city_name = form.city_name.trim()
-  if (form.region != null) payload.region = form.region
-  if (form.region_name.trim()) payload.region_name = form.region_name.trim()
   if (form.province != null) payload.province = form.province
   if (form.province_name.trim()) payload.province_name = form.province_name.trim()
   const salaryRange =

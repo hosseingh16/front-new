@@ -32,8 +32,6 @@ export interface CreateAdFormModel {
   company_address: string
   city: number | null
   city_name: string
-  region: number | null
-  region_name: string
   province: number | null
   province_name: string
   employment_type: string
@@ -62,7 +60,6 @@ export interface CreateAdFormErrors {
   title?: string
   province?: string
   city?: string
-  region?: string
   employment_type?: string
   resume_terms?: string
   accounting_management?: string
@@ -80,8 +77,6 @@ export function createEmptyCreateAdForm(): CreateAdFormModel {
     company_address: '',
     city: null,
     city_name: '',
-    region: null,
-    region_name: '',
     province: null,
     province_name: '',
     employment_type: '',
