@@ -146,6 +146,7 @@ const BANNER_STORAGE_KEY = "cv-incomplete-banner-dismissed";
 // Variables
 const tab = ref(1);
 const { user } = useCurrentUser();
+const { isWelcomeVisible } = useFirstVisitWelcome();
 const { totalPercent } = useCvCompletion(user);
 const { toClipboard } = useClipboard();
 const expandedCvCompletion = useState(
@@ -157,7 +158,9 @@ const cvIncompleteBannerDismissed = ref(false);
 
 const showCvIncompleteBanner = computed(
   () =>
-    !isResumeBasicInfoComplete(user.value) && !cvIncompleteBannerDismissed.value,
+    !isResumeBasicInfoComplete(user.value) &&
+    !cvIncompleteBannerDismissed.value &&
+    !isWelcomeVisible.value,
 );
 
 onMounted(() => {

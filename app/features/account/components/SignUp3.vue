@@ -20,7 +20,7 @@
         v-for="item in items"
         :key="item.id"
         class="border border-gray-default hover:border-primary-500 rounded-2xl py-4 min-[1052px]:p-6 flex h-full flex-row min-[1052px]:flex-col items-center group cursor-pointer"
-        :class="{ 'pointer-events-none opacity-60': loading }"
+        :class="{ 'pointer-events-none opacity-60': pendingId !== null }"
         @click="onSelect(item)"
       >
         <NuxtImg
@@ -37,11 +37,11 @@
           <button
             type="button"
             class="request-type-btn btn btn-soft group-hover:btn-primary mt-auto inline-flex h-10 items-center justify-center gap-1"
-            :disabled="loading"
+            :disabled="pendingId !== null"
             @click.stop="onSelect(item)"
           >
             <span
-              v-if="loading && pendingId === item.id"
+              v-if="pendingId === item.id"
               class="loading loading-spinner loading-sm"
             />
             <template v-else>
@@ -69,6 +69,7 @@
 import SignUpStepper from "~/features/account/components/SignUpStepper.vue";
 import type { AccountRole, DirectionT } from "../types";
 import { paths } from "~/routes";
+import { buildEnteringRoute } from "~/utils/entering-route";
 
 const props = withDefaults(
   defineProps<{
@@ -85,7 +86,7 @@ const emits = defineEmits<{
   (e: "selected", role: AccountRole): void;
 }>();
 
-const { updateUserRole, loading } = useAccountAuth();
+const { updateUserRole } = useAccountAuth();
 const route = useRoute();
 const pendingId = ref<string | null>(null);
 
@@ -140,12 +141,18 @@ function goBack() {
 }
 
 async function onSelect(item: RequestTypeItem) {
-  if (loading.value) return;
+  if (pendingId.value) return;
 
   pendingId.value = item.id;
   try {
-    await updateUserRole(item.role);
-    emits("selected", item.role);
+    if (item.role === "employer" && !props.forced) {
+      await updateUserRole(item.role);
+      emits("selected", item.role);
+      emits("onChangeDirection", "forward");
+      emits("onChangeStep", props.step + 1);
+      pendingId.value = null;
+      return;
+    }
 
     const redirect =
       typeof route.query.redirect === "string" &&
@@ -153,24 +160,17 @@ async function onSelect(item: RequestTypeItem) {
         ? route.query.redirect
         : null;
 
-    if (props.forced) {
-      if (redirect) {
-        await navigateTo(redirect, { replace: true });
-        return;
-      }
+    const destination = props.forced
+      ? redirect || item.to || paths.dashboard
+      : item.to || paths.jobs.root;
 
-      await navigateTo(item.to || paths.dashboard, { replace: true });
-      return;
-    }
+    emits("selected", item.role);
 
-    if (item.role === "employer") {
-      emits("onChangeDirection", "forward");
-      emits("onChangeStep", props.step + 1);
-      return;
-    }
-
-    await navigateTo(item.to || paths.jobs.root);
-  } finally {
+    await navigateTo(
+      buildEnteringRoute({ to: destination, role: item.role }),
+      { replace: props.forced },
+    );
+  } catch {
     pendingId.value = null;
   }
 }

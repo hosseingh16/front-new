@@ -2,14 +2,14 @@
   <div class="space-y-8">
     <section>
       <DashboardStatusAlert
-        v-if="statusAlert"
+        v-if="statusAlert && !isWelcomeVisible"
         v-bind="statusAlert"
         @dismiss="dismissStatusAlert"
       />
 
       <h1
         class="font-yb-bold text-xl text-text-tertiary md:text-2xl"
-        :class="{ 'mt-4': statusAlert }"
+        :class="{ 'mt-4': statusAlert && !isWelcomeVisible }"
       >
         پیشخوان
       </h1>
@@ -126,6 +126,7 @@ useSeoMeta({
 });
 
 const { fetchStatus } = useUserStatus();
+const { isWelcomeVisible } = useFirstVisitWelcome();
 const {
   ads,
   adGroups,

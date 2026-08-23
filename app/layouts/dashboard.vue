@@ -10,6 +10,13 @@
           class="min-h-screen no-scrollbar mt-16 flex-1 max-lg:pb-28 pl-4 pr-4 py-6 md-h-full transition-[padding] duration-300"
           :class="collapsed ? 'lg:pr-4' : 'lg:pr-76'"
         >
+          <DashboardStatusAlert
+            v-if="welcomeAlert"
+            class="mb-5"
+            v-bind="welcomeAlert"
+            @dismiss="dismissWelcome"
+            @action="dismissWelcome"
+          />
           <slot />
         </div>
         <panel-bottom-navigation />
@@ -20,6 +27,7 @@
 
 <script setup lang="ts">
 import { useAppTheme } from "~/composables/useAppTheme";
+import DashboardStatusAlert from "~/pages/dashboard/components/DashboardStatusAlert.vue";
 import { paths } from "~/routes";
 
 const route = useRoute();
@@ -30,6 +38,11 @@ const { user } = useCurrentUser();
 const { userId } = useAccountAuth();
 const { isAuthenticated } = useSanctumAuth();
 const { needsRoleSelection } = useRoleGate();
+const { welcomeAlert, dismissWelcome, initWelcome } = useFirstVisitWelcome();
+
+onMounted(() => {
+  initWelcome();
+});
 
 watch(
   user,

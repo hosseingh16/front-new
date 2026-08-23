@@ -24,10 +24,22 @@
           :to="actionTo"
           class="btn btn-ghost h-9 min-h-9 shrink-0 gap-2 px-3 text-sm font-semibold"
           :class="variantClasses.action"
+          @click="emit('action')"
         >
           <Icon v-if="actionIcon" :name="actionIcon" size="18" />
           {{ actionLabel }}
         </NuxtLink>
+
+        <button
+          v-else-if="actionLabel"
+          type="button"
+          class="btn btn-ghost h-9 min-h-9 shrink-0 gap-2 px-3 text-sm font-semibold"
+          :class="variantClasses.action"
+          @click="emit('action')"
+        >
+          <Icon v-if="actionIcon" :name="actionIcon" size="18" />
+          {{ actionLabel }}
+        </button>
 
         <button
           v-if="dismissible"
@@ -62,6 +74,7 @@ const props = withDefaults(
 
 const emit = defineEmits<{
   dismiss: []
+  action: []
 }>()
 
 const variantClasses = computed(() => {
