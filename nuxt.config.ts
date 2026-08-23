@@ -65,7 +65,12 @@ export default defineNuxtConfig({
   },
 
   robots: {
-    disallow: ["/"],
+    groups: [
+      {
+        userAgent: "*",
+        disallow: ["/"],
+      },
+    ],
   },
 
   vite: {
