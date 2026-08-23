@@ -15,6 +15,12 @@ export default defineNuxtConfig({
         lang: "fa",
         dir: "rtl",
       },
+      meta: [
+        {
+          name: "robots",
+          content: "noindex, nofollow, noarchive",
+        },
+      ],
     },
   },
 
@@ -56,6 +62,10 @@ export default defineNuxtConfig({
   site: {
     url: "https://admin.hihesab.com",
     name: "های‌حساب",
+  },
+
+  robots: {
+    disallow: ["/"],
   },
 
   vite: {
