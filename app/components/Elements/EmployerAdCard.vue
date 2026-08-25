@@ -2,8 +2,13 @@
   <article class="rounded-2xl border border-gray-default bg-surface-50 p-1">
     <div class="rounded-lg p-3 bg-surface-soft">
       <div class="flex items-start justify-between gap-4">
-        <h2 class="font-yb-bold text-base text-text-tertiary">
-          {{ ad.title }}
+        <h2 class="min-w-0 font-yb-bold text-base text-text-tertiary">
+          <NuxtLink
+            :to="`/dashboard/employer/ads/${ad.id}/resumes`"
+            class="transition-colors hover:text-primary-500"
+          >
+            {{ ad.title }}
+          </NuxtLink>
         </h2>
         <span v-if="publishedLabel" class="shrink-0 text-sm text-text-passive">
           {{ publishedLabel }}
@@ -11,10 +16,11 @@
       </div>
 
       <div class="mt-5 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
-        <div
+        <NuxtLink
           v-for="item in statItems"
           :key="item.label"
-          class="flex flex-col items-center gap-2"
+          :to="statLink(item.status)"
+          class="flex flex-col items-center gap-2 rounded-lg p-1 transition-opacity hover:opacity-80"
         >
           <div class="min-w-0">
             <p class="font-yb-bold text-sm text-text-tertiary">
@@ -34,7 +40,7 @@
             </span>
             <p class="text-sm text-text-passive">{{ item.label }}</p>
           </div>
-        </div>
+        </NuxtLink>
       </div>
     </div>
 
@@ -84,17 +90,16 @@
                 </NuxtLink>
               </li>
               <li>
-                <button
-                  type="button"
+                <NuxtLink
+                  :to="`/dashboard/employer/ads/create?copy=${ad.id}`"
                   class="flex w-full items-center gap-2 px-4 py-2 text-sm text-text-secondary hover:bg-surface-100"
-                  @click="emit('copy', ad.id)"
                 >
                   <Icon
                     name="material-symbols:content-copy-outline"
                     size="16"
                   />
                   کپی در آگهی جدید
-                </button>
+                </NuxtLink>
               </li>
               <li>
                 <button
@@ -137,7 +142,6 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   edit: [id: number];
-  copy: [id: number];
   delete: [id: number];
 }>();
 
@@ -148,4 +152,10 @@ const publishedLabel = computed(() =>
 const statItems = computed(() => getEmployerAdStatItems(props.ad));
 
 const statusMeta = computed(() => getEmployerAdStatusMeta(props.ad));
+
+function statLink(status?: number) {
+  const path = `/dashboard/employer/ads/${props.ad.id}/resumes`;
+  if (status == null) return path;
+  return { path, query: { status: String(status) } };
+}
 </script>

@@ -7,7 +7,15 @@
 
     <h1 class="font-yb-bold text-2xl text-text-tertiary">{{ pageTitle }}</h1>
 
-    <div class="mt-5 grid items-start gap-4 lg:grid-cols-8">
+    <div v-if="loadingAd" class="mt-5 space-y-4">
+      <div
+        v-for="n in 4"
+        :key="`create-skeleton-${n}`"
+        class="h-40 animate-pulse rounded-2xl bg-surface-200"
+      />
+    </div>
+
+    <div v-else class="mt-5 grid items-start gap-4 lg:grid-cols-8">
       <div class="space-y-4 lg:col-span-6">
         <CreateAdGeneralFields
           :form="form"
@@ -78,8 +86,10 @@ const {
   errors,
   isPartTime,
   payableAmount,
+  isCopy,
   submitting,
   savingDraft,
+  loadingAd,
   citiesLoading,
   cityOptions,
   companyName,
@@ -114,6 +124,8 @@ async function onCompanyBasicCompleted() {
 const route = useRoute();
 
 const pageTitle = computed(() => {
+  if (isCopy.value) return "کپی آگهی";
+
   const raw = route.query.employment_type;
   const employmentType = Array.isArray(raw) ? raw[0] : raw;
 

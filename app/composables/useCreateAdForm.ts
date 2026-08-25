@@ -55,12 +55,22 @@ export function useCreateAdForm(
   const adIdRef = toRef(options.adId ?? null)
   const isEdit = computed(() => adIdRef.value != null && adIdRef.value !== '')
 
+  const copyAdId = computed(() => {
+    if (isEdit.value) return null
+    const raw = route.query.copy
+    const value = Array.isArray(raw) ? raw[0] : raw
+    if (!value) return null
+    const id = Number(value)
+    return Number.isFinite(id) && id > 0 ? id : null
+  })
+
   const form = ref<CreateAdFormModel>(createEmptyCreateAdForm())
   const errors = ref<CreateAdFormErrors>({})
   const submitting = ref(false)
   const savingDraft = ref(false)
   const loadingAd = ref(false)
   const editingAd = ref<Ad | null>(null)
+  const copyingAd = ref<Ad | null>(null)
 
   const {
     items,
@@ -121,12 +131,12 @@ export function useCreateAdForm(
         companyLogo.value = company.logo
       }
 
-      if (company.address) {
+      if (company.address && !form.value.company_address) {
         form.value.company_address = company.address
       }
 
-      // Prefer ad edit values; only prefill empty location from company.
-      if (isEdit.value || form.value.province != null) return
+      // Prefer ad edit/copy values; only prefill empty location from company.
+      if (isEdit.value || copyAdId.value || form.value.province != null) return
 
       const provinceId =
         company.province_id ??
@@ -331,19 +341,44 @@ export function useCreateAdForm(
     }
   }
 
+  async function loadAdForCopy() {
+    if (!copyAdId.value) return
+    loadingAd.value = true
+    try {
+      const result = await api.get<ApiResponse<Ad>>(`/ads/${copyAdId.value}`)
+      copyingAd.value = result.data ?? null
+      if (!copyingAd.value) {
+        $toast.error('آگهی مورد نظر برای کپی یافت نشد')
+      }
+    } catch {
+      $toast.error('دریافت اطلاعات آگهی برای کپی با خطا مواجه شد')
+    } finally {
+      loadingAd.value = false
+    }
+  }
+
   // Prefill only after both the ad and the lookups have loaded, since
   // mapping stored labels back to option values needs the lookups.
   let prefilled = false
   watchEffect(() => {
-    if (prefilled || !editingAd.value || !lookupsReady.value) return
-    prefilled = true
-    applyAdToForm(editingAd.value)
+    if (prefilled || !lookupsReady.value) return
+
+    if (editingAd.value) {
+      prefilled = true
+      applyAdToForm(editingAd.value)
+      return
+    }
+
+    if (copyingAd.value) {
+      prefilled = true
+      applyAdToForm(copyingAd.value)
+    }
   })
 
   watch(
     [lookupsReady, () => route.query.employment_type],
     ([ready]) => {
-      if (!ready) return
+      if (!ready || copyAdId.value) return
       applyEmploymentTypeFromQuery()
     },
     { immediate: true },
@@ -459,6 +494,11 @@ export function useCreateAdForm(
       loadAdForEdit()
       return
     }
+
+    if (copyAdId.value) {
+      loadAdForCopy()
+      return
+    }
     // restoreDraft()
   })
 
@@ -468,6 +508,7 @@ export function useCreateAdForm(
     isPartTime,
     payableAmount,
     isEdit,
+    isCopy: computed(() => copyAdId.value != null),
     submitting,
     savingDraft,
     loadingAd,

@@ -71,7 +71,14 @@ export function getEmployerAdStatusMeta(ad: EmployerAd) {
 export function getEmployerAdStatItems(ad: EmployerAd) {
   const stats = ad.requests
 
-  return [
+  const items: Array<{
+    label: string
+    value: number
+    icon: string
+    iconColor: string
+    iconBgColor: string
+    status?: number
+  }> = [
     {
       label: 'دریافت شده',
       value: stats?.total ?? 0,
@@ -85,6 +92,7 @@ export function getEmployerAdStatItems(ad: EmployerAd) {
       icon: 'mdi:briefcase-search-outline',
       iconColor: '#0098E7',
       iconBgColor: '#E5F5FD',
+      status: 35,
     },
     {
       label: 'تعیین وضعیت',
@@ -92,6 +100,7 @@ export function getEmployerAdStatItems(ad: EmployerAd) {
       icon: 'mdi:briefcase-clock-outline',
       iconColor: '#B95C04',
       iconBgColor: '#FFF3E8',
+      status: 3,
     },
     {
       label: 'تایید برای مصاحبه',
@@ -99,6 +108,7 @@ export function getEmployerAdStatItems(ad: EmployerAd) {
       icon: 'material-symbols:check-circle-outline',
       iconColor: '#009F65',
       iconBgColor: '#E6F6F0',
+      status: 10,
     },
     {
       label: 'رد شده',
@@ -106,8 +116,11 @@ export function getEmployerAdStatItems(ad: EmployerAd) {
       icon: 'material-symbols:cancel-outline',
       iconColor: '#EF4035',
       iconBgColor: '#FDECEB',
+      status: 11,
     },
   ]
+
+  return items
 }
 
 export function getEmployerAdsByFilter(groups: EmployerAdsData, filter: EmployerAdFilter) {

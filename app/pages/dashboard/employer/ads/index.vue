@@ -85,7 +85,6 @@
           :key="ad.id"
           :ad="ad"
           @edit="editAd"
-          @copy="copyAd"
           @delete="confirmDeleteAd"
         />
       </div>
@@ -169,10 +168,6 @@ const filteredAds = computed(() => {
 
 function editAd(id: number) {
   navigateTo(`/dashboard/employer/ads/${id}/edit`)
-}
-
-function copyAd(id: number) {
-  navigateTo(`/dashboard/employer/ads/create?copy=${id}`)
 }
 
 function confirmDeleteAd(id: number) {
