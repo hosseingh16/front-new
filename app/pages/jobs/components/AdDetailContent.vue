@@ -213,7 +213,7 @@
         </section>
       </template>
 
-      <template v-else-if="activeTab === 'history'">
+      <template v-else-if="isAuthenticated && activeTab === 'history'">
         <section
           class="rounded-2xl border border-gray-default bg-white p-5 py-12 md:p-6"
         >
@@ -414,6 +414,8 @@ const proficiencySteps = computed(() => {
   return steps.length ? steps : DEFAULT_PROFICIENCY_STEPS;
 });
 
+const { isAuthenticated } = useSanctumAuth();
+
 const activeTab = ref<AdTab>("about");
 const galleryDialogRef = ref<HTMLDialogElement | null>(null);
 const selectedGalleryImage = ref<string | null>(null);
@@ -422,7 +424,9 @@ const selectedGalleryIndex = ref(0);
 const companyNameForAds = computed(
   () => props.ad.company_name?.trim() || props.ad.company?.name?.trim() || "",
 );
-const adsTabEnabled = computed(() => activeTab.value === "ads");
+const adsTabEnabled = computed(
+  () => isAuthenticated.value && activeTab.value === "ads",
+);
 
 const { companyAds, loadingCompanyAds, companyAdsError } = useCompanyAds(
   companyNameForAds,
@@ -470,7 +474,7 @@ function handleGalleryBackdropClick(event: MouseEvent) {
   }
 }
 
-const tabs: { id: AdTab; label: string; icon: string }[] = [
+const allTabs: { id: AdTab; label: string; icon: string }[] = [
   { id: "about", label: "درباره استخدامی", icon: "lucide:briefcase" },
   {
     id: "company",
@@ -480,6 +484,18 @@ const tabs: { id: AdTab; label: string; icon: string }[] = [
   { id: "history", label: "سوابق ارسال", icon: "lucide:history" },
   { id: "ads", label: "آگهی‌ها", icon: "lucide:layout-grid" },
 ];
+
+const tabs = computed(() =>
+  isAuthenticated.value
+    ? allTabs
+    : allTabs.filter((tab) => tab.id !== "history"),
+);
+
+watch(isAuthenticated, (authenticated) => {
+  if (!authenticated && activeTab.value === "history") {
+    activeTab.value = "about";
+  }
+});
 
 function displayValue(
   value: string | number | null | undefined,

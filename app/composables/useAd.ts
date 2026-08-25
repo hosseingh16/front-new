@@ -1,6 +1,6 @@
 import type { MaybeRef } from 'vue'
 import type { ApiResponse } from '~/types/api'
-import type { Ad } from '~/types/ad'
+import type { Ad, AdList } from '~/types/ad'
 import type { Opportunity } from '~/types/opportunity'
 
 function getFetchErrorMessage(err: unknown): string {
@@ -89,5 +89,71 @@ export function useSimilarAds(excludeId: MaybeRef<string | number>) {
   return {
     similarAds: computed(() => data.value ?? []),
     loadingSimilar: pending,
+  }
+}
+
+export function useCompanyAds(
+  companyName: MaybeRef<string | null | undefined>,
+  excludeId?: MaybeRef<string | number | null | undefined>,
+  options?: { enabled?: MaybeRef<boolean> },
+) {
+  const api = useApi()
+  const companyNameRef = toRef(companyName)
+  const excludeIdRef = toRef(excludeId)
+  const enabledRef = toRef(options?.enabled ?? true)
+
+  const normalizedCompanyName = computed(
+    () => companyNameRef.value?.trim() || '',
+  )
+
+  const {
+    data,
+    pending,
+    error: fetchError,
+    execute,
+  } = useAsyncData(
+    () =>
+      `company-ads-${normalizedCompanyName.value}-${excludeIdRef.value ?? 'all'}`,
+    async () => {
+      const name = normalizedCompanyName.value
+      if (!name) return [] as AdList[]
+
+      const result = await api.get<ApiResponse<AdList[]>>('/ads', {
+        query: { company_name: name },
+      })
+
+      const exclude = Number(excludeIdRef.value)
+      return (result.data ?? []).filter(
+        (item) => !exclude || item.id !== exclude,
+      )
+    },
+    {
+      default: () => [] as AdList[],
+      immediate: false,
+      watch: [normalizedCompanyName, excludeIdRef],
+    },
+  )
+
+  watch(
+    [enabledRef, normalizedCompanyName],
+    ([enabled, name]) => {
+      if (enabled && name) {
+        execute()
+      }
+    },
+    { immediate: true },
+  )
+
+  const error = computed(() =>
+    fetchError.value
+      ? getFetchErrorMessage(fetchError.value) ||
+        'خطا در دریافت آگهی‌های شرکت'
+      : null,
+  )
+
+  return {
+    companyAds: computed(() => data.value ?? []),
+    loadingCompanyAds: pending,
+    companyAdsError: error,
   }
 }
