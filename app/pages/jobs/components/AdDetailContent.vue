@@ -224,13 +224,53 @@
         </section>
       </template>
 
-      <template v-else>
-        <section
-          class="rounded-2xl border border-gray-default bg-white p-5 py-12 md:p-6"
-        >
-          <p class="mt-2 text-center text-sm text-text-passive">
-            سایر آگهی‌های این شرکت به‌زودی در این بخش نمایش داده می‌شود.
+      <template v-else-if="activeTab === 'ads'">
+        <section class="space-y-3">
+          <template v-if="loadingCompanyAds">
+            <ItemBoxVertical
+              v-for="n in 3"
+              :key="`company-ad-skeleton-${n}`"
+              title=""
+              type=""
+              location=""
+              gender=""
+              salary=""
+              age=""
+              loading
+              :highlight="n % 2 === 0"
+            />
+          </template>
+
+          <p
+            v-else-if="companyAdsError"
+            class="rounded-2xl border border-gray-default bg-white py-12 text-center text-sm text-error"
+          >
+            {{ companyAdsError }}
           </p>
+
+          <NoResult
+            v-else-if="!companyAdCards.length"
+            title="آگهی دیگری یافت نشد"
+            description="در حال حاضر آگهی فعال دیگری از این شرکت وجود ندارد."
+            wrapper-class="rounded-2xl border border-gray-default bg-white"
+          />
+
+          <ItemBoxVertical
+            v-for="card in companyAdCards"
+            :key="card.id"
+            :title="card.title"
+            :company-name="card.companyName"
+            :type="card.type"
+            :location="card.location"
+            :gender="card.gender"
+            :salary="card.salary"
+            :age="card.age"
+            :logo="card.logo"
+            :to="card.to"
+            :highlight="card.highlight"
+            :variant="card.variant"
+            :employment-type="card.employmentType"
+          />
         </section>
       </template>
     </main>
@@ -329,6 +369,8 @@
 
 <script setup lang="ts">
 import type { Ad } from "~/types/ad";
+import ItemBoxVertical from "~/components/Elements/item-box-vertical.vue";
+import NoResult from "~/components/Elements/NoResult.vue";
 import AdSectionTitle from "./AdSectionTitle.vue";
 import AdRequirementStat from "./AdRequirementStat.vue";
 import AdSkillLevelBar from "./AdSkillLevelBar.vue";
@@ -338,8 +380,10 @@ import {
   getProficiencySteps,
   parseAdBenefits,
 } from "../utils/ad-benefits";
+import { useCompanyAds } from "~/composables/useAd";
 import { useLookups } from "~/composables/useLookups";
 import { formatJalaliDate } from "~/utils/format-jalali-date";
+import { formatRelativeDate } from "~/utils/format-relative-date";
 import { resolveCompanyLogoDisplaySrc } from "~/utils/company-basic-info";
 
 type AdTab = "about" | "company" | "history" | "ads";
@@ -374,6 +418,36 @@ const activeTab = ref<AdTab>("about");
 const galleryDialogRef = ref<HTMLDialogElement | null>(null);
 const selectedGalleryImage = ref<string | null>(null);
 const selectedGalleryIndex = ref(0);
+
+const companyNameForAds = computed(
+  () => props.ad.company_name?.trim() || props.ad.company?.name?.trim() || "",
+);
+const adsTabEnabled = computed(() => activeTab.value === "ads");
+
+const { companyAds, loadingCompanyAds, companyAdsError } = useCompanyAds(
+  companyNameForAds,
+  () => props.ad.id,
+  { enabled: adsTabEnabled },
+);
+
+const companyAdCards = computed(() =>
+  companyAds.value.map((ad, index) => ({
+    id: ad.id,
+    title: ad.title,
+    companyName: ad.company_name || companyNameForAds.value,
+    type: ad.category || "—",
+    location:
+      [ad.province_name, ad.city_name].filter(Boolean).join("، ") || "—",
+    gender: ad.gender || "—",
+    employmentType: ad.employment_type || "—",
+    salary: String(ad.salary_range ?? ad.salary ?? "—"),
+    age: formatRelativeDate(ad.publish_date),
+    logo: ad.company_logo || props.ad.company_logo,
+    highlight: index % 2 === 1,
+    variant: "ad" as const,
+    to: `/jobs/${ad.id}`,
+  })),
+);
 
 const selectedGalleryAlt = computed(
   () =>

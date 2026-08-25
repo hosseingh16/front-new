@@ -17,11 +17,13 @@ logs
 .DS_Store
 .fleet
 .idea
+.vercel
 
 # Local env files
 .env
 .env.*
 !.env.example
+
+# Local Nuxt configs (keep production config tracked)
 nuxt.config.ts
-.vercel
-.env*
+nuxt.config.local.ts
