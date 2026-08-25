@@ -101,6 +101,7 @@ export interface UserResume {
   skills?: string
   description?: string
   notes?: string
+  cv_slug?: string | null
   resume_file?: string | null
   resume_personal?: UserResumePersonal | null
   resume_educations?: UserResumeEducation[]

@@ -4,9 +4,6 @@
   >
     <div class="flex gap-12">
       <div class="flex gap-2 items-center">
-        <!-- <div class="lg:hidden">
-          <Icon name="svg:menu" size="20" />
-        </div> -->
         <NuxtLink to="/" class="flex items-center">
           <NuxtImg src="/images/logo.png" alt="Logo" class="lg:w-10 lg:h-12" />
 
@@ -51,9 +48,6 @@
       </div>
     </div>
     <div class="flex items-center">
-      <!-- <button class="btn btn-ghost w-12 h-12 p-0">
-        <Icon name="svg:search-1" size="24" />
-      </button> -->
       <m-dropdown>
         <template #btn>
           <button
@@ -65,7 +59,7 @@
               v-if="unreadCount > 0"
               class="absolute top-2 left-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-danger-500 px-1 text-[10px] font-semibold text-white"
             >
-              {{ unreadCount > 99 ? '99+' : unreadCount }}
+              {{ unreadCount > 99 ? "99+" : unreadCount }}
             </span>
           </button>
         </template>
@@ -83,7 +77,16 @@
           <panel-avatar-menu />
         </template>
       </m-dropdown>
-      <m-dropdown>
+      <NuxtLink
+        v-if="isJobSeeker"
+        to="/dashboard/cv"
+        class="btn btn-ghost-primary text-sm max-lg:w-9 max-lg:h-9 max-lg:p-2"
+        aria-label="رزومه من"
+      >
+        <Icon name="svg:work-history-outline" size="16" />
+        <span class="max-lg:hidden text-text-tertiary">رزومه من</span>
+      </NuxtLink>
+      <m-dropdown v-else>
         <template #btn>
           <button
             class="btn btn-ghost-primary text-sm max-lg:w-9 max-lg:h-9 max-lg:p-2"
@@ -115,6 +118,7 @@
 const { collapsed, toggle } = useDashboardSidebar();
 const { unreadCount, fetchNotifications } = useNotifications();
 const { breadcrumbs } = useDashboardBreadcrumbs();
+const { isJobSeeker } = useCurrentUser();
 
 onMounted(() => {
   fetchNotifications();

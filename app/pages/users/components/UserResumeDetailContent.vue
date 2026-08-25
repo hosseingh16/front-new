@@ -34,7 +34,10 @@
       :class="embedded ? 'gap-4' : 'mt-6 p-5'"
     >
       <div class="min-w-0 space-y-4">
-        <div class="flex items-center gap-6 border-b border-gray-default px-6">
+        <div
+          v-if="hasJobTabContent"
+          class="flex items-center gap-6 border-b border-gray-default px-6"
+        >
           <button
             type="button"
             class="flex cursor-pointer items-center gap-2 border-b-2 pb-2 text-sm transition-colors"
@@ -51,7 +54,7 @@
                 activeTab === 'basic' ? 'bg-primary-500/8' : 'bg-gray-500/8'
               "
             >
-              <Icon name="lucide:user" size="16" />
+              <Icon name="svg:user-outline" size="16" />
             </span>
             اطلاعات پایه
           </button>
@@ -71,13 +74,16 @@
                 activeTab === 'job' ? 'bg-primary-500/8' : 'bg-gray-500/8'
               "
             >
-              <Icon name="svg:bag-1" size="16" />
+              <Icon name="svg:briefcase-outline" size="16" />
             </span>
             اطلاعات شغلی
           </button>
         </div>
 
-        <main v-if="activeTab === 'basic'" class="space-y-8">
+        <main
+          v-if="activeTab === 'basic' || !hasJobTabContent"
+          class="space-y-8"
+        >
           <section
             v-if="avatar || visibleBasicInfoFields.length"
             class="rounded-2xl bg-white p-6"
@@ -126,7 +132,7 @@
           </section>
         </main>
 
-        <UserResumeJobTab v-else :user="user" />
+        <UserResumeJobTab v-else-if="hasJobTabContent" :user="user" />
       </div>
 
       <aside class="user-resume-aside">
@@ -269,6 +275,7 @@
         </div>
 
         <div
+          v-if="showShare"
           class="relative my-2 overflow-hidden rounded-2xl border border-gray-default bg-white"
         >
           <div class="z-10 px-3 pb-3 pt-3">
@@ -324,7 +331,6 @@ import {
   getResumeEmploymentStatus,
   getResumeFullName,
   getResumeGenderLabel,
-  hasResumeValue,
   getResumeHighestDegree,
   getResumeJobTitle,
   getResumeLocationLabel,
@@ -333,21 +339,38 @@ import {
   getResumePersonal,
   getResumeSalary,
   getResumeWorkExperienceLabel,
+  hasResumeJobTabContent,
+  hasResumeValue,
   maskResumeEmail,
 } from "../utils/user-resume";
 
 type UserResumeTab = "basic" | "job";
 
-const props = defineProps<{
-  user: UserResume | null;
-  loading?: boolean;
-  embedded?: boolean;
-  showBookmark?: boolean;
-  showFullContact?: boolean;
-}>();
+const props = withDefaults(
+  defineProps<{
+    user: UserResume | null;
+    loading?: boolean;
+    embedded?: boolean;
+    showBookmark?: boolean;
+    showFullContact?: boolean;
+    showShare?: boolean;
+  }>(),
+  {
+    showShare: true,
+  },
+);
 
 const activeTab = ref<UserResumeTab>("basic");
 
+const hasJobTabContent = computed(() => hasResumeJobTabContent(props.user));
+
+watch(
+  hasJobTabContent,
+  (hasContent) => {
+    if (!hasContent) activeTab.value = "basic";
+  },
+  { immediate: true },
+);
 const { items: lookupItems } = useLookups(
   "job_titles,experience_levels,salary_ranges,military_statuses,education_levels,birth_years",
 );
@@ -429,7 +452,7 @@ const personalSidebarItems = computed<SidebarItem[]>(() => [
   {
     label: "عنوان شغلی",
     value: jobTitle.value,
-    icon: "ph:suitcase-simple-light",
+    icon: "svg:briefcase-outline",
   },
   {
     label: "مدرک تحصیلی",
@@ -437,22 +460,22 @@ const personalSidebarItems = computed<SidebarItem[]>(() => [
       props.user?.resume_educations,
       educationLevels.value,
     ),
-    icon: "svg:edu-item",
+    icon: "svg:certificate",
   },
   {
     label: "موقعیت مکانی",
     value: getResumeLocationLabel(personal.value),
-    icon: "svg:location-4",
+    icon: "svg:locate-fixed",
   },
   {
     label: "سن",
     value: getResumeAgeLabel(personal.value?.birthdate),
-    icon: "svg:timer",
+    icon: "svg:calendar-clock",
   },
   {
     label: "جنسیت",
     value: getResumeGenderLabel(personal.value?.gender),
-    icon: "lucide:user",
+    icon: "svg:user-outline",
   },
   {
     label: "وضعیت خدمت",
@@ -460,12 +483,12 @@ const personalSidebarItems = computed<SidebarItem[]>(() => [
       personal.value?.military_service_status,
       militaryStatuses.value,
     ),
-    icon: "lucide:shield",
+    icon: "svg:soldier",
   },
   {
     label: "وضعیت تاهل",
     value: getResumeMaritalStatusLabel(personal.value?.marital_status),
-    icon: "lucide:heart",
+    icon: "svg:relationship-status",
   },
 ]);
 
@@ -485,13 +508,13 @@ const contactSidebarItems = computed<SidebarItem[]>(() => {
     {
       label: "شماره همراه",
       value: phone,
-      icon: "lucide:smartphone",
+      icon: "svg:smartphone",
       ltr: true,
     },
     {
       label: "پست الکترونیکی",
       value: email,
-      icon: "lucide:mail",
+      icon: "svg:mail-outline",
       ltr: true,
     },
   ];
@@ -503,14 +526,9 @@ const visibleContactSidebarItems = computed(() =>
 
 const salarySidebarItems = computed<SidebarItem[]>(() => [
   {
-    label: "وضعیت اشتغال",
-    value: getResumeEmploymentStatus(props.user),
-    icon: "lucide:file-text",
-  },
-  {
     label: "حقوق درخواستی",
     value: getResumeSalary(props.user, salaryRanges.value),
-    icon: "svg:wallet",
+    icon: "svg:wallet-outline",
   },
   {
     label: "سابقه کار",
@@ -518,7 +536,7 @@ const salarySidebarItems = computed<SidebarItem[]>(() => [
       personal.value?.work_experience,
       experienceLevels.value,
     ),
-    icon: "svg:work-history",
+    icon: "svg:work-history-outline",
   },
 ]);
 

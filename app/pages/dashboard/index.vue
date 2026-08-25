@@ -72,7 +72,11 @@
           class="inline-flex h-8 items-center gap-1 rounded-md bg-[rgba(72,100,225,0.08)] px-3 text-sm font-semibold text-primary-500 transition-opacity hover:opacity-80"
         >
           مشاهده همه
-          <Icon name="svg:receive-briefcase" size="20" class="size-5 shrink-0" />
+          <Icon
+            name="svg:receive-briefcase"
+            size="20"
+            class="size-5 shrink-0"
+          />
         </NuxtLink>
       </div>
 
@@ -86,10 +90,7 @@
       />
     </section>
 
-    <MyRequestDetailModal
-      ref="detailModalRef"
-      :request="selectedRequest"
-    />
+    <MyRequestDetailModal ref="detailModalRef" :request="selectedRequest" />
 
     <ConfirmDialog
       ref="confirmDialogRef"

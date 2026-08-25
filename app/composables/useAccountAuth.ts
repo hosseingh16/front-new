@@ -1,4 +1,5 @@
 import type { AccountRole } from '~/features/account/types'
+import { paths } from '~/routes'
 
 export type AuthUserStatus = 'new_user' | 'existing_user'
 
@@ -87,6 +88,7 @@ export function useAccountAuth() {
   /**
    * Session login via nuxt-auth-sanctum.
    * Pass redirect=false during signup so onboarding can continue.
+   * When redirect=true, honors ?redirect= from the login URL if it is a safe relative path.
    */
   async function loginWithMobile(phone?: string, redirect = true) {
     const username = phone || mobile.value
@@ -101,7 +103,15 @@ export function useAccountAuth() {
         await login({ username })
       }
       if (redirect) {
-        await navigateTo('/')
+        const route = useRoute()
+        const redirectTo =
+          typeof route.query.redirect === 'string' &&
+          route.query.redirect.startsWith('/') &&
+          !route.query.redirect.startsWith('//')
+            ? route.query.redirect
+            : paths.dashboard
+
+        await navigateTo(redirectTo)
       }
     } catch (err: any) {
       $toast.error(getErrorMessage(err, 'ورود با خطا مواجه شد'))
