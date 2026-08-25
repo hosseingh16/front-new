@@ -122,15 +122,30 @@
     <div class="bg-white p-4 rounded-2xl mt-8">
       <Titr :with-icon="false">قابل رویت برای همه</Titr>
       <div class="mt-4 flex items-center gap-2">
-        <div
-          class="shrink-0 bg-primary-500 p-1 w-14 h-8 rounded-full cursor-pointer relative"
+        <button
+          type="button"
+          class="shrink-0 p-1 w-14 h-8 rounded-full relative transition-colors"
+          :class="[
+            cvVisibility ? 'bg-primary-500' : 'bg-gray-300',
+            savingVisibility
+              ? 'cursor-wait opacity-60'
+              : 'cursor-pointer',
+          ]"
+          :disabled="savingVisibility"
+          :aria-pressed="cvVisibility"
+          aria-label="قابل رویت برای همه"
+          @click="toggleVisibility"
         >
           <div
-            class="bg-white p-2 w-[60%] h-[80%] rounded-full flex justify-center items-center cursor-pointer absolute top-[3.5px] left-1"
+            class="bg-white p-2 w-[60%] h-[80%] rounded-full flex justify-center items-center absolute top-[3.5px] transition-[left,right]"
+            :class="cvVisibility ? 'left-1' : 'right-1'"
           >
-            <icons-check color="#4864E1" />
+            <icons-check
+              v-if="cvVisibility"
+              color="#4864E1"
+            />
           </div>
-        </div>
+        </button>
         <p class="text-text-primay leading-8">
           در صورت فعال بودن، رزومه شما در نتیجه جستجوی کارفرمایان قابل ‌رویت
           خواهد بود.
@@ -164,7 +179,7 @@ type PotentialForm = {
 
 const api = useApi();
 const { $toast } = useNuxtApp();
-const { refreshUser } = useCurrentUser();
+const { user, refreshUser, patchUser } = useCurrentUser();
 
 const skills = reactive<SkillForm>({
   excelScore: 0,
@@ -184,6 +199,33 @@ const savedSkills = ref<SkillForm>({ ...skills });
 const savedPotential = ref<PotentialForm>({ ...potential });
 const savingSkills = ref(false);
 const savingPotential = ref(false);
+const savingVisibility = ref(false);
+
+const cvVisibility = computed(() => Boolean(user.value?.cv_visibility ?? true));
+
+async function toggleVisibility() {
+  if (savingVisibility.value) return;
+
+  const previousValue = cvVisibility.value;
+  const nextValue = !previousValue;
+
+  savingVisibility.value = true;
+  try {
+    await api.post("cv/save-visibility", {
+      cv_visibility: nextValue,
+    });
+    patchUser({ cv_visibility: nextValue });
+    $toast.success(
+      nextValue
+        ? "رزومه شما برای کارفرمایان قابل رویت شد"
+        : "رزومه شما از نتایج جستجو پنهان شد",
+    );
+  } catch (error) {
+    $toast.error(getApiErrorMessage(error, "خطا در ذخیره وضعیت نمایش رزومه"));
+  } finally {
+    savingVisibility.value = false;
+  }
+}
 
 function toSliderValue(value?: string | number | null) {
   const numeric = Number(value);
@@ -265,11 +307,9 @@ async function savePotential() {
 }
 
 onMounted(() => {
-  const currentUser = useSanctumUser<any>();
-  const user = currentUser.value?.data;
-  if (!user) return;
+  if (!user.value) return;
 
-  loadSkillsFromUser(user);
-  loadPotentialFromUser(user);
+  loadSkillsFromUser(user.value);
+  loadPotentialFromUser(user.value);
 });
 </script>

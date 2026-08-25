@@ -28,6 +28,7 @@
         v-for="item in items"
         :key="item.employmentType"
         class="border border-gray-default hover:border-primary-500 rounded-2xl px-1 py-4 min-[1052px]:p-6 flex flex-row min-[1052px]:flex-col items-center group cursor-pointer"
+        :class="{ 'pointer-events-none opacity-60': pendingType !== null }"
         @click="goCreate(item.employmentType)"
       >
         <NuxtImg
@@ -43,11 +44,18 @@
           </p>
           <button
             type="button"
-            class="btn btn-soft group-hover:btn-primary h-10"
+            class="btn btn-soft group-hover:btn-primary inline-flex h-10 items-center justify-center gap-1"
+            :disabled="pendingType !== null"
             @click.stop="goCreate(item.employmentType)"
           >
-            <span :class="`icon-${item.icon}`" class="text-2xl"></span>
-            <span class="max-[450px]:text-xs">{{ item.buttonText }}</span>
+            <span
+              v-if="pendingType === item.employmentType"
+              class="loading loading-spinner loading-sm"
+            />
+            <template v-else>
+              <span :class="`icon-${item.icon}`" class="text-2xl"></span>
+              <span class="max-[450px]:text-xs">{{ item.buttonText }}</span>
+            </template>
           </button>
         </div>
       </div>
@@ -58,6 +66,7 @@
 <script setup lang="ts">
 import SignUpStepper from "~/features/account/components/SignUpStepper.vue";
 import type { DirectionT } from "../types";
+import { buildEnteringRoute } from "~/utils/entering-route";
 
 const props = defineProps<{
   step: number;
@@ -95,15 +104,26 @@ const items = [
   },
 ];
 
+const pendingType = ref<string | null>(null);
+
 function goBack() {
   emits("onChangeDirection", "back");
   emits("onChangeStep", props.step - 1);
 }
 
-function goCreate(employmentType: string) {
-  navigateTo({
-    path: "/dashboard/employer/ads/create",
-    query: { employment_type: employmentType },
-  });
+async function goCreate(employmentType: string) {
+  if (pendingType.value) return;
+
+  pendingType.value = employmentType;
+  try {
+    await navigateTo(
+      buildEnteringRoute({
+        to: "/dashboard/employer/ads/create",
+        query: { employment_type: employmentType },
+      }),
+    );
+  } catch {
+    pendingType.value = null;
+  }
 }
 </script>

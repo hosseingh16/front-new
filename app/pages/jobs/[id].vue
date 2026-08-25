@@ -121,7 +121,10 @@
           @resume="showResumeModal"
           @report-issue="showReportModal"
         />
-        <section class="mt-10">
+        <section
+          v-if="loadingSimilar || similarAds.length"
+          class="mt-10"
+        >
           <div class="mb-4 flex items-center justify-between gap-3">
             <div class="flex items-center gap-1">
               <span

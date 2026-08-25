@@ -212,8 +212,8 @@ function menuButtonClass(item: MenuItem) {
     item.disabled
       ? "cursor-not-allowed opacity-55 hover:bg-transparent"
       : route.path !== item.to
-        ? "hover:bg-gray-100 dark:hover:bg-surface-200"
-        : "hover:bg-primary-50",
+      ? "hover:bg-gray-100 dark:hover:bg-surface-200"
+      : "hover:bg-primary-50",
   ];
 }
 </script>

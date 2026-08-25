@@ -26,9 +26,10 @@
             @click="tab = 1"
           >
             <div
-              class="flex justify-center items-center w-6 h-6 bg-[#4A4A4A14] rounded-full p-1"
+              class="flex justify-center items-center w-6 h-6 rounded-full p-1"
+              :class="tab === 1 ? 'bg-primary-500/8 text-primary-500' : 'bg-[#4A4A4A14] text-text-primary'"
             >
-              <Icon name="svg:user-3" />
+              <Icon name="svg:user-outline" size="16" />
             </div>
             اطلاعات پایه
           </button>
@@ -39,9 +40,10 @@
             @click="tab = 2"
           >
             <div
-              class="flex justify-center items-center w-6 h-6 bg-[#4A4A4A14] rounded-full p-1"
+              class="flex justify-center items-center w-6 h-6 rounded-full p-1"
+              :class="tab === 2 ? 'bg-primary-500/8 text-primary-500' : 'bg-[#4A4A4A14] text-text-primary'"
             >
-              <icons-bag2 :color="tab === 2 ? '#4864e1' : '#4A4A4A'" />
+              <Icon name="svg:briefcase-outline" size="16" />
             </div>
             اطلاعات شغلی
           </button>
@@ -63,20 +65,25 @@
             بگذارید.
           </p>
           <div
+            v-if="cvShareUrl"
             class="mt-3 flex items-center justify-end gap-2 text-sm font-semibold text-primary-500"
           >
             <Icon
               name="svg:copy"
               class="cursor-pointer"
-              @click="copy('Hihesab.com/d4ds54gd')"
+              @click="copyCvShareUrl"
             />
-            <span
+            <NuxtLink
+              :to="cvSharePath"
               dir="ltr"
-              class="cursor-pointer"
-              @click="copy('Hihesab.com/d4ds54gd')"
-              >Hihesab.com/d4ds54gd</span
+              class="cursor-pointer hover:underline"
             >
+              {{ cvShareUrl }}
+            </NuxtLink>
           </div>
+          <p v-else class="mt-3 text-sm text-text-muted">
+            آدرس اختصاصی رزومه شما در حال آماده‌سازی است.
+          </p>
         </div>
       </aside>
 
@@ -145,9 +152,11 @@ const BANNER_STORAGE_KEY = "cv-incomplete-banner-dismissed";
 
 // Variables
 const tab = ref(1);
-const { user } = useCurrentUser();
+const { user, refreshUser } = useCurrentUser();
+const { isWelcomeVisible } = useFirstVisitWelcome();
 const { totalPercent } = useCvCompletion(user);
 const { toClipboard } = useClipboard();
+const { $toast } = useNuxtApp();
 const expandedCvCompletion = useState(
   "expandedCvCompletion_state",
   () => false,
@@ -155,15 +164,34 @@ const expandedCvCompletion = useState(
 const showBottomMenu = useState("showBottomMenu_state");
 const cvIncompleteBannerDismissed = ref(false);
 
-const showCvIncompleteBanner = computed(
-  () =>
-    !isResumeBasicInfoComplete(user.value) && !cvIncompleteBannerDismissed.value,
+const cvSlug = computed(() => {
+  const value = user.value?.cv_slug;
+  return typeof value === "string" && value.trim() ? value.trim() : "";
+});
+
+const requestURL = useRequestURL();
+
+const cvSharePath = computed(() => (cvSlug.value ? `/cv/${cvSlug.value}` : ""));
+
+const cvShareUrl = computed(() =>
+  cvSlug.value ? `${requestURL.host}/cv/${cvSlug.value}` : "",
 );
 
-onMounted(() => {
+const showCvIncompleteBanner = computed(
+  () =>
+    !isResumeBasicInfoComplete(user.value) &&
+    !cvIncompleteBannerDismissed.value &&
+    !isWelcomeVisible.value,
+);
+
+onMounted(async () => {
   if (!import.meta.client) return;
   cvIncompleteBannerDismissed.value =
     localStorage.getItem(BANNER_STORAGE_KEY) === "1";
+
+  if (!cvSlug.value) {
+    await refreshUser();
+  }
 });
 
 function dismissCvIncompleteBanner() {
@@ -191,9 +219,13 @@ async function goToSection(item: CvCompletionItem) {
     ?.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
-async function copy(text: string) {
+async function copyCvShareUrl() {
+  if (!cvShareUrl.value) return;
   try {
-    await toClipboard(text);
-  } catch (e) {}
+    await toClipboard(cvShareUrl.value);
+    $toast.success("آدرس کپی شد");
+  } catch {
+    // clipboard unavailable
+  }
 }
 </script>

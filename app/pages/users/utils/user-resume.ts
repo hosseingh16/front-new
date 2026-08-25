@@ -422,3 +422,27 @@ export function resolveResumeAttachment(user: UserResume | null | undefined) {
 
   return { name, url }
 }
+
+export function hasResumeJobTabContent(user: UserResume | null | undefined) {
+  if (!user) return false
+
+  const hasEducations = (user.resume_educations ?? []).length > 0
+  const hasPriors = (user.resume_priors ?? []).length > 0
+  const hasSoftwares = (user.resume_softwares ?? []).length > 0
+  const hasSkills =
+    Boolean(user.resume_skills) &&
+    getResumeSkillItems(user).some((item) => item.percent > 0)
+  const hasTaxSkills =
+    Boolean(user.resume_potential) &&
+    getResumeTaxSkillItems(user).some((item) => item.percent > 0)
+  const hasAttachment = Boolean(resolveResumeAttachment(user))
+
+  return (
+    hasEducations ||
+    hasPriors ||
+    hasSoftwares ||
+    hasSkills ||
+    hasTaxSkills ||
+    hasAttachment
+  )
+}

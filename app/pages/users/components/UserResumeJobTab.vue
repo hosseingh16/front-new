@@ -26,7 +26,7 @@
                 class="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-primary-50"
               >
                 <Icon
-                  name="svg:edu-item"
+                  name="svg:certificate"
                   size="18"
                   class="shrink-0 text-primary-500"
                 />
@@ -86,7 +86,7 @@
                 class="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-primary-50"
               >
                 <Icon
-                  name="svg:bag-1"
+                  name="svg:briefcase-outline"
                   size="18"
                   class="shrink-0 text-primary-500"
                 />
@@ -106,10 +106,21 @@
             <div
               class="flex min-w-0 flex-wrap items-center gap-2 ps-10 sm:shrink-0 sm:justify-end sm:ps-0"
             >
-              <p class="text-sm text-text-passive">
-                {{ item.company }}
+              <p
+                v-if="item.company && item.company !== '—'"
+                class="flex items-center gap-1.5 text-sm font-semibold text-text-tertiary"
+              >
+                <Icon
+                  name="svg:locate-fixed"
+                  size="15"
+                  class="shrink-0 text-primary-500"
+                />
+                <span>{{ item.company }}</span>
               </p>
-              <span class="h-1 w-1 shrink-0 rounded-full bg-surface-200" />
+              <span
+                v-if="item.company && item.company !== '—'"
+                class="h-1 w-1 shrink-0 rounded-full bg-surface-200"
+              />
               <p class="text-sm text-text-passive">
                 {{ item.period }}
               </p>
@@ -319,8 +330,7 @@ const visibleTaxSkillItems = computed(() =>
 );
 
 const hasSkillData = computed(
-  () =>
-    Boolean(props.user.resume_skills) && visibleSkillItems.value.length > 0,
+  () => Boolean(props.user.resume_skills) && visibleSkillItems.value.length > 0,
 );
 
 const hasTaxSkillData = computed(

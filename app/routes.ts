@@ -1,6 +1,7 @@
 export const paths = {
   root: '/',
   login: '/login',
+  entering: '/entering',
   dashboard: '/dashboard',
   jobs: {
     root: '/jobs',
