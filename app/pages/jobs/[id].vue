@@ -58,6 +58,7 @@
                     :src="companyLogoSrc"
                     :alt="ad.company_name"
                     class="h-full w-full object-cover"
+                    @error="onLogoError"
                   />
                 </NuxtLink>
                 <img
@@ -65,6 +66,7 @@
                   :src="companyLogoSrc"
                   :alt="ad.company_name"
                   class="h-full w-full object-cover"
+                  @error="onLogoError"
                 />
               </div>
               <div class="min-w-0">
@@ -229,7 +231,6 @@ import AdDetailContent from "./components/AdDetailContent.vue";
 import ReportIssueModal from "./components/ReportIssueModal.vue";
 import { useAd, useSimilarAds } from "~/composables/useAd";
 import { formatJalaliDate } from "~/utils/format-jalali-date";
-import { resolveCompanyLogoDisplaySrc } from "~/utils/company-basic-info";
 import { getAdDetailSeoMeta } from "~/utils/ad-seo";
 import createAccountIllust from "~/assets/vectors/illustrations/create-account.svg";
 import { paths } from "~/routes";
@@ -276,8 +277,8 @@ onMounted(() => {
   onUnmounted(() => mediaQuery.removeEventListener("change", syncIsMobile));
 });
 
-const companyLogoSrc = computed(() =>
-  resolveCompanyLogoDisplaySrc(ad.value?.company_logo),
+const { logoSrc: companyLogoSrc, onLogoError } = useCompanyLogoDisplaySrc(
+  () => ad.value?.company_logo,
 );
 
 const coverImage = computed(

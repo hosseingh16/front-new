@@ -62,7 +62,7 @@
 
           <div
             v-if="requirementStats.length"
-            class="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3"
+            class="mt-5 grid gap-2.5 sm:grid-cols-2 lg:grid-cols-3"
           >
             <AdRequirementStat
               v-for="item in requirementStats"
@@ -101,7 +101,7 @@
             </div>
           </div>
 
-          <div class="my-6 grid gap-x-4 gap-y-12 md:grid-cols-2">
+          <div class="mt-5 grid gap-x-8 gap-y-8 md:grid-cols-2">
             <AdSkillLevelBar
               v-for="skill in skillItems"
               :key="skill.label"
@@ -130,7 +130,7 @@
               >
                 <Icon :name="item.icon" size="20" />
               </span>
-              <span class="text-base font-semibold text-text-secondary">
+              <span class="text-sm font-semibold text-text-secondary">
                 {{ item.label }}
               </span>
             </div>
@@ -139,139 +139,15 @@
       </template>
 
       <template v-else-if="activeTab === 'company'">
-        <section
-          class="rounded-2xl border border-gray-default bg-white p-5 text-right md:p-6"
-        >
-          <AdSectionTitle title="درباره سازمان" />
-          <div
-            v-if="ad.company?.intro"
-            class="prose prose-sm mt-4 max-w-none text-right text-sm leading-8 text-text-secondary"
-            v-html="ad.company.intro"
-          />
-          <p v-else class="mt-4 text-sm text-text-passive">
-            اطلاعاتی برای نمایش ثبت نشده است.
-          </p>
-
-          <template v-if="ad.company?.culture">
-            <AdSectionTitle class="mt-8" title="فرهنگ سازمانی" />
-            <div
-              class="prose prose-sm mt-4 max-w-none text-right text-sm leading-8 text-text-secondary"
-              v-html="ad.company.culture"
-            />
-          </template>
-
-          <template v-if="ad.company?.advantages">
-            <AdSectionTitle class="mt-8" title="مزایای سازمان" />
-            <div
-              class="prose prose-sm mt-4 max-w-none text-right text-sm leading-8 text-text-secondary"
-              v-html="ad.company.advantages"
-            />
-          </template>
-        </section>
-
-        <section
-          v-if="ad.company?.static_map"
-          class="rounded-2xl border border-gray-default bg-white p-5 md:p-6"
-        >
-          <AdSectionTitle title="موقعیت مکانی" />
-          <img
-            :src="ad.company.static_map"
-            alt="موقعیت مکانی"
-            class="mt-4 h-full w-full object-cover"
-          />
-        </section>
-
-        <section
-          v-if="ad.company?.gallery?.length"
-          class="rounded-xl border border-surface-200 bg-white p-5"
-        >
-          <div class="flex w-full items-center justify-start gap-1 text-right">
-            <span
-              class="h-1 w-2 shrink-0 rounded-full bg-linear-to-b from-[#3B6EF8] to-primary-500"
-              aria-hidden="true"
-            />
-            <h2 class="font-yb-bold text-base text-text-primay">
-              گالری تصاویر
-            </h2>
-          </div>
-          <div class="mt-4 grid gap-3 sm:grid-cols-3">
-            <button
-              v-for="(image, index) in ad.company.gallery"
-              :key="`gallery-${index}`"
-              type="button"
-              class="cursor-pointer overflow-hidden rounded-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500"
-              @click="openGalleryImage(image, index)"
-            >
-              <img
-                :src="image"
-                :alt="`تصویر ${index + 1} ${ad.company?.name}`"
-                class="h-28 w-full object-cover transition-opacity hover:opacity-90"
-                loading="lazy"
-              />
-            </button>
-          </div>
-        </section>
+        <AdCompanyProfile :ad="ad" />
       </template>
 
-      <template v-else-if="isAuthenticated && activeTab === 'history'">
-        <section
-          class="rounded-2xl border border-gray-default bg-white p-5 py-12 md:p-6"
-        >
-          <p class="mt-2 text-center text-sm text-text-passive">
-            پس از ورود به حساب کاربری، سوابق ارسال رزومه در این بخش نمایش داده
-            می‌شود.
-          </p>
-        </section>
+      <template v-else-if="activeTab === 'history'">
+        <AdApplicationHistory :ad="ad" @resume="emit('resume')" />
       </template>
 
-      <template v-else-if="activeTab === 'ads'">
-        <section class="space-y-3">
-          <template v-if="loadingCompanyAds">
-            <ItemBoxVertical
-              v-for="n in 3"
-              :key="`company-ad-skeleton-${n}`"
-              title=""
-              type=""
-              location=""
-              gender=""
-              salary=""
-              age=""
-              loading
-              :highlight="n % 2 === 0"
-            />
-          </template>
-
-          <p
-            v-else-if="companyAdsError"
-            class="rounded-2xl border border-gray-default bg-white py-12 text-center text-sm text-error"
-          >
-            {{ companyAdsError }}
-          </p>
-
-          <NoResult
-            v-else-if="!companyAdCards.length"
-            title="آگهی دیگری یافت نشد"
-            description="در حال حاضر آگهی فعال دیگری از این شرکت وجود ندارد."
-            wrapper-class="rounded-2xl border border-gray-default bg-white"
-          />
-
-          <ItemBoxVertical
-            v-for="card in companyAdCards"
-            :key="card.id"
-            :title="card.title"
-            :company-name="card.companyName"
-            :type="card.type"
-            :location="card.location"
-            :gender="card.gender"
-            :salary="card.salary"
-            :age="card.age"
-            :logo="card.logo"
-            :to="card.to"
-            :highlight="card.highlight"
-            :variant="card.variant"
-            :employment-type="card.employmentType"
-          />
-        </section>
+      <template v-else>
+        <AdCompanyAds :ad="ad" />
       </template>
     </main>
 
@@ -341,29 +217,6 @@
         گزارش مشکل
       </button>
     </aside>
-
-    <dialog
-      ref="galleryDialogRef"
-      class="modal"
-      @click="handleGalleryBackdropClick"
-    >
-      <div class="modal-box relative max-w-[min(90vw,720px)] p-3 sm:p-4">
-        <button
-          type="button"
-          class="absolute left-4 top-4 z-10 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-white/90 text-text-passive shadow"
-          aria-label="بستن"
-          @click="closeGalleryImage"
-        >
-          <Icon name="material-symbols:close" size="18" />
-        </button>
-        <img
-          v-if="selectedGalleryImage"
-          :src="selectedGalleryImage"
-          :alt="selectedGalleryAlt"
-          class="max-h-[80vh] w-full rounded-lg object-contain"
-        />
-      </div>
-    </dialog>
   </div>
 </template>
 
@@ -374,6 +227,9 @@ import NoResult from "~/components/Elements/NoResult.vue";
 import AdSectionTitle from "./AdSectionTitle.vue";
 import AdRequirementStat from "./AdRequirementStat.vue";
 import AdSkillLevelBar from "./AdSkillLevelBar.vue";
+import AdCompanyProfile from "./AdCompanyProfile.vue";
+import AdApplicationHistory from "./AdApplicationHistory.vue";
+import AdCompanyAds from "./AdCompanyAds.vue";
 import {
   DEFAULT_PROFICIENCY_STEPS,
   getProficiencyLevel,
@@ -417,65 +273,9 @@ const proficiencySteps = computed(() => {
 const { isAuthenticated } = useSanctumAuth();
 
 const activeTab = ref<AdTab>("about");
-const galleryDialogRef = ref<HTMLDialogElement | null>(null);
-const selectedGalleryImage = ref<string | null>(null);
-const selectedGalleryIndex = ref(0);
 
-const companyNameForAds = computed(
-  () => props.ad.company_name?.trim() || props.ad.company?.name?.trim() || "",
-);
-const adsTabEnabled = computed(
-  () => isAuthenticated.value && activeTab.value === "ads",
-);
-
-const { companyAds, loadingCompanyAds, companyAdsError } = useCompanyAds(
-  companyNameForAds,
-  () => props.ad.id,
-  { enabled: adsTabEnabled },
-);
-
-const companyAdCards = computed(() =>
-  companyAds.value.map((ad, index) => ({
-    id: ad.id,
-    title: ad.title,
-    companyName: ad.company_name || companyNameForAds.value,
-    type: ad.category || "—",
-    location:
-      [ad.province_name, ad.city_name].filter(Boolean).join("، ") || "—",
-    gender: ad.gender || "—",
-    employmentType: ad.employment_type || "—",
-    salary: String(ad.salary_range ?? ad.salary ?? "—"),
-    age: formatRelativeDate(ad.publish_date),
-    logo: ad.company_logo || props.ad.company_logo,
-    highlight: index % 2 === 1,
-    variant: "ad" as const,
-    to: `/jobs/${ad.id}`,
-  })),
-);
-
-const selectedGalleryAlt = computed(
-  () =>
-    `تصویر ${selectedGalleryIndex.value + 1} ${props.ad.company?.name ?? ""}`,
-);
-
-function openGalleryImage(image: string, index: number) {
-  selectedGalleryImage.value = image;
-  selectedGalleryIndex.value = index;
-  galleryDialogRef.value?.showModal();
-}
-
-function closeGalleryImage() {
-  galleryDialogRef.value?.close();
-}
-
-function handleGalleryBackdropClick(event: MouseEvent) {
-  if (event.target === event.currentTarget) {
-    closeGalleryImage();
-  }
-}
-
-const allTabs: { id: AdTab; label: string; icon: string }[] = [
-  { id: "about", label: "درباره استخدامی", icon: "lucide:briefcase" },
+const tabs: { id: AdTab; label: string; icon: string }[] = [
+  { id: "about", label: "جزئیات شغل", icon: "lucide:briefcase" },
   {
     id: "company",
     label: "پروفایل سازمان",
@@ -591,32 +391,32 @@ const requirementStats = computed(() =>
     {
       label: "نوع آگهی:",
       value: displayValue(props.ad.type ?? props.ad.category, "استخدامی"),
-      icon: "svg:user-search-2",
+      icon: "svg:ad-req-user-search",
     },
     {
       label: "نوع قرارداد:",
       value: displayValue(props.ad.employment_type),
-      icon: "tabler:file-text",
+      icon: "svg:ad-req-file-text",
     },
     {
       label: "حقوق:",
       value: salaryLabel.value,
-      icon: "svg:wallet",
+      icon: "svg:ad-req-wallet",
     },
     {
       label: "سابقه کار:",
       value: workExperienceLabel.value,
-      icon: "svg:work-history",
+      icon: "svg:ad-req-work-history",
     },
     {
       label: "مدرک تحصیلی:",
       value: displayValue(props.ad.minimum_degree),
-      icon: "svg:edu-item",
+      icon: "svg:ad-req-certificate",
     },
     {
       label: "جنسیت:",
       value: genderLabel.value,
-      icon: "lucide:user",
+      icon: "svg:ad-req-user",
     },
   ].filter((item) => item.value !== "—"),
 );
@@ -649,22 +449,22 @@ const skillItems = computed<SkillBarItem[]>(() => {
   const skills: SkillBarItem[] = [];
   const candidates = [
     {
-      label: "بیمه",
+      name: "بیمه",
       value: props.ad.bimeh_skill,
       level: getProficiencyLevel(props.ad.bimeh_skill, proficiencies.value),
     },
     {
-      label: "اکسل",
+      name: "اکسل",
       value: props.ad.excel_skill,
       level: getProficiencyLevel(props.ad.excel_skill, proficiencies.value),
     },
     {
-      label: "مالیات",
+      name: "مالیات",
       value: props.ad.maliat_skill,
       level: getProficiencyLevel(props.ad.maliat_skill, proficiencies.value),
     },
     {
-      label: "بهای تمام شده",
+      name: "بهای تمام شده",
       value: props.ad.baha_skill,
       level: getProficiencyLevel(props.ad.baha_skill, proficiencies.value),
     },
@@ -673,7 +473,7 @@ const skillItems = computed<SkillBarItem[]>(() => {
   for (const skill of candidates) {
     if (skill.level != null && skill.value != null && skill.value !== false) {
       skills.push({
-        label: skill.label,
+        label: `سطح مورد نیاز به آشنایی با ${skill.name}:`,
         value: skill.value,
         level: skill.level,
       });

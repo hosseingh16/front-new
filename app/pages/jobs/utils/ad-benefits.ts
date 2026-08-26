@@ -17,12 +17,12 @@ const BENEFIT_ICON_MAP: Record<string, string> = {
 export const PROFICIENCY_NO_NEED = 'no_need'
 
 export const DEFAULT_PROFICIENCY_STEPS = [
-  'عالی',
-  'خیلی خوب',
-  'خوب',
+  'خیلی ضعیف',
+  'ضعیف',
   'متوسط',
-  'کم',
-  'تازه‌کار',
+  'خوب',
+  'خیلی خوب',
+  'عالی',
 ]
 
 const ORANGE_PROFICIENCY_VALUES = new Set([
@@ -44,7 +44,12 @@ export function getProficiencyColor(
     return '#2E7D32'
   }
 
-  return ORANGE_PROFICIENCY_VALUES.has(String(value)) ? '#FFA726' : '#2E7D32'
+  const raw = String(value)
+  if (/^\d+$/.test(raw)) {
+    return Number(raw) <= 2 ? '#FFA726' : '#2E7D32'
+  }
+
+  return ORANGE_PROFICIENCY_VALUES.has(raw) ? '#FFA726' : '#2E7D32'
 }
 
 export function getProficiencySteps(proficiencies: ISelectItem[]) {
@@ -73,6 +78,11 @@ export function getProficiencyLevel(
 
   const proficiencyValue = String(value)
   if (proficiencyValue === PROFICIENCY_NO_NEED) return null
+
+  if (/^\d+$/.test(proficiencyValue)) {
+    const level = Number(proficiencyValue)
+    return level > 0 && level <= steps.length ? level : null
+  }
 
   const index = steps.findIndex((item) => String(item.value) === proficiencyValue)
   return index >= 0 ? index + 1 : null

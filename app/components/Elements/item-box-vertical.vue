@@ -39,17 +39,14 @@
         <div class="flex items-end justify-between gap-4">
           <div class="flex min-w-0 items-start gap-3">
             <div
-              class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#ECF4D9]"
+              class="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-[#ECF4D9]"
             >
               <img
-                v-if="logo"
-                :src="logo"
+                :src="logoSrc"
                 :alt="title"
                 class="h-11 w-11 rounded-xl object-cover"
+                @error="onLogoError"
               />
-              <span v-else class="font-yb-bold text-base text-text-tertiary"
-                >م</span
-              >
             </div>
             <div class="min-w-0">
               <h3 class="truncate font-yb-bold text-base text-text-tertiary">
@@ -126,7 +123,7 @@
 </template>
 
 <script setup lang="ts">
-withDefaults(
+const props = withDefaults(
   defineProps<{
     title: string;
     companyName?: string;
@@ -151,4 +148,6 @@ withDefaults(
     variant: "ad",
   },
 );
+
+const { logoSrc, onLogoError } = useCompanyLogoDisplaySrc(() => props.logo);
 </script>

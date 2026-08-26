@@ -57,6 +57,7 @@
                   :src="companyLogoSrc"
                   alt=""
                   class="w-16 h-16 object-cover rounded-2xl"
+                  @error="onLogoError"
                 />
               </div>
               <div class="text-sm">
@@ -166,7 +167,6 @@ import "moment/locale/fa";
 import BookmarkToggleButton from "~/components/Elements/BookmarkToggleButton.vue";
 import type { AdList } from "~/types/ad";
 import type { ProjectList } from "~/types/project";
-import { resolveCompanyLogoDisplaySrc } from "~/utils/company-basic-info";
 
 moment.updateLocale("fa", {
   relativeTime: {
@@ -194,8 +194,8 @@ const ad = computed(() => props.item as AdList);
 const project = computed(() => props.item as ProjectList);
 
 const companyName = computed(() => props.item?.company_name || "");
-const companyLogoSrc = computed(() =>
-  resolveCompanyLogoDisplaySrc(props.item?.company_logo),
+const { logoSrc: companyLogoSrc, onLogoError } = useCompanyLogoDisplaySrc(
+  () => props.item?.company_logo,
 );
 
 const itemUrl = computed(() => {
