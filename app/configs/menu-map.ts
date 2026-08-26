@@ -78,6 +78,12 @@ export const menuMap: Record<string, MenuMeta> = {
     to: "/dashboard/employer/ads",
   },
 
+  manage_projects: {
+    label: "مدیریت پروژه‌ها",
+    icon: "svg:projects",
+    to: "/dashboard/employer/projects",
+  },
+
   tax_returns: {
     label: "درخواست های اظهارنامه",
     icon: "lucide:notepad-text",
@@ -124,13 +130,13 @@ export const menuMap: Record<string, MenuMeta> = {
   user_create_project: {
     label: "ایجاد پروژه",
     icon: "svg:projects",
-    to: "/dashboard/ad",
+    to: "/dashboard/employer/projects/create",
   },
 
   user_manage_projects: {
     label: "مدیریت پروژه ها",
     icon: "svg:projects",
-    to: "/dashboard/ad",
+    to: "/dashboard/employer/projects",
   },
 
   user_edit_company: {
@@ -166,7 +172,7 @@ export const menuMap: Record<string, MenuMeta> = {
   user_projects: {
     label: "پروژه‌های من",
     icon: "svg:projects",
-    to: "/dashboard/ad",
+    to: "/dashboard/employer/projects",
   },
 
   user_bookmarks: {
@@ -209,7 +215,9 @@ export const menuMap: Record<string, MenuMeta> = {
     icon: "svg:illust-project-user",
     dashboardIcon: "svg:illust-project-user",
     dashboardSubtitle: "به زودی",
-    to: "",
+    // to: "", // TODO: Remove this after testing
+    to: "/dashboard/employer/projects/create",
+
   },
 
   dashboard_action_consulting: {

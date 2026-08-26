@@ -40,27 +40,51 @@
       </div>
     </section>
 
-    <section v-if="isEmployer">
-      <div class="flex items-center justify-between gap-3">
-        <h2 class="font-yb-bold text-lg text-text-tertiary md:text-xl">
-          آگهی‌های من
-        </h2>
-        <NuxtLink
-          to="/dashboard/employer/ads"
-          class="flex items-center gap-1.5 text-sm font-semibold text-primary-500 transition-opacity hover:opacity-80"
-        >
-          مشاهده همه
-          <icons-arrow color="#4864e1" :size="15" class="mr-1" />
-        </NuxtLink>
-      </div>
+    <template v-if="isEmployer">
+      <section>
+        <div class="flex items-center justify-between gap-3">
+          <h2 class="font-yb-bold text-lg text-text-tertiary md:text-xl">
+            آگهی‌های من
+          </h2>
+          <NuxtLink
+            to="/dashboard/employer/ads"
+            class="flex items-center gap-1.5 text-sm font-semibold text-primary-500 transition-opacity hover:opacity-80"
+          >
+            مشاهده همه
+            <icons-arrow color="#4864e1" :size="15" class="mr-1" />
+          </NuxtLink>
+        </div>
 
-      <EmployerDashboardAdsPanel
-        class="mt-4"
-        :ads="previewAds"
-        :loading="adsLoading"
-        :initialized="adsInitialized"
-      />
-    </section>
+        <EmployerDashboardAdsPanel
+          class="mt-4"
+          :ads="previewAds"
+          :loading="adsLoading"
+          :initialized="adsInitialized"
+        />
+      </section>
+
+      <section>
+        <div class="flex items-center justify-between gap-3">
+          <h2 class="font-yb-bold text-lg text-text-tertiary md:text-xl">
+            پروژه‌های من
+          </h2>
+          <NuxtLink
+            to="/dashboard/employer/projects"
+            class="flex items-center gap-1.5 text-sm font-semibold text-primary-500 transition-opacity hover:opacity-80"
+          >
+            مشاهده همه
+            <icons-arrow color="#4864e1" :size="15" class="mr-1" />
+          </NuxtLink>
+        </div>
+
+        <EmployerDashboardProjectsPanel
+          class="mt-4"
+          :projects="previewProjects"
+          :loading="projectsLoading"
+          :initialized="projectsInitialized"
+        />
+      </section>
+    </template>
 
     <section v-else>
       <div class="flex items-center justify-between gap-3">
@@ -111,6 +135,7 @@ import ConfirmDialog from "~/components/M/ConfirmDialog.vue";
 import DashboardStatusAlert from "./components/DashboardStatusAlert.vue";
 import EmployerDashboardShortcutCard from "./components/EmployerDashboardShortcutCard.vue";
 import EmployerDashboardAdsPanel from "./components/EmployerDashboardAdsPanel.vue";
+import EmployerDashboardProjectsPanel from "./components/EmployerDashboardProjectsPanel.vue";
 import JobseekerDashboardRequestsPanel from "./components/JobseekerDashboardRequestsPanel.vue";
 import MyRequestDetailModal from "./components/MyRequestDetailModal.vue";
 import type { MyRequest } from "~/types/my-request";
@@ -135,6 +160,12 @@ const {
   initialized: adsInitialized,
   fetchAds,
 } = useEmployerAds({ immediate: false });
+const {
+  projects,
+  loading: projectsLoading,
+  initialized: projectsInitialized,
+  fetchProjects,
+} = useEmployerProjects({ immediate: false });
 const {
   total: taxReturnTotal,
   initialized: taxReturnsInitialized,
@@ -164,7 +195,7 @@ onMounted(async () => {
   await fetchMenu(true);
 
   if (isEmployer.value) {
-    await Promise.all([fetchAds(), fetchTaxReturns()]);
+    await Promise.all([fetchAds(), fetchProjects(), fetchTaxReturns()]);
   } else {
     await fetchRequests();
   }
@@ -210,18 +241,32 @@ const ADS_DASHBOARD_ACTION_KEYS = new Set([
   "dashboard_action_ads",
 ]);
 
+const PROJECT_DASHBOARD_ACTION_KEYS = new Set([
+  "dashboard_action_accounting_project",
+]);
+
 const dashboardActionCards = computed(() =>
   dashboardActions.value.map((action) => {
     const isAdsAction =
       action.key != null && ADS_DASHBOARD_ACTION_KEYS.has(action.key);
+    const isProjectAction =
+      action.key != null &&
+      PROJECT_DASHBOARD_ACTION_KEYS.has(action.key) &&
+      false; // TODO: Remove this after testing
 
     return {
       key: action.key ?? action.label,
       title: action.label,
-      subtitle: resolveDashboardSubtitle(action, isAdsAction),
+      subtitle: resolveDashboardSubtitle(action, isAdsAction, isProjectAction),
       icon: action.dashboardIcon ?? action.icon,
-      to: isAdsAction ? "/dashboard/ad" : action.disabled ? "" : action.to,
-      disabled: isAdsAction ? false : action.disabled,
+      to: isAdsAction
+        ? "/dashboard/ad"
+        : isProjectAction
+        ? "/dashboard/employer/projects/create"
+        : action.disabled
+        ? ""
+        : action.to,
+      disabled: isAdsAction || isProjectAction ? false : action.disabled,
     };
   }),
 );
@@ -229,8 +274,9 @@ const dashboardActionCards = computed(() =>
 function resolveDashboardSubtitle(
   action: (typeof dashboardActions.value)[number],
   isAdsAction = false,
+  isProjectAction = false,
 ) {
-  if (isAdsAction) return undefined;
+  if (isAdsAction || isProjectAction) return undefined;
 
   if (action.disabled) {
     return action.dashboardSubtitle ?? "به زودی";
@@ -257,6 +303,7 @@ function toPersianDigits(value: number) {
 }
 
 const previewAds = computed(() => ads.value.slice(0, 5));
+const previewProjects = computed(() => projects.value.slice(0, 5));
 const previewRequests = computed(() => requests.value.slice(0, 6));
 
 function openCancelDialog(request: MyRequest) {
