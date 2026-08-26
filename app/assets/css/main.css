@@ -72,6 +72,9 @@ button:disabled {
 /* Keep toasts above modal dialogs (top layer via popover in toast plugin) */
 .Toastify__toast-container[popover] {
   inset: unset;
+  top: 1.25rem;
+  left: 10%;
+  transform: translateX(-50%);
   border: none;
   background: transparent;
   padding: 4px;
@@ -107,9 +110,18 @@ button:disabled {
   margin-inline-end: 12px !important;
 }
 
-.Toastify__toast--success .Toastify__toast-icon .toast-success-icon,
-.Toastify__toast--success .Toastify__toast-icon .iconify {
-  color: #fff !important;
+.Toastify__toast--success .Toastify__toast-icon svg {
+  display: block;
+}
+
+.Toastify__toast--success .Toastify__toast-icon svg circle {
+  fill: #06c399 !important;
+  stroke: none !important;
+}
+
+.Toastify__toast--success .Toastify__toast-icon svg path {
+  fill: none !important;
+  stroke: #fff !important;
 }
 
 .Toastify__toast--success .Toastify__close-button {

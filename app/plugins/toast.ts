@@ -1,66 +1,48 @@
 import Vue3Toastify, { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 import { h, type FunctionalComponent } from "vue";
-import { Icon } from "#components";
 
-/**
- * lucide:check-check — inlined because Nuxt Icon does not reliably
- * mount inside vue3-toastify's portal (async client fetch).
- * Path from @iconify-json/lucide icons.json
- */
-const SuccessIcon: FunctionalComponent = () =>
-  h(
-    "span",
-    {
-      class: "toast-success-icon",
-      style: {
-        display: "inline-flex",
-        alignItems: "center",
-        justifyContent: "center",
-        width: "28px",
-        height: "28px",
-        borderRadius: "9999px",
-        background: "#06c399",
-        color: "#fff",
-        flexShrink: "0",
+function circleIcon(
+  fill: string,
+  paths: Array<Record<string, string>>,
+): FunctionalComponent {
+  return () =>
+    h(
+      "svg",
+      {
+        viewBox: "0 0 24 24",
+        width: "28",
+        height: "28",
+        fill: "none",
+        "aria-hidden": "true",
+        style: { display: "block", flexShrink: "0" },
       },
-    },
-    [
-      h(Icon, {
-        name: "lucide:check-check",
-        size: "16",
-      }),
-    ],
-  );
+      [
+        h("circle", { cx: "12", cy: "12", r: "12", fill }),
+        ...paths.map((attrs) => h("path", attrs)),
+      ],
+    );
+}
 
-/** Red circle with white X — matches design error toast */
-const ErrorIcon: FunctionalComponent = () =>
-  h(
-    "svg",
-    {
-      viewBox: "0 0 24 24",
-      width: "28",
-      height: "28",
-      fill: "none",
-      "aria-hidden": "true",
-    },
-    [
-      h("circle", {
-        cx: "12",
-        cy: "12",
-        r: "12",
-        fill: "#E11D48",
-      }),
-      h("path", {
-        d: "M8 8l8 8M16 8l-8 8",
-        stroke: "#fff",
-        "stroke-width": "2",
-        "stroke-linecap": "round",
-      }),
-    ],
-  );
+const SuccessIcon = circleIcon("#06c399", [
+  {
+    d: "M17.4 7 7.5 16.57 3 12.22M21 10.48 14.25 17 12.9 15.7",
+    stroke: "#fff",
+    "stroke-width": "1.8",
+    "stroke-linecap": "round",
+    "stroke-linejoin": "round",
+  },
+]);
 
-/** Brown circle with white "i" — matches design warning toast */
+const ErrorIcon = circleIcon("#E11D48", [
+  {
+    d: "M8 8l8 8M16 8l-8 8",
+    stroke: "#fff",
+    "stroke-width": "2",
+    "stroke-linecap": "round",
+  },
+]);
+
 const WarningIcon: FunctionalComponent = () =>
   h(
     "svg",
@@ -70,20 +52,11 @@ const WarningIcon: FunctionalComponent = () =>
       height: "28",
       fill: "none",
       "aria-hidden": "true",
+      style: { display: "block", flexShrink: "0" },
     },
     [
-      h("circle", {
-        cx: "12",
-        cy: "12",
-        r: "12",
-        fill: "#8B5E3C",
-      }),
-      h("circle", {
-        cx: "12",
-        cy: "8",
-        r: "1.35",
-        fill: "#fff",
-      }),
+      h("circle", { cx: "12", cy: "12", r: "12", fill: "#8B5E3C" }),
+      h("circle", { cx: "12", cy: "8", r: "1.35", fill: "#fff" }),
       h("path", {
         d: "M12 11.25v6",
         stroke: "#fff",
@@ -93,14 +66,23 @@ const WarningIcon: FunctionalComponent = () =>
     ],
   );
 
+const InfoIcon = circleIcon("#4864E1", [
+  {
+    d: "M12 10.5v6.25M12 7.4h.01",
+    stroke: "#fff",
+    "stroke-width": "2.2",
+    "stroke-linecap": "round",
+  },
+]);
+
 export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.use(Vue3Toastify, {
     autoClose: 5000,
     rtl: true,
-    position: "top-right",
+    position: "top-left",
     toastClassName: "toast-custom",
     theme: "light",
-    transition: "zoom",
+    transition: "bounce",
   });
 
   /**
@@ -169,8 +151,16 @@ export default defineNuxtPlugin((nuxtApp) => {
 
   const info: typeof toast.info = (message, options) => {
     const id = originalInfo
-      ? originalInfo(message, options)
-      : toast(message, options);
+      ? originalInfo(message, {
+          ...options,
+          icon: InfoIcon,
+          theme: "light",
+        })
+      : toast(message, {
+          ...options,
+          icon: InfoIcon,
+          theme: "light",
+        });
     queueMicrotask(promoteToastContainer);
     return id;
   };

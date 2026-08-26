@@ -6,7 +6,9 @@
     </p>
     <div v-if="isClient" ref="dropDownRef" class="relative inline-block w-full">
       <div
-        class="box-border flex h-10 max-h-10 min-h-10 w-full items-center gap-2 overflow-hidden rounded-lg border border-gray-default bg-white pr-2 pl-2"
+        role="combobox"
+        :aria-expanded="open"
+        class="box-border flex h-10 max-h-10 min-h-10 w-full cursor-pointer items-center gap-2 overflow-hidden rounded-lg border border-gray-default bg-white pr-2 pl-2 focus-within:outline-none focus-within:ring-2 focus-within:ring-primary-500/25"
         :style="`border-color:${error ? 'var(--color-danger-200)' : borderColor}`"
         @click="focusInput"
       >
@@ -16,7 +18,8 @@
           <span
             v-for="item in selectedItems"
             :key="item.value"
-            class="inline-flex h-6 max-h-6 shrink-0 items-center gap-1 rounded-md bg-surface-50 px-1.5 text-xs leading-none text-gray-700"
+            class="inline-flex h-6 max-h-6 shrink-0 items-center gap-1 rounded-md px-1.5 text-xs leading-none"
+            :class="chipClasses"
           >
             <span class="max-w-32 truncate">{{ item.label }}</span>
             <button
@@ -110,7 +113,17 @@ const props = defineProps({
   error: { type: Boolean },
   disabled: { type: Boolean },
   search: { type: Boolean, default: true },
+  chipTone: {
+    type: String as () => "default" | "primary",
+    default: "default",
+  },
 });
+
+const chipClasses = computed(() =>
+  props.chipTone === "primary"
+    ? "shrink-0 bg-primary-50 text-primary-500"
+    : "shrink-0 bg-surface-50 text-gray-700",
+);
 
 const open = ref(false);
 const isClient = ref(false);

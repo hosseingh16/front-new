@@ -1,6 +1,6 @@
 <template>
   <div :class="{ 'opacity-50 pointer-events-none': disabled }">
-    <p class="text-base relative mb-2">
+    <p v-if="label" class="text-base relative mb-2">
       {{ label }}
       <span v-if="required" class="text-red-400 mb-4 absolute -top-2">*</span>
     </p>
