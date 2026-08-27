@@ -274,7 +274,7 @@ const { isAuthenticated } = useSanctumAuth();
 
 const activeTab = ref<AdTab>("about");
 
-const tabs: { id: AdTab; label: string; icon: string }[] = [
+const allTabs: { id: AdTab; label: string; icon: string }[] = [
   { id: "about", label: "جزئیات شغل", icon: "lucide:briefcase" },
   {
     id: "company",
