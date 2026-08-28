@@ -120,6 +120,7 @@ import SignUpStepper from "~/features/account/components/SignUpStepper.vue";
 import type { DirectionT } from "../types";
 import { useForm } from "vee-validate";
 import * as Yup from "yup";
+import { isEnteringRoleRedirect } from "~/utils/entering-route";
 
 // Model
 const model = defineModel({
@@ -146,6 +147,7 @@ const emits = defineEmits<{
 }>();
 
 // Auth
+const route = useRoute();
 const { completeProfile, loading } = useAccountAuth();
 const { $toast } = useNuxtApp();
 
@@ -224,6 +226,11 @@ const onSubmit = handleSubmit(async (data) => {
   emits("completed");
 
   if (props.inline) return;
+
+  if (isEnteringRoleRedirect(route.query.redirect)) {
+    await navigateTo(route.query.redirect, { replace: true });
+    return;
+  }
 
   // Next: role selection (SignUp3)
   emits("onChangeStep", props.step + 1);

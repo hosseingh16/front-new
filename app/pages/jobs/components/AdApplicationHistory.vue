@@ -15,7 +15,9 @@
         :key="`history-skeleton-${n}`"
         class="flex items-start gap-2"
       >
-        <div class="size-8 shrink-0 animate-pulse rounded-full bg-surface-200" />
+        <div
+          class="size-8 shrink-0 animate-pulse rounded-full bg-surface-200"
+        />
         <div class="min-w-0 flex-1 space-y-2">
           <div class="h-4 w-28 animate-pulse rounded bg-surface-200" />
           <div class="h-5 w-40 animate-pulse rounded bg-surface-200" />
@@ -24,15 +26,27 @@
       </div>
     </div>
 
-    <p
-      v-else-if="error"
-      class="mt-6 py-8 text-center text-sm text-error"
-    >
+    <p v-else-if="error" class="mt-6 py-8 text-center text-sm text-error">
       {{ error }}
     </p>
 
     <div v-else-if="request" class="mt-4">
       <MyRequestTimeline :request="request" />
+    </div>
+
+    <div
+      v-else-if="isEmployer"
+      class="mt-4 flex items-start gap-3 rounded-xl border border-primary-200 bg-primary-50 p-5"
+    >
+      <div
+        class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-white"
+        aria-hidden="true"
+      >
+        <Icon name="lucide:info" size="20" class="text-primary-500" />
+      </div>
+      <p class="text-sm leading-7 text-text-secondary">
+        ارسال رزومه برای کارفرمایان امکان‌پذیر نیست.
+      </p>
     </div>
 
     <NoResult
@@ -72,6 +86,7 @@ const emit = defineEmits<{
 }>();
 
 const { isAuthenticated } = useSanctumAuth();
+const { isEmployer } = useCurrentUser();
 const api = useApi();
 
 const loading = ref(false);
@@ -112,14 +127,16 @@ async function fetchRequest() {
     const items = (
       Array.isArray(result.data)
         ? result.data
-        : Array.isArray((result.data as { data?: JobSeekerAdsRequestApi[] } | undefined)?.data)
-          ? (result.data as { data: JobSeekerAdsRequestApi[] }).data
-          : []
+        : Array.isArray(
+            (result.data as { data?: JobSeekerAdsRequestApi[] } | undefined)
+              ?.data,
+          )
+        ? (result.data as { data: JobSeekerAdsRequestApi[] }).data
+        : []
     ).map(mapJobSeekerAdsRequestToMyRequest);
 
     const adId = Number(props.ad.id);
-    const match =
-      items.find((item) => Number(item.ad_id) === adId) ?? null;
+    const match = items.find((item) => Number(item.ad_id) === adId) ?? null;
     request.value = match ?? fallbackRequest();
   } catch {
     error.value = "خطا در دریافت سوابق ارسال";

@@ -54,6 +54,7 @@
                 class="flex justify-center items-center bg-[#ECF4D9] rounded-2xl"
               >
                 <img
+                  :ref="bindLogoImg"
                   :src="companyLogoSrc"
                   alt=""
                   class="w-16 h-16 object-cover rounded-2xl"
@@ -194,9 +195,10 @@ const ad = computed(() => props.item as AdList);
 const project = computed(() => props.item as ProjectList);
 
 const companyName = computed(() => props.item?.company_name || "");
-const { logoSrc: companyLogoSrc, onLogoError } = useCompanyLogoDisplaySrc(
-  () => props.item?.company_logo,
-);
+const { logoSrc: companyLogoSrc, onLogoError, bindLogoImg } =
+  useCompanyLogoDisplaySrc(
+    () => props.item?.company?.logo || props.item?.company_logo,
+  );
 
 const itemUrl = computed(() => {
   if (!props.item?.id) return "#";

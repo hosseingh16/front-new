@@ -52,9 +52,14 @@
             >
               پروژه خود را ثبت کنید و متخصص مناسب پیدا کنید.
             </p>
-            <NuxtLink to="/login" class="mt-auto pt-6 flex justify-center">
-              <button class="btn btn-primary gap-2">ثبت پروژه حسابداری</button>
-            </NuxtLink>
+            <IntentLink
+              :to="paths.employer.adsCreate"
+              role="employer"
+              :query="{ employment_type: 'project_based' }"
+              class="mt-auto pt-6 flex justify-center"
+            >
+              <span class="btn btn-primary gap-2">ثبت پروژه حسابداری</span>
+            </IntentLink>
           </div>
 
           <img :src="heroIcon" alt="" class="hidden w-14 shrink-0 md:block" />
@@ -77,9 +82,13 @@
             >
               پروژه‌های جدید را مشاهده و درخواست همکاری ارسال کنید.
             </p>
-            <NuxtLink to="/login" class="mt-auto pt-6 flex justify-center">
-              <button class="btn btn-primary gap-2">مشاهده پروژه‌ها</button>
-            </NuxtLink>
+            <IntentLink
+              :to="paths.jobSeeker.ads"
+              role="job_seeker"
+              class="mt-auto pt-6 flex justify-center"
+            >
+              <span class="btn btn-primary gap-2">مشاهده پروژه‌ها</span>
+            </IntentLink>
           </div>
         </div>
       </div>
@@ -279,6 +288,7 @@ import type { Testimonial } from "~/components/Elements/Testimonials.vue";
 import type { ApiResponse } from "~/types/api";
 import type { ProjectList } from "~/types/project";
 import FaqSection from "~/components/Elements/FaqSection.vue";
+import { paths } from "~/routes";
 
 const projectCategoriesTop = [
   "پروژه‌های عملیاتی و روزمره حسابداری",

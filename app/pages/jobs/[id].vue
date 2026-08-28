@@ -44,28 +44,30 @@
             class="flex flex-wrap items-start justify-between gap-4 p-5 md:p-6"
           >
             <div class="flex min-w-0 items-center gap-4">
+              <NuxtLink
+                v-if="ad.company?.slug"
+                :to="`/companies/${ad.company.slug}`"
+                class="flex h-[74px] w-[74px] shrink-0 items-center justify-center overflow-hidden rounded-2xl border-4 border-white bg-[#ECF4D9]"
+                tabindex="-1"
+                :aria-label="ad.company_name"
+              >
+                <img
+                  :ref="bindLogoImg"
+                  :src="companyLogoSrc"
+                  alt=""
+                  class="h-[66px] w-[66px] object-cover"
+                  @error="onLogoError"
+                />
+              </NuxtLink>
               <div
+                v-else
                 class="flex h-[74px] w-[74px] shrink-0 items-center justify-center overflow-hidden rounded-2xl border-4 border-white bg-[#ECF4D9]"
               >
-                <NuxtLink
-                  v-if="ad.company?.slug"
-                  :to="`/companies/${ad.company.slug}`"
-                  class="block h-full w-full"
-                  tabindex="-1"
-                  aria-label="نمایه شرکت"
-                >
-                  <img
-                    :src="companyLogoSrc"
-                    :alt="ad.company_name"
-                    class="h-full w-full object-cover"
-                    @error="onLogoError"
-                  />
-                </NuxtLink>
                 <img
-                  v-else
+                  :ref="bindLogoImg"
                   :src="companyLogoSrc"
-                  :alt="ad.company_name"
-                  class="h-full w-full object-cover"
+                  alt=""
+                  class="h-[66px] w-[66px] object-cover"
                   @error="onLogoError"
                 />
               </div>
@@ -239,6 +241,7 @@ const route = useRoute();
 const adId = computed(() => String(route.params.id ?? ""));
 
 const { isAuthenticated } = useSanctumAuth();
+const { isEmployer } = useCurrentUser();
 const { needsRoleSelection, ensureRoleForAction } = useRoleGate();
 const { applyToAd, loading: applyLoading } = useApplyToAd();
 const { ad, loading, error, setHasApplied, refresh: refreshAd } = useAd(adId);
@@ -277,9 +280,8 @@ onMounted(() => {
   onUnmounted(() => mediaQuery.removeEventListener("change", syncIsMobile));
 });
 
-const { logoSrc: companyLogoSrc, onLogoError } = useCompanyLogoDisplaySrc(
-  () => ad.value?.company_logo,
-);
+const { logoSrc: companyLogoSrc, onLogoError, bindLogoImg } =
+  useCompanyLogoDisplaySrc(() => ad.value?.company?.logo || ad.value?.company_logo);
 
 const coverImage = computed(
   () => ad.value?.company?.cover || "/images/ad-cover-bg.jpg",
@@ -321,7 +323,7 @@ async function onApplyFailedAfterLogin() {
 
 async function sendRequest() {
   const id = ad.value?.id ?? adId.value;
-  if (!id || ad.value?.has_applied) return;
+  if (!id || ad.value?.has_applied || isEmployer.value) return;
 
   applying.value = true;
   try {
@@ -339,7 +341,7 @@ async function sendRequest() {
 
 async function showResumeModal() {
   if (!import.meta.client || applyLoading.value || applying.value) return;
-  if (ad.value?.has_applied) return;
+  if (ad.value?.has_applied || isEmployer.value) return;
 
   if (isAuthenticated.value) {
     await sendRequest();

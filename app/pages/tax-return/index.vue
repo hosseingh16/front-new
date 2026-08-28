@@ -309,13 +309,14 @@
         >
           همین حالا درخواست اظهارنامه خود را ثبت کنید
         </p>
-        <button
+        <IntentLink
+          :to="paths.employer.taxReturnCreate"
+          role="employer"
           class="btn btn-primary shrink-0 gap-2 px-6"
-          @click="navigateTo('/dashboard/tax-returns/create')"
         >
           <Icon name="lucide:pen-line" size="18" class="text-white" />
           ثبت درخواست اظهارنامه
-        </button>
+        </IntentLink>
       </div>
     </section>
 
@@ -372,6 +373,7 @@ import step3 from "~/assets/vectors/pages/tax-return/step3.webp";
 import bannerMobile from "~/assets/vectors/pages/tax-return/banner-mobile.webp";
 import banner from "~/assets/vectors/pages/tax-return/banner.webp";
 import FaqSection from "~/components/Elements/FaqSection.vue";
+import { paths } from "~/routes";
 import type { ApiResponse } from "~/types/api";
 import type { ISelectItem } from "~/types/select-item";
 import type { TaxReturnActivityType } from "~/types/tax-return-form";

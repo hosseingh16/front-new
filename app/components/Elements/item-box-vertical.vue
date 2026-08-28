@@ -42,8 +42,9 @@
               class="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-[#ECF4D9]"
             >
               <img
+                :ref="bindLogoImg"
                 :src="logoSrc"
-                :alt="title"
+                alt=""
                 class="h-11 w-11 rounded-xl object-cover"
                 @error="onLogoError"
               />
@@ -149,5 +150,7 @@ const props = withDefaults(
   },
 );
 
-const { logoSrc, onLogoError } = useCompanyLogoDisplaySrc(() => props.logo);
+const { logoSrc, onLogoError, bindLogoImg } = useCompanyLogoDisplaySrc(
+  () => props.logo,
+);
 </script>

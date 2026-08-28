@@ -10,7 +10,7 @@ export function useCompanyLogoDisplaySrc(
   const failed = ref(false)
 
   const apiOrigin = computed(() =>
-    String(config.public.apiBase ?? ''),
+    String(config.public.baseUrl || config.public.apiBase || ''),
   )
 
   watch(
@@ -26,11 +26,21 @@ export function useCompanyLogoDisplaySrc(
   })
 
   function onLogoError() {
+    if (failed.value) return
     failed.value = true
+  }
+
+  /** Catch images that already 404'd before Vue hydrated (SSR). */
+  function bindLogoImg(el: unknown) {
+    if (!(el instanceof HTMLImageElement)) return
+    if (el.complete && el.naturalWidth === 0) {
+      onLogoError()
+    }
   }
 
   return {
     logoSrc,
     onLogoError,
+    bindLogoImg,
   }
 }

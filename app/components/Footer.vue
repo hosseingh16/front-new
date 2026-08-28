@@ -169,7 +169,7 @@ const businessLinks: FooterLink[] = [
   { label: "ایجاد پروژه حسابداری", to: "/" },
   { label: "سوالات متداول", to: "/faq" },
   { label: "اظهارنامه عملکرد", to: "/tax-return" },
-  { label: "پروژه های حسابداری", to: "/projects" },
+  // { label: "پروژه های حسابداری", to: "/projects" },
 ];
 
 const aboutLinks: FooterLink[] = [
@@ -177,7 +177,6 @@ const aboutLinks: FooterLink[] = [
   { label: "سوالات متداول", to: "/faq" },
   { label: "قوانین و مقررات", to: "/terms" },
   { label: "حریم خصوصی", to: "/privacy" },
-  { label: "درباره ما", to: "/" },
   { label: "تماس ما", to: "/contact" },
 ];
 

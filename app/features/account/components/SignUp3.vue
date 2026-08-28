@@ -69,7 +69,10 @@
 import SignUpStepper from "~/features/account/components/SignUpStepper.vue";
 import type { AccountRole, DirectionT } from "../types";
 import { paths } from "~/routes";
-import { buildEnteringRoute } from "~/utils/entering-route";
+import {
+  buildEnteringRoute,
+  isEnteringRoleRedirect,
+} from "~/utils/entering-route";
 
 const props = withDefaults(
   defineProps<{
@@ -134,6 +137,12 @@ const items: RequestTypeItem[] = [
     to: "/dashboard/cv",
   },
 ];
+
+onMounted(async () => {
+  if (props.forced) return;
+  if (!isEnteringRoleRedirect(route.query.redirect)) return;
+  await navigateTo(route.query.redirect, { replace: true });
+});
 
 function goBack() {
   emits("onChangeDirection", "back");

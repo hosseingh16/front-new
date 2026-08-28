@@ -91,6 +91,7 @@
                 :src="companyLogoSrc"
                 :alt="ad.company_name"
                 class="h-full w-full rounded object-cover"
+                @error="onLogoError"
               />
             </div>
             <div class="flex flex-col text-right">
@@ -186,13 +187,38 @@
           </div>
         </dl>
 
-        <p
+        <div
           v-if="ad.has_applied"
-          class="mt-6 flex h-11 w-full items-center justify-center gap-2 text-sm font-semibold text-text-primay"
+          class="mt-6 flex items-start gap-3 rounded-xl border border-success-200 bg-success-50 p-4"
         >
-          <Icon name="svg:hint" size="18" />
-          قبلا رزومه ارسال کرده‌اید
-        </p>
+          <div
+            class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-white"
+            aria-hidden="true"
+          >
+            <Icon
+              name="lucide:circle-check"
+              size="20"
+              class="text-success-500"
+            />
+          </div>
+          <p class="text-sm font-semibold leading-7 text-text-secondary">
+            قبلا رزومه ارسال کرده‌اید
+          </p>
+        </div>
+        <div
+          v-else-if="isEmployer"
+          class="mt-6 flex items-start gap-3 rounded-xl border border-primary-200 bg-primary-50 p-4"
+        >
+          <div
+            class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-white"
+            aria-hidden="true"
+          >
+            <Icon name="lucide:info" size="20" class="text-primary-500" />
+          </div>
+          <p class="text-sm leading-7 text-text-secondary">
+            ارسال رزومه برای کارفرمایان امکان‌پذیر نیست.
+          </p>
+        </div>
         <button
           v-else
           type="button"
@@ -222,8 +248,6 @@
 
 <script setup lang="ts">
 import type { Ad } from "~/types/ad";
-import ItemBoxVertical from "~/components/Elements/item-box-vertical.vue";
-import NoResult from "~/components/Elements/NoResult.vue";
 import AdSectionTitle from "./AdSectionTitle.vue";
 import AdRequirementStat from "./AdRequirementStat.vue";
 import AdSkillLevelBar from "./AdSkillLevelBar.vue";
@@ -236,11 +260,8 @@ import {
   getProficiencySteps,
   parseAdBenefits,
 } from "../utils/ad-benefits";
-import { useCompanyAds } from "~/composables/useAd";
 import { useLookups } from "~/composables/useLookups";
 import { formatJalaliDate } from "~/utils/format-jalali-date";
-import { formatRelativeDate } from "~/utils/format-relative-date";
-import { resolveCompanyLogoDisplaySrc } from "~/utils/company-basic-info";
 
 type AdTab = "about" | "company" | "history" | "ads";
 
@@ -259,8 +280,8 @@ const emit = defineEmits<{
   "report-issue": [];
 }>();
 
-const companyLogoSrc = computed(() =>
-  resolveCompanyLogoDisplaySrc(props.ad.company_logo),
+const { logoSrc: companyLogoSrc, onLogoError } = useCompanyLogoDisplaySrc(
+  () => props.ad.company?.logo || props.ad.company_logo,
 );
 
 const { items: lookupItems } = useLookups("proficiencies");
@@ -271,6 +292,7 @@ const proficiencySteps = computed(() => {
 });
 
 const { isAuthenticated } = useSanctumAuth();
+const { isEmployer } = useCurrentUser();
 
 const activeTab = ref<AdTab>("about");
 

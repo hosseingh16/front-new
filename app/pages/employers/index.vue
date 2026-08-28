@@ -34,13 +34,21 @@
           مناسب استفاده کنید.
         </p>
         <div class="mt-8 flex flex-wrap justify-center gap-3">
-          <button class="btn btn-primary gap-2 px-6">
+          <IntentLink
+            :to="paths.employer.adsCreate"
+            role="employer"
+            class="btn btn-primary gap-2 px-6"
+          >
             <Icon name="svg:user-plus-white" size="20" />
             ایجاد اولین آگهی
-          </button>
-          <button class="btn btn-outline border-success text-success px-6">
+          </IntentLink>
+          <IntentLink
+            :to="paths.employer.taxReturnCreate"
+            role="employer"
+            class="btn btn-outline border-success text-success px-6"
+          >
             درخواست اظهارنامه مالیاتی
-          </button>
+          </IntentLink>
         </div>
 
         <img
@@ -94,8 +102,10 @@
                 <span>{{ point }}</span>
               </li>
             </ol>
-            <NuxtLink
-              :to="card.link"
+            <IntentLink
+              :to="card.to"
+              :role="card.role"
+              :query="card.query"
               class="mt-8 flex w-full items-center justify-center gap-2 rounded-xl py-3.5 text-sm font-semibold transition-opacity hover:opacity-80"
               :class="card.ctaClass"
             >
@@ -105,7 +115,7 @@
                 :size="14"
                 class="rotate-45"
               />
-            </NuxtLink>
+            </IntentLink>
           </div>
 
           <div
@@ -315,6 +325,7 @@ import FaqSection from "~/components/Elements/FaqSection.vue";
 import Testimonials, {
   type Testimonial,
 } from "~/components/Elements/Testimonials.vue";
+import { paths } from "~/routes";
 
 const PROCESS_STEP_OFFSETS = [0, 217, 449, 680];
 const PROCESS_VIEWPORT_HEIGHTS = [217, 232, 241, 220];
@@ -327,7 +338,21 @@ const servicePoints = [
   "استخدام توانمند ترین حسابدار",
 ];
 
-const serviceCards = [
+type ServiceCard = {
+  featureTitle: string;
+  icon: string;
+  featureSubtitle: string;
+  boxClass: string;
+  numberClass: string;
+  ctaClass: string;
+  ctaArrowColor: string;
+  btnText: string;
+  to: string;
+  role: "employer";
+  query?: Record<string, string>;
+};
+
+const serviceCards: ServiceCard[] = [
   {
     featureTitle: "آگهی استخدام رو ثبت کن",
     icon: "svg:bag-icon",
@@ -340,7 +365,8 @@ const serviceCards = [
     ctaClass: "bg-[#EBF0FC] text-primary-500",
     ctaArrowColor: "#4864e1",
     btnText: "ایجاد آگهی استخدام",
-    link: "/login",
+    to: paths.employer.adsCreate,
+    role: "employer" as const,
   },
   {
     featureTitle: "پروژه حسابداری رو ثبت کن",
@@ -354,7 +380,9 @@ const serviceCards = [
     ctaClass: "bg-[#E6FAF3] text-accent-500",
     ctaArrowColor: "#06c399",
     btnText: "ایجاد پروژه حسابداری",
-    link: "/login",
+    to: paths.employer.adsCreate,
+    role: "employer" as const,
+    query: { employment_type: "project_based" },
   },
   {
     featureTitle: "درخواست انجام اظهارنامه مالیاتی",
@@ -368,7 +396,8 @@ const serviceCards = [
     ctaClass: "bg-[#FFF5EB] text-warning-500",
     ctaArrowColor: "#b95c04",
     btnText: "ایجاد پروژه حسابداری",
-    link: "/tax-return",
+    to: paths.employer.taxReturnCreate,
+    role: "employer" as const,
   },
 ];
 
