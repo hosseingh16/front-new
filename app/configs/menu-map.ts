@@ -66,6 +66,12 @@ export const menuMap: Record<string, MenuMeta> = {
     to: "/dashboard/employer/ads",
   },
 
+  resume_bank: {
+    label: "بانک رزومه",
+    icon: "svg:user-search-3",
+    to: "/dashboard/employer/resumes",
+  },
+
   create_ad: {
     label: "ایجاد آگهی جدید",
     icon: "svg:add-briefcase",

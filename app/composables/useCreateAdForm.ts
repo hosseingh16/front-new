@@ -10,6 +10,7 @@ import {
 } from '~/types/create-ad-form'
 import {
   buildCreateAdPayload,
+  getResumeTermsValidationError,
   validateCreateAdForm,
 } from '~/utils/create-ad-payload'
 import type { ISelectItem } from '~/types/select-item'
@@ -418,6 +419,22 @@ export function useCreateAdForm(
       savingDraft.value = false
     }
   }
+
+  watch(
+    () => form.value.resume_terms,
+    (value) => {
+      if (!errors.value.resume_terms) return
+
+      const nextError = getResumeTermsValidationError(value)
+      if (nextError) {
+        errors.value = { ...errors.value, resume_terms: nextError }
+        return
+      }
+
+      const { resume_terms: _removed, ...rest } = errors.value
+      errors.value = rest
+    },
+  )
 
   async function publish() {
     const validationErrors = validateCreateAdForm(form.value, {

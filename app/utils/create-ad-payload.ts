@@ -39,6 +39,17 @@ export function getResumeTermsPlainLength(value: string) {
   return stripHtml(value).length
 }
 
+export function getResumeTermsValidationError(value: string) {
+  const resumeTermsLength = getResumeTermsPlainLength(value)
+  if (resumeTermsLength < RESUME_TERMS_MIN_LENGTH) {
+    return 'شرایط احراز باید حداقل ۱۰ کاراکتر باشد'
+  }
+  if (resumeTermsLength > RESUME_TERMS_MAX_LENGTH) {
+    return 'شرایط احراز نباید بیشتر از ۵۰۰۰ کاراکتر باشد'
+  }
+  return undefined
+}
+
 export function validateCreateAdForm(
   form: CreateAdFormModel,
   options: { isPartTime?: boolean } = {},
@@ -61,11 +72,9 @@ export function validateCreateAdForm(
     errors.employment_type = 'نوع همکاری الزامی است'
   }
 
-  const resumeTermsLength = getResumeTermsPlainLength(form.resume_terms)
-  if (resumeTermsLength < RESUME_TERMS_MIN_LENGTH) {
-    errors.resume_terms = 'شرایط احراز باید حداقل ۱۰ کاراکتر باشد'
-  } else if (resumeTermsLength > RESUME_TERMS_MAX_LENGTH) {
-    errors.resume_terms = 'شرایط احراز نباید بیشتر از ۵۰۰۰ کاراکتر باشد'
+  const resumeTermsError = getResumeTermsValidationError(form.resume_terms)
+  if (resumeTermsError) {
+    errors.resume_terms = resumeTermsError
   }
 
   if (options.isPartTime) {

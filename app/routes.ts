@@ -8,7 +8,9 @@ export const paths = {
     detail: (id: string | number) => `/jobs/${id}`,
   },
   employer: {
+    ads: '/dashboard/employer/ads',
     adsCreate: '/dashboard/employer/ads/create',
+    resumeBank: '/dashboard/employer/resumes',
     taxReturnCreate: '/dashboard/tax-returns/create',
   },
   jobSeeker: {

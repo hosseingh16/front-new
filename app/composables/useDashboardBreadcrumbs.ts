@@ -21,6 +21,11 @@ const DYNAMIC_ROUTE_LABELS: Array<{
     parent: "/dashboard/employer/ads",
   },
   {
+    pattern: /^\/dashboard\/employer\/resumes\/?$/,
+    label: "بانک رزومه",
+    parent: "/dashboard/employer/ads",
+  },
+  {
     pattern: /^\/dashboard\/ad\/[^/]+\/?$/,
     label: "جزئیات آگهی",
     parent: "/dashboard/ad",

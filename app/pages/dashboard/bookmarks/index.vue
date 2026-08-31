@@ -25,12 +25,9 @@
 
     <NoResult
       v-else-if="initialized && totalCount === 0"
-      title="هنوز چیزی نشان نکرده‌اید"
-      description="آگهی‌ها، پروژه‌ها و سازمان‌هایی که نشان می‌کنید اینجا نمایش داده می‌شوند."
+      v-bind="emptyState"
       icon="svg:no-result"
       :icon-size="180"
-      action-label="مشاهده فرصت‌های شغلی"
-      action-to="/ad"
     />
 
     <template v-else>
@@ -208,6 +205,7 @@ import ItemBox from "~/components/Elements/item-box.vue";
 import NoResult from "~/components/Elements/NoResult.vue";
 import PersonBox from "~/components/Elements/person-box.vue";
 import { toPersianDigits } from "~/composables/useCountUp";
+import { paths } from "~/routes";
 import type { BookmarkTab } from "~/types/bookmark";
 import { countBookmarks } from "~/types/bookmark";
 
@@ -215,7 +213,70 @@ definePageMeta({
   layout: "dashboard",
 });
 
+const { isEmployer } = useCurrentUser();
 const { groups, loading, initialized, error, fetchBookmarks } = useBookmarks();
+const {
+  ads: employerAds,
+  initialized: employerAdsInitialized,
+  fetchAds,
+} = useEmployerAds({ immediate: false });
+
+onMounted(() => {
+  if (isEmployer.value) {
+    void fetchAds();
+  }
+});
+
+const hasEmployerAds = computed(() => employerAds.value.length > 0);
+
+const emptyState = computed(() => {
+  if (!isEmployer.value) {
+    return {
+      title: "هنوز چیزی نشان نکرده‌اید",
+      description:
+        "آگهی‌ها، پروژه‌ها و سازمان‌هایی که نشان می‌کنید اینجا نمایش داده می‌شوند.",
+      actionLabel: "مشاهده فرصت‌های شغلی",
+      actionTo: "/ad",
+      secondaryActionLabel: "",
+      secondaryActionTo: "",
+    };
+  }
+
+  if (!employerAdsInitialized.value) {
+    return {
+      title: "هنوز رزومه‌ای نشان نکرده‌اید",
+      description:
+        "رزومه‌های مناسب را از بانک رزومه یا میان رزومه‌های دریافتی آگهی‌هایتان پیدا کنید و برای دسترسی سریع‌تر، نشان کنید.",
+      actionLabel: "",
+      actionTo: "",
+      secondaryActionLabel: "",
+      secondaryActionTo: "",
+    };
+  }
+
+  if (hasEmployerAds.value) {
+    return {
+      title: "هنوز رزومه‌ای نشان نکرده‌اید",
+      description:
+        "رزومه‌های مناسب را از بانک رزومه یا میان رزومه‌های دریافتی آگهی‌هایتان پیدا کنید و برای دسترسی سریع‌تر، نشان کنید.",
+      actionLabel: "مشاهده رزومه‌های دریافتی",
+      actionTo: paths.employer.ads,
+      secondaryActionLabel: "جست‌وجو در بانک رزومه",
+      secondaryActionTo: paths.employer.resumeBank,
+    };
+  }
+
+  return {
+    title: "هنوز رزومه‌ای نشان نکرده‌اید",
+    description:
+      "رزومه‌های مناسب را از بانک رزومه یا میان رزومه‌های دریافتی آگهی‌هایتان پیدا کنید و برای دسترسی سریع‌تر، نشان کنید.",
+    actionLabel: "انتشار آگهی استخدام",
+    actionTo: paths.employer.adsCreate,
+    actionIcon: "svg:bag-1",
+    secondaryActionLabel: "",
+    secondaryActionTo: "",
+  };
+});
 
 const activeTab = ref<BookmarkTab>("ad");
 
