@@ -1,7 +1,12 @@
 import type { LocationQuery } from 'vue-router'
 import type { JobFiltersModel } from '~/types/job-filters'
 import { createEmptyJobFilters } from '~/types/job-filters'
+import type { ISelectItem } from '~/types/select-item'
 import { normalizeFilterId } from '~/utils/job-filters-query'
+import {
+  provinceIdsToQueryValue,
+  resolveProvinceIdsFromQueryValue,
+} from '~/utils/province-filter-query'
 
 export type AdsSort = 'newest' | 'salary'
 
@@ -48,6 +53,7 @@ export function adsFiltersToRouteQuery(
   filters: JobFiltersModel,
   page: number,
   sort: AdsSort = 'newest',
+  provinces: ISelectItem[] = [],
 ): Record<string, string> {
   const query: Record<string, string> = {}
 
@@ -66,8 +72,8 @@ export function adsFiltersToRouteQuery(
   const group = joinParam(filters.jobGroups)
   if (group) query.group = group
 
-  const city = joinParam(filters.cities)
-  if (city) query.city = city
+  const province = provinceIdsToQueryValue(filters.provinces, provinces)
+  if (province) query.province = province
 
   const salary = joinParam(filters.salaries)
   if (salary) query.salary = salary
@@ -81,7 +87,10 @@ export function adsFiltersToRouteQuery(
   return query
 }
 
-export function routeQueryToAdsFilters(query: RouteQuery): {
+export function routeQueryToAdsFilters(
+  query: RouteQuery,
+  provinces: ISelectItem[] = [],
+): {
   filters: JobFiltersModel
   page: number
   sort: AdsSort
@@ -95,7 +104,10 @@ export function routeQueryToAdsFilters(query: RouteQuery): {
   filters.titleSearch = typeof q === 'string' ? q : (q?.[0] ?? '')
 
   filters.jobGroups = splitParam(queryValue(query.group))
-  filters.cities = splitParam(queryValue(query.city))
+  filters.provinces = resolveProvinceIdsFromQueryValue(
+    queryValue(query.province),
+    provinces,
+  )
   filters.salaries = splitParam(queryValue(query.salary))
   filters.workHistory = splitParam(queryValue(query.experience))
   filters.benefits = splitParam(queryValue(query.benefits))

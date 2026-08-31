@@ -13,14 +13,13 @@ import {
   validateCreateAdForm,
 } from '~/utils/create-ad-payload'
 import type { ISelectItem } from '~/types/select-item'
-import { provinces } from '~/feeders/provinces'
 import {
   isPaidAdCity,
   PAID_AD_CITY_PRICE,
 } from '~/pages/dashboard/employer/ads/utils/paid-ad-cities'
 
 const LOOKUP_KEYS =
-  'job_titles,employment_types,experience_levels,salary_ranges,benefits,proficiencies,education_levels,genders,accounting_programs'
+  'job_titles,employment_types,experience_levels,salary_ranges,benefits,proficiencies,education_levels,genders,accounting_programs,provinces'
 
 /** The API stores lookup labels on the ad; map them back to option values. */
 function reverseLookup(
@@ -87,6 +86,7 @@ export function useCreateAdForm(
   const educationLevels = items('education_levels')
   const genders = items('genders')
   const accountingPrograms = items('accounting_programs')
+  const provinces = items('provinces')
 
   function applyEmploymentTypeFromQuery() {
     if (isEdit.value) return
@@ -140,7 +140,7 @@ export function useCreateAdForm(
 
       const provinceId =
         company.province_id ??
-        (provinces.find((item) => item.label === company.province_name)
+        (provinces.value.find((item) => item.label === company.province_name)
           ?.value as number | undefined) ??
         null
 
@@ -156,7 +156,7 @@ export function useCreateAdForm(
 
       form.value.province = provinceId
       form.value.province_name =
-        provinces.find((item) => item.value === provinceId)?.label ??
+        provinces.value.find((item) => item.value === provinceId)?.label ??
         company.province_name ??
         ''
 

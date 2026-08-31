@@ -118,7 +118,7 @@
           v-if="benefitItems.length"
           class="rounded-2xl border border-gray-default bg-white p-5 text-right md:p-6"
         >
-          <AdSectionTitle title="مزایای سازمان:" />
+          <AdSectionTitle title="مزایای شغلی:" />
 
           <div class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <div
@@ -356,11 +356,11 @@ const expireDateLabel = computed(() => {
 const overviewItems = computed(() => {
   const website = props.ad.company?.website;
   const items = [
-    {
-      label: "نوع آگهی",
-      value: displayValue(props.ad.type, "استخدامی"),
-      icon: "svg:user-search-2",
-    },
+    // {
+    //   label: "نوع آگهی",
+    //   value: displayValue(props.ad.type, "استخدامی"),
+    //   icon: "svg:user-search-2",
+    // },
     {
       label: "نوع قرارداد",
       value: displayValue(props.ad.employment_type),
@@ -410,11 +410,11 @@ const overviewItems = computed(() => {
 
 const requirementStats = computed(() =>
   [
-    {
-      label: "نوع آگهی:",
-      value: displayValue(props.ad.type ?? props.ad.category, "استخدامی"),
-      icon: "svg:ad-req-user-search",
-    },
+    // {
+    //   label: "نوع آگهی:",
+    //   value: displayValue(props.ad.type ?? props.ad.category, "استخدامی"),
+    //   icon: "svg:ad-req-user-search",
+    // },
     {
       label: "نوع قرارداد:",
       value: displayValue(props.ad.employment_type),

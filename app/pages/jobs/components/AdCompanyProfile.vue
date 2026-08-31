@@ -26,7 +26,7 @@
       </template>
 
       <template v-if="company?.advantages">
-        <AdSectionTitle class="mt-8" title="مزایای سازمان" />
+        <AdSectionTitle class="mt-8" title="مزایای شغلی" />
         <div
           class="prose mt-4 max-w-none text-right text-base leading-[1.7] text-text-secondary"
           v-html="company.advantages"
@@ -58,10 +58,7 @@
       >
         {{ fullAddress }}
       </p>
-      <div
-        v-if="company?.static_map"
-        class="mt-4 overflow-hidden rounded-lg"
-      >
+      <div v-if="company?.static_map" class="mt-4 overflow-hidden rounded-lg">
         <img
           :src="company.static_map"
           alt="موقعیت مکانی"

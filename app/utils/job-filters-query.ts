@@ -1,6 +1,11 @@
 import type { LocationQuery } from 'vue-router'
 import type { JobFiltersModel } from '~/types/job-filters'
 import { createEmptyJobFilters } from '~/types/job-filters'
+import type { ISelectItem } from '~/types/select-item'
+import {
+  provinceIdsToQueryValue,
+  resolveProvinceIdsFromQueryValue,
+} from '~/utils/province-filter-query'
 
 type RouteQuery = LocationQuery | Record<string, string | string[] | undefined>
 
@@ -35,6 +40,7 @@ function splitParam(value: string | string[] | undefined): Array<string | number
 export function jobFiltersToRouteQuery(
   filters: JobFiltersModel,
   page: number,
+  provinces: ISelectItem[] = [],
 ): Record<string, string> {
   const query: Record<string, string> = {}
 
@@ -52,8 +58,8 @@ export function jobFiltersToRouteQuery(
   const jobGroup = joinParam(filters.jobGroups)
   if (jobGroup) query.job_group = jobGroup
 
-  const city = joinParam(filters.cities)
-  if (city) query.city = city
+  const province = provinceIdsToQueryValue(filters.provinces, provinces)
+  if (province) query.province = province
 
   const salaryRange = joinParam(filters.salaries)
   if (salaryRange) query.salary_range = salaryRange
@@ -67,7 +73,10 @@ export function jobFiltersToRouteQuery(
   return query
 }
 
-export function routeQueryToJobFilters(query: RouteQuery): {
+export function routeQueryToJobFilters(
+  query: RouteQuery,
+  provinces: ISelectItem[] = [],
+): {
   filters: JobFiltersModel
   page: number
 } {
@@ -80,7 +89,10 @@ export function routeQueryToJobFilters(query: RouteQuery): {
   filters.titleSearch = typeof search === 'string' ? search : (search?.[0] ?? '')
 
   filters.jobGroups = splitParam(queryValue(query.job_group))
-  filters.cities = splitParam(queryValue(query.city))
+  filters.provinces = resolveProvinceIdsFromQueryValue(
+    queryValue(query.province),
+    provinces,
+  )
   filters.salaries = splitParam(queryValue(query.salary_range))
   filters.workHistory = splitParam(queryValue(query.experience))
   filters.benefits = splitParam(queryValue(query.advantages))

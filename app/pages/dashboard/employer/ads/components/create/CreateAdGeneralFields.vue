@@ -150,7 +150,6 @@
 <script setup lang="ts">
 import Titr from "~/features/panel/cv/Titr.vue";
 import CreateAdPartTimeSection from "./CreateAdPartTimeSection.vue";
-import { provinces } from "~/feeders/provinces";
 import { findPaidAdCityName, isPaidAdCity } from "~/pages/dashboard/employer/ads/utils/paid-ad-cities";
 import type {
   CreateAdFormErrors,
@@ -173,7 +172,8 @@ const props = defineProps<{
   loadCities: (provinceId: number) => Promise<void>;
 }>();
 
-const provinceOptions = provinces;
+const { items } = useLookups(["provinces"]);
+const provinceOptions = items("provinces");
 
 const paidCityName = computed(() =>
   findPaidAdCityName(props.form.city_name),
@@ -200,7 +200,7 @@ const selectedProvince = computed({
     const provinceId = value == null ? null : Number(value);
     props.form.province = provinceId;
     props.form.province_name =
-      provinceOptions.find((item) => item.value === provinceId)?.label ?? "";
+      provinceOptions.value.find((item) => item.value === provinceId)?.label ?? "";
     props.form.city = null;
     props.form.city_name = "";
     if (provinceId) await props.loadCities(provinceId);

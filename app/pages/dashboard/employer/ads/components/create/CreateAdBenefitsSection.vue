@@ -1,6 +1,6 @@
 <template>
   <section class="rounded-2xl border border-gray-default bg-white p-4">
-    <Titr>مزایای سازمان</Titr>
+    <Titr>مزایای شغلی</Titr>
 
     <FilterCheckboxList
       v-model="form.company_advantages"

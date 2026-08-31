@@ -1,7 +1,4 @@
-import type { Ad, AdList } from '~/types/ad'
-import { provinces } from '~/feeders/provinces'
-import type { ISelectItem } from '~/types/select-item'
-import { normalizeFilterId } from '~/utils/job-filters-query'
+import type { Ad } from '~/types/ad'
 
 const EMPLOYMENT_TYPE_LABELS: Record<string, string> = {
   full_time: 'تمام وقت',
@@ -10,6 +7,40 @@ const EMPLOYMENT_TYPE_LABELS: Record<string, string> = {
   project: 'پروژه',
   remote: 'دورکاری',
   internship: 'کارآموزی',
+}
+
+function normalizeEmploymentTypeText(value?: string | number | null): string {
+  return trimText(value)
+    .replace(/ي/g, 'ی')
+    .replace(/ك/g, 'ک')
+    .toLowerCase()
+    .replace(/[\s\u200c-]+/g, '_')
+}
+
+export function normalizeEmploymentTypeKey(
+  type?: string | number | null,
+): string {
+  const raw = trimText(type)
+  if (!raw) return ''
+
+  const normalized = normalizeEmploymentTypeText(raw)
+  if (EMPLOYMENT_TYPE_LABELS[normalized]) return normalized
+
+  for (const [key, label] of Object.entries(EMPLOYMENT_TYPE_LABELS)) {
+    if (normalizeEmploymentTypeText(label) === normalized) return key
+  }
+
+  return normalized
+}
+
+export function matchesEmploymentType(
+  adEmploymentType: string | undefined,
+  filterType: string,
+): boolean {
+  return (
+    normalizeEmploymentTypeKey(adEmploymentType) ===
+    normalizeEmploymentTypeKey(filterType)
+  )
 }
 
 type AdSeoSource = Pick<
@@ -30,12 +61,7 @@ export function employmentTypeSeoLabel(type?: string | number | null): string {
   const raw = trimText(type)
   if (!raw) return ''
 
-  const key = raw
-    .replace(/ي/g, 'ی')
-    .replace(/ك/g, 'ک')
-    .toLowerCase()
-    .replace(/[\s-]+/g, '_')
-
+  const key = normalizeEmploymentTypeKey(raw)
   return EMPLOYMENT_TYPE_LABELS[key] || raw
 }
 
@@ -79,56 +105,4 @@ export function getCityAdsListSeoMeta(
     title: `استخدام حسابدار در ${name} | جدیدترین فرصت‌های شغلی حسابداری`,
     description: `جدیدترین آگهی‌های استخدام حسابدار در ${name} را در های‌حساب ببینید؛ رزومه بسازید و درخواست‌تان را همین الان ارسال کنید.`,
   }
-}
-
-export function resolveAdsListLocationLabel(
-  selectedCityIds: Array<string | number>,
-  citiesByProvince: Record<number, ISelectItem[]>,
-  ads: Array<Pick<AdList, 'city_name'>>,
-): string {
-  const selectedIds = selectedCityIds.map((id) => String(normalizeFilterId(id)))
-  if (!selectedIds.length) return ''
-
-  if (selectedIds.length === 1) {
-    const cityId = selectedIds[0]
-    if (!cityId) return ''
-
-    for (const cities of Object.values(citiesByProvince)) {
-      const match = cities.find(
-        (city) => String(normalizeFilterId(city.value)) === cityId,
-      )
-      if (match?.label) return trimText(match.label)
-    }
-
-    const names = [
-      ...new Set(ads.map((ad) => trimText(ad.city_name)).filter(Boolean)),
-    ]
-    return names[0] ?? ''
-  }
-
-  const selectedSet = new Set(selectedIds)
-  const matchedProvinceLabels: string[] = []
-  const accountedIds = new Set<string>()
-
-  for (const province of provinces) {
-    const cities = citiesByProvince[province.value as number]
-    if (!cities?.length) continue
-
-    const cityIds = cities.map((city) => String(normalizeFilterId(city.value)))
-    const selectedInProvince = cityIds.filter((id) => selectedSet.has(id))
-    if (!selectedInProvince.length) continue
-    if (selectedInProvince.length !== cityIds.length) return ''
-
-    matchedProvinceLabels.push(province.label)
-    cityIds.forEach((id) => accountedIds.add(id))
-  }
-
-  if (
-    matchedProvinceLabels.length === 1 &&
-    accountedIds.size === selectedSet.size
-  ) {
-    return matchedProvinceLabels[0] ?? ''
-  }
-
-  return ''
 }

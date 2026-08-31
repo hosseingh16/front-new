@@ -13,7 +13,6 @@ import {
   toGalleryPayload,
   toMediaPayload,
 } from '~/types/company-profile-form'
-import { provinces } from '~/feeders/provinces'
 import type { ISelectItem } from '~/types/select-item'
 
 export type CompanyMediaCollection = 'logo' | 'cover' | 'gallery'
@@ -80,6 +79,7 @@ function fillFormFromCompany(
     province_id?: number | null
     city_id?: number | null
   },
+  provinces: ISelectItem[],
 ) {
   form.id = company.id ?? null
   form.name = company.name ?? ''
@@ -215,9 +215,10 @@ export function useCompanyProfileForm() {
   const savingSection = ref<CompanyProfileSectionKey | null>(null)
   const uploading = ref(false)
 
-  const { items } = useLookups('industries,company_sizes')
+  const { items } = useLookups('industries,company_sizes,provinces')
   const activityOptions = items('industries')
   const sizeOptions = items('company_sizes')
+  const provinceOptions = items('provinces')
 
   const cityOptions = ref<ISelectItem[]>([])
   const citiesLoading = ref(false)
@@ -294,7 +295,7 @@ export function useCompanyProfileForm() {
       }
 
       if (company) {
-        fillFormFromCompany(form.value, company)
+        fillFormFromCompany(form.value, company, provinceOptions.value)
         await syncLocationFields()
       } else {
         Object.assign(form.value, createEmptyCompanyProfileForm())
@@ -335,7 +336,7 @@ export function useCompanyProfileForm() {
       }
 
       if (result.data) {
-        fillFormFromCompany(form.value, result.data)
+        fillFormFromCompany(form.value, result.data, provinceOptions.value)
         await syncLocationFields()
       }
 

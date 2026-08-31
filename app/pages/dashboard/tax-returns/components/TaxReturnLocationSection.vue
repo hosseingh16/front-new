@@ -51,7 +51,6 @@
 <script setup lang="ts">
 import Titr from '~/features/panel/cv/Titr.vue'
 import CompanyLocationMapPicker from '~/pages/dashboard/employer/company/components/CompanyLocationMapPicker.vue'
-import { provinces } from '~/feeders/provinces'
 import type {
   TaxReturnFormErrors,
   TaxReturnFormModel,
@@ -70,7 +69,8 @@ const emit = defineEmits<{
   select: [coords: { lat: number; long: number }]
 }>()
 
-const provinceOptions = provinces
+const { items } = useLookups(['provinces'])
+const provinceOptions = items('provinces')
 
 const selectedProvince = computed({
   get: () => props.form.province ?? undefined,
@@ -78,7 +78,7 @@ const selectedProvince = computed({
     const provinceId = value == null ? null : Number(value)
     props.form.province = provinceId
     props.form.province_name =
-      provinceOptions.find((item) => item.value === provinceId)?.label ?? ''
+      provinceOptions.value.find((item) => item.value === provinceId)?.label ?? ''
     props.form.city = null
     props.form.city_name = ''
     if (provinceId) await props.loadCities(provinceId)

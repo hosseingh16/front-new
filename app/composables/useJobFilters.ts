@@ -1,30 +1,23 @@
-import { provinces } from '~/feeders/provinces'
 import {
   createEmptyJobFilters,
+  JOB_FILTERS_LOOKUP_KEYS,
   type JobFiltersModel,
-  type LocationTreeItem,
-  type ProvinceCheckState,
 } from '~/types/job-filters'
 import { normalizeFilterId } from '~/utils/job-filters-query'
 
 export function useJobFilters(model?: Ref<JobFiltersModel>) {
-  const { items } = useLookups([
-    'job_titles',
-    'employment_types',
-    'experience_levels',
-    'salary_ranges',
-    'benefits',
-  ])
+  const { items } = useLookups(JOB_FILTERS_LOOKUP_KEYS)
 
   const jobTitleSearch = ref('')
   const jobGroupSearch = ref('')
-  const citySearch = ref('')
+  const provinceSearch = ref('')
 
   const jobTitles = items('job_titles')
   const employmentTypes = items('employment_types')
   const experienceLevels = items('experience_levels')
   const salaryRanges = items('salary_ranges')
   const benefits = items('benefits')
+  const provinces = items('provinces')
 
   const selectedJobTypes = ref<Array<string | number>>([])
   const selectedJobGroups = ref<Array<string | number>>([])
@@ -32,11 +25,6 @@ export function useJobFilters(model?: Ref<JobFiltersModel>) {
   const selectedWorkHistory = ref<Array<string | number>>([])
   const selectedContractTypes = ref<Array<string | number>>([])
   const selectedBenefits = ref<Array<string | number>>([])
-
-  const expandedProvinces = ref<number[]>([])
-  const { citiesByProvince, citiesLoading, ensureProvinceCities } =
-    useProvinceCities()
-  const selectedCities = ref<Array<string | number>>([])
   const selectedProvinces = ref<number[]>([])
 
   const adTypeOptions = computed(() =>
@@ -57,35 +45,10 @@ export function useJobFilters(model?: Ref<JobFiltersModel>) {
     return jobTitles.value.filter((group) => group.label.includes(query))
   })
 
-  const filteredLocationTree = computed<LocationTreeItem[]>(() => {
-    const query = citySearch.value.trim()
-
-    if (!query) {
-      return provinces.map((province) => ({
-        province,
-        cities: citiesByProvince.value[province.value as number] ?? [],
-        forceExpand: false,
-      }))
-    }
-
-    return provinces
-      .map((province) => {
-        const provinceId = province.value as number
-        const cities = citiesByProvince.value[provinceId] ?? []
-        const provinceMatch = province.label.includes(query)
-        const matchingCities = provinceMatch
-          ? cities
-          : cities.filter((city) => city.label.includes(query))
-
-        return {
-          province,
-          cities: matchingCities,
-          forceExpand: matchingCities.length > 0,
-          visible: provinceMatch || matchingCities.length > 0,
-        }
-      })
-      .filter((item) => item.visible)
-      .map(({ province, cities, forceExpand }) => ({ province, cities, forceExpand }))
+  const filteredProvinces = computed(() => {
+    const query = provinceSearch.value.trim()
+    if (!query) return provinces.value
+    return provinces.value.filter((province) => province.label.includes(query))
   })
 
   const activeFilterCount = computed(() => {
@@ -93,7 +56,7 @@ export function useJobFilters(model?: Ref<JobFiltersModel>) {
 
     if (jobTitleSearch.value.trim()) count += 1
     count += selectedJobGroups.value.length
-    count += selectedCities.value.length
+    count += selectedProvinces.value.length
     count += selectedSalaries.value.length
     count += selectedWorkHistory.value.length
     count += selectedContractTypes.value.length
@@ -106,7 +69,6 @@ export function useJobFilters(model?: Ref<JobFiltersModel>) {
     jobTypes: [...selectedJobTypes.value],
     titleSearch: jobTitleSearch.value,
     jobGroups: [...selectedJobGroups.value],
-    cities: [...selectedCities.value],
     provinces: [...selectedProvinces.value],
     salaries: [...selectedSalaries.value],
     workHistory: [...selectedWorkHistory.value],
@@ -119,18 +81,12 @@ export function useJobFilters(model?: Ref<JobFiltersModel>) {
     jobTitleSearch.value = value.titleSearch
     jobGroupSearch.value = ''
     selectedJobGroups.value = value.jobGroups.map(normalizeFilterId)
-    citySearch.value = ''
-    selectedCities.value = value.cities.map(normalizeFilterId)
+    provinceSearch.value = ''
     selectedProvinces.value = [...value.provinces]
     selectedSalaries.value = value.salaries.map(normalizeFilterId)
     selectedWorkHistory.value = value.workHistory.map(normalizeFilterId)
     selectedContractTypes.value = value.contractTypes.map(normalizeFilterId)
     selectedBenefits.value = value.benefits.map(normalizeFilterId)
-  }
-
-  function isCitySelected(cityValue: string | number) {
-    const id = normalizeFilterId(cityValue)
-    return selectedCities.value.some((city) => normalizeFilterId(city) === id)
   }
 
   if (model?.value) {
@@ -158,21 +114,12 @@ export function useJobFilters(model?: Ref<JobFiltersModel>) {
     { deep: true },
   )
 
-  watch(citySearch, async (query) => {
-    if (!query.trim()) return
-    await Promise.all(
-      provinces.map((province) => ensureProvinceCities(province.value as number)),
-    )
-  })
-
   function clearFilters() {
     selectedJobTypes.value = []
     jobTitleSearch.value = ''
     jobGroupSearch.value = ''
     selectedJobGroups.value = []
-    citySearch.value = ''
-    expandedProvinces.value = []
-    selectedCities.value = []
+    provinceSearch.value = ''
     selectedProvinces.value = []
     selectedSalaries.value = []
     selectedWorkHistory.value = []
@@ -182,104 +129,10 @@ export function useJobFilters(model?: Ref<JobFiltersModel>) {
     if (model) model.value = createEmptyJobFilters()
   }
 
-  function provinceCheckState(provinceId: number): ProvinceCheckState {
-    const cities = citiesByProvince.value[provinceId] ?? []
-    if (!cities.length) {
-      return selectedProvinces.value.includes(provinceId) ? 'all' : 'none'
-    }
-
-    const selectedCount = cities.filter((city) =>
-      isCitySelected(city.value),
-    ).length
-
-    if (selectedCount === 0) return 'none'
-    if (selectedCount === cities.length) return 'all'
-    return 'some'
-  }
-
-  function setProvinceIndeterminate(
-    el: Element | ComponentPublicInstance | null,
-    provinceId: number,
-  ) {
-    const input = el instanceof HTMLInputElement ? el : null
-    if (!input) return
-    input.indeterminate = provinceCheckState(provinceId) === 'some'
-  }
-
-  function isProvinceExpanded(item: LocationTreeItem) {
-    if (item.forceExpand) return true
-    return expandedProvinces.value.includes(item.province.value as number)
-  }
-
-  async function toggleProvinceExpand(provinceId: number) {
-    if (expandedProvinces.value.includes(provinceId)) {
-      expandedProvinces.value = expandedProvinces.value.filter((id) => id !== provinceId)
-      return
-    }
-
-    expandedProvinces.value = [...expandedProvinces.value, provinceId]
-    await ensureProvinceCities(provinceId)
-  }
-
-  async function toggleProvince(provinceId: number) {
-    await ensureProvinceCities(provinceId)
-    const cities = citiesByProvince.value[provinceId] ?? []
-    const state = provinceCheckState(provinceId)
-
-    if (state === 'all') {
-      const cityValues = new Set(cities.map((city) => normalizeFilterId(city.value)))
-      selectedCities.value = selectedCities.value.filter(
-        (id) => !cityValues.has(normalizeFilterId(id)),
-      )
-      selectedProvinces.value = selectedProvinces.value.filter((id) => id !== provinceId)
-      return
-    }
-
-    const nextCities = new Set(selectedCities.value.map(normalizeFilterId))
-    for (const city of cities) {
-      nextCities.add(normalizeFilterId(city.value))
-    }
-    selectedCities.value = [...nextCities]
-
-    if (!selectedProvinces.value.includes(provinceId)) {
-      selectedProvinces.value = [...selectedProvinces.value, provinceId]
-    }
-  }
-
-  function toggleCity(
-    cityValue: string | number,
-    provinceId: number,
-    event: Event,
-  ) {
-    const checked = (event.target as HTMLInputElement).checked
-    const id = normalizeFilterId(cityValue)
-
-    if (checked) {
-      if (!isCitySelected(id)) {
-        selectedCities.value = [...selectedCities.value, id]
-      }
-      if (!selectedProvinces.value.includes(provinceId)) {
-        selectedProvinces.value = [...selectedProvinces.value, provinceId]
-      }
-      return
-    }
-
-    selectedCities.value = selectedCities.value.filter(
-      (city) => normalizeFilterId(city) !== id,
-    )
-    const hasSelectedCity = (citiesByProvince.value[provinceId] ?? []).some((city) =>
-      isCitySelected(city.value),
-    )
-
-    if (!hasSelectedCity) {
-      selectedProvinces.value = selectedProvinces.value.filter((id) => id !== provinceId)
-    }
-  }
-
   return {
     jobTitleSearch,
     jobGroupSearch,
-    citySearch,
+    provinceSearch,
     jobTitles,
     employmentTypes,
     experienceLevels,
@@ -291,21 +144,13 @@ export function useJobFilters(model?: Ref<JobFiltersModel>) {
     selectedWorkHistory,
     selectedContractTypes,
     selectedBenefits,
-    selectedCities,
-    citiesLoading,
+    selectedProvinces,
     adTypeOptions,
     contractTypeOptions,
     filteredJobGroups,
-    filteredLocationTree,
+    filteredProvinces,
     activeFilterCount,
     filtersModel,
     clearFilters,
-    provinceCheckState,
-    setProvinceIndeterminate,
-    isProvinceExpanded,
-    toggleProvinceExpand,
-    toggleProvince,
-    toggleCity,
-    isCitySelected,
   }
 }

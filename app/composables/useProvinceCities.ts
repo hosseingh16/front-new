@@ -1,10 +1,12 @@
-import { provinces } from '~/feeders/provinces'
 import type { ISelectItem } from '~/types/select-item'
 
 const inflightByProvince = new Map<number, Promise<void>>()
 
 export function useProvinceCities() {
   const api = useApi()
+  const { items, ensure } = useLookups(['provinces'])
+  const provinceList = items('provinces')
+
   const citiesByProvince = useState<Record<number, ISelectItem[]>>(
     'cities-by-province',
     () => ({}),
@@ -39,8 +41,11 @@ export function useProvinceCities() {
   }
 
   async function ensureAllProvinceCities() {
+    await ensure()
     await Promise.all(
-      provinces.map((province) => ensureProvinceCities(province.value as number)),
+      provinceList.value.map((province) =>
+        ensureProvinceCities(province.value as number),
+      ),
     )
   }
 

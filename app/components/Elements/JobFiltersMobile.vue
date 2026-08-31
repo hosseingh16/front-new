@@ -248,7 +248,7 @@ function chipHasSelection(sectionIndex: number) {
     case 2:
       return filters.selectedJobGroups.length > 0;
     case 3:
-      return filters.selectedCities.length > 0;
+      return filters.selectedProvinces.length > 0;
     case 4:
       return filters.selectedSalaries.length > 0;
     case 5:
@@ -283,6 +283,8 @@ function sectionOptions(sectionIndex: number) {
       return filters.adTypeOptions;
     case 2:
       return filters.jobTitles;
+    case 3:
+      return filters.filteredProvinces;
     case 4:
       return filters.salaryRanges;
     case 5:
@@ -303,7 +305,7 @@ function sectionSelectedValues(sectionIndex: number) {
     case 2:
       return filters.selectedJobGroups;
     case 3:
-      return filters.selectedCities;
+      return filters.selectedProvinces;
     case 4:
       return filters.selectedSalaries;
     case 5:

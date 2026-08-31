@@ -85,13 +85,24 @@ import {
   routeQueryToJobFilters,
 } from '~/utils/job-filters-query'
 import { getCityAdsListSeoMeta } from '~/utils/ad-seo'
+import {
+  useJobFilterProvinceOptions,
+  useResolveProvinceFiltersFromRoute,
+} from '~/composables/useJobFilterProvinceOptions'
 
 const route = useRoute()
 const router = useRouter()
+const provinceOptions = useJobFilterProvinceOptions()
 
-const initialState = routeQueryToJobFilters(route.query)
+const initialState = routeQueryToJobFilters(route.query, provinceOptions.value)
 const jobFilters = ref(initialState.filters)
 const page = ref(initialState.page)
+
+useResolveProvinceFiltersFromRoute(
+  jobFilters,
+  provinceOptions,
+  (query, provinces) => routeQueryToJobFilters(query, provinces).filters,
+)
 const { opportunities, lastPage, loading, initialized, error } = useJobAds(jobFilters, page)
 
 let urlSyncTimer: ReturnType<typeof setTimeout> | null = null
@@ -100,7 +111,11 @@ let syncingFromRoute = false
 function syncRouteQuery() {
   if (syncingFromRoute) return
 
-  const nextQuery = jobFiltersToRouteQuery(jobFilters.value, page.value)
+  const nextQuery = jobFiltersToRouteQuery(
+    jobFilters.value,
+    page.value,
+    provinceOptions.value,
+  )
   if (areRouteQueriesEqual(route.query, nextQuery)) return
 
   syncingFromRoute = true
@@ -144,7 +159,7 @@ watch(
       return
     }
 
-    const next = routeQueryToJobFilters(query)
+    const next = routeQueryToJobFilters(query, provinceOptions.value)
     const filtersJson = JSON.stringify(next.filters)
     const currentJson = JSON.stringify(jobFilters.value)
 
@@ -207,13 +222,7 @@ const faqs = [
   },
 ]
 
-const selectedAds = computed(() =>
-  opportunities.value
-    .filter((opportunity) => opportunity.type === 'ad')
-    .map((opportunity) => opportunity.item),
-)
-
-const selectedLocationName = useAdsListLocationLabel(jobFilters, selectedAds)
+const selectedLocationName = useAdsListLocationLabel(jobFilters)
 
 const jobsListSeo = computed(() =>
   getCityAdsListSeoMeta(selectedLocationName.value, {

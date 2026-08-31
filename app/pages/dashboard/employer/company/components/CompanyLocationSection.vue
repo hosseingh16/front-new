@@ -72,7 +72,6 @@
 import Titr from "~/features/panel/cv/Titr.vue";
 import CompanyLocationMapPicker from "./CompanyLocationMapPicker.vue";
 import CompanySectionActions from "./CompanySectionActions.vue";
-import { provinces } from "~/feeders/provinces";
 import type {
   CompanyProfileFormErrors,
   CompanyProfileFormModel,
@@ -93,7 +92,8 @@ const emit = defineEmits<{
   cancel: [];
 }>();
 
-const provinceOptions = provinces;
+const { items } = useLookups(["provinces"]);
+const provinceOptions = items("provinces");
 
 function onMapSelect(coords: { lat: number; long: number }) {
   props.form.lat = coords.lat;
@@ -106,7 +106,7 @@ const selectedProvince = computed({
     const provinceId = value == null ? null : Number(value);
     props.form.province = provinceId;
     props.form.province_name =
-      provinceOptions.find((item) => item.value === provinceId)?.label ?? "";
+      provinceOptions.value.find((item) => item.value === provinceId)?.label ?? "";
     props.form.city = null;
     props.form.city_name = "";
     if (provinceId) await props.loadCities(provinceId);

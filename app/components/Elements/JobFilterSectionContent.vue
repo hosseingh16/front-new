@@ -38,71 +38,15 @@
 
   <div v-else-if="sectionIndex === 3" class="pb-1">
     <FilterSearchField
-      v-model="filters.citySearch"
-      placeholder="جستجو در شهرها"
+      v-model="filters.provinceSearch"
+      placeholder="جستجو در استان‌ها"
       wrapper-class="mb-3"
     />
-    <div class="max-h-[280px] space-y-2 overflow-y-scroll md:overflow-y-auto overflow-x-hidden">
-      <div
-        v-for="item in filters.filteredLocationTree"
-        :key="item.province.value"
-        class="space-y-2"
-      >
-        <div class="flex items-center gap-2">
-          <input
-            type="checkbox"
-            :checked="filters.provinceCheckState(item.province.value as number) === 'all'"
-            :ref="(el) => filters.setProvinceIndeterminate(el, item.province.value as number)"
-            class="checkbox checkbox-primary p-1.5"
-            @change="filters.toggleProvince(item.province.value as number)"
-          />
-          <span
-            class="flex-1 cursor-pointer text-text-tertiary"
-            @click="filters.toggleProvinceExpand(item.province.value as number)"
-          >
-            {{ item.province.label }}
-          </span>
-          <button
-            type="button"
-            class="shrink-0 p-0.5"
-            @click="filters.toggleProvinceExpand(item.province.value as number)"
-          >
-            <icons-chevron
-              class="transition-transform"
-              :class="{ 'rotate-180': filters.isProvinceExpanded(item) }"
-              color="#757575"
-            />
-          </button>
-        </div>
-        <div v-if="filters.isProvinceExpanded(item)" class="me-6 space-y-2">
-          <p
-            v-if="filters.citiesLoading[item.province.value as number]"
-            class="text-xs text-text-passive"
-          >
-            در حال بارگذاری...
-          </p>
-          <div
-            v-for="city in item.cities"
-            :key="city.value"
-            class="flex items-center gap-2 px-2"
-          >
-            <input
-              type="checkbox"
-              :checked="filters.isCitySelected(city.value)"
-              class="checkbox checkbox-primary p-1.5"
-              @change="
-                filters.toggleCity(
-                  city.value,
-                  item.province.value as number,
-                  $event,
-                )
-              "
-            />
-            <span class="text-text-tertiary">{{ city.label }}</span>
-          </div>
-        </div>
-      </div>
-    </div>
+    <FilterCheckboxList
+      v-model="filters.selectedProvinces"
+      :options="filters.filteredProvinces"
+      list-class="pb-1"
+    />
   </div>
 
   <FilterCheckboxList

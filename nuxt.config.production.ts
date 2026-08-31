@@ -1,5 +1,11 @@
 import tailwindcss from "@tailwindcss/vite";
 
+const nonPagePatterns = [
+  "!**/components/**",
+  "!**/data/**",
+  "!**/utils/**",
+] as const;
+
 export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
 
@@ -62,6 +68,17 @@ export default defineNuxtConfig({
   site: {
     url: "https://admin.hihesab.com",
     name: "های‌حساب",
+  },
+  pages: {
+    pattern: ["**/*.{vue,js,jsx,mjs,ts,tsx}", ...nonPagePatterns],
+  },
+  sitemap: {
+    exclude: [
+      "/dashboard/**",
+      new RegExp("/.+/components/.*"),
+      new RegExp("/.+/data/.*"),
+      new RegExp("/.+/utils/.*"),
+    ],
   },
 
   robots: {

@@ -17,7 +17,7 @@ export const COMPANY_FILTER_SECTIONS: CompanyFilterSection[] = [
   { title: 'موقعیت مکانی', icon: 'location-6' },
   { title: 'نوع فعالیت', icon: 'bag-4' },
   { title: 'اندازه شرکت', icon: 'users-1' },
-  { title: 'مزایای سازمانی', icon: 'benefits' },
+  { title: 'مزایای شغلی', icon: 'benefits' },
 ]
 
 export function createEmptyCompanyFilters(): CompanyFiltersModel {

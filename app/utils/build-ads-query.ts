@@ -22,8 +22,8 @@ export function buildAdsQueryFromFilters(
   if (search) titleParts.push(search)
   if (titleParts.length) query.title = titleParts.join(',')
 
-  const city = joinParam(filters.cities)
-  if (city) query.city = city
+  const province = joinParam(filters.provinces)
+  if (province) query.province = province
 
   const salaryRange = joinParam(filters.salaries)
   if (salaryRange) query.salary_range = salaryRange

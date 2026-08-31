@@ -86,6 +86,11 @@ import {
   type AdsSort,
 } from "~/utils/ads-filters-query";
 import { areRouteQueriesEqual } from "~/utils/job-filters-query";
+import { sortAds } from "~/utils/sort-ads";
+import {
+  useJobFilterProvinceOptions,
+  useResolveProvinceFiltersFromRoute,
+} from "~/composables/useJobFilterProvinceOptions";
 
 definePageMeta({
   layout: "dashboard",
@@ -93,15 +98,23 @@ definePageMeta({
 
 const route = useRoute();
 const router = useRouter();
+const provinceOptions = useJobFilterProvinceOptions();
 
-const initialState = routeQueryToAdsFilters(route.query);
+const initialState = routeQueryToAdsFilters(route.query, provinceOptions.value);
 const jobFilters = ref(initialState.filters);
 const page = ref(initialState.page);
 const sort = ref<AdsSort>(initialState.sort);
 
-const { opportunities, lastPage, loading, initialized, error } = useJobAds(
+useResolveProvinceFiltersFromRoute(
+  jobFilters,
+  provinceOptions,
+  (query, provinces) => routeQueryToAdsFilters(query, provinces).filters,
+);
+
+const { opportunities, lastPage, total, loading, initialized, error } = useJobAds(
   jobFilters,
   page,
+  sort,
 );
 
 let urlSyncTimer: ReturnType<typeof setTimeout> | null = null;
@@ -113,18 +126,10 @@ const ads = computed(() =>
     .map((opportunity) => opportunity.item),
 );
 
-const sortedAds = computed(() => {
-  const list = [...ads.value];
-
-  if (sort.value === "salary") {
-    return list.sort((a, b) => Number(b.salary) - Number(a.salary));
-  }
-
-  return list.sort((a, b) => Number(b.publish_date) - Number(a.publish_date));
-});
+const sortedAds = computed(() => sortAds(ads.value, sort.value));
 
 const paginatedAds = computed<AdList[]>(() => sortedAds.value);
-const totalCount = computed(() => sortedAds.value.length);
+const totalCount = computed(() => total.value || sortedAds.value.length);
 
 function syncRouteQuery() {
   if (syncingFromRoute) return;
@@ -133,6 +138,7 @@ function syncRouteQuery() {
     jobFilters.value,
     page.value,
     sort.value,
+    provinceOptions.value,
   );
   if (areRouteQueriesEqual(route.query, nextQuery)) return;
 
@@ -155,6 +161,9 @@ watch(page, () => {
 });
 
 watch(sort, () => {
+  if (!syncingFromRoute && page.value !== 1) {
+    page.value = 1;
+  }
   syncRouteQuery();
 });
 
@@ -183,7 +192,7 @@ watch(
       return;
     }
 
-    const next = routeQueryToAdsFilters(route.query);
+    const next = routeQueryToAdsFilters(route.query, provinceOptions.value);
     const filtersJson = JSON.stringify(next.filters);
     const currentJson = JSON.stringify(jobFilters.value);
 

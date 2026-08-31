@@ -44,15 +44,7 @@
         </p>
       </div>
       <div class="mt-6 flex items-center justify-between">
-        <m-toggle
-          v-model="jobType"
-          :items="[
-            { title: 'همه', value: 'همه' },
-            { title: 'تمام وقت', value: 'تمام وقت' },
-            { title: 'پاره وقت', value: 'پاره وقت' },
-            { title: 'پروژه', value: 'پروژه' },
-          ]"
-        />
+        <m-toggle v-model="jobType" :items="HOME_JOB_TYPE_OPTIONS" />
         <button
           class="btn btn-outline text-primary-500 max-sm:hidden"
           @click="navigateTo('/jobs')"
@@ -291,12 +283,22 @@ import type { Opportunity } from "~/types/opportunity";
 import FaqSection from "~/components/Elements/FaqSection.vue";
 import type { AccountRole } from "~/features/account/types";
 import { paths } from "~/routes";
+import { matchesEmploymentType } from "~/utils/ad-seo";
+
+type HomeJobType = "all" | "full_time" | "part_time" | "project_based";
+
+const HOME_JOB_TYPE_OPTIONS: Array<{ title: string; value: HomeJobType }> = [
+  { title: "همه", value: "all" },
+  { title: "تمام وقت", value: "full_time" },
+  { title: "پاره وقت", value: "part_time" },
+  { title: "پروژه", value: "project_based" },
+];
 
 // Variables
 const opportunities = ref<Opportunity[]>([]);
 const opportunitiesLoading = ref(false);
 const posts = ref<any[]>([]);
-const jobType = ref("همه");
+const jobType = ref<HomeJobType>("all");
 // const testimonials: Testimonial[] = [
 //   {
 //     text: "ما دنبال یک حسابدار دقیق و با‌تجربه بودیم. در این سایت خیلی راحت آگهی گذاشتیم. رزومه‌هایی که دریافت کردیم دقیق و فیلترشده بودند و سریع به نتیجه رسیدیم.",
@@ -453,31 +455,38 @@ const getPosts = async () => {
 };
 function filterOpportunities(
   items: Opportunity[],
-  type: string,
+  type: HomeJobType,
 ): Opportunity[] {
-  if (type === "پروژه") {
-    return items.filter((item) => item.type === "project");
+  if (type === "project_based") {
+    return items.filter(
+      (item) =>
+        item.type === "project" ||
+        (item.type === "ad" &&
+          matchesEmploymentType(
+            (item.item as AdList).employment_type,
+            "project_based",
+          )),
+    );
   }
 
-  if (type === "همه") {
+  if (type === "all") {
     return items;
   }
 
   return items.filter(
     (item) =>
-      item.type === "ad" && (item.item as AdList).employment_type === type,
+      item.type === "ad" &&
+      matchesEmploymentType((item.item as AdList).employment_type, type),
   );
 }
 
-const getOpportunities = async (type: string) => {
+const getOpportunities = async (type: HomeJobType) => {
   opportunitiesLoading.value = true;
 
   try {
     const query: Record<string, string | undefined> = {};
 
-    if (type === "پروژه") {
-      query.employment_type = "project_based";
-    } else if (type !== "همه") {
+    if (type !== "all") {
       query.employment_type = type;
     }
 

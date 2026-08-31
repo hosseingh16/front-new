@@ -1,39 +1,18 @@
 import type { Ref } from 'vue'
-import type { AdList } from '~/types/ad'
-import type { JobFiltersModel } from '~/types/job-filters'
-import { resolveAdsListLocationLabel } from '~/utils/ad-seo'
+import { JOB_FILTERS_LOOKUP_KEYS, type JobFiltersModel } from '~/types/job-filters'
 
-export function useAdsListLocationLabel(
-  filters: Ref<JobFiltersModel>,
-  ads: Ref<Array<Pick<AdList, 'city_name'>>>,
-) {
-  const { citiesByProvince, ensureAllProvinceCities } = useProvinceCities()
-  const selectedCityIds = computed(() => filters.value.cities)
+export function useAdsListLocationLabel(filters: Ref<JobFiltersModel>) {
+  const { items } = useLookups(JOB_FILTERS_LOOKUP_KEYS)
+  const provinces = items('provinces')
 
-  useAsyncData(
-    () => `ads-list-location-${selectedCityIds.value.join(',')}`,
-    async () => {
-      if (!selectedCityIds.value.length) return true
+  return computed(() => {
+    const selectedProvinceIds = filters.value.provinces
+    if (selectedProvinceIds.length !== 1) return ''
 
-      const alreadyResolved = resolveAdsListLocationLabel(
-        selectedCityIds.value,
-        citiesByProvince.value,
-        [],
-      )
-      if (alreadyResolved) return true
+    const match = provinces.value.find(
+      (province) => province.value === selectedProvinceIds[0],
+    )
 
-      await ensureAllProvinceCities()
-      return true
-    },
-    { watch: [selectedCityIds] },
-  )
-
-  return computed(() =>
-    resolveAdsListLocationLabel(
-      selectedCityIds.value,
-      citiesByProvince.value,
-      ads.value,
-    ),
-  )
+    return match?.label ?? ''
+  })
 }
-
