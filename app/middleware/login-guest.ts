@@ -1,8 +1,13 @@
-import { paths } from '~/routes'
+import {
+  buildEnteringRoute,
+  enteringFromAuthQuery,
+  resolvePostLoginLocation,
+} from '~/utils/entering-route'
 
 /**
- * Keep /login for guests. Authenticated users go to the dashboard,
- * except when finishing role selection (?step=5).
+ * Keep /login for guests. Authenticated users with a role leave for the CTA
+ * destination or dashboard. Users without a role stay for signup, unless a
+ * CTA already implies their role — then they go through /entering.
  */
 export default defineNuxtRouteMiddleware(async (to) => {
   const { isAuthenticated, refreshIdentity } = useSanctumAuth()
@@ -20,14 +25,13 @@ export default defineNuxtRouteMiddleware(async (to) => {
   const { needsRoleSelection, ensureUserLoaded } = useRoleGate()
   await ensureUserLoaded()
 
-  if (to.query.step === '5' && needsRoleSelection.value) {
+  if (needsRoleSelection.value) {
+    const entering = enteringFromAuthQuery(to.query)
+    if (entering?.role) {
+      return navigateTo(buildEnteringRoute(entering), { replace: true })
+    }
     return
   }
 
-  const redirect =
-    typeof to.query.redirect === 'string' && to.query.redirect.startsWith('/')
-      ? to.query.redirect
-      : paths.dashboard
-
-  return navigateTo(redirect, { replace: true })
+  return navigateTo(resolvePostLoginLocation(to.query, true), { replace: true })
 })

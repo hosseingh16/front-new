@@ -31,26 +31,34 @@
 
           <h2
             id="ad-resume-incomplete-title"
-            class="mt-4 font-yb-bold text-[21px] leading-[1.7] text-text-primary"
+            class="mt-4 font-yb-bold text-[21px] leading-[1.7] text-text-primay"
           >
             تکمیل اطلاعات پایه رزومه
           </h2>
 
           <p class="mt-2 max-w-md text-base leading-[1.7] text-text-tertiary">
-            برای ارسال رزومه، ابتدا باید اطلاعات پایه خود را در رزومه‌ساز تکمیل
-            کنید.
+            برای ارسال رزومه به این آگهی، ابتدا باید اطلاعات پایه رزومه خود را در
+            رزومه‌ساز تکمیل کنید.
           </p>
         </div>
       </div>
 
-      <NuxtLink
-        to="/dashboard/cv"
-        class="btn btn-primary mt-6 flex h-10 w-full gap-1"
-        @click="closeModal"
-      >
-        رفتن به رزومه‌ساز
-        <Icon name="material-symbols:chevron-left" size="24" class="size-6 shrink-0" />
-      </NuxtLink>
+      <div class="mt-6 grid grid-cols-2 gap-3">
+        <NuxtLink
+          to="/dashboard/cv"
+          class="btn btn-primary flex h-10 w-full items-center justify-center"
+          @click="closeModal"
+        >
+          رفتن به رزومه‌ساز
+        </NuxtLink>
+        <button
+          type="button"
+          class="btn btn-outline h-10 w-full border-gray-200 text-text-tertiary"
+          @click="closeModal"
+        >
+          انصراف
+        </button>
+      </div>
     </div>
   </dialog>
 </template>

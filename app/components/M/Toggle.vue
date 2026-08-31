@@ -2,6 +2,7 @@
   <!-- FORM MODE -->
   <Field v-if="name" :name="name" v-slot="{ value, setValue, errorMessage }">
     <div
+      :data-field="name"
       class="gap-1 rounded-xl border border-gray-default bg-surface-soft p-1 [&>.btn]:h-8 [&>.btn]:text-sm"
       :class="sameWidth ? 'grid' : 'flex'"
       :style="sameWidth ? gridStyle : ''"

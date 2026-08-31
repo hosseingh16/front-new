@@ -82,10 +82,10 @@ import AdsSortToggle from "~/pages/ad/components/AdsSortToggle.vue";
 import type { AdList } from "~/types/ad";
 import {
   adsFiltersToRouteQuery,
-  areRouteQueriesEqual,
   routeQueryToAdsFilters,
   type AdsSort,
 } from "~/utils/ads-filters-query";
+import { areRouteQueriesEqual } from "~/utils/job-filters-query";
 
 definePageMeta({
   layout: "dashboard",

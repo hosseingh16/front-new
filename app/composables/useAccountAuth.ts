@@ -1,10 +1,15 @@
 import type { AccountRole } from '~/features/account/types'
-import { paths } from '~/routes'
+import { resolvePostLoginLocation } from '~/utils/entering-route'
+import { resolvePrimaryRole } from '~/utils/user-role'
 
 export type AuthUserStatus = 'new_user' | 'existing_user'
 
 export interface RequestOtpResponse {
   request_id: string
+  message: string
+}
+
+export interface RequestOtpVoiceResponse {
   message: string
 }
 
@@ -20,6 +25,15 @@ function getErrorMessage(err: any, fallback: string) {
   return err?.data?.message || err?.response?._data?.message || err?.message || fallback
 }
 
+function snapshotQuery(query: Record<string, unknown>) {
+  const snap: Record<string, unknown> = {}
+  for (const [key, value] of Object.entries(query)) {
+    if (value == null) continue
+    snap[key] = Array.isArray(value) ? [...value] : value
+  }
+  return snap
+}
+
 export function useAccountAuth() {
   const client = useSanctumClient()
   const { login, refreshIdentity, isAuthenticated } = useSanctumAuth()
@@ -33,6 +47,7 @@ export function useAccountAuth() {
   const hasRole = useState<boolean | null>('account.hasRole', () => null)
   const selectedRole = useState<AccountRole | null>('account.selectedRole', () => null)
   const loading = useState('account.loading', () => false)
+  const voiceSent = useState('account.voiceSent', () => false)
 
   async function requestOtp(phone: string) {
     loading.value = true
@@ -48,9 +63,33 @@ export function useAccountAuth() {
       registrationToken.value = ''
       hasRole.value = null
       selectedRole.value = null
+      voiceSent.value = false
       return res
     } catch (err: any) {
       $toast.error(getErrorMessage(err, 'ارسال کد با خطا مواجه شد'))
+      throw err
+    } finally {
+      loading.value = false
+    }
+  }
+
+  async function requestOtpViaVoice() {
+    if (!requestId.value) {
+      $toast.error('ابتدا شماره موبایل را وارد کنید')
+      throw new Error('request_id missing')
+    }
+
+    loading.value = true
+    try {
+      const res = await client<RequestOtpVoiceResponse>('/api/request-otp-voice', {
+        method: 'POST',
+        body: { request_id: requestId.value },
+      })
+      $toast.success(res.message || 'تماس صوتی برقرار شد')
+      voiceSent.value = true
+      return res
+    } catch (err: any) {
+      $toast.error(getErrorMessage(err, 'ارسال کد با تماس با خطا مواجه شد'))
       throw err
     } finally {
       loading.value = false
@@ -88,8 +127,22 @@ export function useAccountAuth() {
   /**
    * Session login via nuxt-auth-sanctum.
    * Pass redirect=false during signup so onboarding can continue.
-   * When redirect=true, honors ?redirect= from the login URL if it is a safe relative path.
+   * When redirect=true, uses the login URL query captured before login()
+   * so CTA to/role survive if the route changes.
    */
+  async function navigateAfterLogin(intentQuery: Record<string, unknown>) {
+    await refreshIdentity()
+    const { user, refreshUser } = useCurrentUser()
+    await refreshUser()
+
+    await navigateTo(
+      resolvePostLoginLocation(
+        intentQuery,
+        resolvePrimaryRole(user.value) !== null,
+      ),
+    )
+  }
+
   async function loginWithMobile(phone?: string, redirect = true) {
     const username = phone || mobile.value
     if (!username) {
@@ -97,21 +150,19 @@ export function useAccountAuth() {
       throw new Error('mobile missing')
     }
 
+    const intentQuery = snapshotQuery(useRoute().query)
+
     loading.value = true
     try {
       if (!isAuthenticated.value) {
         await login({ username })
       }
       if (redirect) {
-        const route = useRoute()
-        const redirectTo =
-          typeof route.query.redirect === 'string' &&
-          route.query.redirect.startsWith('/') &&
-          !route.query.redirect.startsWith('//')
-            ? route.query.redirect
-            : paths.dashboard
-
-        await navigateTo(redirectTo)
+        await navigateAfterLogin(intentQuery)
+      } else {
+        await refreshIdentity()
+        const { refreshUser } = useCurrentUser()
+        await refreshUser()
       }
     } catch (err: any) {
       $toast.error(getErrorMessage(err, 'ورود با خطا مواجه شد'))
@@ -193,6 +244,7 @@ export function useAccountAuth() {
     status.value = null
     hasRole.value = null
     selectedRole.value = null
+    voiceSent.value = false
   }
 
   return {
@@ -204,7 +256,9 @@ export function useAccountAuth() {
     hasRole,
     selectedRole,
     loading,
+    voiceSent,
     requestOtp,
+    requestOtpViaVoice,
     verifyOtp,
     updateUserRole,
     loginWithMobile,

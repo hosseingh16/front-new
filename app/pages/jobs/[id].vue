@@ -174,7 +174,10 @@
       :ad-id="ad?.id ?? adId"
       @applied="showSuccessModal"
       @apply-failed="onApplyFailedAfterLogin"
+      @resume-incomplete="onResumeIncompleteAfterLogin"
     />
+
+    <AdResumeIncompleteModal ref="incompleteModalRef" />
 
     <dialog
       ref="successDialogRef"
@@ -231,17 +234,22 @@ import BookmarkToggleButton from "~/components/Elements/BookmarkToggleButton.vue
 import FastLoginModal from "~/components/FastLoginModal.vue";
 import AdDetailContent from "./components/AdDetailContent.vue";
 import ReportIssueModal from "./components/ReportIssueModal.vue";
+import AdResumeIncompleteModal from "~/pages/ad/components/AdResumeIncompleteModal.vue";
 import { useAd, useSimilarAds } from "~/composables/useAd";
 import { formatJalaliDate } from "~/utils/format-jalali-date";
 import { getAdDetailSeoMeta } from "~/utils/ad-seo";
 import createAccountIllust from "~/assets/vectors/illustrations/create-account.svg";
 import { paths } from "~/routes";
+import {
+  isResumeBasicInfoComplete,
+  isResumeBasicInfoRequiredError,
+} from "~/utils/api-error";
 
 const route = useRoute();
 const adId = computed(() => String(route.params.id ?? ""));
 
 const { isAuthenticated } = useSanctumAuth();
-const { isEmployer } = useCurrentUser();
+const { isEmployer, user } = useCurrentUser();
 const { needsRoleSelection, ensureRoleForAction } = useRoleGate();
 const { applyToAd, loading: applyLoading } = useApplyToAd();
 const { ad, loading, error, setHasApplied, refresh: refreshAd } = useAd(adId);
@@ -250,6 +258,9 @@ const reportIssueModalRef = ref<InstanceType<typeof ReportIssueModal> | null>(
   null,
 );
 const fastLoginRef = ref<InstanceType<typeof FastLoginModal> | null>(null);
+const incompleteModalRef = ref<InstanceType<
+  typeof AdResumeIncompleteModal
+> | null>(null);
 const successDialogRef = ref<HTMLDialogElement | null>(null);
 const applying = ref(false);
 const isMobile = ref(false);
@@ -316,9 +327,19 @@ function goToJobRequests() {
   navigateTo("/dashboard/my-requests");
 }
 
+function showIncompleteResumeModal() {
+  if (!import.meta.client) return;
+  incompleteModalRef.value?.showModal();
+}
+
 /** Login ok but apply failed — re-fetch ad; button updates only if has_applied is true. */
 async function onApplyFailedAfterLogin() {
   await refreshAd();
+}
+
+async function onResumeIncompleteAfterLogin() {
+  await refreshAd();
+  showIncompleteResumeModal();
 }
 
 async function sendRequest() {
@@ -330,10 +351,17 @@ async function sendRequest() {
     const assigned = await ensureRoleForAction("job_seeker");
     if (!assigned) return;
 
+    if (!isResumeBasicInfoComplete(user.value)) {
+      showIncompleteResumeModal();
+      return;
+    }
+
     await applyToAd(id);
     showSuccessModal();
-  } catch {
-    // toasted in composable
+  } catch (err) {
+    if (isResumeBasicInfoRequiredError(err)) {
+      showIncompleteResumeModal();
+    }
   } finally {
     applying.value = false;
   }

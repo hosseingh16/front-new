@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :data-field="name">
     <Field :name="name" v-slot="{ value, setValue, errorMessage }">
       <p class="text-base relative mb-3">
         {{ label }}

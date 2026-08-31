@@ -13,7 +13,7 @@
 
     <m-dialog ref="experienceModalRef" :width="850">
       <Titr>{{ modalTitle }}</Titr>
-      <form @submit.prevent="onSubmit" class="mt-6">
+      <form id="cv-experience-form" @submit.prevent="onSubmit" class="mt-6">
         <div class="grid md:grid-cols-2 gap-4">
           <m-form-select2
             name="title"
@@ -146,6 +146,7 @@ const emits = defineEmits<{
 const experienceModalRef = ref<InstanceType<typeof Dialog> | null>(null);
 const api = useApi();
 const loading = api.loading;
+const { notifyRequiredFieldsError } = useCvFormValidation();
 
 const nullableString = () => Yup.string().nullable();
 
@@ -240,15 +241,20 @@ const submitIcon = computed(() =>
   props.editMode ? "svg:check-check" : "svg:plus-white",
 );
 
-const onSubmit = handleSubmit((data: Yup.InferType<typeof formSchema>) => {
-  if (props.editMode) {
-    emits("item", {
-      ...data,
-      id: props.itemToEdit.id,
-    });
-  } else {
-    emits("item", data);
-  }
-  experienceModalRef.value?.closeModal();
-});
+const onSubmit = handleSubmit(
+  (data: Yup.InferType<typeof formSchema>) => {
+    if (props.editMode) {
+      emits("item", {
+        ...data,
+        id: props.itemToEdit.id,
+      });
+    } else {
+      emits("item", data);
+    }
+    experienceModalRef.value?.closeModal();
+  },
+  () => {
+    notifyRequiredFieldsError("cv-experience-form");
+  },
+);
 </script>

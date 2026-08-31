@@ -23,6 +23,7 @@
         <NuxtLink to="/ad" class="text-sm hover:opacity-80"
           >فرصت‌های شغلی</NuxtLink
         >
+        <!-- #future
         <NuxtLink to="/companies" class="text-sm hover:opacity-80"
           >شرکت‌ها</NuxtLink
         >
@@ -30,12 +31,15 @@
           >رزومه‌های شغلی
           <icons-chevron />
         </NuxtLink>
+        -->
       </div>
     </div>
     <div class="flex items-center gap-1">
+      <!-- #future
       <button class="btn border-none">
         <icons-search2 color="#4A4A4A" />
       </button>
+      -->
 
       <NuxtLink v-if="canAccessDashboard" to="/dashboard">
         <button class="btn btn-primary">

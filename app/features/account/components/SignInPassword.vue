@@ -30,7 +30,9 @@
       v-model="code"
       :mobile
       :loading
+      :voice-disabled="voiceDisabled"
       @resend="emits('resend')"
+      @voice="emits('voice')"
       @complete="onOtpComplete"
     />
 
@@ -63,6 +65,7 @@ import type { PasswordButtonT } from '~/features/account/types';
 const props = defineProps<{
   mobile?: string;
   loading?: boolean;
+  voiceDisabled?: boolean;
 }>();
 
 const emits = defineEmits<{
@@ -70,6 +73,7 @@ const emits = defineEmits<{
   (e: 'submitPassword', password: string): void;
   (e: 'submitOtp', otp: string): void;
   (e: 'resend'): void;
+  (e: 'voice'): void;
 }>();
 
 const showPass = ref(false);

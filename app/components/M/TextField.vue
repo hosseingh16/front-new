@@ -44,6 +44,7 @@
       <input
         v-if="!multiline"
         v-model="model"
+        :name="name"
         :type="type"
         :placeholder="placeholder"
         autofocus
@@ -53,6 +54,7 @@
       <textarea
         v-else
         v-model="model"
+        :name="name"
         id="model"
         resize="none"
         :placeholder="placeholder"
@@ -79,6 +81,7 @@ const model = defineModel({ default: "" });
 // Props
 const props = withDefaults(
   defineProps<{
+    name?: string;
     label?: string;
     defaultValue?: string;
     required?: boolean;

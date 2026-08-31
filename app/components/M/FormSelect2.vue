@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :data-field="name">
     <Field :name="name" v-slot="{ setValue, value, errorMessage }">
       <m-select2
         v-bind="$props"

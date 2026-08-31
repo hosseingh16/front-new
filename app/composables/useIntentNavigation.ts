@@ -3,9 +3,9 @@ import type { AccountRole } from '~/features/account/types'
 import { paths } from '~/routes'
 import {
   buildEnteringRoute,
+  buildLoginIntentQuery,
   destinationLocation,
   destinationFullPath,
-  enteringFullPath,
 } from '~/utils/entering-route'
 import { resolvePrimaryRole } from '~/utils/user-role'
 
@@ -46,7 +46,7 @@ export function useIntentNavigation() {
 
       return {
         path: paths.login,
-        query: { redirect: enteringFullPath(options) },
+        query: buildLoginIntentQuery(options),
       }
     }
 

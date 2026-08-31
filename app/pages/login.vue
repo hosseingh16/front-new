@@ -15,8 +15,10 @@
         key="sign-in"
         :mobile
         :loading
+        :voice-disabled="voiceSent"
         @on-change-step="onChangeStep(1)"
         @resend="resendOtp"
+        @voice="requestOtpViaVoice"
         @submit-password="onPasswordLogin"
         @submit-otp="onOtpLogin"
       />
@@ -79,8 +81,10 @@ const {
   mobile: authMobile,
   loading,
   requestOtp,
+  requestOtpViaVoice,
   verifyOtp,
   loginWithMobile,
+  voiceSent,
 } = useAccountAuth();
 
 const step = ref(1);
@@ -139,6 +143,17 @@ async function ensureRoleSelectionStep() {
     step.value = stepFromQuery;
   }
 }
+
+watch(
+  () => route.query.step,
+  (value) => {
+    const stepFromQuery = Number(value);
+    if (stepFromQuery >= 1 && stepFromQuery <= 6) {
+      direction.value = step.value < stepFromQuery ? "forward" : "back";
+      step.value = stepFromQuery;
+    }
+  },
+);
 
 await ensureRoleSelectionStep();
 </script>

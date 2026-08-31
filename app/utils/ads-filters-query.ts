@@ -1,7 +1,7 @@
 import type { LocationQuery } from 'vue-router'
 import type { JobFiltersModel } from '~/types/job-filters'
 import { createEmptyJobFilters } from '~/types/job-filters'
-import { areRouteQueriesEqual, normalizeFilterId } from '~/utils/job-filters-query'
+import { normalizeFilterId } from '~/utils/job-filters-query'
 
 export type AdsSort = 'newest' | 'salary'
 
@@ -106,5 +106,3 @@ export function routeQueryToAdsFilters(query: RouteQuery): {
 
   return { filters, page, sort }
 }
-
-export { areRouteQueriesEqual }

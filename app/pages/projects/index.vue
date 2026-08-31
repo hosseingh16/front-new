@@ -242,7 +242,21 @@
               v-html="post.excerpt"
             />
             <div class="mt-5">
-              <NuxtLink v-if="post.link" :to="post.link" target="_blank">
+              <IntentLink
+                v-if="post.to"
+                :to="post.to"
+                :role="post.role"
+                :query="post.query"
+                class="btn border-none h-8 text-md text-primary-500 bg-[#4864E114] p-4 w-full"
+              >
+                {{ post.btnText }}
+                <icons-arrow
+                  color="#4864e1"
+                  :size="14"
+                  class="mr-1 rotate-45"
+                />
+              </IntentLink>
+              <NuxtLink v-else-if="post.link" :to="post.link" target="_blank">
                 <button
                   class="btn border-none h-8 text-md text-primary-500 bg-[#4864E114] p-4 w-full"
                 >
@@ -288,6 +302,7 @@ import type { Testimonial } from "~/components/Elements/Testimonials.vue";
 import type { ApiResponse } from "~/types/api";
 import type { ProjectList } from "~/types/project";
 import FaqSection from "~/components/Elements/FaqSection.vue";
+import type { AccountRole } from "~/features/account/types";
 import { paths } from "~/routes";
 
 const projectCategoriesTop = [
@@ -386,7 +401,18 @@ async function getProjects() {
   const result = await api.get<ApiResponse>("/projects");
   projects.value = (result.data ?? []).slice(0, 6);
 }
-const posts = [
+const posts: {
+  title: string;
+  excerpt: string;
+  color: string;
+  badgeClass: string;
+  badgeTitle: string;
+  btnText: string;
+  link?: string;
+  to?: string;
+  role?: AccountRole;
+  query?: Record<string, string>;
+}[] = [
   {
     title: "تکمیل اظهارنامه مالیاتی",
     excerpt:
@@ -415,7 +441,8 @@ const posts = [
     badgeClass: "bg-[#E6FAF3] text-accent-500",
     badgeTitle: "استخدام نیرو",
     btnText: "استخدام حسابدار",
-    link: "/login",
+    to: paths.employer.adsCreate,
+    role: "employer",
   },
 ];
 

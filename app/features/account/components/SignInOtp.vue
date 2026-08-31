@@ -7,7 +7,12 @@
 
     <OtpInput v-model="model" @complete="emit('complete', $event)" />
 
-    <OtpButton :loading="loading" @resend="emit('resend')" />
+    <OtpButton
+      :loading="loading"
+      :voice-disabled="voiceDisabled"
+      @resend="emit('resend')"
+      @voice="emit('voice')"
+    />
   </div>
 </template>
 
@@ -20,10 +25,12 @@ const model = defineModel({ default: ['', '', '', '', ''] });
 defineProps<{
   mobile?: string;
   loading?: boolean;
+  voiceDisabled?: boolean;
 }>();
 
 const emit = defineEmits<{
   (e: 'resend'): void;
+  (e: 'voice'): void;
   (e: 'complete', otp: string): void;
 }>();
 </script>

@@ -62,10 +62,15 @@
           <div class="flex justify-center items-center gap-1">
             <NuxtLink
               v-for="item in socials"
-              :key="item"
+              :key="item.name"
+              :to="item.href"
+              :aria-label="item.name"
+              target="_blank"
+              rel="noopener noreferrer"
+              external
               class="h-8 w-8 flex justify-center items-center bg-white rounded-lg"
             >
-              <Icon :name="`svg:${item}`" />
+              <Icon :name="`svg:${item.name}`" />
             </NuxtLink>
           </div>
         </div>
@@ -128,10 +133,15 @@
           <div class="flex items-center justify-center gap-2">
             <NuxtLink
               v-for="item in socials"
-              :key="item"
+              :key="item.name"
+              :to="item.href"
+              :aria-label="item.name"
+              target="_blank"
+              rel="noopener noreferrer"
+              external
               class="flex h-10 w-10 items-center justify-center rounded-lg bg-white"
             >
-              <Icon :name="`svg:${item}`" />
+              <Icon :name="`svg:${item.name}`" />
             </NuxtLink>
           </div>
         </div>
@@ -180,7 +190,11 @@ const aboutLinks: FooterLink[] = [
   { label: "تماس ما", to: "/contact" },
 ];
 
-const socials = ["telegram", "linkedin", "instagram"] as const;
+const socials = [
+  { name: "telegram", href: "https://t.me/hihesabchannel" },
+  { name: "linkedin", href: "https://www.linkedin.com/company/hihesab/" },
+  { name: "instagram", href: "https://www.instagram.com/hi.hesab" },
+] as const;
 
 const badgeImages = [
   "/images/footer-img-1.png",

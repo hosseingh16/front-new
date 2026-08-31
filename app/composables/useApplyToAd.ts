@@ -1,6 +1,7 @@
-function getErrorMessage(err: any, fallback: string) {
-  return err?.data?.message || err?.message || fallback
-}
+import {
+  getApiErrorMessage,
+  isResumeBasicInfoRequiredError,
+} from '~/utils/api-error'
 
 /**
  * Jobseeker apply — send resume/request to an ad.
@@ -22,7 +23,9 @@ export function useApplyToAd() {
       await api.post(`/ads/${adId}/apply`)
       return true
     } catch (err: any) {
-      $toast.error(getErrorMessage(err, 'ارسال درخواست با خطا مواجه شد'))
+      if (!isResumeBasicInfoRequiredError(err)) {
+        $toast.error(getApiErrorMessage(err, 'ارسال درخواست با خطا مواجه شد'))
+      }
       throw err
     } finally {
       loading.value = false

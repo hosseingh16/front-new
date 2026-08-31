@@ -88,6 +88,11 @@
       </div>
     </div>
 
+    <!--
+      [HIDDEN] Attached file upload section.
+      Temporarily disabled; will be re-enabled when resume attachment upload is supported.
+    -->
+    <!--
     <div class="bg-white p-4 rounded-2xl mt-8">
       <Titr>فایل ضمیمه</Titr>
       <div class="mt-5 flex gap-1 items-center">
@@ -118,6 +123,7 @@
         </m-button>
       </div>
     </div>
+    -->
 
     <div class="bg-white p-4 rounded-2xl mt-8">
       <Titr :with-icon="false">قابل رویت برای همه</Titr>

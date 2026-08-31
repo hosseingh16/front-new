@@ -22,7 +22,7 @@
         تایید شماره همراه
         <span class="font-semibold">{{ displayMobile }}</span>
       </p>
-      <OtpButton :loading @resend="onResend" />
+      <OtpButton :loading :voice-disabled="voiceSent" @resend="onResend" @voice="onVoice" />
     </div>
 
     <form @submit.prevent="onSubmit">
@@ -65,7 +65,7 @@ const emit = defineEmits<{
   (e: "verified", status: AuthUserStatus): void;
 }>();
 
-const { mobile, verifyOtp, requestOtp, loginWithMobile, loading } =
+const { mobile, verifyOtp, requestOtp, requestOtpViaVoice, loginWithMobile, loading, voiceSent } =
   useAccountAuth();
 
 const displayMobile = computed(() => props.mobile || mobile.value || "—");
@@ -81,6 +81,10 @@ async function onResend() {
   if (!phone) return;
   model.value = ["", "", "", "", ""];
   await requestOtp(phone);
+}
+
+async function onVoice() {
+  await requestOtpViaVoice();
 }
 
 /** Accepts OTP string from @complete, or reads model on form submit / button click. */

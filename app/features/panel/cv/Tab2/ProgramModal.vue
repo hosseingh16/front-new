@@ -13,7 +13,7 @@
 
     <m-dialog ref="modalRef" :width="850">
       <Titr>{{ modalTitle }}</Titr>
-      <form @submit.prevent="onSubmit" class="mt-6">
+      <form id="cv-program-form" @submit.prevent="onSubmit" class="mt-6">
         <div class="grid md:grid-cols-2 gap-x-4 gap-y-12">
           <m-form-select2
             name="programName"
@@ -128,6 +128,7 @@ const emits = defineEmits<{
 // Variables
 const modalRef = ref<InstanceType<typeof Dialog> | null>(null);
 const skipProgramWatch = ref(false);
+const { notifyRequiredFieldsError } = useCvFormValidation();
 
 function resolveProgramType(program?: ISelectItem): 0 | 1 {
   return program?.type === 0 ? 0 : 1;
@@ -245,16 +246,21 @@ async function showModal() {
   modalRef.value?.showModal();
 }
 
-const onSubmit = handleSubmit((data: ProgramFormValues) => {
-  const programType = resolveProgramType(findProgram(data.programName));
+const onSubmit = handleSubmit(
+  (data: ProgramFormValues) => {
+    const programType = resolveProgramType(findProgram(data.programName));
 
-  emits('item', {
-    ...data,
-    programType,
-    ...(props.editMode && props.itemToEdit?.id != null
-      ? { id: props.itemToEdit.id }
-      : {}),
-  });
-  modalRef.value?.closeModal();
-});
+    emits('item', {
+      ...data,
+      programType,
+      ...(props.editMode && props.itemToEdit?.id != null
+        ? { id: props.itemToEdit.id }
+        : {}),
+    });
+    modalRef.value?.closeModal();
+  },
+  () => {
+    notifyRequiredFieldsError('cv-program-form');
+  },
+);
 </script>

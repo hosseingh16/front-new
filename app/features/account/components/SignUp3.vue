@@ -71,7 +71,8 @@ import type { AccountRole, DirectionT } from "../types";
 import { paths } from "~/routes";
 import {
   buildEnteringRoute,
-  isEnteringRoleRedirect,
+  enteringFromAuthQuery,
+  firstQueryString,
 } from "~/utils/entering-route";
 
 const props = withDefaults(
@@ -139,9 +140,9 @@ const items: RequestTypeItem[] = [
 ];
 
 onMounted(async () => {
-  if (props.forced) return;
-  if (!isEnteringRoleRedirect(route.query.redirect)) return;
-  await navigateTo(route.query.redirect, { replace: true });
+  const entering = enteringFromAuthQuery(route.query);
+  if (!entering?.role) return;
+  await navigateTo(buildEnteringRoute(entering), { replace: true });
 });
 
 function goBack() {
@@ -154,7 +155,11 @@ async function onSelect(item: RequestTypeItem) {
 
   pendingId.value = item.id;
   try {
-    if (item.role === "employer" && !props.forced) {
+    if (
+      item.role === "employer" &&
+      !props.forced &&
+      !enteringFromAuthQuery(route.query)?.role
+    ) {
       await updateUserRole(item.role);
       emits("selected", item.role);
       emits("onChangeDirection", "forward");
@@ -163,20 +168,25 @@ async function onSelect(item: RequestTypeItem) {
       return;
     }
 
-    const redirect =
-      typeof route.query.redirect === "string" &&
-      route.query.redirect.startsWith("/")
-        ? route.query.redirect
-        : null;
-
-    const destination = props.forced
-      ? redirect || item.to || paths.dashboard
-      : item.to || paths.jobs.root;
+    const cta = enteringFromAuthQuery(route.query);
+    const redirect = firstQueryString(route.query.redirect);
 
     emits("selected", item.role);
 
     await navigateTo(
-      buildEnteringRoute({ to: destination, role: item.role }),
+      cta
+        ? buildEnteringRoute({
+            to: cta.to,
+            role: item.role,
+            query: cta.query,
+          })
+        : buildEnteringRoute({
+            to:
+              (props.forced
+                ? redirect || item.to || paths.dashboard
+                : item.to || paths.jobs.root) ?? paths.dashboard,
+            role: item.role,
+          }),
       { replace: props.forced },
     );
   } catch {

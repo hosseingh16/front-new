@@ -2,7 +2,7 @@
   <div id="section-basic" class="scroll-mt-24 bg-white p-4 rounded-2xl mt-5">
     <Titr :with-icon="editMode" class="mb-8">اطلاعات پایه</Titr>
     <form @submit="onSubmit">
-      <div id="section-avatar" class="mb-8 scroll-mt-24">
+      <div id="section-avatar" class="mb-8 scroll-mt-24" data-field="profileImage">
         <p class="relative">
           تصویر پروفایل:
           <span
@@ -282,6 +282,7 @@ import { profileImageValidation } from "~/validations/profileImage";
 // Variables
 const api = useApi();
 const { $toast } = useNuxtApp();
+const { notifyRequiredFieldsError } = useCvFormValidation();
 const { applyUserPayload, patchUser, refreshUser, avatar: userAvatar, user } =
   useCurrentUser();
 const loading = api.loading;
@@ -392,7 +393,8 @@ const changeEditMode = async (value: boolean) => {
   window.scrollTo({ top: 0 });
 };
 
-const onSubmit = handleSubmit(async (data) => {
+const onSubmit = handleSubmit(
+  async (data) => {
   //let result =  await api.get('/lookups?keys=all');
 
   // خارج کردن تصویر پروفایل از فرم
@@ -441,7 +443,11 @@ const onSubmit = handleSubmit(async (data) => {
   //   method: "POST",
   //   body: { data },
   // })
-});
+  },
+  () => {
+    notifyRequiredFieldsError("section-basic");
+  },
+);
 
 const handleProfileImage = async (file: File | null) => {
   if (!file) {

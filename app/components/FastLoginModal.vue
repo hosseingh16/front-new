@@ -62,7 +62,7 @@
         <form class="mt-4" @submit.prevent="onSubmitOtp()">
           <OtpInput v-model="otpDigits" @complete="onSubmitOtp" />
 
-          <div class="mt-3 flex justify-end">
+          <div class="mt-3 flex flex-col items-end gap-2">
             <button
               v-if="canResend"
               type="button"
@@ -82,6 +82,21 @@
               <Icon name="svg:refresh" />
               <span>ارسال مجدد تا {{ persianRemaining }} ثانیه دیگر</span>
             </div>
+
+            <button
+              type="button"
+              class="btn btn-ghost h-8 px-2"
+              :class="
+                isVoiceInactive
+                  ? 'cursor-not-allowed text-text-passive opacity-60'
+                  : 'text-primary-500'
+              "
+              :disabled="isVoiceInactive"
+              @click="onVoice"
+            >
+              <Icon name="svg:mobile" :class="isVoiceInactive ? 'opacity-50' : 'opacity-70'" />
+              <span class="text-sm">{{ voiceLabel }}</span>
+            </button>
           </div>
 
           <button
@@ -108,8 +123,13 @@ import { useForm } from 'vee-validate'
 import * as Yup from 'yup'
 import OtpInput from '~/features/account/components/OtpInput.vue'
 import { toPersianDigits } from '~/composables/useCountUp'
+import {
+  isResumeBasicInfoComplete,
+  isResumeBasicInfoRequiredError,
+} from '~/utils/api-error'
 
 const RESEND_SECONDS = 60
+const VOICE_DELAY_SECONDS = 20
 
 const props = withDefaults(
   defineProps<{
@@ -124,6 +144,8 @@ const emit = defineEmits<{
   (e: 'applied'): void
   /** Login/OTP succeeded but apply failed — parent should still update UI. */
   (e: 'apply-failed'): void
+  /** Logged in, but the user has no complete resume to send. */
+  (e: 'resume-incomplete'): void
 }>()
 
 const dialogRef = ref<HTMLDialogElement | null>(null)
@@ -131,6 +153,7 @@ const step = ref<'phone' | 'otp'>('phone')
 const otpDigits = ref(['', '', '', '', ''])
 const applying = ref(false)
 const remaining = ref(RESEND_SECONDS)
+const voiceRemaining = ref(VOICE_DELAY_SECONDS)
 
 let timer: ReturnType<typeof setInterval> | null = null
 
@@ -138,12 +161,15 @@ const {
   mobile,
   loading: authLoading,
   requestOtp,
+  requestOtpViaVoice,
   verifyOtp,
   loginWithMobile,
+  voiceSent,
   reset: resetAuth,
 } = useAccountAuth()
 
 const { applyToAd, loading: applyLoading } = useApplyToAd()
+const { user } = useCurrentUser()
 const { ensureRoleForAction } = useRoleGate()
 
 const phoneSchema = Yup.object({
@@ -162,6 +188,7 @@ const phoneValid = computed(() => meta.value.valid)
 const otpReady = computed(() => otpDigits.value.every((d) => d !== ''))
 const busy = computed(() => authLoading.value || applying.value || applyLoading.value)
 const canResend = computed(() => remaining.value <= 0)
+const voiceAvailable = computed(() => voiceRemaining.value <= 0)
 
 const displayMobile = computed(() => {
   const phone = mobile.value || ''
@@ -169,6 +196,17 @@ const displayMobile = computed(() => {
 })
 
 const persianRemaining = computed(() => toPersianDigits(remaining.value))
+const persianVoiceRemaining = computed(() => toPersianDigits(voiceRemaining.value))
+const voiceLabel = computed(() => {
+  if (voiceSent.value) return 'تماس صوتی ارسال شد'
+  if (!voiceAvailable.value) {
+    return `دریافت کد با تماس تا ${persianVoiceRemaining.value} ثانیه دیگر`
+  }
+  return 'دریافت کد با تماس'
+})
+const isVoiceInactive = computed(
+  () => authLoading.value || voiceSent.value || !voiceAvailable.value,
+)
 
 const stepTitle = computed(() =>
   step.value === 'phone'
@@ -186,13 +224,17 @@ function clearTimer() {
 function startCountdown() {
   clearTimer()
   remaining.value = RESEND_SECONDS
+  voiceRemaining.value = VOICE_DELAY_SECONDS
   timer = setInterval(() => {
-    if (remaining.value <= 1) {
-      remaining.value = 0
-      clearTimer()
-      return
+    if (remaining.value > 0) {
+      remaining.value--
     }
-    remaining.value--
+    if (voiceRemaining.value > 0) {
+      voiceRemaining.value--
+    }
+    if (remaining.value <= 0 && voiceRemaining.value <= 0) {
+      clearTimer()
+    }
   }, 1000)
 }
 
@@ -202,6 +244,7 @@ function resetLocalState() {
   applying.value = false
   clearTimer()
   remaining.value = RESEND_SECONDS
+  voiceRemaining.value = VOICE_DELAY_SECONDS
   resetForm()
 }
 
@@ -245,6 +288,10 @@ async function onResend() {
   startCountdown()
 }
 
+async function onVoice() {
+  await requestOtpViaVoice()
+}
+
 async function onSubmitOtp(otpFromEvent?: string | Event) {
   if (busy.value) return
 
@@ -265,16 +312,21 @@ async function onSubmitOtp(otpFromEvent?: string | Event) {
     await loginWithMobile(undefined, false)
 
     let applySucceeded = true
+    let resumeIncomplete = false
     if (props.adId) {
       try {
         const assigned = await ensureRoleForAction('job_seeker')
         if (!assigned) {
           applySucceeded = false
+        } else if (!isResumeBasicInfoComplete(user.value)) {
+          applySucceeded = false
+          resumeIncomplete = true
         } else {
           await applyToAd(props.adId)
         }
-      } catch {
+      } catch (err) {
         applySucceeded = false
+        resumeIncomplete = isResumeBasicInfoRequiredError(err)
       }
     }
 
@@ -284,6 +336,8 @@ async function onSubmitOtp(otpFromEvent?: string | Event) {
 
     if (applySucceeded) {
       emit('applied')
+    } else if (resumeIncomplete) {
+      emit('resume-incomplete')
     } else {
       emit('apply-failed')
     }

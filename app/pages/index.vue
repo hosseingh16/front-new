@@ -16,10 +16,14 @@
           پلی میان کارفرمایان و حسابداران برای استخدام و همکاری حرفه‌ای
         </h2>
         <div class="flex flex-wrap gap-2 mt-5 justify-center">
-          <button class="btn btn-success">
+          <IntentLink
+            :to="paths.employer.adsCreate"
+            role="employer"
+            class="btn btn-success"
+          >
             <Icon name="svg:user-plus-white" size="24" />
             استخدام حسابدار
-          </button>
+          </IntentLink>
           <NuxtLink to="/ad">
             <button class="btn btn-primary">
               <Icon name="svg:user-plus-white" size="24" />
@@ -129,9 +133,19 @@
             <p class="mt-4 text-sm">
               {{ item.text }}
             </p>
+            <IntentLink
+              v-if="item.to && item.role"
+              :to="item.to"
+              :role="item.role"
+              :query="item.query"
+              class="btn btn-ghost-primary mt-6 w-full text-sm"
+            >
+              <Icon name="svg:open-link" />
+              {{ item.btnText }}
+            </IntentLink>
             <NuxtLink
-              v-if="item.btnText === 'فرصت های شغلی'"
-              to="/ad"
+              v-else-if="item.to"
+              :to="item.to"
               class="btn btn-ghost-primary mt-6 w-full text-sm"
             >
               <Icon name="svg:open-link" />
@@ -147,8 +161,17 @@
     </section>
     <!-- [END] Services -->
 
-    <TrustBar />
+    <!--
+      [HIDDEN] Trust bar — partner logos and platform stats.
+      Temporarily disabled; will be re-enabled once real partner data is available.
+    -->
+    <!-- <TrustBar /> -->
 
+    <!--
+      [HIDDEN] User testimonials section.
+      Temporarily disabled; will be re-enabled with verified customer reviews.
+    -->
+    <!--
     <Testimonials
       badge="تجربه کاربران ما"
       title="آنچه کاربران درباره های‌حساب می‌گویند"
@@ -156,6 +179,7 @@
       :testimonials="testimonials"
       badge-class="mt-20"
     />
+    -->
 
     <m-divider class="mt-12" />
 
@@ -258,67 +282,84 @@
 <script setup lang="ts">
 import HomeSearchBox from "~/components/Elements/HomeSearchBox.vue";
 import ItemBox from "~/components/Elements/item-box.vue";
-import Testimonials from "~/components/Elements/Testimonials.vue";
-import TrustBar from "../components/Elements/TrustBar.vue";
-import type { Testimonial } from "~/components/Elements/Testimonials.vue";
+// import Testimonials from "~/components/Elements/Testimonials.vue";
+// import TrustBar from "../components/Elements/TrustBar.vue";
+// import type { Testimonial } from "~/components/Elements/Testimonials.vue";
 import type { AdList } from "~/types";
 import type { ApiResponse } from "~/types/api";
 import type { Opportunity } from "~/types/opportunity";
 import FaqSection from "~/components/Elements/FaqSection.vue";
+import type { AccountRole } from "~/features/account/types";
+import { paths } from "~/routes";
 
 // Variables
 const opportunities = ref<Opportunity[]>([]);
 const opportunitiesLoading = ref(false);
 const posts = ref<any[]>([]);
 const jobType = ref("همه");
-const testimonials: Testimonial[] = [
-  {
-    text: "ما دنبال یک حسابدار دقیق و با‌تجربه بودیم. در این سایت خیلی راحت آگهی گذاشتیم. رزومه‌هایی که دریافت کردیم دقیق و فیلترشده بودند و سریع به نتیجه رسیدیم.",
-    name: "فرزاد فرحزاد",
-    role: "مدیر منابع انسانی موسسه کاسپین",
-    image: "bank3.png",
-    avatarClass: "from-[#FFE68C] to-[#FFF5CC] p-0",
-  },
-  {
-    text: "فرآیند ثبت پروژه و دسترسی به نیروهای متخصص برای ما بسیار ساده و سریع بود. این پلتفرم کمک کرد در زمان کوتاه‌تری نیروی مناسب تیم مالی‌مان را پیدا کنیم.",
-    name: "مریم یاوری",
-    role: "مدیر ارشد منابع انسانی",
-    image: "bank1.png",
-    avatarClass: "from-[#AFAAD4] to-[#FFFFFF] p-2",
-    imageClass: "w-[80%]",
-  },
-  {
-    text: "با بانک رزومه های‌حساب توانستیم بدون آگهی‌نویسی، حسابدار مناسب شرکت را پیدا کنیم. فیلترهای تخصصی واقعاً در صرفه‌جویی زمان مؤثر بودند.",
-    name: "مسعود شاه‌مرادی",
-    role: "بنیان‌گذار خانومی",
-    image: "bank2.png",
-    avatarClass: "from-[#82E8F2] to-[#FFFFFF] p-2",
-  },
-];
-const services = [
+// const testimonials: Testimonial[] = [
+//   {
+//     text: "ما دنبال یک حسابدار دقیق و با‌تجربه بودیم. در این سایت خیلی راحت آگهی گذاشتیم. رزومه‌هایی که دریافت کردیم دقیق و فیلترشده بودند و سریع به نتیجه رسیدیم.",
+//     name: "فرزاد فرحزاد",
+//     role: "مدیر منابع انسانی موسسه کاسپین",
+//     image: "bank3.png",
+//     avatarClass: "from-[#FFE68C] to-[#FFF5CC] p-0",
+//   },
+//   {
+//     text: "فرآیند ثبت پروژه و دسترسی به نیروهای متخصص برای ما بسیار ساده و سریع بود. این پلتفرم کمک کرد در زمان کوتاه‌تری نیروی مناسب تیم مالی‌مان را پیدا کنیم.",
+//     name: "مریم یاوری",
+//     role: "مدیر ارشد منابع انسانی",
+//     image: "bank1.png",
+//     avatarClass: "from-[#AFAAD4] to-[#FFFFFF] p-2",
+//     imageClass: "w-[80%]",
+//   },
+//   {
+//     text: "با بانک رزومه های‌حساب توانستیم بدون آگهی‌نویسی، حسابدار مناسب شرکت را پیدا کنیم. فیلترهای تخصصی واقعاً در صرفه‌جویی زمان مؤثر بودند.",
+//     name: "مسعود شاه‌مرادی",
+//     role: "بنیان‌گذار خانومی",
+//     image: "bank2.png",
+//     avatarClass: "from-[#82E8F2] to-[#FFFFFF] p-2",
+//   },
+// ];
+const services: {
+  title1: string;
+  title2: string;
+  text: string;
+  btnText: string;
+  to?: string;
+  role?: AccountRole;
+  query?: Record<string, string>;
+}[] = [
   {
     title1: "استخدام",
     title2: "فرصت های شغلی حسابداری",
-    text: "با ثبت رزومه و مشاهده پروژه‌ها، شانس خودت برای پیدا کردن کار افزایش بده.",
+    text: "جدیدترین فرصت‌های شغلی حسابداری را مشاهده کنید و برای موقعیت مناسب درخواست ارسال کنید.",
     btnText: "فرصت های شغلی",
+    to: "/ad",
   },
   {
-    title1: "مشاورجو",
-    title2: "مشاور کسب و کار",
-    text: "با ثبت رزومه و مشاهده پروژه‌ها، شانس خودت برای پیدا کردن کار افزایش بده.",
-    btnText: "دریافت مشاوره",
+    title1: "آگهی",
+    title2: "ایجاد آگهی",
+    text: "آگهی استخدام حسابداری ثبت کنید و نیاز استخدامی خود را به حسابداران متخصص معرفی کنید.",
+    btnText: "ایجاد آگهی",
+    to: paths.employer.adsCreate,
+    role: "employer",
   },
   {
-    title1: "پروژه",
-    title2: "ایجاد پروژه",
-    text: "با ثبت رزومه و مشاهده پروژه‌ها، شانس خودت برای پیدا کردن کار افزایش بده.",
-    btnText: "ایجاد پروژه",
+    title1: "رزومه ساز",
+    title2: "ساخت رزومه حرفه‌ای",
+    text: "با رزومه‌ساز حسابداری، رزومه حرفه‌ای و استاندارد خود را بسازید و برای فرصت‌های شغلی اقدام کنید.",
+    btnText: "رزومه ساز",
+    to: "/dashboard/cv",
+    role: "job_seeker",
   },
   {
     title1: "استخدام نیرو",
     title2: "استخدام حسابدار",
-    text: "با ثبت رزومه و مشاهده پروژه‌ها، شانس خودت برای پیدا کردن کار افزایش بده.",
+    text: "آگهی استخدام ثبت کنید و از میان رزومه‌های حسابداران متخصص، نیروی مناسب تیم خود را پیدا کنید.",
     btnText: "استخدام حسابدار",
+    to: paths.employer.adsCreate,
+    role: "employer",
   },
 ];
 
