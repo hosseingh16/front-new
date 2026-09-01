@@ -27,7 +27,7 @@
           :src="`/images/${item.image}`"
           class="w-32 h-32 min-[1052px]:w-50 min-[1052px]:h-50 shrink-0"
         />
-        <div class="flex min-w-0 flex-1 flex-col min-[1052px]:w-full min-[1052px]:text-center">
+        <div class="flex min-w-0 flex-1 flex-col min-[1052px]:w-full min-[1052px]:text-center px-5">
           <p class="min-[1052px]:-mt-10 text-lg sm:text-xl font-yb-bold">
             {{ item.title }}
           </p>

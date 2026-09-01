@@ -61,6 +61,7 @@ export interface CreateAdFormErrors {
   province?: string
   city?: string
   employment_type?: string
+  salary_range?: string
   resume_terms?: string
   accounting_management?: string
   work_hours_type?: string
@@ -68,8 +69,6 @@ export interface CreateAdFormErrors {
   floating_hours?: string
   fixed_schedule?: string
 }
-
-export const CREATE_AD_DRAFT_KEY = 'create-ad-draft'
 
 export function createEmptyCreateAdForm(): CreateAdFormModel {
   return {

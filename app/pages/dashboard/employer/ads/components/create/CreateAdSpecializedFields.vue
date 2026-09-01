@@ -1,14 +1,15 @@
 <template>
-  <section class="overflow-visible rounded-2xl border border-gray-default bg-white p-4">
+  <section class="min-w-0 overflow-visible rounded-2xl border border-gray-default bg-white p-4">
     <Titr>فیلدهای تخصصی</Titr>
 
     <m-select2-multi
-      class="relative z-10 mt-6"
+      class="relative z-10 mt-6 min-w-0"
       v-model="form.company_software"
       label="نرم‌افزار حسابداری مورد استفاده در مجموعه:"
       :options="softwareOptions"
       placeholder="نرم‌افزار را انتخاب کنید"
       search
+      :max="maxSoftwares"
     />
 
     <div class="my-4 mt-8 grid gap-x-4 gap-y-12 lg:grid-cols-2">
@@ -25,6 +26,7 @@
 
 <script setup lang="ts">
 import Titr from '~/features/panel/cv/Titr.vue'
+import { resolveMaxAdSoftwares } from '~/configs/ad-limits'
 import type { CreateAdFormModel } from '~/types/create-ad-form'
 import type { ISelectItem } from '~/types/select-item'
 import CreateAdSkillSlider from './CreateAdSkillSlider.vue'
@@ -34,6 +36,11 @@ const props = defineProps<{
   accountingPrograms: ISelectItem[]
   proficiencies: ISelectItem[]
 }>()
+
+const { public: publicConfig } = useRuntimeConfig()
+const maxSoftwares = computed(() =>
+  resolveMaxAdSoftwares(publicConfig.maxAdSoftwares),
+)
 
 const softwareOptions = computed(() => {
   if (props.accountingPrograms.length) return props.accountingPrograms

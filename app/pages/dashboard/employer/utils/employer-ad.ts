@@ -9,11 +9,16 @@ export type EmployerAdStatus =
   | 'expired'
   | 'draft'
 
+export function isDraftEmployerAdStatus(status?: string | null) {
+  const value = (status ?? '').toLowerCase()
+  return value.includes('draft') || value.includes('پیش')
+}
+
 export function normalizeEmployerAdStatus(ad: EmployerAd): EmployerAdStatus {
   if (ad.expired) return 'expired'
 
   const status = (ad.status ?? '').toLowerCase()
-  if (status.includes('draft') || status.includes('پیش')) return 'draft'
+  if (isDraftEmployerAdStatus(status)) return 'draft'
   if (status.includes('expired') || status.includes('منقضی')) return 'expired'
   // UNDER_REVIEW ("در انتظار بازبینی اطلاعات") must be matched before the
   // generic "در انتظار" of PENDING, and UNPUBLISHED before "publish"/"منتشر".

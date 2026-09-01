@@ -11,7 +11,7 @@
     </div>
 
     <div v-else class="mt-5 grid items-start gap-4 lg:grid-cols-8">
-      <div class="space-y-4 lg:col-span-6">
+      <div class="min-w-0 space-y-4 lg:col-span-6">
         <CreateAdGeneralFields
           :form="form"
           :errors="errors"
@@ -53,10 +53,12 @@
       <CreateAdInvoiceSidebar
         class="lg:col-span-2"
         :submitting="submitting"
+        :saving-draft="savingDraft"
         publish-label="ثبت تغییرات"
-        :show-draft="false"
+        :show-draft="canSaveDraft"
         :payable-amount="payableAmount"
         @publish="publish"
+        @save-draft="saveDraft"
       />
     </div>
   </div>
@@ -84,6 +86,8 @@ const {
   isPartTime,
   payableAmount,
   submitting,
+  savingDraft,
+  canSaveDraft,
   loadingAd,
   citiesLoading,
   cityOptions,
@@ -99,6 +103,7 @@ const {
   genders,
   accountingPrograms,
   loadCities,
+  saveDraft,
   publish,
 } = useCreateAdForm({ adId })
 

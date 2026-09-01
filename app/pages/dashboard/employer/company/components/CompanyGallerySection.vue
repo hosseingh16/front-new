@@ -35,6 +35,7 @@
 
     <CompanySectionActions
       :saving="saving"
+      :disabled="!canSave"
       @save="emit('save')"
       @cancel="emit('cancel')"
     />
@@ -46,8 +47,9 @@ import Titr from '~/features/panel/cv/Titr.vue'
 import CompanyImageUpload from './CompanyImageUpload.vue'
 import CompanySectionActions from './CompanySectionActions.vue'
 import type { CompanyProfileFormModel } from '~/types/company-profile-form'
+import { isCompanyProfileSectionComplete } from '~/types/company-profile-form'
 
-defineProps<{
+const props = defineProps<{
   form: CompanyProfileFormModel
   saving?: boolean
 }>()
@@ -58,4 +60,8 @@ const emit = defineEmits<{
   upload: [file: File]
   remove: [index: number]
 }>()
+
+const canSave = computed(() =>
+  isCompanyProfileSectionComplete(props.form, 'gallery'),
+)
 </script>

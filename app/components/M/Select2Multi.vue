@@ -1,34 +1,42 @@
 <template>
-  <div :class="{ 'pointer-events-none opacity-50': disabled }">
+  <div
+    class="w-full min-w-0 max-w-full"
+    :class="{ 'pointer-events-none opacity-50': disabled }"
+  >
     <p v-if="label" class="relative mb-2 text-base">
       {{ label }}
       <span v-if="required" class="absolute -top-2 mb-4 text-red-400">*</span>
     </p>
-    <div v-if="isClient" ref="dropDownRef" class="relative inline-block w-full">
+    <div
+      v-if="isClient"
+      ref="dropDownRef"
+      class="relative block w-full min-w-0 max-w-full"
+    >
       <div
         role="combobox"
         :aria-expanded="open"
-        class="box-border flex h-10 max-h-10 min-h-10 w-full cursor-pointer items-center gap-2 overflow-hidden rounded-lg border border-gray-default bg-white pr-2 pl-2 focus-within:outline-none focus-within:ring-2 focus-within:ring-primary-500/25"
+        class="box-border flex h-12 max-h-12 min-h-12 w-full min-w-0 cursor-pointer items-center gap-2 overflow-hidden rounded-lg border border-gray-default bg-white px-4 focus-within:outline-none focus-within:ring-2 focus-within:ring-primary-500/25"
         :style="`border-color:${error ? 'var(--color-danger-200)' : borderColor}`"
         @click="focusInput"
       >
         <div
-          class="scrollbar-none flex h-6 min-w-0 flex-1 items-center gap-1 overflow-x-auto overflow-y-hidden"
+          class="scrollbar-none flex h-8 min-w-0 flex-1 items-center gap-2 overflow-x-auto overflow-y-hidden overscroll-x-contain"
         >
           <span
             v-for="item in selectedItems"
             :key="item.value"
-            class="inline-flex h-6 max-h-6 shrink-0 items-center gap-1 rounded-md px-1.5 text-xs leading-none"
+            class="inline-flex h-8 max-h-8 shrink-0 items-center gap-1.5 rounded-md px-3 text-xs leading-none"
             :class="chipClasses"
           >
             <span class="max-w-32 truncate">{{ item.label }}</span>
             <button
               type="button"
-              class="flex h-4 w-4 shrink-0 items-center justify-center"
+              class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full hover:bg-black/10"
+              :aria-label="`حذف ${item.label}`"
               :disabled="disabled"
               @click.stop="removeItem(item.value)"
             >
-              <Icon name="svg:close" class="size-3" />
+              <Icon name="svg:close" class="size-4" />
             </button>
           </span>
 
@@ -37,11 +45,11 @@
             :value="open && search ? keyword : ''"
             :readonly="!open || !search"
             :placeholder="inputPlaceholder"
-            class="h-6 min-h-0 shrink-0 border-0 bg-transparent py-0 text-sm leading-5 font-normal outline-none placeholder:text-text-muted"
+            class="h-8 min-h-0 min-w-0 shrink border-0 bg-transparent py-0 text-sm leading-5 font-normal outline-none placeholder:text-text-muted"
             :class="
               selectedItems.length && !open
-                ? 'w-px min-w-0 max-w-px opacity-0'
-                : 'min-w-12 flex-1'
+                ? 'w-px max-w-px opacity-0'
+                : 'w-12 flex-1'
             "
             @focus="openDropdown"
             @click.stop="openDropdown"
@@ -65,23 +73,27 @@
 
       <div
         v-if="open"
-        class="menu absolute z-10 mt-2 w-full rounded-lg border border-gray-200 bg-white p-0 shadow-sm"
+        class="menu absolute inset-x-0 z-10 mt-2 w-full max-w-full overflow-hidden rounded-lg border border-gray-200 bg-white p-0 shadow-sm"
       >
-        <div class="max-h-50 overflow-y-auto">
+        <div class="max-h-50 overflow-x-hidden overflow-y-auto">
           <div v-if="filteredOptions.length > 0" class="mx-2 space-y-1 py-2">
             <label
               v-for="item in filteredOptions"
               :key="item.value"
-              class="flex cursor-pointer items-center gap-2 rounded-lg px-3 py-2 text-sm text-gray-700 hover:bg-gray-100"
-              :class="{ 'bg-gray-100 font-semibold': isSelected(item) }"
+              class="flex min-w-0 cursor-pointer items-center gap-2 rounded-lg px-3 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              :class="{
+                'bg-gray-100 font-semibold': isSelected(item),
+                'pointer-events-none opacity-50': !canSelect(item),
+              }"
             >
               <input
                 v-model="model"
                 type="checkbox"
                 class="checkbox checkbox-primary p-1.5"
                 :value="item.value"
+                :disabled="!canSelect(item)"
               />
-              <span>{{ item.label }}</span>
+              <span class="min-w-0 truncate">{{ item.label }}</span>
             </label>
           </div>
           <div
@@ -113,6 +125,7 @@ const props = defineProps({
   error: { type: Boolean },
   disabled: { type: Boolean },
   search: { type: Boolean, default: true },
+  max: { type: Number, default: 3 },
   chipTone: {
     type: String as () => "default" | "primary",
     default: "default",
@@ -139,6 +152,10 @@ const selectedItems = computed(() =>
   })),
 );
 
+const atMax = computed(
+  () => props.max != null && model.value.length >= props.max,
+);
+
 const filteredOptions = computed(() => {
   if (!props.search || !keyword.value.trim()) return allOptions.value;
   return allOptions.value.filter((item) => item.label.includes(keyword.value));
@@ -158,6 +175,15 @@ watch(
   { immediate: true },
 );
 
+watch(
+  model,
+  (value) => {
+    if (props.max == null || value.length <= props.max) return;
+    model.value = value.slice(0, props.max);
+  },
+  { immediate: true },
+);
+
 function getItemLabel(value: string | number) {
   const match = props.options.find(
     (item) => String(item.value) === String(value),
@@ -167,6 +193,10 @@ function getItemLabel(value: string | number) {
 
 function isSelected(item: ISelectItem) {
   return model.value.some((value) => String(value) === String(item.value));
+}
+
+function canSelect(item: ISelectItem) {
+  return isSelected(item) || !atMax.value;
 }
 
 function removeItem(value: string | number) {

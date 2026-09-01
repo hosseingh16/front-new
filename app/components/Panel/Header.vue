@@ -1,6 +1,6 @@
 <template>
   <header
-    class="fixed right-0 left-0 z-20 flex h-16 items-center justify-between border-gray-default bg-surface-50 px-4 shadow-sm max-md:border-b-2"
+    class="fixed right-0 left-0 z-1200 flex h-16 items-center justify-between border-gray-default bg-surface-50 px-4 shadow-sm max-md:border-b-2"
   >
     <div class="flex gap-12">
       <div class="flex gap-2 items-center">
@@ -125,19 +125,29 @@ onMounted(() => {
 });
 
 const createMenuItems = [
+  // {
+  //   title: "آگهی تمام وقت",
+  //   to: "/dashboard/employer/ads/create?employment_type=full_time",
+  //   icon: "svg:new-briefcase",
+  // },
+  // {
+  //   title: "آگهی نیمه وقت",
+  //   to: "/dashboard/employer/ads/create?employment_type=part_time",
+  //   icon: "svg:new-briefcase",
+  // },
+  // {
+  //   title: "آگهی پروژه ای",
+  //   to: "/dashboard/employer/ads/create?employment_type=project_based",
+  //   icon: "svg:new-notepad-text",
+  // },
   {
-    title: "آگهی تمام وقت",
-    to: "/dashboard/employer/ads/create?employment_type=full_time",
+    title: "ایجاد آگهی",
+    to: "/dashboard/employer/ads/create",
     icon: "svg:new-briefcase",
   },
   {
-    title: "آگهی نیمه وقت",
-    to: "/dashboard/employer/ads/create?employment_type=part_time",
-    icon: "svg:new-briefcase",
-  },
-  {
-    title: "آگهی پروژه ای",
-    to: "/dashboard/employer/ads/create?employment_type=project_based",
+    title: "درخواست اظهار نامه",
+    to: "/dashboard/tax-returns/create",
     icon: "svg:new-notepad-text",
   },
 ];

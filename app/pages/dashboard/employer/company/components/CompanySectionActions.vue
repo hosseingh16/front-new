@@ -2,8 +2,8 @@
   <div class="mt-6 flex items-center justify-end gap-2">
     <button
       type="button"
-      class="btn btn-primary h-10 rounded-lg px-6 text-sm"
-      :disabled="saving"
+      class="btn btn-primary h-10 rounded-lg px-6 text-sm disabled:cursor-not-allowed disabled:opacity-60"
+      :disabled="saving || disabled"
       @click="emit('save')"
     >
       <Icon name="svg:check-check" size="18" />
@@ -25,6 +25,7 @@
 <script setup lang="ts">
 defineProps<{
   saving?: boolean;
+  disabled?: boolean;
 }>();
 
 const emit = defineEmits<{

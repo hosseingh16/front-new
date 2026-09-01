@@ -18,6 +18,7 @@
 
     <CompanySectionActions
       :saving="saving"
+      :disabled="!canSave"
       @save="emit('save')"
       @cancel="emit('cancel')"
     />
@@ -31,8 +32,9 @@ import type {
   CompanyProfileFormErrors,
   CompanyProfileFormModel,
 } from '~/types/company-profile-form'
+import { isCompanyProfileSectionComplete } from '~/types/company-profile-form'
 
-defineProps<{
+const props = defineProps<{
   form: CompanyProfileFormModel
   errors: CompanyProfileFormErrors
   saving?: boolean
@@ -42,4 +44,8 @@ const emit = defineEmits<{
   save: []
   cancel: []
 }>()
+
+const canSave = computed(() =>
+  isCompanyProfileSectionComplete(props.form, 'intro'),
+)
 </script>

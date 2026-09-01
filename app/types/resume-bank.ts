@@ -32,7 +32,7 @@ export const RESUME_BANK_JOB_STATUS_OPTIONS = [
 ] as const
 
 export const RESUME_BANK_FILTER_SECTIONS: ResumeBankFilterSection[] = [
-  { title: 'جستجو عنوان', icon: 'search-1' },
+  { title: 'جستجو عنوان شغلی', icon: 'search-1' },
   { title: 'مهارت‌ها و تخصص‌ها', icon: 'bag-4' },
   { title: 'وضعیت شغلی و سابقه', icon: 'work-history-2' },
   { title: 'حقوق', icon: 'wallet' },

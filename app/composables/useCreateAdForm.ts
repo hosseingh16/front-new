@@ -4,7 +4,6 @@ import type { Ad } from '~/types/ad'
 import type { Company } from '~/types/company'
 import type { CreateAdFormErrors, CreateAdFormModel } from '~/types/create-ad-form'
 import {
-  CREATE_AD_DRAFT_KEY,
   createEmptyCreateAdForm,
   createEmptyPartTimeWeekSchedule,
 } from '~/types/create-ad-form'
@@ -18,6 +17,7 @@ import {
   isPaidAdCity,
   PAID_AD_CITY_PRICE,
 } from '~/pages/dashboard/employer/ads/utils/paid-ad-cities'
+import { isDraftEmployerAdStatus } from '~/pages/dashboard/employer/utils/employer-ad'
 
 const LOOKUP_KEYS =
   'job_titles,employment_types,experience_levels,salary_ranges,benefits,proficiencies,education_levels,genders,accounting_programs,provinces'
@@ -326,12 +326,28 @@ export function useCreateAdForm(
     }
   }
 
+  async function fetchOwnedAd(id: string | number) {
+    try {
+      const result = await api.get<ApiResponse<Ad>>(`/ads/${id}`)
+      if (result.data) return result.data
+    } catch {
+      // Drafts and unpublished ads may only be available on the employer endpoint.
+    }
+
+    const result = await api.get<ApiResponse<Ad | { ad: Ad }>>(
+      `/employers/ads/${id}`,
+    )
+    const data = result.data
+    if (data && 'ad' in data && data.ad) return data.ad
+    if (data && 'id' in data) return data as Ad
+    return null
+  }
+
   async function loadAdForEdit() {
     if (!isEdit.value) return
     loadingAd.value = true
     try {
-      const result = await api.get<ApiResponse<Ad>>(`/ads/${adIdRef.value}`)
-      editingAd.value = result.data ?? null
+      editingAd.value = await fetchOwnedAd(adIdRef.value as string | number)
       if (!editingAd.value) {
         $toast.error('آگهی مورد نظر یافت نشد')
       }
@@ -384,37 +400,92 @@ export function useCreateAdForm(
     },
     { immediate: true },
   )
-  function restoreDraft() {
-    if (!import.meta.client) return
 
-    const raw = localStorage.getItem(CREATE_AD_DRAFT_KEY)
-    if (!raw) return
+  const isEditingDraft = computed(() =>
+    isDraftEmployerAdStatus(editingAd.value?.status),
+  )
+  const canSaveDraft = computed(() => !isEdit.value || isEditingDraft.value)
 
-    try {
-      const parsed = JSON.parse(raw) as CreateAdFormModel
-      form.value = { ...createEmptyCreateAdForm(), ...parsed }
-      if (
-        parsed.minimum_work_experience != null &&
-        parsed.minimum_work_experience !== ''
-      ) {
-        form.value.minimum_work_experience = String(parsed.minimum_work_experience)
-      }
-      if (form.value.province) {
-        loadCities(form.value.province)
-      }
-      $toast.info('پیش‌نویس بازیابی شد')
-    } catch {
-      localStorage.removeItem(CREATE_AD_DRAFT_KEY)
-    }
+  type AdWriteResponse = ApiResponse<{
+    ad?: Ad
+    payment?: {
+      redirect_url?: string
+      action?: string
+      payment_id?: number
+    } | null
+  } & Partial<Ad>>
+
+  function buildPayload(isDraft = false) {
+    return buildCreateAdPayload(
+      form.value,
+      {
+        jobTitles: jobTitles.value,
+        employmentTypes: employmentTypes.value,
+        experienceLevels: experienceLevels.value,
+        salaryRanges: salaryRanges.value,
+        benefits: benefits.value,
+        accountingPrograms: accountingPrograms.value,
+        educationLevels: educationLevels.value,
+        genders: genders.value,
+      },
+      { isDraft },
+    )
   }
 
-  function saveDraft() {
-    if (!import.meta.client) return
+  function getWriteErrorMessage(err: unknown, fallback: string) {
+    if (err && typeof err === 'object' && 'message' in err) {
+      const message = String((err as { message?: string }).message)
+      if (message) return message
+    }
+    return fallback
+  }
 
+  function getSavedAd(result: AdWriteResponse): Ad | null {
+    const data = result.data
+    if (!data) return null
+    if (data.ad && typeof data.ad === 'object' && 'id' in data.ad) {
+      return data.ad
+    }
+    if ('id' in data && data.id != null) {
+      return data as Ad
+    }
+    return null
+  }
+
+  async function writeAd(isDraft: boolean) {
+    const payload = buildPayload(isDraft)
+    return isEdit.value
+      ? await api.put<AdWriteResponse>(
+          `/employers/ads/${adIdRef.value}`,
+          payload,
+        )
+      : await api.post<AdWriteResponse>('/employers/ads', payload)
+  }
+
+  async function saveDraft() {
+    errors.value = {}
     savingDraft.value = true
     try {
-      localStorage.setItem(CREATE_AD_DRAFT_KEY, JSON.stringify(form.value))
+      const result = await writeAd(true)
+      const saved = getSavedAd(result)
       $toast.success('پیش‌نویس ذخیره شد')
+
+      if (!isEdit.value && saved?.id) {
+        await router.replace(`/dashboard/employer/ads/${saved.id}/edit`)
+        return true
+      }
+
+      if (saved) {
+        editingAd.value = {
+          ...(editingAd.value ?? saved),
+          ...saved,
+          status: saved.status || editingAd.value?.status || 'پیش نویس',
+        }
+      }
+      return true
+    } catch (err: unknown) {
+      $toast.error(getWriteErrorMessage(err, 'ذخیره پیش‌نویس با خطا مواجه شد'))
+      return false
     } finally {
       savingDraft.value = false
     }
@@ -449,35 +520,7 @@ export function useCreateAdForm(
 
     submitting.value = true
     try {
-      const payload = buildCreateAdPayload(form.value, {
-        jobTitles: jobTitles.value,
-        employmentTypes: employmentTypes.value,
-        experienceLevels: experienceLevels.value,
-        salaryRanges: salaryRanges.value,
-        benefits: benefits.value,
-        accountingPrograms: accountingPrograms.value,
-        educationLevels: educationLevels.value,
-        genders: genders.value,
-      })
-      type PublishResponse = ApiResponse<{
-        ad: Ad
-        payment?: {
-          redirect_url?: string
-          action?: string
-          payment_id?: number
-        } | null
-      }>
-
-      const result = isEdit.value
-        ? await api.put<PublishResponse>(
-            `/employers/ads/${adIdRef.value}`,
-            payload,
-          )
-        : await api.post<PublishResponse>('/employers/ads', payload)
-
-      if (!isEdit.value && import.meta.client) {
-        localStorage.removeItem(CREATE_AD_DRAFT_KEY)
-      }
+      const result = await writeAd(false)
 
       $toast.success(
         isEdit.value ? 'آگهی با موفقیت ویرایش شد' : 'آگهی با موفقیت ثبت شد',
@@ -491,13 +534,12 @@ export function useCreateAdForm(
       await router.push('/dashboard/employer/ads')
       return true
     } catch (err: unknown) {
-      const message =
-        err && typeof err === 'object' && 'message' in err
-          ? String((err as { message?: string }).message)
-          : isEdit.value
-            ? 'ویرایش آگهی با خطا مواجه شد'
-            : 'ثبت آگهی با خطا مواجه شد'
-      $toast.error(message)
+      $toast.error(
+        getWriteErrorMessage(
+          err,
+          isEdit.value ? 'ویرایش آگهی با خطا مواجه شد' : 'ثبت آگهی با خطا مواجه شد',
+        ),
+      )
       return false
     } finally {
       submitting.value = false
@@ -514,9 +556,7 @@ export function useCreateAdForm(
 
     if (copyAdId.value) {
       loadAdForCopy()
-      return
     }
-    // restoreDraft()
   })
 
   return {
@@ -526,6 +566,8 @@ export function useCreateAdForm(
     payableAmount,
     isEdit,
     isCopy: computed(() => copyAdId.value != null),
+    isEditingDraft,
+    canSaveDraft,
     submitting,
     savingDraft,
     loadingAd,

@@ -36,6 +36,7 @@ export default defineNuxtConfig({
       apiBase: "https://api.hihesab.com/api/v1",
       neshanMapKey: process.env.NUXT_PUBLIC_NESHAN_MAP_KEY || "",
       neshanServiceKey: process.env.NUXT_PUBLIC_NESHAN_SERVICE_KEY || "",
+      maxAdSoftwares: Number(process.env.NUXT_PUBLIC_MAX_AD_SOFTWARES) || 3,
     },
   },
 

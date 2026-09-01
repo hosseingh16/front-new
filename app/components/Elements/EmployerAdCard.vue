@@ -57,7 +57,7 @@
       </span>
 
       <div class="flex flex-wrap items-center gap-2">
-        <MDropdown hover>
+        <MDropdown hover placement="auto" align="end">
           <template #btn>
             <button
               type="button"

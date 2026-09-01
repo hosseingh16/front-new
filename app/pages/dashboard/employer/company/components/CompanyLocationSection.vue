@@ -62,6 +62,7 @@
 
     <CompanySectionActions
       :saving="saving"
+      :disabled="!canSave"
       @save="emit('save')"
       @cancel="emit('cancel')"
     />
@@ -76,6 +77,7 @@ import type {
   CompanyProfileFormErrors,
   CompanyProfileFormModel,
 } from "~/types/company-profile-form";
+import { isCompanyProfileSectionComplete } from "~/types/company-profile-form";
 import type { ISelectItem } from "~/types/select-item";
 
 const props = defineProps<{
@@ -91,6 +93,10 @@ const emit = defineEmits<{
   save: [];
   cancel: [];
 }>();
+
+const canSave = computed(() =>
+  isCompanyProfileSectionComplete(props.form, "location"),
+);
 
 const { items } = useLookups(["provinces"]);
 const provinceOptions = items("provinces");

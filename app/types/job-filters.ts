@@ -18,7 +18,7 @@ export interface JobFiltersModel {
 }
 export const JOB_FILTER_SECTIONS: JobFilterSection[] = [
   { title: 'نوع آگهی', icon: 'user-search-4' },
-  { title: 'جستجو عنوان', icon: 'search-1' },
+  { title: 'جستجو عنوان شغلی', icon: 'search-1' },
   { title: 'گروه‌های شغلی', icon: 'bag-4' },
   { title: 'استان', icon: 'location-6' },
   { title: 'حقوق', icon: 'wallet' },

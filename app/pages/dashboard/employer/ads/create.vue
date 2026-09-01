@@ -16,7 +16,7 @@
     </div>
 
     <div v-else class="mt-5 grid items-start gap-4 lg:grid-cols-8">
-      <div class="space-y-4 lg:col-span-6">
+      <div class="min-w-0 space-y-4 lg:col-span-6">
         <CreateAdGeneralFields
           :form="form"
           :errors="errors"

@@ -130,9 +130,14 @@
         <m-select2
           v-model="form.salary_range"
           label="حقوق:"
+          required
           :options="salaryRanges"
           placeholder="محدوده حقوق را انتخاب کنید"
+          :error="Boolean(errors.salary_range)"
         />
+        <p v-if="errors.salary_range" class="mt-1 text-xs text-[#EF4035]">
+          {{ errors.salary_range }}
+        </p>
       </div>
 
       <div>

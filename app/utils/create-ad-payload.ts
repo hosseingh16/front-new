@@ -72,6 +72,10 @@ export function validateCreateAdForm(
     errors.employment_type = 'نوع همکاری الزامی است'
   }
 
+  if (!form.salary_range.trim()) {
+    errors.salary_range = 'حقوق الزامی است'
+  }
+
   const resumeTermsError = getResumeTermsValidationError(form.resume_terms)
   if (resumeTermsError) {
     errors.resume_terms = resumeTermsError
@@ -122,16 +126,23 @@ export function validateCreateAdForm(
 export function buildCreateAdPayload(
   form: CreateAdFormModel,
   context: CreateAdPayloadContext,
+  options: { isDraft?: boolean } = {},
 ) {
   const title =
     resolveLabel(context.jobTitles, form.title) || form.title.trim()
   const employmentType =
     resolveLabel(context.employmentTypes, form.employment_type) ||
-    form.employment_type
+    form.employment_type.trim()
 
-  const payload: Record<string, unknown> = {
-    title,
-    employment_type: employmentType,
+  const payload: Record<string, unknown> = {}
+
+  if (options.isDraft) {
+    payload.is_draft = true
+  }
+
+  if (title || !options.isDraft) payload.title = title
+  if (employmentType || !options.isDraft) {
+    payload.employment_type = employmentType
   }
 
   if (form.company_address.trim()) {
