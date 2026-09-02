@@ -1,3 +1,5 @@
+import { SETTINGS_DEFAULTS } from '~/configs/settings-defaults'
+
 export type TaxReturnActivityType = 'خدماتی' | 'بازرگانی' | 'تولیدی'
 
 export type TaxReturnFormModel = {
@@ -46,9 +48,11 @@ export const TAX_RETURN_ACTIVITY_OPTIONS = [
   { label: 'تولیدی', value: 'تولیدی' },
 ] as const
 
-export const TAX_RETURN_DESC_MAX = 500
+export const TAX_RETURN_DESC_MAX =
+  SETTINGS_DEFAULTS['tax_return.desc_max_length']
 
-export const TAX_RETURN_PAYABLE_PRICE = 1_000_000
+export const TAX_RETURN_PAYABLE_PRICE =
+  SETTINGS_DEFAULTS['tax_return.payable_price']
 
 export function createEmptyTaxReturnForm(): TaxReturnFormModel {
   return {

@@ -63,7 +63,7 @@
 
           <CompanyImageUpload
             v-else
-            :max-size="10"
+          :max-size="uploadCompanyLogoModalMaxMb"
             :accept="['jpg', 'jpeg', 'png']"
             @select="onUploadLogo"
           />

@@ -25,6 +25,7 @@ export function useTaxReturnForm() {
   const api = useApi()
   const { $toast } = useNuxtApp()
   const { user, name, cellphone } = useCurrentUser()
+  const { taxReturnDescMaxLength } = useSettings()
 
   const form = ref<TaxReturnFormModel>(createEmptyTaxReturnForm())
   const errors = ref<TaxReturnFormErrors>({})
@@ -34,7 +35,9 @@ export function useTaxReturnForm() {
   const cityOptions = ref<ISelectItem[]>([])
   const citiesLoading = ref(false)
 
-  const canSubmit = computed(() => isTaxReturnFormReady(form.value))
+  const canSubmit = computed(() =>
+    isTaxReturnFormReady(form.value, taxReturnDescMaxLength.value),
+  )
 
   function syncContactFromUser() {
     form.value.name = name.value === '—' ? '' : name.value
@@ -66,7 +69,10 @@ export function useTaxReturnForm() {
   }
 
   async function submit() {
-    const validationErrors = validateTaxReturnForm(form.value)
+    const validationErrors = validateTaxReturnForm(
+      form.value,
+      taxReturnDescMaxLength.value,
+    )
     errors.value = validationErrors
 
     if (Object.keys(validationErrors).length) {

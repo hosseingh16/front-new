@@ -10,6 +10,7 @@ function getFetchErrorMessage(err: unknown) {
 
 export function useTaxReturns(options: { immediate?: boolean } = {}) {
   const api = useApi()
+  const { paginationTaxReturns } = useSettings()
   const immediate = options.immediate ?? true
 
   const items = ref<TaxReturnListItem[]>([])
@@ -27,7 +28,7 @@ export function useTaxReturns(options: { immediate?: boolean } = {}) {
     try {
       const result = await api.get<ApiResponse<TaxReturnListItem[]>>(
         '/tax-returns',
-        { query: { page, perPage: 12 } },
+        { query: { page, perPage: paginationTaxReturns.value } },
       )
 
       items.value = Array.isArray(result.data) ? result.data : []

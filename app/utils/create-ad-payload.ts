@@ -1,3 +1,4 @@
+import { SETTINGS_DEFAULTS } from '~/configs/settings-defaults'
 import type { CreateAdFormModel } from '~/types/create-ad-form'
 import type { ISelectItem } from '~/types/select-item'
 
@@ -32,27 +33,38 @@ function resolveLabels(
   return values.map((value) => resolveLabel(options, value)).filter(Boolean)
 }
 
-export const RESUME_TERMS_MIN_LENGTH = 10
-export const RESUME_TERMS_MAX_LENGTH = 5000
+export const RESUME_TERMS_MIN_LENGTH =
+  SETTINGS_DEFAULTS['ads.resume_terms_min_length']
+export const RESUME_TERMS_MAX_LENGTH =
+  SETTINGS_DEFAULTS['ads.resume_terms_max_length']
 
 export function getResumeTermsPlainLength(value: string) {
   return stripHtml(value).length
 }
 
-export function getResumeTermsValidationError(value: string) {
+export function getResumeTermsValidationError(
+  value: string,
+  limits: { min?: number; max?: number } = {},
+) {
+  const min = limits.min ?? RESUME_TERMS_MIN_LENGTH
+  const max = limits.max ?? RESUME_TERMS_MAX_LENGTH
   const resumeTermsLength = getResumeTermsPlainLength(value)
-  if (resumeTermsLength < RESUME_TERMS_MIN_LENGTH) {
-    return 'شرایط احراز باید حداقل ۱۰ کاراکتر باشد'
+  if (resumeTermsLength < min) {
+    return `شرایط احراز باید حداقل ${min.toLocaleString('fa-IR')} کاراکتر باشد`
   }
-  if (resumeTermsLength > RESUME_TERMS_MAX_LENGTH) {
-    return 'شرایط احراز نباید بیشتر از ۵۰۰۰ کاراکتر باشد'
+  if (resumeTermsLength > max) {
+    return `شرایط احراز نباید بیشتر از ${max.toLocaleString('fa-IR')} کاراکتر باشد`
   }
   return undefined
 }
 
 export function validateCreateAdForm(
   form: CreateAdFormModel,
-  options: { isPartTime?: boolean } = {},
+  options: {
+    isPartTime?: boolean
+    resumeTermsMin?: number
+    resumeTermsMax?: number
+  } = {},
 ) {
   const errors: Record<string, string> = {}
 
@@ -76,7 +88,10 @@ export function validateCreateAdForm(
     errors.salary_range = 'حقوق الزامی است'
   }
 
-  const resumeTermsError = getResumeTermsValidationError(form.resume_terms)
+  const resumeTermsError = getResumeTermsValidationError(form.resume_terms, {
+    min: options.resumeTermsMin,
+    max: options.resumeTermsMax,
+  })
   if (resumeTermsError) {
     errors.resume_terms = resumeTermsError
   }

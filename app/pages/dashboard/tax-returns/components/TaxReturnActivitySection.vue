@@ -33,12 +33,12 @@
           <p
             class="ms-auto text-xs"
             :class="
-              form.desc.length > TAX_RETURN_DESC_MAX
+              form.desc.length > taxReturnDescMaxLength
                 ? 'text-[#EF4035]'
                 : 'text-text-passive'
             "
           >
-            {{ form.desc.length }} / {{ TAX_RETURN_DESC_MAX }}
+            {{ form.desc.length }} / {{ taxReturnDescMaxLength }}
           </p>
         </div>
       </div>
@@ -50,7 +50,6 @@
 import Titr from '~/features/panel/cv/Titr.vue'
 import {
   TAX_RETURN_ACTIVITY_OPTIONS,
-  TAX_RETURN_DESC_MAX,
   type TaxReturnFormErrors,
   type TaxReturnFormModel,
 } from '~/types/tax-return-form'
@@ -60,6 +59,8 @@ defineProps<{
   form: TaxReturnFormModel
   errors: TaxReturnFormErrors
 }>()
+
+const { taxReturnDescMaxLength } = useSettings()
 
 const activityOptions: ISelectItem[] = TAX_RETURN_ACTIVITY_OPTIONS.map(
   (item) => ({

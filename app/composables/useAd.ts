@@ -65,6 +65,7 @@ export function useAd(id: MaybeRef<string | number>) {
 
 export function useSimilarAds(excludeId: MaybeRef<string | number>) {
   const api = useApi()
+  const { paginationSimilarAds } = useSettings()
   const excludeIdRef = toRef(excludeId)
 
   const { data, pending } = useAsyncData(
@@ -72,7 +73,7 @@ export function useSimilarAds(excludeId: MaybeRef<string | number>) {
     () =>
       api
         .get<ApiResponse<Opportunity[]>>('/opportunities', {
-          query: { per_page: 6, type: 'ad' },
+          query: { per_page: paginationSimilarAds.value, type: 'ad' },
         })
         .then((result) =>
           (result.data ?? []).filter(
@@ -82,7 +83,7 @@ export function useSimilarAds(excludeId: MaybeRef<string | number>) {
         ),
     {
       default: () => [] as Opportunity[],
-      watch: [excludeIdRef],
+      watch: [excludeIdRef, paginationSimilarAds],
     },
   )
 

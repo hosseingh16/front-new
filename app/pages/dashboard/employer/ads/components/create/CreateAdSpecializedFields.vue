@@ -26,7 +26,6 @@
 
 <script setup lang="ts">
 import Titr from '~/features/panel/cv/Titr.vue'
-import { resolveMaxAdSoftwares } from '~/configs/ad-limits'
 import type { CreateAdFormModel } from '~/types/create-ad-form'
 import type { ISelectItem } from '~/types/select-item'
 import CreateAdSkillSlider from './CreateAdSkillSlider.vue'
@@ -37,10 +36,8 @@ const props = defineProps<{
   proficiencies: ISelectItem[]
 }>()
 
-const { public: publicConfig } = useRuntimeConfig()
-const maxSoftwares = computed(() =>
-  resolveMaxAdSoftwares(publicConfig.maxAdSoftwares),
-)
+const { adsMaxSoftwares } = useSettings()
+const maxSoftwares = adsMaxSoftwares
 
 const softwareOptions = computed(() => {
   if (props.accountingPrograms.length) return props.accountingPrograms

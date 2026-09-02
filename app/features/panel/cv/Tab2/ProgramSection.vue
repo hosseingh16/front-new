@@ -134,6 +134,7 @@ export type ProgramItem = {
 const api = useApi();
 const { $toast } = useNuxtApp();
 const { refreshUser } = useCurrentUser();
+const { cvMaxSoftwares } = useSettings();
 const programsItems = ref<ProgramItem[]>([]);
 const { items: lookupItems } = useLookups("accounting_programs");
 const programs = lookupItems("accounting_programs");
@@ -271,6 +272,13 @@ async function addSoftware(item: ProgramItem) {
   );
   if (exists) {
     $toast.error("این نرم‌افزار حسابداری قبلاً ثبت شده است.");
+    return;
+  }
+
+  if (programsItems.value.length >= cvMaxSoftwares.value) {
+    $toast.error(
+      `نمی‌توانید بیش از ${cvMaxSoftwares.value} نرم‌افزار حسابداری ثبت کنید.`,
+    );
     return;
   }
 

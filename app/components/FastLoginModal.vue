@@ -124,12 +124,13 @@ import * as Yup from 'yup'
 import OtpInput from '~/features/account/components/OtpInput.vue'
 import { toPersianDigits } from '~/composables/useCountUp'
 import {
+  createEmptyOtpDigits,
+  otpCompletePattern,
+} from '~/configs/settings-defaults'
+import {
   isResumeBasicInfoComplete,
   isResumeBasicInfoRequiredError,
 } from '~/utils/api-error'
-
-const RESEND_SECONDS = 60
-const VOICE_DELAY_SECONDS = 20
 
 const props = withDefaults(
   defineProps<{
@@ -148,12 +149,14 @@ const emit = defineEmits<{
   (e: 'resume-incomplete'): void
 }>()
 
+const { otpLength, otpResendSeconds, otpVoiceDelaySeconds } = useSettings()
+
 const dialogRef = ref<HTMLDialogElement | null>(null)
 const step = ref<'phone' | 'otp'>('phone')
-const otpDigits = ref(['', '', '', '', ''])
+const otpDigits = ref(createEmptyOtpDigits())
 const applying = ref(false)
-const remaining = ref(RESEND_SECONDS)
-const voiceRemaining = ref(VOICE_DELAY_SECONDS)
+const remaining = ref(otpResendSeconds.value)
+const voiceRemaining = ref(otpVoiceDelaySeconds.value)
 
 let timer: ReturnType<typeof setInterval> | null = null
 
@@ -214,6 +217,14 @@ const stepTitle = computed(() =>
     : 'برای ادامه، شماره موبایل خود را تایید کنید',
 )
 
+function emptyOtp() {
+  return createEmptyOtpDigits(otpLength.value)
+}
+
+function isCompleteOtp(value: string) {
+  return otpCompletePattern(otpLength.value).test(value)
+}
+
 function clearTimer() {
   if (timer) {
     clearInterval(timer)
@@ -223,8 +234,8 @@ function clearTimer() {
 
 function startCountdown() {
   clearTimer()
-  remaining.value = RESEND_SECONDS
-  voiceRemaining.value = VOICE_DELAY_SECONDS
+  remaining.value = otpResendSeconds.value
+  voiceRemaining.value = otpVoiceDelaySeconds.value
   timer = setInterval(() => {
     if (remaining.value > 0) {
       remaining.value--
@@ -240,11 +251,11 @@ function startCountdown() {
 
 function resetLocalState() {
   step.value = 'phone'
-  otpDigits.value = ['', '', '', '', '']
+  otpDigits.value = emptyOtp()
   applying.value = false
   clearTimer()
-  remaining.value = RESEND_SECONDS
-  voiceRemaining.value = VOICE_DELAY_SECONDS
+  remaining.value = otpResendSeconds.value
+  voiceRemaining.value = otpVoiceDelaySeconds.value
   resetForm()
 }
 
@@ -269,7 +280,7 @@ function onBackdropClick(event: MouseEvent) {
 
 function goBackToPhone() {
   step.value = 'phone'
-  otpDigits.value = ['', '', '', '', '']
+  otpDigits.value = emptyOtp()
   clearTimer()
   if (mobile.value) setValues({ mobile: mobile.value })
 }
@@ -277,13 +288,13 @@ function goBackToPhone() {
 const onSubmitPhone = handleSubmit(async (data) => {
   await requestOtp(data.mobile)
   step.value = 'otp'
-  otpDigits.value = ['', '', '', '', '']
+  otpDigits.value = emptyOtp()
   startCountdown()
 })
 
 async function onResend() {
   if (!canResend.value || !mobile.value) return
-  otpDigits.value = ['', '', '', '', '']
+  otpDigits.value = emptyOtp()
   await requestOtp(mobile.value)
   startCountdown()
 }
@@ -296,11 +307,11 @@ async function onSubmitOtp(otpFromEvent?: string | Event) {
   if (busy.value) return
 
   const otp =
-    typeof otpFromEvent === 'string' && /^\d{5}$/.test(otpFromEvent)
+    typeof otpFromEvent === 'string' && isCompleteOtp(otpFromEvent)
       ? otpFromEvent
       : otpDigits.value.join('')
 
-  if (!/^\d{5}$/.test(otp)) return
+  if (!isCompleteOtp(otp)) return
 
   if (typeof otpFromEvent === 'string') {
     otpDigits.value = otp.split('')

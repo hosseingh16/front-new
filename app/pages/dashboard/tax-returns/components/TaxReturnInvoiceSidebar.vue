@@ -44,7 +44,6 @@
 
 <script setup lang="ts">
 import Titr from "~/features/panel/cv/Titr.vue";
-import { TAX_RETURN_PAYABLE_PRICE } from "~/types/tax-return-form";
 import { formatPayablePrice } from "~/utils/tax-return-payload";
 
 withDefaults(
@@ -62,5 +61,8 @@ const emit = defineEmits<{
   submit: [];
 }>();
 
-const formattedPrice = formatPayablePrice(TAX_RETURN_PAYABLE_PRICE);
+const { taxReturnPayablePrice } = useSettings();
+const formattedPrice = computed(() =>
+  formatPayablePrice(taxReturnPayablePrice.value),
+);
 </script>

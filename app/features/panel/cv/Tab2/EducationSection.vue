@@ -108,7 +108,7 @@ import EducationModal from "./EducationModal.vue";
 import RemoveItemModal from "~/components/M/RemoveItemModal.vue";
 import { getApiErrorMessage } from "~/utils/api-error";
 
-const MAX_EDUCATIONS = 5;
+const { cvMaxEducations } = useSettings();
 
 // Variabels
 const educationItems = ref<any[]>([]);
@@ -125,9 +125,9 @@ const removingIndex = ref<number | null>(null);
 const removing = ref(false);
 
 async function addEducation(item: any) {
-  if (educationItems.value.length >= MAX_EDUCATIONS) {
+  if (educationItems.value.length >= cvMaxEducations.value) {
     $toast.error(
-      `نمی‌توانید بیش از ${MAX_EDUCATIONS} سابقه تحصیلی ثبت کنید.`,
+      `نمی‌توانید بیش از ${cvMaxEducations.value} سابقه تحصیلی ثبت کنید.`,
     );
     return;
   }

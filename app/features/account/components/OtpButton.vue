@@ -34,8 +34,7 @@
 </template>
 
 <script setup lang="ts">
-const TOTAL_SECONDS = 70; // 1:10
-const VOICE_DELAY_SECONDS = 20;
+const { otpResendSeconds, otpVoiceDelaySeconds } = useSettings();
 
 const props = defineProps<{
   loading?: boolean;
@@ -47,8 +46,8 @@ const emit = defineEmits<{
   (e: 'voice'): void;
 }>();
 
-const remaining = ref(TOTAL_SECONDS);
-const voiceRemaining = ref(VOICE_DELAY_SECONDS);
+const remaining = ref(otpResendSeconds.value);
+const voiceRemaining = ref(otpVoiceDelaySeconds.value);
 const showResend = computed(() => remaining.value <= 0);
 const voiceAvailable = computed(() => voiceRemaining.value <= 0);
 const isVoiceInactive = computed(
@@ -92,8 +91,8 @@ function tickCountdowns() {
 
 function startCountdown() {
   clearTimer();
-  remaining.value = TOTAL_SECONDS;
-  voiceRemaining.value = VOICE_DELAY_SECONDS;
+  remaining.value = otpResendSeconds.value;
+  voiceRemaining.value = otpVoiceDelaySeconds.value;
   timer = setInterval(tickCountdowns, 1000);
 }
 

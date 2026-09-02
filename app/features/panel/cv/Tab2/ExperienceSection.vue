@@ -127,6 +127,7 @@ import RemoveItemModal from "~/components/M/RemoveItemModal.vue";
 const api = useApi();
 const { $toast } = useNuxtApp();
 const { refreshUser } = useCurrentUser();
+const { cvMaxPriors } = useSettings();
 
 // Variabels
 const experiencesItems = ref<any[]>([]);
@@ -155,6 +156,13 @@ const addPrior = async (item: any) => {
   );
   if (exists) {
     alert("duplicate prior");
+    return;
+  }
+
+  if (experiencesItems.value.length >= cvMaxPriors.value) {
+    $toast.error(
+      `نمی توانید بیش از ${cvMaxPriors.value} سابقه شغلی ایجاد کنید.`,
+    );
     return;
   }
 

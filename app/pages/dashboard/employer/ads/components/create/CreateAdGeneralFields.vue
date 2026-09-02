@@ -54,7 +54,7 @@
                 >
                   <span class="line-clamp-1 text-right">{{ item.label }}</span>
                   <span
-                    v-if="!isPaidAdCity(item.label)"
+                    v-if="!isPaidCity(item.label)"
                     class="shrink-0 rounded-md bg-success-soft px-1.5 py-0.5 text-[10px] font-semibold leading-none text-success-500"
                   >
                     رایگان
@@ -65,7 +65,7 @@
               <template #option="{ item }">
                 <span class="line-clamp-1 text-right">{{ item.label }}</span>
                 <span
-                  v-if="!isPaidAdCity(item.label)"
+                  v-if="!isPaidCity(item.label)"
                   class="shrink-0 rounded-md bg-success-soft px-1.5 py-0.5 text-[10px] font-semibold leading-none text-success-500"
                 >
                   رایگان
@@ -179,10 +179,15 @@ const props = defineProps<{
 
 const { items } = useLookups(["provinces"]);
 const provinceOptions = items("provinces");
+const { adsPaidCities } = useSettings();
 
 const paidCityName = computed(() =>
-  findPaidAdCityName(props.form.city_name),
+  findPaidAdCityName(props.form.city_name, adsPaidCities.value),
 );
+
+function isPaidCity(label?: string | null) {
+  return isPaidAdCity(label, adsPaidCities.value);
+}
 
 const genderItems = computed(() => {
   if (props.genders.length) {

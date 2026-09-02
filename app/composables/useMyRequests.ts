@@ -1,3 +1,4 @@
+import { SETTINGS_DEFAULTS } from '~/configs/settings-defaults'
 import type { ApiResponse } from '~/types/api'
 import type { MyRequest, MyRequestTab } from '~/types/my-request'
 import {
@@ -9,7 +10,8 @@ import {
   type JobSeekerAdsRequestApi,
 } from '~/pages/dashboard/utils/map-my-request'
 
-export const MY_REQUESTS_PAGE_SIZE = 5
+export const MY_REQUESTS_PAGE_SIZE =
+  SETTINGS_DEFAULTS['pagination.my_requests']
 
 function getFetchErrorMessage(err: unknown) {
   if (err && typeof err === 'object' && 'message' in err) {
@@ -20,6 +22,7 @@ function getFetchErrorMessage(err: unknown) {
 
 export function useMyRequests(options: { immediate?: boolean } = {}) {
   const api = useApi()
+  const { paginationMyRequests } = useSettings()
   const immediate = options.immediate ?? true
   const requests = ref<MyRequest[]>([])
   const loading = ref(false)
@@ -58,12 +61,12 @@ export function useMyRequests(options: { immediate?: boolean } = {}) {
   const totalCount = computed(() => requests.value.length)
 
   const lastPage = computed(() =>
-    Math.max(1, Math.ceil(filteredRequests.value.length / MY_REQUESTS_PAGE_SIZE)),
+    Math.max(1, Math.ceil(filteredRequests.value.length / paginationMyRequests.value)),
   )
 
   const paginatedRequests = computed(() => {
-    const start = (currentPage.value - 1) * MY_REQUESTS_PAGE_SIZE
-    return filteredRequests.value.slice(start, start + MY_REQUESTS_PAGE_SIZE)
+    const start = (currentPage.value - 1) * paginationMyRequests.value
+    return filteredRequests.value.slice(start, start + paginationMyRequests.value)
   })
 
   function goToPage(page: number) {

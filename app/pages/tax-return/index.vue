@@ -128,7 +128,7 @@
                     :error="Boolean(heroErrors.desc)"
                   />
                   <p class="mt-1 text-left text-xs text-text-passive">
-                    {{ heroForm.desc.length }} / {{ TAX_RETURN_DESC_MAX }}
+                    {{ heroForm.desc.length }} / {{ taxReturnDescMaxLength }}
                   </p>
                 </div>
               </div>
@@ -379,7 +379,6 @@ import type { ISelectItem } from "~/types/select-item";
 import type { TaxReturnActivityType } from "~/types/tax-return-form";
 import {
   TAX_RETURN_ACTIVITY_OPTIONS,
-  TAX_RETURN_DESC_MAX,
 } from "~/types/tax-return-form";
 
 type TaxReturnPayment = {
@@ -395,6 +394,7 @@ type StoreTaxReturnResponse = ApiResponse<{
 
 const api = useApi();
 const { $toast } = useNuxtApp();
+const { taxReturnDescMaxLength } = useSettings();
 
 const heroFeatures = [
   {
@@ -482,8 +482,8 @@ function validateHeroForm() {
   const desc = heroForm.desc.trim();
   if (!desc) {
     heroErrors.desc = "شرح فعالیت الزامی است.";
-  } else if (desc.length > TAX_RETURN_DESC_MAX) {
-    heroErrors.desc = `شرح فعالیت نباید بیشتر از ${TAX_RETURN_DESC_MAX} کاراکتر باشد.`;
+  } else if (desc.length > taxReturnDescMaxLength.value) {
+    heroErrors.desc = `شرح فعالیت نباید بیشتر از ${taxReturnDescMaxLength.value} کاراکتر باشد.`;
   } else {
     heroErrors.desc = "";
   }

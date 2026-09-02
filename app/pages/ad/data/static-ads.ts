@@ -1,3 +1,4 @@
+import { SETTINGS_DEFAULTS } from '~/configs/settings-defaults'
 import type { AdList } from '~/types/ad'
 
 export type StaticAd = AdList & {
@@ -88,4 +89,4 @@ export const STATIC_ADS: StaticAd[] = [
   },
 ]
 
-export const ADS_PAGE_SIZE = 12
+export const ADS_PAGE_SIZE = SETTINGS_DEFAULTS['pagination.ads']

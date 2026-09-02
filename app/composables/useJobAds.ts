@@ -70,17 +70,19 @@ export function useJobAds(
   sort?: Ref<AdsSort>,
 ) {
   const api = useApi();
+  const { paginationAds } = useSettings();
   const debouncedFilters = ref<JobFiltersModel>(cloneFilters(filters.value));
 
   let debounceTimer: ReturnType<typeof setTimeout> | null = null;
 
-  const opportunitiesQuery = computed(() =>
-    buildOpportunitiesQuery(
+  const opportunitiesQuery = computed(() => ({
+    ...buildOpportunitiesQuery(
       debouncedFilters.value,
       page.value,
       sort?.value ?? "newest",
     ),
-  );
+    per_page: paginationAds.value,
+  }));
 
   const {
     data,
@@ -109,7 +111,9 @@ export function useJobAds(
         lastPage: 1,
         total: 0,
       }),
-      watch: sort ? [page, debouncedFilters, sort] : [page, debouncedFilters],
+      watch: sort
+        ? [page, debouncedFilters, sort, paginationAds]
+        : [page, debouncedFilters, paginationAds],
     },
   );
 

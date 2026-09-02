@@ -103,7 +103,6 @@
 </template>
 
 <script setup lang="ts">
-import { TAX_RETURN_PAYABLE_PRICE } from "~/types/tax-return-form";
 import { formatJalaliDate } from "~/utils/format-jalali-date";
 import { formatPayablePrice } from "~/utils/tax-return-payload";
 
@@ -119,6 +118,7 @@ onUnmounted(() => {
 
 type PaymentType = "TaxReturn" | "Ad" | "Project" | string;
 
+const { taxReturnPayablePrice } = useSettings();
 const route = useRoute();
 const query = computed(() => route.query);
 
@@ -153,7 +153,7 @@ const price = computed(() => {
     if (Number.isFinite(parsed) && parsed > 0) return parsed;
   }
 
-  if (paymentType.value === "TaxReturn") return TAX_RETURN_PAYABLE_PRICE;
+  if (paymentType.value === "TaxReturn") return taxReturnPayablePrice.value;
   return null;
 });
 

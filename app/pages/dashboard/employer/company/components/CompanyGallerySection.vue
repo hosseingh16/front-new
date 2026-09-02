@@ -9,7 +9,6 @@
 
     <div class="mt-4">
       <CompanyImageUpload
-        :max-size="2"
         :accept="['jpg', 'jpeg', 'png', 'webp', 'gif']"
         @select="(file) => emit('upload', file)"
       />

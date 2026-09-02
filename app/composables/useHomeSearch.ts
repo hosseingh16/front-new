@@ -9,8 +9,6 @@ import type { Opportunity } from '~/types/opportunity'
 import type { AdList } from '~/types/ad'
 import type { ProjectList } from '~/types/project'
 
-const SEARCH_RESULT_LIMIT = 5
-
 type SearchOpportunity = Opportunity | Record<string, unknown>
 
 function mapOpportunityToSearchItem(opportunity: SearchOpportunity): HomeSearchItem | null {
@@ -111,6 +109,7 @@ function viewAllPath(tab: Exclude<HomeSearchTab, 'all'>, keyword: string): strin
 export function useHomeSearch() {
   const api = useApi()
   const router = useRouter()
+  const { searchHomeResultLimit } = useSettings()
 
   const keyword = ref('')
   const debouncedKeyword = ref('')
@@ -155,7 +154,7 @@ export function useHomeSearch() {
         api.get<ApiResponse<SearchOpportunity[]>>('/opportunities', {
           query: {
             search,
-            count: SEARCH_RESULT_LIMIT,
+            count: searchHomeResultLimit.value,
           },
         }),
         api.get<ApiResponse<CompanyList[]>>('/companies', {
@@ -171,12 +170,12 @@ export function useHomeSearch() {
       const jobItems = (opportunitiesResult.data ?? [])
         .map(mapOpportunityToSearchItem)
         .filter((item): item is HomeSearchItem => item !== null)
-        .slice(0, SEARCH_RESULT_LIMIT)
+        .slice(0, searchHomeResultLimit.value)
 
       const organizationItems = (companiesResult.data ?? [])
         .map(mapCompanyToSearchItem)
         .filter((item): item is HomeSearchItem => item !== null)
-        .slice(0, SEARCH_RESULT_LIMIT)
+        .slice(0, searchHomeResultLimit.value)
 
       items.value = [...jobItems, ...organizationItems]
       highlightedIndex.value = -1

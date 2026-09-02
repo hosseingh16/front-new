@@ -15,7 +15,6 @@ import {
 import type { ISelectItem } from '~/types/select-item'
 import {
   isPaidAdCity,
-  PAID_AD_CITY_PRICE,
 } from '~/pages/dashboard/employer/ads/utils/paid-ad-cities'
 import { isDraftEmployerAdStatus } from '~/pages/dashboard/employer/utils/employer-ad'
 
@@ -51,6 +50,12 @@ export function useCreateAdForm(
   const route = useRoute()
   const router = useRouter()
   const { $toast } = useNuxtApp()
+  const {
+    adsPaidCities,
+    adsPaidCityPrice,
+    adsResumeTermsMinLength,
+    adsResumeTermsMaxLength,
+  } = useSettings()
 
   const adIdRef = toRef(options.adId ?? null)
   const isEdit = computed(() => adIdRef.value != null && adIdRef.value !== '')
@@ -192,7 +197,9 @@ export function useCreateAdForm(
   })
 
   const payableAmount = computed(() =>
-    isPaidAdCity(form.value.city_name) ? PAID_AD_CITY_PRICE : 0,
+    isPaidAdCity(form.value.city_name, adsPaidCities.value)
+      ? adsPaidCityPrice.value
+      : 0,
   )
 
   async function loadCities(provinceId: number) {
@@ -496,7 +503,10 @@ export function useCreateAdForm(
     (value) => {
       if (!errors.value.resume_terms) return
 
-      const nextError = getResumeTermsValidationError(value)
+      const nextError = getResumeTermsValidationError(value, {
+        min: adsResumeTermsMinLength.value,
+        max: adsResumeTermsMaxLength.value,
+      })
       if (nextError) {
         errors.value = { ...errors.value, resume_terms: nextError }
         return
@@ -510,6 +520,8 @@ export function useCreateAdForm(
   async function publish() {
     const validationErrors = validateCreateAdForm(form.value, {
       isPartTime: isPartTime.value,
+      resumeTermsMin: adsResumeTermsMinLength.value,
+      resumeTermsMax: adsResumeTermsMaxLength.value,
     })
     errors.value = validationErrors
 

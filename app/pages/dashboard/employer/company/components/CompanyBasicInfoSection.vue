@@ -21,7 +21,6 @@
         </div>
         <CompanyImageUpload
           v-else
-          :max-size="2"
           :accept="['jpg', 'jpeg', 'png', 'webp', 'gif']"
           @select="(file) => emit('upload-logo', file)"
         />

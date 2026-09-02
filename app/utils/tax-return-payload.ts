@@ -14,6 +14,7 @@ const ACTIVITY_TYPES: TaxReturnActivityType[] = [
 
 export function validateTaxReturnForm(
   form: TaxReturnFormModel,
+  descMax = TAX_RETURN_DESC_MAX,
 ): TaxReturnFormErrors {
   const errors: TaxReturnFormErrors = {}
 
@@ -28,8 +29,8 @@ export function validateTaxReturnForm(
   const desc = form.desc.trim()
   if (!desc) {
     errors.desc = 'توضیحات الزامی است.'
-  } else if (desc.length > TAX_RETURN_DESC_MAX) {
-    errors.desc = `توضیحات نباید بیشتر از ${TAX_RETURN_DESC_MAX} کاراکتر باشد.`
+  } else if (desc.length > descMax) {
+    errors.desc = `توضیحات نباید بیشتر از ${descMax} کاراکتر باشد.`
   }
 
   if (form.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
@@ -78,11 +79,14 @@ export function buildTaxReturnPayload(
   return payload
 }
 
-export function isTaxReturnFormReady(form: TaxReturnFormModel) {
+export function isTaxReturnFormReady(
+  form: TaxReturnFormModel,
+  descMax = TAX_RETURN_DESC_MAX,
+) {
   return (
     Boolean(form.activity_type) &&
     Boolean(form.desc.trim()) &&
-    form.desc.trim().length <= TAX_RETURN_DESC_MAX &&
+    form.desc.trim().length <= descMax &&
     form.province != null &&
     form.city != null &&
     form.lat != null &&

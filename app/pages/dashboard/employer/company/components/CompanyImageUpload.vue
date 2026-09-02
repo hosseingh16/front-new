@@ -34,6 +34,8 @@
 </template>
 
 <script setup lang="ts">
+const { uploadCompanyImageMaxMb } = useSettings();
+
 const props = withDefaults(
   defineProps<{
     title?: string;
@@ -43,8 +45,11 @@ const props = withDefaults(
   {
     title: "برای آپلود تصویر کلیک کنید",
     accept: () => ["jpg", "jpeg", "png", "webp", "gif"],
-    maxSize: 2,
   },
+);
+
+const maxSize = computed(
+  () => props.maxSize ?? uploadCompanyImageMaxMb.value,
 );
 
 const emit = defineEmits<{
@@ -68,8 +73,8 @@ function onSelect(event: Event) {
     return;
   }
 
-  if (file.size > props.maxSize * 1024 * 1024) {
-    localError.value = `حجم تصویر نباید بیشتر از ${props.maxSize}MB باشد`;
+  if (file.size > maxSize.value * 1024 * 1024) {
+    localError.value = `حجم تصویر نباید بیشتر از ${maxSize.value}MB باشد`;
     return;
   }
 
