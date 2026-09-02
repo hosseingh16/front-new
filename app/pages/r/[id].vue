@@ -291,14 +291,78 @@ async function fetchPayment() {
   }
 }
 
-async function initiatePayment(): Promise<string | null> {
+type PayPayload = {
+  redirect_url?: string | null;
+  action?: string | null;
+  ref_id?: string | null;
+  RefId?: string | null;
+  token?: string | null;
+  inputs?: { RefId?: string | null; ref_id?: string | null };
+};
+
+function isHttpUrl(value: string) {
+  return /^https?:\/\//i.test(value);
+}
+
+function unwrapPay(response: unknown): PayPayload {
+  if (!response || typeof response !== "object") return {};
+  const record = response as Record<string, unknown>;
+  const nested = record.data;
+  if (nested && typeof nested === "object" && !Array.isArray(nested)) {
+    return { ...record, ...(nested as PayPayload) };
+  }
+  return record as PayPayload;
+}
+
+function resolveRefId(payload: PayPayload, fallback?: string | null) {
+  const candidates = [
+    payload.ref_id,
+    payload.RefId,
+    payload.token,
+    payload.inputs?.RefId,
+    payload.inputs?.ref_id,
+    fallback,
+  ];
+
+  for (const value of candidates) {
+    const text = value == null ? "" : String(value).trim();
+    if (text && !isHttpUrl(text)) return text;
+  }
+
+  return null;
+}
+
+function resolveActionUrl(payload: PayPayload) {
+  const action = payload.action?.trim();
+  return action && isHttpUrl(action) ? action : null;
+}
+
+function postRefId(refIdValue: string, action: string) {
+  if (!import.meta.client) return;
+
+  const form = document.createElement("form");
+  form.setAttribute("method", "POST");
+  form.setAttribute("action", action);
+  form.setAttribute("target", "_self");
+
+  const hiddenField = document.createElement("input");
+  hiddenField.setAttribute("type", "hidden");
+  hiddenField.setAttribute("name", "RefId");
+  hiddenField.setAttribute("value", refIdValue);
+  form.appendChild(hiddenField);
+
+  document.body.appendChild(form);
+  form.submit();
+}
+
+async function initiatePayment(): Promise<PayPayload | null> {
   paying.value = true;
   try {
-    const response = await client<{ redirect_url?: string; action?: string }>(
+    const response = await client<PayPayload | { data: PayPayload }>(
       `/payments/${paymentId.value}/pay`,
       { baseURL: baseUrl.value, method: "GET" },
     );
-    return response.redirect_url || response.action || null;
+    return unwrapPay(response);
   } catch {
     errorMessage.value = "خطا در اتصال به درگاه پرداخت. لطفا دوباره تلاش کنید.";
     return null;
@@ -357,11 +421,28 @@ async function goNow() {
   if (redirecting.value || paying.value || alreadyPaid.value) return;
 
   clearTimer();
-  const url = await initiatePayment();
-  if (url) {
+  const payload = await initiatePayment();
+  if (!payload) return;
+
+  const refId = resolveRefId(payload, paymentData.value?.ref_id);
+  const action = resolveActionUrl(payload);
+
+  if (refId && action) {
+    if (paymentData.value) paymentData.value.ref_id = refId;
+    redirecting.value = true;
+    postRefId(refId, action);
+    return;
+  }
+
+  const url = payload.redirect_url?.trim();
+  if (url && isHttpUrl(url)) {
     redirecting.value = true;
     window.location.href = url;
+    return;
   }
+
+  errorMessage.value =
+    "اطلاعات درگاه پرداخت ناقص است. لطفا دوباره تلاش کنید.";
 }
 
 function cancel() {
