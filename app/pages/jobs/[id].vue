@@ -93,7 +93,7 @@
                 aria-label="اشتراک‌گذاری"
                 @click="shareAd"
               >
-                <Icon name="material-symbols:share-outline" size="16" />
+                <Icon name="lucide:share-2" size="18" />
               </button>
               <BookmarkToggleButton
                 v-if="ad?.id"
@@ -125,10 +125,7 @@
           @resume="showResumeModal"
           @report-issue="showReportModal"
         />
-        <section
-          v-if="loadingSimilar || similarAds.length"
-          class="mt-10"
-        >
+        <section v-if="loadingSimilar || similarAds.length" class="mt-10">
           <div class="mb-4 flex items-center justify-between gap-3">
             <div class="flex items-center gap-1">
               <span
@@ -291,8 +288,13 @@ onMounted(() => {
   onUnmounted(() => mediaQuery.removeEventListener("change", syncIsMobile));
 });
 
-const { logoSrc: companyLogoSrc, onLogoError, bindLogoImg } =
-  useCompanyLogoDisplaySrc(() => ad.value?.company?.logo || ad.value?.company_logo);
+const {
+  logoSrc: companyLogoSrc,
+  onLogoError,
+  bindLogoImg,
+} = useCompanyLogoDisplaySrc(
+  () => ad.value?.company?.logo || ad.value?.company_logo,
+);
 
 const coverImage = computed(
   () => ad.value?.company?.cover || "/images/ad-cover-bg.jpg",

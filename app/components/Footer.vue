@@ -192,7 +192,7 @@ const aboutLinks: FooterLink[] = [
 
 const socials = [
   { name: "telegram", href: "https://t.me/hihesabchannel" },
-  { name: "linkedin", href: "https://www.linkedin.com/company/hihesab/" },
+  { name: "linkedin", href: "https://www.linkedin.com/company/hih" },
   { name: "instagram", href: "https://www.instagram.com/hi.hesab" },
 ] as const;
 

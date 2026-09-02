@@ -73,17 +73,40 @@ button:disabled {
 .Toastify__toast-container[popover] {
   inset: unset;
   top: 1.25rem;
-  left: 10%;
-  transform: translateX(-50%);
+  left: 1rem;
+  right: auto;
+  transform: none;
   border: none;
   background: transparent;
   padding: 4px;
   margin: 0;
   overflow: visible;
-  width: var(--toastify-toast-width);
+  box-sizing: border-box;
+  width: min(var(--toastify-toast-width), calc(100vw - 2rem));
   max-width: calc(100vw - 2rem);
   height: fit-content;
   position: fixed;
+}
+
+.Toastify__toast-container[popover] .Toastify__toast {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.Toastify__toast-container[popover] .Toastify__toast-body {
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 480px) {
+  .Toastify__toast-container[popover] {
+    top: max(0.75rem, env(safe-area-inset-top, 0px));
+    left: max(0.75rem, env(safe-area-inset-left, 0px));
+    right: max(0.75rem, env(safe-area-inset-right, 0px));
+    width: auto;
+    max-width: none;
+  }
 }
 
 .Toastify__toast--success,
