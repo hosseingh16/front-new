@@ -17,6 +17,7 @@
     </div>
 
     <button
+      v-if="showVoiceButton"
       type="button"
       class="btn btn-ghost h-8 px-2"
       :class="
@@ -50,6 +51,7 @@ const remaining = ref(otpResendSeconds.value);
 const voiceRemaining = ref(otpVoiceDelaySeconds.value);
 const showResend = computed(() => remaining.value <= 0);
 const voiceAvailable = computed(() => voiceRemaining.value <= 0);
+const showVoiceButton = computed(() => voiceAvailable.value || !!props.voiceDisabled);
 const isVoiceInactive = computed(
   () => props.loading || props.voiceDisabled || !voiceAvailable.value,
 );
@@ -60,9 +62,6 @@ const formatted = computed(() => {
 });
 const voiceLabel = computed(() => {
   if (props.voiceDisabled) return 'تماس صوتی ارسال شد';
-  if (!voiceAvailable.value) {
-    return `دریافت کد با تماس تا ${voiceRemaining.value} ثانیه دیگر`;
-  }
   return 'دریافت کد با تماس';
 });
 

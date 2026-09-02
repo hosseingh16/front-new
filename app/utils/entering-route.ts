@@ -213,17 +213,24 @@ export function resolvePostLoginLocation(
   const redirect = firstQueryString(query.redirect)
 
   if (!hasRole) {
-    if (entering?.role) {
-      return buildEnteringRoute(entering)
+    const nextQuery: Record<string, string> = {
+      step: ROLE_SELECTION_STEP,
+      ...extraQuery(query),
     }
 
-    const nextQuery: Record<string, string> = { step: ROLE_SELECTION_STEP }
+    if (entering) {
+      nextQuery.to = entering.to
+      if (entering.role) nextQuery.role = entering.role
+    }
+
     if (
       redirect &&
       isSafeInternalPath(splitPathAndQuery(redirect).path) &&
       splitPathAndQuery(redirect).path !== paths.entering
     ) {
       nextQuery.redirect = redirect
+    } else if (!nextQuery.redirect && entering) {
+      nextQuery.redirect = paths.entering
     }
 
     return { path: paths.login, query: nextQuery }

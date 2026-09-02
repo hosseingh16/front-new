@@ -115,6 +115,7 @@ const items: RequestTypeItem[] = [
     icon: "bag-1",
     buttonText: "ایجاد آگهی",
     role: "employer",
+    to: paths.employer.adsCreate,
   },
   {
     id: "jobs",
@@ -139,12 +140,6 @@ const items: RequestTypeItem[] = [
   },
 ];
 
-onMounted(async () => {
-  const entering = enteringFromAuthQuery(route.query);
-  if (!entering?.role) return;
-  await navigateTo(buildEnteringRoute(entering), { replace: true });
-});
-
 function goBack() {
   emits("onChangeDirection", "back");
   emits("onChangeStep", props.step - 1);
@@ -155,14 +150,23 @@ async function onSelect(item: RequestTypeItem) {
 
   pendingId.value = item.id;
   try {
-    if (
-      item.role === "employer" &&
-      !props.forced &&
-      !enteringFromAuthQuery(route.query)?.role
-    ) {
+    if (item.role === "employer" && !props.forced) {
       await updateUserRole(item.role);
       emits("selected", item.role);
       emits("onChangeDirection", "forward");
+
+      const cta = enteringFromAuthQuery(route.query);
+      if (cta?.query?.employment_type) {
+        await navigateTo(
+          buildEnteringRoute({
+            to: cta.to || paths.employer.adsCreate,
+            role: item.role,
+            query: cta.query,
+          }),
+        );
+        return;
+      }
+
       emits("onChangeStep", props.step + 1);
       pendingId.value = null;
       return;

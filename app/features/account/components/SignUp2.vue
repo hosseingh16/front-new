@@ -120,7 +120,8 @@ import SignUpStepper from "~/features/account/components/SignUpStepper.vue";
 import type { DirectionT } from "../types";
 import { useForm } from "vee-validate";
 import * as Yup from "yup";
-import { resolvePostLoginLocation } from "~/utils/entering-route";
+import { firstQueryString } from "~/utils/entering-route";
+import { paths } from "~/routes";
 
 // Model
 const model = defineModel({
@@ -227,9 +228,14 @@ const onSubmit = handleSubmit(async (data) => {
 
   if (props.inline) return;
 
-  await navigateTo(resolvePostLoginLocation(route.query, false), {
-    replace: true,
-  });
+  const nextQuery: Record<string, string> = { step: "5" };
+  for (const [key, value] of Object.entries(route.query)) {
+    if (key === "step") continue;
+    const str = firstQueryString(value);
+    if (str) nextQuery[key] = str;
+  }
+
+  await navigateTo({ path: paths.login, query: nextQuery }, { replace: true });
 });
 
 async function onSelectImage(event: Event) {

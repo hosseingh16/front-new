@@ -196,35 +196,46 @@ export const menuMap: Record<string, MenuMeta> = {
     to: "/dashboard/ad",
   },
 
-  dashboard_action_create_fulltime_ad: {
-    label: "آگهی تمام‌وقت",
+  dashboard_action_create_ad: {
+    label: "ایجاد آگهی",
     icon: "svg:illust-create-job",
     dashboardIcon: "svg:illust-create-job",
-    to: "/dashboard/employer/ads/create?employment_type=full_time",
+    to: "/dashboard/employer/ads/create",
   },
 
-  dashboard_action_create_parttime_ad: {
-    label: "آگهی نیمه‌وقت",
-    icon: "svg:illust-create-bag",
-    dashboardIcon: "svg:illust-create-bag",
-    to: "/dashboard/employer/ads/create?employment_type=part_time",
-  },
+  // #future
+  // dashboard_action_create_fulltime_ad: {
+  //   label: "آگهی تمام‌وقت",
+  //   icon: "svg:illust-create-job",
+  //   dashboardIcon: "svg:illust-create-job",
+  //   to: "/dashboard/employer/ads/create?employment_type=full_time",
+  // },
 
-  dashboard_action_accounting_project: {
-    label: "پروژه حسابداری",
-    icon: "svg:illust-project-user",
-    dashboardIcon: "svg:illust-project-user",
-    dashboardSubtitle: "به زودی",
-    to: "",
-  },
+  // #future
+  // dashboard_action_create_parttime_ad: {
+  //   label: "آگهی نیمه‌وقت",
+  //   icon: "svg:illust-create-bag",
+  //   dashboardIcon: "svg:illust-create-bag",
+  //   to: "/dashboard/employer/ads/create?employment_type=part_time",
+  // },
 
-  dashboard_action_consulting: {
-    label: "نوبت مشاوره",
-    icon: "svg:illust-consulting-user",
-    dashboardIcon: "svg:illust-consulting-user",
-    dashboardSubtitle: "به زودی",
-    to: "",
-  },
+  // #future
+  // dashboard_action_accounting_project: {
+  //   label: "پروژه حسابداری",
+  //   icon: "svg:illust-project-user",
+  //   dashboardIcon: "svg:illust-project-user",
+  //   dashboardSubtitle: "به زودی",
+  //   to: "",
+  // },
+
+  // #future
+  // dashboard_action_consulting: {
+  //   label: "نوبت مشاوره",
+  //   icon: "svg:illust-consulting-user",
+  //   dashboardIcon: "svg:illust-consulting-user",
+  //   dashboardSubtitle: "به زودی",
+  //   to: "",
+  // },
 
   dashboard_action_ads: {
     label: "فرصت‌های شغلی",

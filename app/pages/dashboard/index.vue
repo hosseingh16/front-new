@@ -1,5 +1,5 @@
 <template>
-  <div class="space-y-8">
+  <div class="space-y-12">
     <section>
       <DashboardStatusAlert
         v-if="statusAlert && !isWelcomeVisible"
@@ -14,7 +14,10 @@
         پیشخوان
       </h1>
 
-      <div class="mt-4 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-5">
+      <div
+        class="mt-4 grid grid-cols-2 gap-3 md:grid-cols-3"
+        :class="isEmployer ? '' : 'lg:grid-cols-5'"
+      >
         <EmployerDashboardShortcutCard
           v-for="card in dashboardActionCards"
           :key="card.key"
@@ -24,14 +27,9 @@
           :to="card.to"
           :disabled="card.disabled"
         />
-      </div>
 
-      <div
-        v-if="isEmployer"
-        class="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5"
-      >
         <EmployerDashboardShortcutCard
-          class="sm:col-span-2 lg:col-span-2"
+          v-if="isEmployer"
           title="اظهارنامه عملکرد"
           :subtitle="performanceSubtitle"
           icon="svg:illust-create-account"
@@ -43,7 +41,7 @@
     <section v-if="isEmployer">
       <div class="flex items-center justify-between gap-3">
         <h2 class="font-yb-bold text-lg text-text-tertiary md:text-xl">
-          آگهی‌های من
+          آخرین آگهی ها
         </h2>
         <NuxtLink
           to="/dashboard/employer/ads"
@@ -236,12 +234,8 @@ function resolveDashboardSubtitle(
     return action.dashboardSubtitle ?? "به زودی";
   }
 
-  if (action.key === "dashboard_action_create_fulltime_ad") {
+  if (action.key === "dashboard_action_create_ad") {
     return `${toPersianDigits(activeAdsCount.value)} آگهی`;
-  }
-
-  if (action.key === "dashboard_action_create_parttime_ad") {
-    return "۰ آگهی";
   }
 
   return action.dashboardSubtitle;

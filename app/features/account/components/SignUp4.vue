@@ -67,6 +67,7 @@
 import SignUpStepper from "~/features/account/components/SignUpStepper.vue";
 import type { DirectionT } from "../types";
 import { buildEnteringRoute } from "~/utils/entering-route";
+import { paths } from "~/routes";
 
 const props = defineProps<{
   step: number;
@@ -118,7 +119,7 @@ async function goCreate(employmentType: string) {
   try {
     await navigateTo(
       buildEnteringRoute({
-        to: "/dashboard/employer/ads/create",
+        to: paths.employer.adsCreate,
         query: { employment_type: employmentType },
       }),
     );
