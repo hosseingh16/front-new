@@ -294,24 +294,35 @@ async function fetchPayment() {
 type PayPayload = {
   redirect_url?: string | null;
   action?: string | null;
+  method?: string | null;
   ref_id?: string | null;
   RefId?: string | null;
   token?: string | null;
-  inputs?: { RefId?: string | null; ref_id?: string | null };
+  payment?: PayPayload | null;
+  inputs?: Record<string, string | number | null | undefined> | null;
 };
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return value != null && typeof value === "object" && !Array.isArray(value);
+}
 
 function isHttpUrl(value: string) {
   return /^https?:\/\//i.test(value);
 }
 
 function unwrapPay(response: unknown): PayPayload {
-  if (!response || typeof response !== "object") return {};
-  const record = response as Record<string, unknown>;
-  const nested = record.data;
-  if (nested && typeof nested === "object" && !Array.isArray(nested)) {
-    return { ...record, ...(nested as PayPayload) };
+  if (!isRecord(response)) return {};
+
+  const layers: Record<string, unknown>[] = [response];
+  const data = response.data;
+  if (isRecord(data)) layers.push(data);
+
+  for (const layer of [...layers]) {
+    const payment = layer.payment;
+    if (isRecord(payment)) layers.push(payment);
   }
-  return record as PayPayload;
+
+  return Object.assign({}, ...layers) as PayPayload;
 }
 
 function resolveRefId(payload: PayPayload, fallback?: string | null) {
@@ -321,6 +332,10 @@ function resolveRefId(payload: PayPayload, fallback?: string | null) {
     payload.token,
     payload.inputs?.RefId,
     payload.inputs?.ref_id,
+    payload.payment?.ref_id,
+    payload.payment?.RefId,
+    payload.payment?.inputs?.RefId,
+    payload.payment?.inputs?.ref_id,
     fallback,
   ];
 
@@ -333,11 +348,18 @@ function resolveRefId(payload: PayPayload, fallback?: string | null) {
 }
 
 function resolveActionUrl(payload: PayPayload) {
-  const action = payload.action?.trim();
-  return action && isHttpUrl(action) ? action : null;
+  const candidates = [payload.action, payload.payment?.action];
+  for (const value of candidates) {
+    const action = value?.trim();
+    if (action && isHttpUrl(action)) return action;
+  }
+  return null;
 }
 
-function postRefId(refIdValue: string, action: string) {
+function postGatewayForm(
+  action: string,
+  inputs: Record<string, string | number | null | undefined>,
+) {
   if (!import.meta.client) return;
 
   const form = document.createElement("form");
@@ -345,13 +367,17 @@ function postRefId(refIdValue: string, action: string) {
   form.setAttribute("action", action);
   form.setAttribute("target", "_self");
 
-  const hiddenField = document.createElement("input");
-  hiddenField.setAttribute("type", "hidden");
-  hiddenField.setAttribute("name", "RefId");
-  hiddenField.setAttribute("value", refIdValue);
-  form.appendChild(hiddenField);
+  for (const [name, value] of Object.entries(inputs)) {
+    if (value == null || value === "") continue;
+    const hiddenField = document.createElement("input");
+    hiddenField.setAttribute("type", "hidden");
+    hiddenField.setAttribute("name", name);
+    hiddenField.setAttribute("value", String(value));
+    form.appendChild(hiddenField);
+  }
 
   document.body.appendChild(form);
+  console.log("form submited")
   form.submit();
 }
 
@@ -426,11 +452,19 @@ async function goNow() {
 
   const refId = resolveRefId(payload, paymentData.value?.ref_id);
   const action = resolveActionUrl(payload);
+  const inputs = payload.inputs ?? payload.payment?.inputs ?? null;
+
+  if (action && inputs && Object.keys(inputs).length) {
+    if (paymentData.value && refId) paymentData.value.ref_id = refId;
+    redirecting.value = true;
+    postGatewayForm(action, inputs);
+    return;
+  }
 
   if (refId && action) {
     if (paymentData.value) paymentData.value.ref_id = refId;
     redirecting.value = true;
-    postRefId(refId, action);
+    postGatewayForm(action, { RefId: refId });
     return;
   }
 
