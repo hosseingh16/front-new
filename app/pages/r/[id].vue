@@ -291,109 +291,232 @@ async function fetchPayment() {
   }
 }
 
+type GatewayInputs = Record<string, string | number | boolean | null | undefined>
+
 type PayPayload = {
-  redirect_url?: string | null;
-  action?: string | null;
-  method?: string | null;
-  ref_id?: string | null;
-  RefId?: string | null;
-  token?: string | null;
-  payment?: PayPayload | null;
-  inputs?: Record<string, string | number | null | undefined> | null;
-};
+  redirect_url?: string | null
+  action?: string | null
+  method?: string | null
+  ref_id?: string | null
+  RefId?: string | null
+  Token?: string | null
+  token?: string | null
+  GetMethod?: string | boolean | null
+  payment?: PayPayload | null
+  inputs?: GatewayInputs | string | null
+}
 
 function isRecord(value: unknown): value is Record<string, unknown> {
-  return value != null && typeof value === "object" && !Array.isArray(value);
+  return value != null && typeof value === 'object' && !Array.isArray(value)
 }
 
 function isHttpUrl(value: string) {
-  return /^https?:\/\//i.test(value);
+  return /^https?:\/\//i.test(value)
 }
 
-function unwrapPay(response: unknown): PayPayload {
-  if (!isRecord(response)) return {};
-
-  const layers: Record<string, unknown>[] = [response];
-  const data = response.data;
-  if (isRecord(data)) layers.push(data);
-
-  for (const layer of [...layers]) {
-    const payment = layer.payment;
-    if (isRecord(payment)) layers.push(payment);
+function normalizeInputs(value: unknown): GatewayInputs {
+  if (typeof value === 'string') {
+    try {
+      return normalizeInputs(JSON.parse(value))
+    } catch {
+      return {}
+    }
   }
 
-  return Object.assign({}, ...layers) as PayPayload;
+  if (!isRecord(value)) return {}
+
+  const inputs: GatewayInputs = {}
+  for (const [key, entry] of Object.entries(value)) {
+    if (entry == null) continue
+    if (
+      typeof entry === 'string' ||
+      typeof entry === 'number' ||
+      typeof entry === 'boolean'
+    ) {
+      inputs[key] = entry
+    }
+  }
+  return inputs
 }
 
-function resolveRefId(payload: PayPayload, fallback?: string | null) {
-  const candidates = [
-    payload.ref_id,
-    payload.RefId,
-    payload.token,
-    payload.inputs?.RefId,
-    payload.inputs?.ref_id,
-    payload.payment?.ref_id,
-    payload.payment?.RefId,
-    payload.payment?.inputs?.RefId,
-    payload.payment?.inputs?.ref_id,
-    fallback,
-  ];
+function collectPayNodes(response: unknown): Record<string, unknown>[] {
+  if (!isRecord(response)) return []
 
-  for (const value of candidates) {
-    const text = value == null ? "" : String(value).trim();
-    if (text && !isHttpUrl(text)) return text;
+  const nodes: Record<string, unknown>[] = []
+  const queue: unknown[] = [response]
+  const seen = new Set<unknown>()
+
+  while (queue.length) {
+    const current = queue.shift()
+    if (!isRecord(current) || seen.has(current)) continue
+    seen.add(current)
+    nodes.push(current)
+
+    for (const value of Object.values(current)) {
+      if (isRecord(value)) queue.push(value)
+    }
   }
 
-  return null;
+  return nodes
 }
 
-function resolveActionUrl(payload: PayPayload) {
-  const candidates = [payload.action, payload.payment?.action];
-  for (const value of candidates) {
-    const action = value?.trim();
-    if (action && isHttpUrl(action)) return action;
+function resolveGateway(
+  response: unknown,
+  options: {
+    fallbackRefId?: string | null
+    gateway?: string | null
+  } = {},
+): {
+  action: string | null
+  inputs: GatewayInputs
+  redirectUrl: string | null
+  method: string
+} {
+  const nodes = collectPayNodes(response)
+
+  let action: string | null = null
+  let redirectUrl: string | null = null
+  let gatewayName = String(options.gateway ?? '').toLowerCase()
+  let inputs: GatewayInputs = {}
+
+  for (const node of nodes) {
+    if (!action) {
+      const candidate = node.action
+      if (typeof candidate === 'string' && isHttpUrl(candidate.trim())) {
+        action = candidate.trim()
+      }
+    }
+
+    if (!redirectUrl) {
+      const candidate = node.redirect_url
+      if (typeof candidate === 'string' && isHttpUrl(candidate.trim())) {
+        redirectUrl = candidate.trim()
+      }
+    }
+
+    if (!gatewayName) {
+      const candidate = node.gateway ?? node.formatted_gateway
+      if (typeof candidate === 'string' && candidate.trim()) {
+        gatewayName = candidate.trim().toLowerCase()
+      }
+    }
+
+    const nestedInputs = normalizeInputs(node.inputs)
+    if (Object.keys(nestedInputs).length) {
+      inputs = { ...inputs, ...nestedInputs }
+    }
+
+    for (const key of ['RefId', 'ref_id'] as const) {
+      const value = node[key]
+      if (
+        (typeof value === 'string' || typeof value === 'number') &&
+        String(value).trim() &&
+        !isHttpUrl(String(value).trim())
+      ) {
+        inputs.RefId = value
+      }
+    }
+
+    for (const key of ['Token', 'token'] as const) {
+      const value = node[key]
+      if (
+        (typeof value === 'string' || typeof value === 'number') &&
+        String(value).trim() &&
+        !isHttpUrl(String(value).trim())
+      ) {
+        inputs.Token = value
+      }
+    }
+
+    if ('GetMethod' in node && inputs.GetMethod === undefined) {
+      const value = node.GetMethod
+      if (
+        value == null ||
+        typeof value === 'string' ||
+        typeof value === 'boolean' ||
+        typeof value === 'number'
+      ) {
+        inputs.GetMethod = value as string | number | boolean | null
+      }
+    }
   }
-  return null;
+
+  const fallbackToken = options.fallbackRefId?.trim()
+  if (fallbackToken) {
+    if (!inputs.RefId) inputs.RefId = fallbackToken
+    if (!inputs.Token) inputs.Token = fallbackToken
+  }
+
+  const token =
+    inputs.Token ?? inputs.token ?? inputs.RefId ?? inputs.ref_id ?? null
+
+  if (gatewayName.includes('sep') || gatewayName.includes('saman')) {
+    inputs = {
+      Token: token,
+      GetMethod: inputs.GetMethod ?? '',
+    }
+  } else if (
+    gatewayName.includes('behpardakht') ||
+    gatewayName.includes('mellat')
+  ) {
+    inputs = { RefId: token }
+  }
+
+  let method = 'POST'
+  for (const node of nodes) {
+    const candidate = node.method
+    if (typeof candidate === 'string' && candidate.trim()) {
+      method = candidate.trim().toUpperCase()
+      break
+    }
+  }
+
+  return { action, inputs, redirectUrl, method }
+}
+
+function hasGatewayToken(inputs: GatewayInputs) {
+  const token = inputs.RefId ?? inputs.Token ?? inputs.ref_id ?? inputs.token
+  return token != null && String(token).trim() !== ''
 }
 
 function postGatewayForm(
   action: string,
-  inputs: Record<string, string | number | null | undefined>,
+  method: string,
+  inputs: GatewayInputs,
 ) {
-  if (!import.meta.client) return;
+  if (!import.meta.client) return
 
-  const form = document.createElement("form");
-  form.setAttribute("method", "POST");
-  form.setAttribute("action", action);
-  form.setAttribute("target", "_self");
+  const form = document.createElement('form')
+  form.setAttribute('method', method.toUpperCase() === 'GET' ? 'GET' : 'POST')
+  form.setAttribute('action', action)
+  form.setAttribute('target', '_self')
+  form.setAttribute('name', 'forms')
 
   for (const [name, value] of Object.entries(inputs)) {
-    if (value == null || value === "") continue;
-    const hiddenField = document.createElement("input");
-    hiddenField.setAttribute("type", "hidden");
-    hiddenField.setAttribute("name", name);
-    hiddenField.setAttribute("value", String(value));
-    form.appendChild(hiddenField);
+    if (value == null && name !== 'GetMethod') continue
+    const hiddenField = document.createElement('input')
+    hiddenField.setAttribute('type', 'hidden')
+    hiddenField.setAttribute('name', name)
+    hiddenField.setAttribute('value', value == null ? '' : String(value))
+    form.appendChild(hiddenField)
   }
 
-  document.body.appendChild(form);
-  console.log("form submited")
-  form.submit();
+  document.body.appendChild(form)
+  form.submit()
 }
 
-async function initiatePayment(): Promise<PayPayload | null> {
-  paying.value = true;
+async function initiatePayment(): Promise<unknown | null> {
+  paying.value = true
   try {
-    const response = await client<PayPayload | { data: PayPayload }>(
-      `/payments/${paymentId.value}/pay`,
-      { baseURL: baseUrl.value, method: "GET" },
-    );
-    return unwrapPay(response);
+    return await client(`/payments/${paymentId.value}/pay`, {
+      baseURL: baseUrl.value,
+      method: 'GET',
+    })
   } catch {
-    errorMessage.value = "خطا در اتصال به درگاه پرداخت. لطفا دوباره تلاش کنید.";
-    return null;
+    errorMessage.value = 'خطا در اتصال به درگاه پرداخت. لطفا دوباره تلاش کنید.'
+    return null
   } finally {
-    paying.value = false;
+    paying.value = false
   }
 }
 
@@ -419,11 +542,13 @@ const typeLabel = computed(() => {
 });
 
 const gatewayLabel = computed(() => {
-  const raw = String(paymentData.value?.gateway || "zibal").toLowerCase();
-  if (raw.includes("zibal")) return "زیبال";
-  if (raw.includes("zarin")) return "زرین‌پال";
-  return paymentData.value?.formatted_gateway || "درگاه بانکی";
-});
+  const raw = String(paymentData.value?.gateway || '').toLowerCase()
+  if (raw.includes('zibal')) return 'زیبال'
+  if (raw.includes('zarin')) return 'زرین‌پال'
+  if (raw.includes('mellat') || raw.includes('behpardakht')) return 'ملت'
+  if (raw.includes('sep') || raw.includes('saman')) return 'سپ'
+  return paymentData.value?.formatted_gateway || 'درگاه بانکی'
+})
 
 function toPersianDigits(value: string | number) {
   return String(value).replace(/\d/g, (d) => "۰۱۲۳۴۵۶۷۸۹"[Number(d)]!);
@@ -444,39 +569,37 @@ function clearTimer() {
 }
 
 async function goNow() {
-  if (redirecting.value || paying.value || alreadyPaid.value) return;
+  if (redirecting.value || paying.value || alreadyPaid.value) return
 
-  clearTimer();
-  const payload = await initiatePayment();
-  if (!payload) return;
+  clearTimer()
+  const response = await initiatePayment()
+  if (!response) return
 
-  const refId = resolveRefId(payload, paymentData.value?.ref_id);
-  const action = resolveActionUrl(payload);
-  const inputs = payload.inputs ?? payload.payment?.inputs ?? null;
+  const { action, inputs, redirectUrl, method } = resolveGateway(response, {
+    fallbackRefId: paymentData.value?.ref_id,
+    gateway: paymentData.value?.gateway,
+  })
 
-  if (action && inputs && Object.keys(inputs).length) {
-    if (paymentData.value && refId) paymentData.value.ref_id = refId;
-    redirecting.value = true;
-    postGatewayForm(action, inputs);
-    return;
+  if (action && hasGatewayToken(inputs)) {
+    const token =
+      inputs.RefId ?? inputs.Token ?? inputs.ref_id ?? inputs.token ?? null
+    if (paymentData.value && token != null) {
+      paymentData.value.ref_id = String(token)
+    }
+
+    redirecting.value = true
+    postGatewayForm(action, method, inputs)
+    return
   }
 
-  if (refId && action) {
-    if (paymentData.value) paymentData.value.ref_id = refId;
-    redirecting.value = true;
-    postGatewayForm(action, { RefId: refId });
-    return;
-  }
-
-  const url = payload.redirect_url?.trim();
-  if (url && isHttpUrl(url)) {
-    redirecting.value = true;
-    window.location.href = url;
-    return;
+  if (redirectUrl) {
+    redirecting.value = true
+    window.location.href = redirectUrl
+    return
   }
 
   errorMessage.value =
-    "اطلاعات درگاه پرداخت ناقص است. لطفا دوباره تلاش کنید.";
+    'اطلاعات درگاه پرداخت ناقص است. لطفا دوباره تلاش کنید.'
 }
 
 function cancel() {
