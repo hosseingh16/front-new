@@ -43,7 +43,7 @@ const { welcomeAlert, dismissWelcome, initWelcome } = useFirstVisitWelcome();
 onMounted(() => {
   initWelcome();
 });
-
+//allowed
 watch(
   user,
   (value) => {

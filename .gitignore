@@ -27,3 +27,4 @@ logs
 # Local Nuxt configs (keep production config tracked)
 nuxt.config.ts
 nuxt.config.local.ts
+nuxt.config.ts
