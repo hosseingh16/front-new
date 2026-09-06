@@ -41,24 +41,15 @@
 
           <div
             v-if="qualificationIntro"
-            class="prose prose-sm mt-4 max-w-none text-right text-sm leading-8 text-text-secondary"
+            class="prose prose-sm mt-4 max-w-none text-right text-sm leading-8 text-text-secondary prose-p:my-0 prose-ul:my-2 prose-li:my-0"
             v-html="qualificationIntro"
           ></div>
 
           <div
-            v-if="qualificationItems.length"
-            class="mt-4 text-sm leading-8 text-text-secondary"
-          >
-            <ul
-              class="list-inside list-disc space-y-1 marker:text-text-secondary"
-            >
-              <li
-                v-for="item in qualificationItems"
-                :key="item"
-                v-html="item"
-              ></li>
-            </ul>
-          </div>
+            v-if="resumeTermsHtml"
+            class="prose prose-sm mt-4 max-w-none text-right text-sm leading-8 text-text-secondary prose-p:my-0 prose-ul:my-2 prose-li:my-0"
+            v-html="resumeTermsHtml"
+          ></div>
 
           <div
             v-if="requirementStats.length"
@@ -447,19 +438,12 @@ const qualificationIntro = computed(
   () => props.ad.job_description?.trim() || "",
 );
 
-const qualificationItems = computed(() => {
-  if (!props.ad.resume_terms?.trim()) return [];
-
-  return props.ad.resume_terms
-    .split(/\n|،|,/)
-    .map((item) => item.trim())
-    .filter(Boolean);
-});
+const resumeTermsHtml = computed(() => props.ad.resume_terms?.trim() || "");
 
 const showQualificationsSection = computed(
   () =>
     Boolean(qualificationIntro.value) ||
-    qualificationItems.value.length > 0 ||
+    Boolean(resumeTermsHtml.value) ||
     requirementStats.value.length > 0,
 );
 
