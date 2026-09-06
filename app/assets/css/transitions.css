@@ -52,3 +52,28 @@
 .accordion-leave-from {
   @apply max-h-80;
 }
+
+.header-drawer-enter-active,
+.header-drawer-leave-active {
+  @apply pointer-events-none;
+}
+
+.header-drawer-enter-active .header-drawer-backdrop,
+.header-drawer-leave-active .header-drawer-backdrop {
+  @apply transition-opacity duration-300 ease-out;
+}
+
+.header-drawer-enter-from .header-drawer-backdrop,
+.header-drawer-leave-to .header-drawer-backdrop {
+  @apply opacity-0;
+}
+
+.header-drawer-enter-active .header-drawer-panel,
+.header-drawer-leave-active .header-drawer-panel {
+  @apply transition-transform duration-300 ease-out;
+}
+
+.header-drawer-enter-from .header-drawer-panel,
+.header-drawer-leave-to .header-drawer-panel {
+  @apply translate-x-full;
+}
