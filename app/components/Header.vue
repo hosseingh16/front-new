@@ -13,13 +13,16 @@
         >
           <Icon name="svg:menu" size="20" />
         </button>
-        <NuxtLink to="/">
+        <NuxtLink to="/" class="flex items-center">
           <NuxtImg src="/images/logo.png" alt="Logo" class="lg:w-10 lg:h-12" />
+
+          <div class="max-lg:hidden">
+            <h1 class="font-semibold text-text-tertiary">های‌حساب</h1>
+            <h2 class="text-caption text-text-secondary">
+              خانه حسابداران با تجربه
+            </h2>
+          </div>
         </NuxtLink>
-        <div class="max-lg:hidden">
-          <h1 class="font-semibold">های‌حساب</h1>
-          <h2 class="text-caption">خانه حسابداران با تجربه</h2>
-        </div>
       </div>
       <div class="flex items-center gap-12 max-lg:hidden">
         <NuxtLink
@@ -92,44 +95,44 @@
           aria-modal="true"
           aria-label="منوی اصلی"
         >
-        <div
-          class="flex items-center justify-between border-b border-gray-default px-4 py-4"
-        >
-          <div class="flex items-center gap-2">
-            <NuxtImg src="/images/logo.png" alt="" class="h-10 w-8" />
-            <div>
-              <p class="font-semibold text-sm">های‌حساب</p>
-              <p class="text-caption text-text-passive">
-                خانه حسابداران با تجربه
-              </p>
+          <div
+            class="flex items-center justify-between border-b border-gray-default px-4 py-4"
+          >
+            <div class="flex items-center gap-2">
+              <NuxtImg src="/images/logo.png" alt="" class="h-10 w-8" />
+              <div>
+                <p class="font-semibold text-sm">های‌حساب</p>
+                <p class="text-caption text-text-passive">
+                  خانه حسابداران با تجربه
+                </p>
+              </div>
             </div>
+            <button
+              type="button"
+              class="flex h-8 w-8 items-center justify-center rounded-full text-text-tertiary"
+              aria-label="بستن منو"
+              @click="closeDrawer"
+            >
+              <Icon name="svg:close" size="20" />
+            </button>
           </div>
-          <button
-            type="button"
-            class="flex h-8 w-8 items-center justify-center rounded-full text-text-tertiary"
-            aria-label="بستن منو"
-            @click="closeDrawer"
-          >
-            <Icon name="svg:close" size="20" />
-          </button>
-        </div>
 
-        <nav class="flex flex-1 flex-col gap-1 overflow-y-auto px-3 py-4">
-          <NuxtLink
-            v-for="link in navLinks"
-            :key="link.to"
-            :to="link.to"
-            class="rounded-lg px-3 py-3 text-sm font-semibold transition-colors"
-            :class="
-              isActive(link.to)
-                ? 'bg-primary-50 text-primary-500'
-                : 'text-text-tertiary hover:bg-surface-100'
-            "
-            @click="closeDrawer"
-          >
-            {{ link.label }}
-          </NuxtLink>
-        </nav>
+          <nav class="flex flex-1 flex-col gap-1 overflow-y-auto px-3 py-4">
+            <NuxtLink
+              v-for="link in navLinks"
+              :key="link.to"
+              :to="link.to"
+              class="rounded-lg px-3 py-3 text-sm font-semibold transition-colors"
+              :class="
+                isActive(link.to)
+                  ? 'bg-primary-50 text-primary-500'
+                  : 'text-text-tertiary hover:bg-surface-100'
+              "
+              @click="closeDrawer"
+            >
+              {{ link.label }}
+            </NuxtLink>
+          </nav>
         </aside>
       </div>
     </Transition>
