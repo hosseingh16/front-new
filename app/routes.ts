@@ -14,6 +14,6 @@ export const paths = {
     taxReturnCreate: '/dashboard/tax-returns/create',
   },
   jobSeeker: {
-    ads: '/dashboard/ad',
+    jobs: '/dashboard/jobs',
   },
 };

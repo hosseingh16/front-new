@@ -107,7 +107,7 @@ const menus: Array<{
   {
     key: "jobs",
     title: "فرصت‌ها",
-    to: "/dashboard/ad",
+    to: "/dashboard/jobs",
     icon: "jobs",
   },
 ];

@@ -231,7 +231,7 @@ import BookmarkToggleButton from "~/components/Elements/BookmarkToggleButton.vue
 import FastLoginModal from "~/components/FastLoginModal.vue";
 import AdDetailContent from "./components/AdDetailContent.vue";
 import ReportIssueModal from "./components/ReportIssueModal.vue";
-import AdResumeIncompleteModal from "~/pages/ad/components/AdResumeIncompleteModal.vue";
+import AdResumeIncompleteModal from "~/pages/jobs/components/AdResumeIncompleteModal.vue";
 import { useAd, useSimilarAds } from "~/composables/useAd";
 import { formatJalaliDate } from "~/utils/format-jalali-date";
 import { getAdDetailSeoMeta } from "~/utils/ad-seo";
@@ -267,7 +267,7 @@ const embedded = computed(
   () => isAuthenticated.value && !needsRoleSelection.value,
 );
 const adsListPath = computed(() =>
-  embedded.value ? "/dashboard/ad" : paths.jobs.root,
+  embedded.value ? "/dashboard/jobs" : paths.jobs.root,
 );
 
 function syncLayout(useDashboard: boolean) {

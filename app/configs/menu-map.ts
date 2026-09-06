@@ -38,7 +38,7 @@ export const menuMap: Record<string, MenuMeta> = {
   ads: {
     label: "فرصت های شغلی",
     icon: "svg:bag-1",
-    to: "/dashboard/ad",
+    to: "/dashboard/jobs",
   },
 
   my_requests: {
@@ -50,7 +50,7 @@ export const menuMap: Record<string, MenuMeta> = {
   projects: {
     label: "پروژه ها",
     icon: "svg:projects",
-    to: "/dashboard/ad",
+    to: "/dashboard/jobs",
   },
 
   bookmarks: {
@@ -130,13 +130,13 @@ export const menuMap: Record<string, MenuMeta> = {
   user_create_project: {
     label: "ایجاد پروژه",
     icon: "svg:projects",
-    to: "/dashboard/ad",
+    to: "/dashboard/jobs",
   },
 
   user_manage_projects: {
     label: "مدیریت پروژه ها",
     icon: "svg:projects",
-    to: "/dashboard/ad",
+    to: "/dashboard/jobs",
   },
 
   user_edit_company: {
@@ -160,7 +160,7 @@ export const menuMap: Record<string, MenuMeta> = {
   user_ads: {
     label: "فرصت های شغلی",
     icon: "svg:bag-1",
-    to: "/dashboard/ad",
+    to: "/dashboard/jobs",
   },
 
   user_requests: {
@@ -172,7 +172,7 @@ export const menuMap: Record<string, MenuMeta> = {
   user_projects: {
     label: "پروژه‌های من",
     icon: "svg:projects",
-    to: "/dashboard/ad",
+    to: "/dashboard/jobs",
   },
 
   user_bookmarks: {
@@ -193,7 +193,7 @@ export const menuMap: Record<string, MenuMeta> = {
     label: "فرصت‌های شغلی",
     icon: "svg:illust-job-user",
     dashboardIcon: "svg:illust-job-user",
-    to: "/dashboard/ad",
+    to: "/dashboard/jobs",
   },
 
   dashboard_action_create_ad: {
@@ -241,7 +241,7 @@ export const menuMap: Record<string, MenuMeta> = {
     label: "فرصت‌های شغلی",
     icon: "svg:illust-job-user",
     dashboardIcon: "svg:illust-job-user",
-    to: "/dashboard/ad",
+    to: "/dashboard/jobs",
   },
 
   dashboard_action_my_requests: {

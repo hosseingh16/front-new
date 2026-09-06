@@ -26,9 +26,9 @@ const DYNAMIC_ROUTE_LABELS: Array<{
     parent: "/dashboard/employer/ads",
   },
   {
-    pattern: /^\/dashboard\/ad\/[^/]+\/?$/,
+    pattern: /^\/dashboard\/jobs\/[^/]+\/?$/,
     label: "جزئیات آگهی",
-    parent: "/dashboard/ad",
+    parent: "/dashboard/jobs",
   },
 ];
 

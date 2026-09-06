@@ -269,7 +269,7 @@ export function enteringMessageForDestination(destination: string) {
     return 'در حال ورود به صفحه درخواست اظهارنامه ...'
   }
 
-  if (matchesPath(destination, paths.jobs.root) || matchesPath(destination, paths.jobSeeker.ads)) {
+  if (matchesPath(destination, paths.jobs.root) || matchesPath(destination, paths.jobSeeker.jobs)) {
     return 'در حال آماده‌سازی فرصت‌های شغلی...'
   }
 

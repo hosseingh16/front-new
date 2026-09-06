@@ -47,7 +47,7 @@ export function parseAdsSort(value: string | string[] | undefined): AdsSort {
 
 /**
  * Pretty ads URL queries, e.g.
- * /ad?type=full_time,part_time&q=حسابدار&sort=salary&page=2
+ * /jobs?type=full_time,part_time&q=حسابدار&sort=salary&page=2
  */
 export function adsFiltersToRouteQuery(
   filters: JobFiltersModel,

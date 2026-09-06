@@ -83,7 +83,7 @@
               پروژه‌های جدید را مشاهده و درخواست همکاری ارسال کنید.
             </p>
             <IntentLink
-              :to="paths.jobSeeker.ads"
+              :to="paths.jobSeeker.jobs"
               role="job_seeker"
               class="mt-auto pt-6 flex justify-center"
             >

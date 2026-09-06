@@ -168,7 +168,7 @@ interface FooterLink {
 const jobseekerLinks: FooterLink[] = [
   { label: "حسابدار", to: "/" },
   { label: "رزومه‌ساز", to: "/" },
-  { label: "جست‌وجوی فرصت‌های‌ شغلی", to: "/ad" },
+  { label: "جست‌وجوی فرصت‌های‌ شغلی", to: "/jobs" },
   { label: "ایجاد پروژه حسابداری", to: "/" },
   { label: "سوالات متداول", to: "/faq" },
 ];

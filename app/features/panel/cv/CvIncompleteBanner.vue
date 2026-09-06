@@ -18,7 +18,7 @@
 
       <div class="flex items-center gap-2">
         <NuxtLink
-          to="/dashboard/ad"
+          to="/dashboard/jobs"
           class="btn btn-ghost h-9 min-h-9 shrink-0 gap-2 border border-warning-300 bg-warning-400 px-3 text-sm font-semibold text-surface-card hover:bg-warning-500"
         >
           <Icon name="svg:jobs" size="18" />

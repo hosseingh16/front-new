@@ -218,7 +218,7 @@ const dashboardActionCards = computed(() =>
       title: action.label,
       subtitle: resolveDashboardSubtitle(action, isAdsAction),
       icon: action.dashboardIcon ?? action.icon,
-      to: isAdsAction ? "/dashboard/ad" : action.disabled ? "" : action.to,
+      to: isAdsAction ? "/dashboard/jobs" : action.disabled ? "" : action.to,
       disabled: isAdsAction ? false : action.disabled,
     };
   }),

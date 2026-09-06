@@ -24,7 +24,7 @@
             <Icon name="svg:user-plus-white" size="24" />
             استخدام حسابدار
           </IntentLink>
-          <NuxtLink to="/ad">
+          <NuxtLink to="/jobs">
             <button class="btn btn-primary">
               <Icon name="svg:user-plus-white" size="24" />
               مشاهده فرصت های شغلی
@@ -337,7 +337,7 @@ const services: {
     title2: "فرصت های شغلی حسابداری",
     text: "جدیدترین فرصت‌های شغلی حسابداری را مشاهده کنید و برای موقعیت مناسب درخواست ارسال کنید.",
     btnText: "فرصت های شغلی",
-    to: "/ad",
+    to: "/jobs",
   },
   {
     title1: "آگهی",

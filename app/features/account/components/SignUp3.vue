@@ -126,7 +126,7 @@ const items: RequestTypeItem[] = [
     icon: "bag-2",
     buttonText: "فرصت‌های شغلی",
     role: "job_seeker",
-    to: "/dashboard/ad",
+    to: "/dashboard/jobs",
   },
   {
     id: "cv",

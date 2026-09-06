@@ -236,7 +236,7 @@ const emptyState = computed(() => {
       description:
         "آگهی‌ها، پروژه‌ها و سازمان‌هایی که نشان می‌کنید اینجا نمایش داده می‌شوند.",
       actionLabel: "مشاهده فرصت‌های شغلی",
-      actionTo: "/ad",
+      actionTo: "/jobs",
       secondaryActionLabel: "",
       secondaryActionTo: "",
     };

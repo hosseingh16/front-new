@@ -126,7 +126,7 @@
         icon="svg:no-jobs"
         action-label="فرصت‌های شغلی"
         action-icon="svg:jobs"
-        action-to="/dashboard/ad"
+        action-to="/dashboard/jobs"
       />
     </div>
   </div>

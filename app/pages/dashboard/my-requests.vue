@@ -46,7 +46,7 @@
           :icon-size="240"
           action-label="فرصت‌های شغلی"
           action-icon="svg:jobs"
-          action-to="/dashboard/ad"
+          action-to="/dashboard/jobs"
           action-icon-size="24"
           wrapper-class="py-0"
         />
@@ -76,7 +76,7 @@
           >
             <Icon name="svg:search-1" size="24" />
           </button>
-          <NuxtLink to="/dashboard/ad" class="btn btn-success h-9 gap-2 px-4">
+          <NuxtLink to="/dashboard/jobs" class="btn btn-success h-9 gap-2 px-4">
             فرصت‌های شغلی
             <Icon
               name="svg:jobs"

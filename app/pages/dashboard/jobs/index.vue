@@ -1,6 +1,6 @@
 <template>
-  <div class="bg-surface-50 pb-16">
-    <section class="custom-pad pt-6">
+  <div class="pb-10">
+    <section>
       <div
         class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
       >
@@ -22,7 +22,7 @@
       </div>
     </section>
 
-    <div class="custom-pad mt-4 grid min-w-0 items-start gap-4 md:grid-cols-7">
+    <div class="mt-4 grid min-w-0 items-start gap-4 md:grid-cols-7">
       <JobFiltersSidebar
         v-model="jobFilters"
         class="col-span-full min-w-0 md:col-span-2"
@@ -78,6 +78,7 @@ import JobFiltersSidebar from "~/components/Elements/JobFiltersSidebar.vue";
 import NoResult from "~/components/Elements/NoResult.vue";
 import Pagination from "~/components/Elements/Pagination.vue";
 import { toPersianDigits } from "~/composables/useCountUp";
+import AdsSortToggle from "./components/AdsSortToggle.vue";
 import type { AdList } from "~/types/ad";
 import {
   adsFiltersToRouteQuery,
@@ -85,13 +86,15 @@ import {
   type AdsSort,
 } from "~/utils/ads-filters-query";
 import { areRouteQueriesEqual } from "~/utils/job-filters-query";
-import { getCityAdsListSeoMeta } from "~/utils/ad-seo";
 import { sortAds } from "~/utils/sort-ads";
 import {
   useJobFilterProvinceOptions,
   useResolveProvinceFiltersFromRoute,
 } from "~/composables/useJobFilterProvinceOptions";
-import AdsSortToggle from "./components/AdsSortToggle.vue";
+
+definePageMeta({
+  layout: "dashboard",
+});
 
 const route = useRoute();
 const router = useRouter();
@@ -219,18 +222,7 @@ onUnmounted(() => {
   if (urlSyncTimer) clearTimeout(urlSyncTimer);
 });
 
-const selectedLocationName = useAdsListLocationLabel(jobFilters);
-
-const adsListSeo = computed(() =>
-  getCityAdsListSeoMeta(selectedLocationName.value, {
-    title: "استخدام حسابدار|جدیدترین فرصت‌های شغلی حسابداری",
-    description:
-      "جدیدترین آگهی‌های استخدام حسابدار را ببینید، رزومه‌تان را در های‌حساب بسازید و برای فرصت شغلی مناسب درخواست بفرستید.",
-  }),
-);
-
 useSeoMeta({
-  title: () => adsListSeo.value.title,
-  description: () => adsListSeo.value.description,
+  title: "فرصت های شغلی",
 });
 </script>

@@ -24,7 +24,6 @@ logs
 .env.*
 !.env.example
 
-# Local Nuxt configs (keep production config tracked)
+# Local Nuxt config (tracked template: nuxt.config.production.ts)
 nuxt.config.ts
 nuxt.config.local.ts
-nuxt.config.ts
