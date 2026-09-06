@@ -27,7 +27,7 @@ export const AD_REQUEST_REJECT_REASONS = [
 ]
 
 const LOOKUP_COLOR_MAP: Record<string, string> = {
-  success: '#009F65',
+  success: '#0EA972',
   danger: '#EF4035',
   warning: '#B95C04',
   info: '#0098E7',

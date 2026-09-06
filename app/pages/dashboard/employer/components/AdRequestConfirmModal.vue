@@ -20,7 +20,7 @@
 
       <button
         type="button"
-        class="flex h-11 items-center justify-center gap-1.5 rounded-lg bg-[#009F65] text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-60"
+        class="flex h-11 items-center justify-center gap-1.5 rounded-lg bg-[#0EA972] text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-60"
         :disabled="loading"
         @click="emit('confirm')"
       >

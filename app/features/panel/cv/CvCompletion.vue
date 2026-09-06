@@ -18,7 +18,7 @@
             cy="60"
             r="52"
             fill="none"
-            :stroke="totalPercent >= 100 ? '#009F65' : '#4864E1'"
+            :stroke="totalPercent >= 100 ? '#0EA972' : '#4864E1'"
             stroke-width="12"
             stroke-linecap="round"
             :stroke-dasharray="circumference"
@@ -48,7 +48,7 @@
               item.complete ? 'lucide:circle-check' : 'lucide:circle-alert'
             "
             size="18"
-            :class="item.complete ? 'text-[#009F65]' : 'text-[#F59E0B]'"
+            :class="item.complete ? 'text-[#0EA972]' : 'text-[#F59E0B]'"
           />
         </button>
       </li>

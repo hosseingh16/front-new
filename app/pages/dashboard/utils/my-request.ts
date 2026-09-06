@@ -26,7 +26,7 @@ const STATUS_META: Record<MyRequestStatus, MyRequestStatusMeta> = {
   },
   interview: {
     label: 'تأیید برای مصاحبه',
-    className: 'bg-[rgba(0,159,101,0.08)] text-success-500',
+    className: 'bg-[rgba(14,169,114,0.08)] text-success-500',
     dotClassName: 'bg-success-500',
   },
   rejected: {

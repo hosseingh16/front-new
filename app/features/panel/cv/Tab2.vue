@@ -96,7 +96,7 @@
     <div class="bg-white p-4 rounded-2xl mt-8">
       <Titr>فایل ضمیمه</Titr>
       <div class="mt-5 flex gap-1 items-center">
-        <icons-check color="#009F65" />
+        <icons-check color="#0EA972" />
         <span class="text-text-passive text-sm">
           در صورتی که فایل رزومه یا توضیحات جداگانه دارید میتوانید آن را اپلود
           کنید. این فایل برای کارفرمایان قابل مشاهده است.

@@ -22,7 +22,7 @@
           class="relative mx-4 min-w-[220px] rounded-lg border border-[#E8E8E8] px-6 py-4"
         >
           <div class="text-center">
-            <p class="font-yb-bold text-[28px] leading-none text-[#009F65]">
+            <p class="font-yb-bold text-[28px] leading-none text-[#0EA972]">
               +{{ toPersianDigits(displayValues[index] ?? 0) }}
             </p>
             <p class="mt-3 text-sm font-semibold text-text-tertiary">

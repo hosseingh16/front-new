@@ -28,7 +28,7 @@
 }
 
 @utility btn-success {
-  @apply border-none text-white bg-accent-500 hover:bg-[rgba(47,158,108,1)] active:bg-[rgba(30,127,83,1)];
+  @apply border-none text-white bg-success-500 hover:bg-[#0b8f60] active:bg-[#097a52];
 }
 
 @utility btn-disabled {

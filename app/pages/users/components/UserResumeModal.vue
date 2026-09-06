@@ -133,7 +133,7 @@
 
                 <button
                   type="button"
-                  class="flex h-10 items-center gap-2 rounded-lg bg-[#009F65] px-5 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-60"
+                  class="flex h-10 items-center gap-2 rounded-lg bg-[#0EA972] px-5 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-60"
                   :disabled="actionLoading || isApproved"
                   @click="emit('confirm', request.id)"
                 >

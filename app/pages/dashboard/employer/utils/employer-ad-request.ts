@@ -37,8 +37,8 @@ const AD_REQUEST_STATUS_META: Record<
   },
   approved: {
     label: "تایید برای مصاحبه",
-    className: "bg-[#E6F6F0] text-[#009F65]",
-    dotColor: "#009F65",
+    className: "bg-[#E6F6F0] text-[#0EA972]",
+    dotColor: "#0EA972",
   },
   rejected: {
     label: "رد شده",

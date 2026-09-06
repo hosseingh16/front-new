@@ -32,8 +32,8 @@ const STATUS_META: Record<
   paid: {
     match: /پرداخت شده|paid/i,
     label: 'پرداخت شده',
-    className: 'bg-[#E6F6F0] text-[#009F65]',
-    dotColor: '#009F65',
+    className: 'bg-[#E6F6F0] text-[#0EA972]',
+    dotColor: '#0EA972',
   },
   cancelled: {
     match: /لغو شده|cancelled|canceled/i,

@@ -111,7 +111,7 @@ export function getEmployerAdStatItems(ad: EmployerAd) {
       label: 'تایید برای مصاحبه',
       value: stats?.confirmed ?? 0,
       icon: 'material-symbols:check-circle-outline',
-      iconColor: '#009F65',
+      iconColor: '#0EA972',
       iconBgColor: '#E6F6F0',
       status: 10,
     },

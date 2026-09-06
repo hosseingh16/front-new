@@ -144,7 +144,7 @@
             <TaxReturnStatusBadge :status="detail.status" />
             <p
               v-if="formattedPrice"
-              class="font-yb-bold text-lg text-[#009F65]"
+              class="font-yb-bold text-lg text-[#0EA972]"
             >
               {{ formattedPrice }}
               <span class="text-sm font-semibold text-text-passive">تومان</span>

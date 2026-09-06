@@ -376,9 +376,9 @@ const serviceCards: ServiceCard[] = [
     boxClass:
       "bg-gradient-to-bl from-[#2BDCAF] to-[#fff] border-2 border-[#A0F8D5]",
     numberClass:
-      "text-[#06c399] rounded-xl bg-[#E6FAF3] w-[28px] h-[32px] text-center leading-[32px]",
+      "text-[#0ea972] rounded-xl bg-[#E6FAF3] w-[28px] h-[32px] text-center leading-[32px]",
     ctaClass: "bg-[#E6FAF3] text-accent-500",
-    ctaArrowColor: "#06c399",
+    ctaArrowColor: "#0ea972",
     btnText: "ایجاد پروژه حسابداری",
     to: paths.employer.adsCreate,
     role: "employer" as const,

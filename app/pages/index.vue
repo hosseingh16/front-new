@@ -112,7 +112,7 @@
               class="font-semibold text-sm flex justify-center items-center py-1 px-4 rounded-lg"
               :class="{
                 'bg-[#0098E714] text-info-500': index === 0,
-                'bg-[#06C39914] text-accent-500': index === 1,
+                'bg-[#0EA97214] text-accent-500': index === 1,
                 'bg-[#B95C0414] text-warning-500': index === 2,
                 'bg-[#4864E114] text-primary-500': index === 3,
               }"

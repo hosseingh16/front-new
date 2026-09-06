@@ -24,7 +24,7 @@ function circleIcon(
     );
 }
 
-const SuccessIcon = circleIcon("#06c399", [
+const SuccessIcon = circleIcon("#0ea972", [
   {
     d: "M17.4 7 7.5 16.57 3 12.22M21 10.48 14.25 17 12.9 15.7",
     stroke: "#fff",
