@@ -210,6 +210,20 @@
             ارسال رزومه برای کارفرمایان امکان‌پذیر نیست.
           </p>
         </div>
+        <div
+          v-else-if="isPublicAd"
+          class="mt-6 flex items-start gap-3 rounded-xl border border-primary-200 bg-primary-50 p-4"
+        >
+          <div
+            class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-white"
+            aria-hidden="true"
+          >
+            <Icon name="lucide:info" size="20" class="text-primary-500" />
+          </div>
+          <p class="text-sm leading-7 text-text-secondary">
+            برای ارسال رزومه با شماره تماس موجود درآگهی تماس بگیرید
+          </p>
+        </div>
         <button
           v-else
           type="button"
@@ -330,6 +344,8 @@ const workExperienceLabel = computed(() => {
 });
 
 const genderLabel = computed(() => displayValue(props.ad.gender, "مهم نیست"));
+
+const isPublicAd = computed(() => props.ad.company?.id == 1);
 
 const locationLabel = computed(() => {
   const province = props.ad.province_name;

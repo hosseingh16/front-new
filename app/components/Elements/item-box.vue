@@ -68,9 +68,9 @@
                   }}
                 </p>
                 <div class="flex flex-wrap items-center mt-2">
-                  <Icon name="svg:buildings-4" />
+                  <!-- <Icon name="svg:buildings-4" /> -->
                   <p
-                    class="mr-1"
+                    class="text-[#1D1F4E]"
                     :title="companyName.length > 24 ? companyName : undefined"
                   >
                     {{ truncatedCompanyName }}

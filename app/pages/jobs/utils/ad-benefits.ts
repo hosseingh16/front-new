@@ -4,13 +4,13 @@ const BENEFIT_ICON_MAP: Record<string, string> = {
   بیمه: 'lucide:shield',
   'بیمه تکمیلی': 'lucide:shield-plus',
   'بیمه درمان تکمیلی': 'lucide:shield-plus',
-  'پاداش و هدایا': 'svg:reward',
+  'پاداش و هدایا': 'lucide:badge-dollar-sign',
   'سرانه آموزشی': 'lucide:book-open-text',
   'کمک هزینه آموزشی': 'lucide:book-open-text',
   'پزشک سازمانی': 'lucide:stethoscope',
   'وام سازمانی': 'lucide:hand-coins',
-  صبحانه: 'lucide:coffee',
-  ناهار: 'lucide:utensils',
+  'صبحانه': 'lucide:coffee',
+  'ناهار': 'lucide:utensils',
   'سرویس رفت و برگشت': 'lucide:bus',
 }
 
