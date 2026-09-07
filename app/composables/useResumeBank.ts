@@ -5,6 +5,7 @@ import type {
   ResumeBankTab,
   ResumeBankUser,
 } from '~/types/resume-bank'
+import { asyncDataCacheKey } from '~/utils/async-data-cache-key'
 import { buildResumeBankApiQuery } from '~/utils/resume-bank-query'
 
 function getFetchErrorMessage(err: unknown): string {
@@ -50,14 +51,18 @@ export function useResumeBank(
     buildResumeBankApiQuery(debouncedFilters.value, page.value, tab.value),
   )
 
+  const cacheKey = computed(() =>
+    asyncDataCacheKey('resume-bank-users', usersQuery.value),
+  )
+
   const {
     data,
     pending,
     error: fetchError,
     status,
     refresh,
-  } = useAsyncData(
-    'resume-bank-users',
+  } = useCachedAsyncData(
+    cacheKey,
     () =>
       api
         .get<ApiResponse<ResumeBankUser[]>>('/users', {
@@ -78,7 +83,6 @@ export function useResumeBank(
         lastPage: 1,
         total: 0,
       }),
-      watch: [page, debouncedFilters, tab],
     },
   )
 

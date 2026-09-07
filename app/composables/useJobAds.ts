@@ -3,6 +3,7 @@ import type { ApiResponse } from "~/types/api";
 import type { JobFiltersModel } from "~/types/job-filters";
 import type { Opportunity } from "~/types/opportunity";
 import type { AdsSort } from "~/utils/ads-filters-query";
+import { asyncDataCacheKey } from "~/utils/async-data-cache-key";
 import { buildAdsQueryFromFilters } from "~/utils/build-ads-query";
 
 function getFetchErrorMessage(err: unknown): string {
@@ -84,13 +85,17 @@ export function useJobAds(
     per_page: paginationAds.value,
   }));
 
+  const cacheKey = computed(() =>
+    asyncDataCacheKey("jobs-opportunities", opportunitiesQuery.value),
+  );
+
   const {
     data,
     pending,
     error: fetchError,
     status,
-  } = useAsyncData(
-    "jobs-opportunities",
+  } = useCachedAsyncData(
+    cacheKey,
     () =>
       api
         .get<ApiResponse<Opportunity[]>>("/opportunities", {
@@ -111,9 +116,6 @@ export function useJobAds(
         lastPage: 1,
         total: 0,
       }),
-      watch: sort
-        ? [page, debouncedFilters, sort, paginationAds]
-        : [page, debouncedFilters, paginationAds],
     },
   );
 

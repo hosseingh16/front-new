@@ -2,6 +2,7 @@ import type { Ref } from 'vue'
 import type { ApiResponse } from '~/types/api'
 import type { CompanyList } from '~/types/company'
 import type { CompanyFiltersModel } from '~/types/company-filters'
+import { asyncDataCacheKey } from '~/utils/async-data-cache-key'
 
 function getFetchErrorMessage(err: unknown): string {
   if (err && typeof err === 'object' && 'message' in err) {
@@ -69,8 +70,12 @@ export function useCompanies(filters: Ref<CompanyFiltersModel>, page: Ref<number
     buildCompaniesQuery(debouncedFilters.value, page.value),
   )
 
-  const { data, pending, error: fetchError, status } = useAsyncData(
-    'companies-list',
+  const cacheKey = computed(() =>
+    asyncDataCacheKey('companies-list', companiesQuery.value),
+  )
+
+  const { data, pending, error: fetchError, status } = useCachedAsyncData(
+    cacheKey,
     () =>
       api
         .get<ApiResponse<CompanyList[]>>('/companies', {
@@ -87,7 +92,6 @@ export function useCompanies(filters: Ref<CompanyFiltersModel>, page: Ref<number
         currentPage: 1,
         lastPage: 1,
       }),
-      watch: [page, debouncedFilters],
     },
   )
 

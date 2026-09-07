@@ -6,6 +6,7 @@ import type {
   EmployerAdRequestFiltersModel,
   EmployerAdRequestTab,
 } from "~/types/employer-ad-request";
+import { asyncDataCacheKey } from "~/utils/async-data-cache-key";
 import { resolveAdRequestStatusQuery } from "~/utils/employer-ad-request-filters-query";
 
 function getFetchErrorMessage(err: unknown): string {
@@ -67,7 +68,12 @@ export function useEmployerAdRequests(
     buildRequestsQuery(debouncedFilters.value, page.value, tab.value),
   );
 
-  const cacheKey = computed(() => `employer-ad-requests-${adId.value}`);
+  const cacheKey = computed(() =>
+    asyncDataCacheKey(
+      `employer-ad-requests-${adId.value}`,
+      requestsQuery.value,
+    ),
+  );
   const hasLoadedOnce = ref(false);
 
   async function fetchRequests(): Promise<EmployerAdRequestsResult> {
@@ -99,14 +105,13 @@ export function useEmployerAdRequests(
     error: fetchError,
     status,
     refresh,
-  } = useAsyncData(cacheKey, fetchRequests, {
+  } = useCachedAsyncData(cacheKey, fetchRequests, {
     default: (): EmployerAdRequestsResult => ({
       requests: [],
       currentPage: 1,
       lastPage: 1,
       total: 0,
     }),
-    watch: [adId, page, debouncedFilters, tab],
   });
 
   watch(

@@ -13,7 +13,7 @@ export function usePublicCv(slug: MaybeRef<string>) {
   const api = useApi();
   const slugRef = toRef(slug);
 
-  const { data, pending, error: fetchError, status } = useAsyncData(
+  const { data, pending, error: fetchError, status } = useCachedAsyncData(
     () => `cv-public-${slugRef.value}`,
     async () => {
       const value = slugRef.value?.trim();

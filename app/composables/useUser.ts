@@ -13,7 +13,7 @@ export function useUser(id: MaybeRef<string | number>) {
   const api = useApi()
   const idRef = toRef(id)
 
-  const { data, pending, error: fetchError, status } = useAsyncData(
+  const { data, pending, error: fetchError, status } = useCachedAsyncData(
     () => `user-${idRef.value}`,
     async () => {
       const id = idRef.value

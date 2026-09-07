@@ -13,6 +13,10 @@ export default defineNuxtConfig({
     enabled: true,
   },
 
+  experimental: {
+    purgeCachedData: false,
+  },
+
   css: ["~/assets/css/main.css"],
 
   app: {
@@ -24,7 +28,7 @@ export default defineNuxtConfig({
       meta: [
         {
           name: "robots",
-          content: "noindex, nofollow, noarchive",
+          content: "index, follow",
         },
       ],
     },

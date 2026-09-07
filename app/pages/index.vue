@@ -284,6 +284,7 @@ import FaqSection from "~/components/Elements/FaqSection.vue";
 import type { AccountRole } from "~/features/account/types";
 import { paths } from "~/routes";
 import { matchesEmploymentType } from "~/utils/ad-seo";
+import { asyncDataCacheKey } from "~/utils/async-data-cache-key";
 
 type HomeJobType = "all" | "full_time" | "part_time" | "project_based";
 
@@ -294,10 +295,6 @@ const HOME_JOB_TYPE_OPTIONS: Array<{ title: string; value: HomeJobType }> = [
   { title: "پروژه", value: "project_based" },
 ];
 
-// Variables
-const opportunities = ref<Opportunity[]>([]);
-const opportunitiesLoading = ref(false);
-const posts = ref<any[]>([]);
 const jobType = ref<HomeJobType>("all");
 // const testimonials: Testimonial[] = [
 //   {
@@ -447,12 +444,8 @@ const faqs = [
   },
 ];
 
-// Functions
 const api = useApi();
-const getPosts = async () => {
-  const result = await api.get<ApiResponse>("/posts");
-  posts.value = result.data;
-};
+
 function filterOpportunities(
   items: Opportunity[],
   type: HomeJobType,
@@ -480,33 +473,39 @@ function filterOpportunities(
   );
 }
 
-const getOpportunities = async (type: HomeJobType) => {
-  opportunitiesLoading.value = true;
+const { data: opportunitiesData, pending: opportunitiesLoading } =
+  useCachedAsyncData(
+    () => asyncDataCacheKey("home-opportunities", { type: jobType.value }),
+    async () => {
+      const type = jobType.value;
+      const query: Record<string, string | undefined> = {};
 
-  try {
-    const query: Record<string, string | undefined> = {};
+      if (type !== "all") {
+        query.employment_type = type;
+      }
 
-    if (type !== "all") {
-      query.employment_type = type;
-    }
+      const result = await api.get<ApiResponse<Opportunity[]>>(
+        "/opportunities",
+        { query },
+      );
 
-    const result = await api.get<ApiResponse<Opportunity[]>>("/opportunities", {
-      query,
-    });
+      return filterOpportunities(result.data ?? [], type);
+    },
+  );
 
-    opportunities.value = filterOpportunities(result.data ?? [], type);
-  } finally {
-    opportunitiesLoading.value = false;
-  }
-};
+const { data: postsData } = useCachedAsyncData(
+  "home-posts",
+  async () => {
+    const result = await api.get<ApiResponse>("/posts");
+    return Array.isArray(result.data) ? result.data : [];
+  },
+  { default: () => [] },
+);
 
-onMounted(() => {
-  getOpportunities(jobType.value);
-  getPosts();
-});
-watch(jobType, () => {
-  getOpportunities(jobType.value);
-});
+const opportunities = computed(() => opportunitiesData.value ?? []);
+const posts = computed(() =>
+  Array.isArray(postsData.value) ? postsData.value : [],
+);
 
 useSeoMeta({
   title: "سایت استخدام حسابدار و خدمات حسابداری",

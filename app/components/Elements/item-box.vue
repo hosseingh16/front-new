@@ -69,7 +69,6 @@
                 </p>
                 <div class="flex flex-wrap items-center mt-2">
                   <Icon name="svg:buildings-4" />
-                  <p class="text-text-passive">نام شرکت:</p>
                   <p
                     class="mr-1"
                     :title="companyName.length > 24 ? companyName : undefined"
@@ -195,10 +194,13 @@ const ad = computed(() => props.item as AdList);
 const project = computed(() => props.item as ProjectList);
 
 const companyName = computed(() => props.item?.company_name || "");
-const { logoSrc: companyLogoSrc, onLogoError, bindLogoImg } =
-  useCompanyLogoDisplaySrc(
-    () => props.item?.company?.logo || props.item?.company_logo,
-  );
+const {
+  logoSrc: companyLogoSrc,
+  onLogoError,
+  bindLogoImg,
+} = useCompanyLogoDisplaySrc(
+  () => props.item?.company?.logo || props.item?.company_logo,
+);
 
 const itemUrl = computed(() => {
   if (!props.item?.id) return "#";
@@ -215,7 +217,7 @@ function onBookmarkChange(value: boolean) {
 }
 
 const truncatedCompanyName = computed(() => {
-  const limit = props.variant === "project" ? 24 : 12;
+  const limit = props.variant === "project" ? 24 : 24;
   return companyName.value.length > limit
     ? `${companyName.value.slice(0, limit)}…`
     : companyName.value;

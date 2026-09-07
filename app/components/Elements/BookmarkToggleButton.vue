@@ -13,10 +13,10 @@
           ? 'material-symbols:bookmark'
           : 'material-symbols:bookmark-outline'
       "
-      size="18"
+      size="20"
       :class="bookmarked ? 'text-primary-500' : ''"
     />
-    <span v-if="!iconOnly">{{ label }}</span>
+    <span class="sm-hidden" v-if="!iconOnly">{{ label }}</span>
   </button>
 </template>
 

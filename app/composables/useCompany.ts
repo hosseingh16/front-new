@@ -13,7 +13,7 @@ export function useCompany(slug: MaybeRef<string>) {
   const api = useApi()
   const slugRef = toRef(slug)
 
-  const { data, pending, error: fetchError, status } = useAsyncData(
+  const { data, pending, error: fetchError, status } = useCachedAsyncData(
     () => `company-${slugRef.value}`,
     async () => {
       try {

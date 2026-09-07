@@ -17,10 +17,10 @@
           <NuxtImg src="/images/logo.png" alt="Logo" class="lg:w-10 lg:h-12" />
 
           <div class="max-lg:hidden">
-            <h1 class="font-semibold text-text-tertiary">های‌حساب</h1>
-            <h2 class="text-caption text-text-secondary">
+            <div class="font-semibold text-text-tertiary">های‌حساب</div>
+            <div class="text-caption text-text-secondary">
               خانه حسابداران با تجربه
-            </h2>
+            </div>
           </div>
         </NuxtLink>
       </div>

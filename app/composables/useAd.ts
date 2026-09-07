@@ -14,7 +14,7 @@ export function useAd(id: MaybeRef<string | number>) {
   const api = useApi()
   const idRef = toRef(id)
 
-  const { data, pending, error: fetchError, status, refresh } = useAsyncData(
+  const { data, pending, error: fetchError, status, refresh } = useCachedAsyncData(
     () => `ad-${idRef.value}`,
     async () => {
       try {
@@ -68,7 +68,7 @@ export function useSimilarAds(excludeId: MaybeRef<string | number>) {
   const { paginationSimilarAds } = useSettings()
   const excludeIdRef = toRef(excludeId)
 
-  const { data, pending } = useAsyncData(
+  const { data, pending } = useCachedAsyncData(
     () => `similar-ads-${excludeIdRef.value}`,
     () =>
       api
@@ -112,7 +112,7 @@ export function useCompanyAds(
     pending,
     error: fetchError,
     execute,
-  } = useAsyncData(
+  } = useCachedAsyncData(
     () =>
       `company-ads-${normalizedCompanyName.value}-${excludeIdRef.value ?? 'all'}`,
     async () => {
@@ -139,7 +139,7 @@ export function useCompanyAds(
     [enabledRef, normalizedCompanyName],
     ([enabled, name]) => {
       if (enabled && name) {
-        execute()
+        execute({ cause: 'initial' })
       }
     },
     { immediate: true },
