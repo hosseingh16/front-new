@@ -35,4 +35,5 @@ export interface ApiResponse<T = any> {
 export interface ApiRequestOptions {
   headers?: Record<string, string>;
   query?: Record<string, unknown>;
+  responseType?: "json" | "blob" | "text" | "arrayBuffer" | "stream";
 }
