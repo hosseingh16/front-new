@@ -31,6 +31,22 @@ export default defineNuxtConfig({
           content: "index, follow",
         },
       ],
+      script: [
+        {
+          key: "goftino-widget",
+          type: "text/javascript",
+          tagPosition: "head",
+          textContent:
+            '!function(){var i="pEmWrG",d=document,g=d.createElement("script"),s="https://www.goftino.com/widget/"+i,l=localStorage.getItem("goftino_"+i);g.type="text/javascript",g.async=!0,g.src=l?s+"?o="+l:s;d.getElementsByTagName("head")[0].appendChild(g);}();',
+        },
+        {
+          key: "microsoft-clarity",
+          type: "text/javascript",
+          tagPosition: "head",
+          textContent:
+            '(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window, document, "clarity", "script", "u7z4wy6ec4");',
+        },
+      ],
     },
   },
 
