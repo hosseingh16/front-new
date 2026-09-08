@@ -4,6 +4,8 @@ export const SETTINGS_DEFAULTS = {
   'ads.paid_city_price': 345_000,
   'ads.resume_terms_max_length': 5000,
   'ads.resume_terms_min_length': 10,
+  'contact.email': 'hihesab.co@gmail.com',
+  'contact.phones': ['051-91012030', '021-91300708'],
   'cv.max_educations': 5,
   'cv.max_priors': 12,
   'cv.max_softwares': 5,
@@ -30,7 +32,9 @@ export type SettingKey = keyof typeof SETTINGS_DEFAULTS
 export type AppSettings = {
   [K in SettingKey]: (typeof SETTINGS_DEFAULTS)[K] extends readonly string[]
     ? string[]
-    : number
+    : (typeof SETTINGS_DEFAULTS)[K] extends number
+      ? number
+      : string
 }
 
 export function mbToBytes(mb: number) {

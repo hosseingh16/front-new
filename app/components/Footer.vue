@@ -53,8 +53,9 @@
 
         <div class="flex flex-col gap-3">
           <p>راه های ارتباطی</p>
-          <p>(051)91012030</p>
-          <p>(021)91300708</p>
+          <p v-for="phone in contactPhones" :key="phone" dir="ltr">
+            {{ phone }}
+          </p>
         </div>
 
         <div class="flex flex-col gap-3">
@@ -164,6 +165,8 @@ interface FooterLink {
   label: string;
   to: string;
 }
+
+const { contactPhones } = useSettings();
 
 const jobseekerLinks: FooterLink[] = [
   { label: "حسابدار", to: "/" },

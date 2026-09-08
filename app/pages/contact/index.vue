@@ -104,7 +104,12 @@
               <p class="text-sm py-1 font-semibold text-text-tertiary">
                 {{ item.title }}
               </p>
-              <p class="text-sm py-1 text-text-tertiary">{{ item.value }}</p>
+              <p
+                class="text-sm py-1 text-text-tertiary whitespace-pre-line"
+                :dir="item.direction"
+              >
+                {{ item.value }}
+              </p>
             </div>
           </div>
         </div>
@@ -121,12 +126,14 @@ const form = reactive({
 });
 const api = useApi();
 const { $toast } = useNuxtApp();
+const { contactPhones, contactEmail } = useSettings();
 
-const supportItems = [
+const supportItems = computed(() => [
   {
     icon: "tabler:phone",
     title: "شماره تلفن پشتیبانی",
-    value: "(۰۲۱) ۹۱۰۱۲۰۳۰",
+    value: contactPhones.value.join("\n"),
+    direction: "ltr" as const,
   },
   {
     icon: "tabler:clock",
@@ -136,14 +143,15 @@ const supportItems = [
   {
     icon: "tabler:mail",
     title: "ایمیل پشتیبانی کاربران",
-    value: "hihesab.co@gmail.com",
+    value: contactEmail.value,
+    direction: "ltr" as const,
   },
   {
     icon: "tabler:calendar",
     title: "روز های کاری پشتیبانی",
     value: "روز های کاری : ۷ روز هفته",
   },
-];
+]);
 
 async function submitForm() {
   const response = await api.post<any>("/contact", {

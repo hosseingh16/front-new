@@ -56,6 +56,17 @@ function readStringArray(
   return values
 }
 
+function readString(
+  data: SettingsPayload | null,
+  key: SettingKey,
+  fallback: string,
+) {
+  const raw = data?.[key]
+  if (typeof raw !== 'string') return fallback
+  const value = raw.trim()
+  return value || fallback
+}
+
 export function useSettings() {
   const api = useApi()
   const cache = useState<SettingsPayload | null>(
@@ -124,6 +135,20 @@ export function useSettings() {
       cache.value,
       'ads.resume_terms_min_length',
       SETTINGS_DEFAULTS['ads.resume_terms_min_length'],
+    ),
+  )
+  const contactPhones = computed(() =>
+    readStringArray(
+      cache.value,
+      'contact.phones',
+      SETTINGS_DEFAULTS['contact.phones'],
+    ),
+  )
+  const contactEmail = computed(() =>
+    readString(
+      cache.value,
+      'contact.email',
+      SETTINGS_DEFAULTS['contact.email'],
     ),
   )
   const cvMaxEducations = computed(() =>
@@ -262,6 +287,8 @@ export function useSettings() {
     'ads.paid_city_price': adsPaidCityPrice.value,
     'ads.resume_terms_max_length': adsResumeTermsMaxLength.value,
     'ads.resume_terms_min_length': adsResumeTermsMinLength.value,
+    'contact.email': contactEmail.value,
+    'contact.phones': contactPhones.value,
     'cv.max_educations': cvMaxEducations.value,
     'cv.max_priors': cvMaxPriors.value,
     'cv.max_softwares': cvMaxSoftwares.value,
@@ -292,6 +319,8 @@ export function useSettings() {
     adsPaidCityPrice,
     adsResumeTermsMaxLength,
     adsResumeTermsMinLength,
+    contactEmail,
+    contactPhones,
     cvMaxEducations,
     cvMaxPriors,
     cvMaxSoftwares,
