@@ -76,7 +76,7 @@
               "
               size="14"
             />
-            {{ type }}
+            {{ typeLabel }}
           </span>
           <span
             class="inline-flex items-center gap-1 rounded-full border border-gray-default bg-white px-2.5 py-1"
@@ -153,4 +153,16 @@ const props = withDefaults(
 const { logoSrc, onLogoError, bindLogoImg } = useCompanyLogoDisplaySrc(
   () => props.logo,
 );
+
+const { items: lookupItems } = useLookups("industries");
+const industryOptions = lookupItems("industries");
+
+const typeLabel = computed(() => {
+  const value = props.type;
+  if (!value) return "";
+  const match = industryOptions.value.find(
+    (item) => String(item.value) === String(value),
+  );
+  return match?.label ?? value;
+});
 </script>

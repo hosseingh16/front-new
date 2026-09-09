@@ -111,11 +111,11 @@
               پروژه حسابداری
             </div>
             <div
-              v-if="item!.company?.activity"
+              v-if="activityLabel"
               class="shrink-0 rounded-full border border-gray-default bg-surface-50 py-1 px-3 flex items-center gap-2 text-text-tertiary"
             >
               <Icon name="ph:suitcase-simple-light" class="ma-auto" />
-              {{ item!.company.activity }}
+              {{ activityLabel }}
             </div>
             <template v-if="variant === 'ad'">
               <div
@@ -192,6 +192,18 @@ const emit = defineEmits<{
 
 const ad = computed(() => props.item as AdList);
 const project = computed(() => props.item as ProjectList);
+
+const { items: lookupItems } = useLookups("industries");
+const industryOptions = lookupItems("industries");
+
+const activityLabel = computed(() => {
+  const value = props.item?.company?.activity;
+  if (!value) return "";
+  const match = industryOptions.value.find(
+    (item) => String(item.value) === String(value),
+  );
+  return match?.label ?? value;
+});
 
 const companyName = computed(() => props.item?.company_name || "");
 const {
