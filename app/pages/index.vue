@@ -189,24 +189,26 @@
 
     <m-divider class="mt-12" />
 
-    <section class="custom-pad mt-8 max-lg:hidden">
-      <p class="text-2xl text-text-tertiary font-yb-bold text-center">
+    <section class="custom-pad mt-8 pb-8">
+      <p
+        class="text-xl lg:text-2xl text-text-tertiary font-yb-bold text-center"
+      >
         مقالات آموزشی و تخصصی حسابداری های‌حساب
       </p>
-      <p class="mt-3 text-text-tertiary font-semibold text-center">
+      <p class="mt-3 text-text-tertiary font-semibold text-center text-sm lg:text-base">
         آموزشی -خبری - مسیرشغلی
       </p>
-      <div class="mt-4 grid grid-cols-2 gap-4">
+      <div class="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-4">
         <div
           v-if="posts[0]"
-          class="rounded-lg bg-primary-900 text-white p-6 flex flex-col justify-between"
+          class="rounded-lg bg-primary-900 text-white p-4 lg:p-6 flex flex-col justify-between"
         >
           <div>
             <p class="font-semibold text-sm">
               {{ posts[0].title }}
             </p>
             <p
-              class="mt-3 text-caption text-text-muted"
+              class="mt-3 text-caption text-text-muted line-clamp-3 lg:line-clamp-none"
               v-html="posts[0].excerpt"
             ></p>
           </div>
@@ -214,7 +216,7 @@
             <NuxtImg
               :src="posts[0].image"
               :alt="posts[0].alt_text"
-              class="w-full"
+              class="w-full rounded-lg"
             />
             <div class="text-left mt-2">
               <NuxtLink :to="posts[0].link" target="_blank">
@@ -230,24 +232,24 @@
             </div>
           </div>
         </div>
-        <div class="flex flex-col justify-between">
+        <div class="flex flex-col gap-4 lg:justify-between lg:gap-0">
           <div
             v-for="(post, i) in posts.slice(1, 4)"
             :key="i"
-            class="bg-white rounded-lg p-6 flex gap-4 mb-4 last:mb-0"
+            class="bg-white rounded-lg p-4 lg:p-6 flex flex-col sm:flex-row gap-4 lg:mb-4 lg:last:mb-0"
           >
             <NuxtImg
               :src="post.image || '/images/img-16.png'"
-              class="max-w-35 aspect-2/1"
+              class="w-full sm:max-w-35 sm:w-auto aspect-2/1 object-cover rounded-lg shrink-0"
               :alt="post.alt_text || ''"
             />
-            <div class="flex flex-col justify-between">
+            <div class="flex flex-col justify-between flex-1 min-w-0">
               <div>
                 <p class="text-sm font-semibold text-text-primay">
                   {{ post.title }}
                 </p>
                 <p
-                  class="mt-4 text-caption text-text-passive line-clamp-2"
+                  class="mt-2 lg:mt-4 text-caption text-text-passive line-clamp-2"
                   v-html="post.excerpt"
                 ></p>
               </div>

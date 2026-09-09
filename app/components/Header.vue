@@ -29,6 +29,8 @@
           v-for="link in navLinks"
           :key="link.to"
           :to="link.to"
+          :target="link.blank ? '_blank' : undefined"
+          :rel="link.blank ? 'noopener noreferrer' : undefined"
           class="text-sm hover:opacity-80"
         >
           {{ link.label }}
@@ -122,6 +124,8 @@
               v-for="link in navLinks"
               :key="link.to"
               :to="link.to"
+              :target="link.blank ? '_blank' : undefined"
+              :rel="link.blank ? 'noopener noreferrer' : undefined"
               class="rounded-lg px-3 py-3 text-sm font-semibold transition-colors"
               :class="
                 isActive(link.to)
@@ -148,10 +152,10 @@ const { user } = useCurrentUser();
 const { needsRoleSelection } = useRoleGate();
 
 const navLinks = [
-  { label: "خانه", to: "/" },
-  { label: "کارفرمایان", to: "/employers" },
-  { label: "فرصت‌های شغلی", to: "/jobs" },
-  { label: "مقالات", to: "/blog" },
+  { label: "خانه", to: "/", blank: false },
+  { label: "کارفرمایان", to: "/employers", blank: false },
+  { label: "فرصت‌های شغلی", to: "/jobs", blank: false },
+  { label: "مقالات", to: "/blog", blank: true },
 ] as const;
 
 const isDrawerOpen = ref(false);
