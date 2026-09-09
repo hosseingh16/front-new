@@ -204,9 +204,13 @@
           class="rounded-lg bg-primary-900 text-white p-4 lg:p-6 flex flex-col justify-between"
         >
           <div>
-            <p class="font-semibold text-sm">
+            <NuxtLink
+              :to="posts[0].link"
+              target="_blank"
+              class="font-semibold text-sm hover:opacity-80"
+            >
               {{ posts[0].title }}
-            </p>
+            </NuxtLink>
             <p
               class="mt-3 text-caption text-text-muted line-clamp-3 lg:line-clamp-none"
               v-html="posts[0].excerpt"
@@ -245,7 +249,15 @@
             />
             <div class="flex flex-col justify-between flex-1 min-w-0">
               <div>
-                <p class="text-sm font-semibold text-text-primay">
+                <NuxtLink
+                  v-if="post.link"
+                  :to="post.link"
+                  target="_blank"
+                  class="text-sm font-semibold text-text-primay hover:opacity-80"
+                >
+                  {{ post.title }}
+                </NuxtLink>
+                <p v-else class="text-sm font-semibold text-text-primay">
                   {{ post.title }}
                 </p>
                 <p
