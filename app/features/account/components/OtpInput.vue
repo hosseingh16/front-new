@@ -10,7 +10,8 @@
       ref="inputs"
       type="text"
       inputmode="numeric"
-      autocomplete="one-time-code"
+      :autocomplete="index === 0 ? 'one-time-code' : 'off'"
+      :name="index === 0 ? 'one-time-code' : undefined"
       class="input w-10 h-10"
       :aria-label="`رقم ${index + 1}`"
       :value="model[index] ?? ''"
@@ -26,6 +27,15 @@ import {
   otpCompletePattern,
 } from '~/configs/settings-defaults'
 
+/** Chrome Android Web OTP API (not in all TS DOM libs). */
+interface OtpCredential extends Credential {
+  code: string
+}
+
+interface OtpCredentialRequestOptions extends CredentialRequestOptions {
+  otp?: { transport: Array<'sms'> }
+}
+
 const { otpLength } = useSettings()
 
 const model = defineModel<string[]>({
@@ -38,6 +48,7 @@ const emit = defineEmits<{
 
 const inputs = ref<HTMLInputElement[]>([])
 let submitting = false
+let otpAbort: AbortController | null = null
 
 watch(otpLength, (length) => {
   if (model.value.length === length) return
@@ -191,7 +202,34 @@ function onPaste(event: ClipboardEvent) {
   applyDigits(event.clipboardData?.getData("text") ?? "", 0)
 }
 
+async function listenForSmsOtp() {
+  if (!import.meta.client) return
+  if (!("OTPCredential" in window) || !navigator.credentials?.get) return
+
+  otpAbort?.abort()
+  otpAbort = new AbortController()
+
+  try {
+    const credential = (await navigator.credentials.get({
+      otp: { transport: ["sms"] },
+      signal: otpAbort.signal,
+    } as OtpCredentialRequestOptions)) as OtpCredential | null
+
+    if (credential?.code) {
+      applyDigits(credential.code, 0)
+    }
+  } catch {
+    // Unsupported, aborted, or user dismissed the SMS OTP prompt.
+  }
+}
+
 onMounted(() => {
   nextTick(() => focusAt(0))
+  listenForSmsOtp()
+})
+
+onUnmounted(() => {
+  otpAbort?.abort()
+  otpAbort = null
 })
 </script>
