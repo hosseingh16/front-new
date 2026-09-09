@@ -17,6 +17,10 @@ export default defineNuxtConfig({
     purgeCachedData: false,
   },
 
+  nitro: {
+    preset: "node-server",
+  },
+
   css: ["~/assets/css/main.css"],
 
   app: {
@@ -69,7 +73,7 @@ export default defineNuxtConfig({
   sanctum: {
     mode: "cookie",
     baseUrl: "https://api.hihesab.com",
-    origin: "https://admin.hihesab.com",
+    origin: "https://hihesab.com",
 
     endpoints: {
       csrf: "/sanctum/csrf-cookie",
@@ -86,7 +90,7 @@ export default defineNuxtConfig({
   },
 
   site: {
-    url: "https://admin.hihesab.com",
+    url: "https://hihesab.com",
     name: "های‌حساب",
   },
   pages: {
