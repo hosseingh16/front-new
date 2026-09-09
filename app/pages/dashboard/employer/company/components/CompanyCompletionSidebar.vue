@@ -81,8 +81,8 @@
 </template>
 
 <script setup lang="ts">
-import useClipboard from "vue-clipboard3";
 import Titr from "~/features/panel/cv/Titr.vue";
+import { copyToClipboard } from "~/utils/clipboard";
 import type {
   CompanyProfileSection,
   CompanyProfileSectionKey,
@@ -94,7 +94,6 @@ const props = defineProps<{
   slug: string;
 }>();
 
-const { toClipboard } = useClipboard();
 const { $toast } = useNuxtApp();
 
 const circumference = 2 * Math.PI * 52;
@@ -115,7 +114,7 @@ function scrollToSection(key: CompanyProfileSectionKey) {
 
 async function copyProfileUrl() {
   try {
-    await toClipboard(profileUrl.value);
+    await copyToClipboard(profileUrl.value);
     $toast.success("آدرس کپی شد");
   } catch {
     // clipboard unavailable

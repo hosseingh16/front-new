@@ -92,9 +92,8 @@ import linkedinIcon from "~/assets/vectors/social/linkedin.svg?url";
 import telegramIcon from "~/assets/vectors/social/telegram.svg?url";
 import twitterIcon from "~/assets/vectors/social/twitter.svg?url";
 import whatsappIcon from "~/assets/vectors/social/whatsapp.svg?url";
-import type { ApiResponse } from "~/types/api";
 
-const props = defineProps<{
+defineProps<{
   slug: string;
   title?: string;
 }>();
@@ -174,23 +173,40 @@ const socialLinks = [
 ];
 
 async function downloadPdf() {
-  if (!props.slug || downloading.value) return;
+  if (downloading.value || !import.meta.client) return;
 
   downloading.value = true;
   try {
-    const result = await api.get<
-      ApiResponse<{ filename: string; url: string }>
-    >(`/cv/${props.slug}/pdf`);
+    const blob = await api.get<Blob>("/cv/pdf-link", {
+      responseType: "blob",
+      headers: {
+        Accept: "application/pdf",
+      },
+    });
 
-    const url = result.data?.url;
-    if (!url) {
+    if (!(blob instanceof Blob) || blob.size === 0) {
       $toast.error("دانلود رزومه ممکن نشد");
       return;
     }
 
-    if (import.meta.client) {
-      window.open(url, "_blank", "noopener,noreferrer");
+    if (
+      blob.type.includes("json") ||
+      blob.type.includes("text") ||
+      blob.type.includes("html")
+    ) {
+      $toast.error("دانلود رزومه ممکن نشد");
+      return;
     }
+
+    const objectUrl = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = objectUrl;
+    link.download = "resume.pdf";
+    link.rel = "noopener";
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(objectUrl);
   } catch {
     $toast.error("دانلود رزومه ممکن نشد");
   } finally {

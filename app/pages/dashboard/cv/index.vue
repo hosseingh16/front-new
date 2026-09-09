@@ -137,12 +137,12 @@
 <script setup lang="ts">
 import CvCompletion from "@/features/panel/cv/CvCompletion.vue";
 import CvIncompleteBanner from "@/features/panel/cv/CvIncompleteBanner.vue";
-import useClipboard from "vue-clipboard3";
 import Tab1 from "~/features/panel/cv/Tab1.vue";
 import Tab2 from "~/features/panel/cv/Tab2.vue";
 import Titr from "~/features/panel/cv/Titr.vue";
 import type { CvCompletionItem } from "~/composables/useCvCompletion";
 import { isResumeBasicInfoComplete } from "~/utils/api-error";
+import { copyToClipboard } from "~/utils/clipboard";
 
 definePageMeta({
   layout: "dashboard",
@@ -155,7 +155,6 @@ const tab = ref(1);
 const { user, refreshUser } = useCurrentUser();
 const { isWelcomeVisible } = useFirstVisitWelcome();
 const { totalPercent } = useCvCompletion(user);
-const { toClipboard } = useClipboard();
 const { $toast } = useNuxtApp();
 const expandedCvCompletion = useState(
   "expandedCvCompletion_state",
@@ -222,7 +221,7 @@ async function goToSection(item: CvCompletionItem) {
 async function copyCvShareUrl() {
   if (!cvShareUrl.value) return;
   try {
-    await toClipboard(cvShareUrl.value);
+    await copyToClipboard(cvShareUrl.value);
     $toast.success("آدرس کپی شد");
   } catch {
     // clipboard unavailable
