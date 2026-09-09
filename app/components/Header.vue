@@ -151,6 +151,7 @@ const navLinks = [
   { label: "خانه", to: "/" },
   { label: "کارفرمایان", to: "/employers" },
   { label: "فرصت‌های شغلی", to: "/jobs" },
+  { label: "مقالات", to: "/blog" },
 ] as const;
 
 const isDrawerOpen = ref(false);
