@@ -3,7 +3,7 @@
     <div class="rounded-md border-2 border-primary-50 bg-primary-50 p-2">
       <div class="flex items-center gap-1">
         <div
-          class="flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-[#ECF4D9]"
+          class="flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-2xl"
         >
           <img
             :src="companyLogoSrc"
