@@ -1,5 +1,5 @@
 <template>
-  <dialog ref="dialogRef" class="modal" @close="onDialogClose" @click="onBackdropClick">
+  <dialog ref="dialogRef" class="modal" @click="onBackdropClick">
     <div class="modal-box w-full max-w-105 rounded-2xl p-6">
       <div class="flex items-start justify-between gap-3">
         <h2 class="font-yb-bold text-base leading-7 text-text-primay">
@@ -76,10 +76,10 @@
             </button>
             <div
               v-else
-              class="inline-flex h-8 items-center gap-1 rounded-lg bg-[rgba(227,243,255,1)] px-3 text-sm text-primary-500"
+              class="inline-flex min-h-8 items-center gap-1 rounded-lg bg-[rgba(227,243,255,1)] px-3 py-1 text-sm leading-6 text-primary-500"
               aria-live="polite"
             >
-              <Icon name="svg:refresh" />
+              <Icon name="svg:refresh" class="shrink-0" />
               <span>ارسال مجدد تا {{ persianRemaining }} ثانیه دیگر</span>
             </div>
 
@@ -149,16 +149,17 @@ const emit = defineEmits<{
   (e: 'resume-incomplete'): void
 }>()
 
-const { otpLength, otpResendSeconds, otpVoiceDelaySeconds } = useSettings()
+const { otpLength, otpVoiceDelaySeconds } = useSettings()
 
 const dialogRef = ref<HTMLDialogElement | null>(null)
 const step = ref<'phone' | 'otp'>('phone')
 const otpDigits = ref(createEmptyOtpDigits())
 const applying = ref(false)
-const remaining = ref(otpResendSeconds.value)
-const voiceRemaining = ref(otpVoiceDelaySeconds.value)
 
-let timer: ReturnType<typeof setInterval> | null = null
+// Driven by what the server reported on the last OTP response, so closing and
+// reopening the modal mid-cooldown resumes the real countdown. A rate-limited
+// send only stretches this countdown; saying so is left to the toast.
+const { resendRemaining, canResend, sinceSent } = useOtpCountdown()
 
 const {
   mobile,
@@ -190,15 +191,22 @@ const { handleSubmit, meta, setValues, resetForm } = useForm<
 const phoneValid = computed(() => meta.value.valid)
 const otpReady = computed(() => otpDigits.value.every((d) => d !== ''))
 const busy = computed(() => authLoading.value || applying.value || applyLoading.value)
-const canResend = computed(() => remaining.value <= 0)
-const voiceAvailable = computed(() => voiceRemaining.value <= 0)
+const voiceRemaining = computed(() =>
+  sinceSent.value === null
+    ? otpVoiceDelaySeconds.value
+    : Math.max(0, otpVoiceDelaySeconds.value - sinceSent.value),
+)
+// Nothing sent yet means there is no code to read out over the phone.
+const voiceAvailable = computed(
+  () => sinceSent.value !== null && voiceRemaining.value <= 0,
+)
 
 const displayMobile = computed(() => {
   const phone = mobile.value || ''
   return phone.replace(/\d/g, (d) => '۰۱۲۳۴۵۶۷۸۹'[Number(d)] ?? d)
 })
 
-const persianRemaining = computed(() => toPersianDigits(remaining.value))
+const persianRemaining = computed(() => toPersianDigits(resendRemaining.value))
 const persianVoiceRemaining = computed(() => toPersianDigits(voiceRemaining.value))
 const voiceLabel = computed(() => {
   if (voiceSent.value) return 'تماس صوتی ارسال شد'
@@ -225,37 +233,10 @@ function isCompleteOtp(value: string) {
   return otpCompletePattern(otpLength.value).test(value)
 }
 
-function clearTimer() {
-  if (timer) {
-    clearInterval(timer)
-    timer = null
-  }
-}
-
-function startCountdown() {
-  clearTimer()
-  remaining.value = otpResendSeconds.value
-  voiceRemaining.value = otpVoiceDelaySeconds.value
-  timer = setInterval(() => {
-    if (remaining.value > 0) {
-      remaining.value--
-    }
-    if (voiceRemaining.value > 0) {
-      voiceRemaining.value--
-    }
-    if (remaining.value <= 0 && voiceRemaining.value <= 0) {
-      clearTimer()
-    }
-  }, 1000)
-}
-
 function resetLocalState() {
   step.value = 'phone'
   otpDigits.value = emptyOtp()
   applying.value = false
-  clearTimer()
-  remaining.value = otpResendSeconds.value
-  voiceRemaining.value = otpVoiceDelaySeconds.value
   resetForm()
 }
 
@@ -268,10 +249,6 @@ function closeModal() {
   dialogRef.value?.close()
 }
 
-function onDialogClose() {
-  clearTimer()
-}
-
 function onBackdropClick(event: MouseEvent) {
   if (event.target === event.currentTarget) {
     closeModal()
@@ -281,7 +258,6 @@ function onBackdropClick(event: MouseEvent) {
 function goBackToPhone() {
   step.value = 'phone'
   otpDigits.value = emptyOtp()
-  clearTimer()
   if (mobile.value) setValues({ mobile: mobile.value })
 }
 
@@ -289,14 +265,12 @@ const onSubmitPhone = handleSubmit(async (data) => {
   await requestOtp(data.mobile)
   step.value = 'otp'
   otpDigits.value = emptyOtp()
-  startCountdown()
 })
 
 async function onResend() {
   if (!canResend.value || !mobile.value) return
   otpDigits.value = emptyOtp()
   await requestOtp(mobile.value)
-  startCountdown()
 }
 
 async function onVoice() {
@@ -358,8 +332,6 @@ async function onSubmitOtp(otpFromEvent?: string | Event) {
     applying.value = false
   }
 }
-
-onUnmounted(clearTimer)
 
 defineExpose({
   showModal,

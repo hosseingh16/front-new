@@ -33,6 +33,29 @@ export function isResumeBasicInfoComplete(
   );
 }
 
+/**
+ * The parsed response body of a failed request. ofetch exposes it as `data`,
+ * with `response._data` as the fallback for errors raised before that is set.
+ */
+export function getApiErrorData(
+  error: unknown,
+): Record<string, unknown> | null {
+  if (!error || typeof error !== "object") return null;
+
+  const candidate = error as {
+    data?: unknown;
+    response?: { _data?: unknown };
+  };
+
+  for (const body of [candidate.data, candidate.response?._data]) {
+    if (body && typeof body === "object" && !Array.isArray(body)) {
+      return body as Record<string, unknown>;
+    }
+  }
+
+  return null;
+}
+
 export function getApiErrorMessage(
   error: unknown,
   fallback = "خطایی رخ داد",

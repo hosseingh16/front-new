@@ -1,6 +1,10 @@
 <template>
-  <DaisyCard class="w-full">
-    <SignUpStepper :current="1" class="hidden min-[560px]:flex flex-1" />
+  <DaisyCard :class="needsRegistration ? 'w-full' : 'w-full min-[560px]:w-140'">
+    <SignUpStepper
+      v-if="needsRegistration"
+      :current="1"
+      class="hidden min-[560px]:flex flex-1"
+    />
     <div class="flex items-center">
       <Icon
         name="svg:chevron-right"
@@ -8,11 +12,15 @@
         @click="goBack"
       />
       <img
+        v-if="needsRegistration"
         src="/images/1-3.png"
         width="54"
         class="ms-auto min-[560px]:hidden"
       />
-      <span class="hidden min-[560px]:block w-6 shrink-0" />
+      <span
+        v-if="needsRegistration"
+        class="hidden min-[560px]:block w-6 shrink-0"
+      />
     </div>
 
     <p class="mt-4 text-2xl sm:text-h1 font-yb-bold">احراز هویت</p>
@@ -65,7 +73,7 @@ const emit = defineEmits<{
   (e: "verified", status: AuthUserStatus): void;
 }>();
 
-const { mobile, verifyOtp, requestOtp, requestOtpViaVoice, loginWithMobile, loading, voiceSent } =
+const { mobile, verifyOtp, requestOtp, requestOtpViaVoice, loginWithMobile, loading, voiceSent, needsRegistration } =
   useAccountAuth();
 
 const displayMobile = computed(() => props.mobile || mobile.value || "—");

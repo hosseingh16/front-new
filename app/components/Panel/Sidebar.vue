@@ -28,18 +28,21 @@
     </div>
 
     <div class="flex flex-col gap-y-2 border-t border-gray-default">
-      <div class="flex gap-2 px-4 pt-3">
+      <NuxtLink
+        to="/dashboard/cv?edit=basic"
+        class="flex gap-2 rounded-lg px-4 pt-3 transition-colors hover:bg-surface-100"
+        aria-label="ویرایش اطلاعات پایه رزومه"
+      >
         <Avatar class="h-10 w-10 shrink-0" />
-        <div class="flex flex-col gap-1">
-          <span class="font-semibold text-text-tertiary">{{ userName }}</span>
-          <button class="flex items-center">
-            <!-- <Icon name="svg:settings" /> -->
-            <span class="text-sm font-normal text-text-passive">{{
-              cellphone
-            }}</span>
-          </button>
+        <div class="flex min-w-0 flex-col gap-1">
+          <span class="truncate font-semibold text-text-tertiary">{{
+            userName
+          }}</span>
+          <span class="text-sm font-normal text-text-passive">{{
+            cellphone
+          }}</span>
         </div>
-      </div>
+      </NuxtLink>
     </div>
   </aside>
 </template>

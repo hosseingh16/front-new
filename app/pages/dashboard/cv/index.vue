@@ -8,14 +8,6 @@
 
     <div class="flex justify-between items-center">
       <p class="font-yb-bold text-2xl">رزومه من</p>
-      <button
-        class="btn h-10 border-none text-sm text-primary-500 bg-[#4864E114]"
-        type="button"
-        @click="navigateTo('/dashboard/my-resume')"
-      >
-        <Icon name="svg:user-2" size="18" />
-        از دید کارفرما
-      </button>
     </div>
     <div class="grid lg:grid-cols-8 gap-4 mt-5">
       <div class="lg:col-span-6">
@@ -84,6 +76,24 @@
           <p v-else class="mt-3 text-sm text-text-muted">
             آدرس اختصاصی رزومه شما در حال آماده‌سازی است.
           </p>
+          <button
+            type="button"
+            class="mt-4 flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-primary-500 px-4 text-sm font-yb-bold text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+            :disabled="downloadingPdf"
+            @click="downloadPdf"
+          >
+            <Icon
+              :name="
+                downloadingPdf ? 'lucide:loader-circle' : 'lucide:download'
+              "
+              size="18"
+              class="text-white"
+              :class="{ 'animate-spin': downloadingPdf }"
+            />
+            <span>{{
+              downloadingPdf ? "در حال آماده‌سازی..." : "دانلود رزومه"
+            }}</span>
+          </button>
         </div>
       </aside>
 
@@ -151,17 +161,28 @@ definePageMeta({
 const BANNER_STORAGE_KEY = "cv-incomplete-banner-dismissed";
 
 // Variables
+const route = useRoute();
 const tab = ref(1);
 const { user, refreshUser } = useCurrentUser();
 const { isWelcomeVisible } = useFirstVisitWelcome();
 const { totalPercent } = useCvCompletion(user);
+const api = useApi();
 const { $toast } = useNuxtApp();
+const downloadingPdf = ref(false);
 const expandedCvCompletion = useState(
   "expandedCvCompletion_state",
   () => false,
 );
 const showBottomMenu = useState("showBottomMenu_state");
 const cvIncompleteBannerDismissed = ref(false);
+
+watch(
+  () => route.query.edit,
+  (edit) => {
+    if (edit === "basic") tab.value = 1;
+  },
+  { immediate: true },
+);
 
 const cvSlug = computed(() => {
   const value = user.value?.cv_slug;
@@ -225,6 +246,48 @@ async function copyCvShareUrl() {
     $toast.success("آدرس کپی شد");
   } catch {
     // clipboard unavailable
+  }
+}
+
+async function downloadPdf() {
+  if (downloadingPdf.value || !import.meta.client) return;
+
+  downloadingPdf.value = true;
+  try {
+    const blob = await api.get<Blob>("/cv/pdf-link", {
+      responseType: "blob",
+      headers: {
+        Accept: "application/pdf",
+      },
+    });
+
+    if (!(blob instanceof Blob) || blob.size === 0) {
+      $toast.error("دانلود رزومه ممکن نشد");
+      return;
+    }
+
+    if (
+      blob.type.includes("json") ||
+      blob.type.includes("text") ||
+      blob.type.includes("html")
+    ) {
+      $toast.error("دانلود رزومه ممکن نشد");
+      return;
+    }
+
+    const objectUrl = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = objectUrl;
+    link.download = "resume.pdf";
+    link.rel = "noopener";
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(objectUrl);
+  } catch {
+    $toast.error("دانلود رزومه ممکن نشد");
+  } finally {
+    downloadingPdf.value = false;
   }
 }
 </script>

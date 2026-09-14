@@ -48,6 +48,7 @@ export function useCreateAdForm(
 ) {
   const api = useApi()
   const route = useRoute()
+  const { markFirstAdCreated } = useFirstVisitWelcome()
   const router = useRouter()
   const { $toast } = useNuxtApp()
   const {
@@ -477,6 +478,8 @@ export function useCreateAdForm(
       const saved = getSavedAd(result)
       $toast.success('پیش‌نویس ذخیره شد')
 
+      if (!isEdit.value) markFirstAdCreated()
+
       if (!isEdit.value && saved?.id) {
         await router.replace(`/dashboard/employer/ads/${saved.id}/edit`)
         return true
@@ -537,6 +540,8 @@ export function useCreateAdForm(
       $toast.success(
         isEdit.value ? 'آگهی با موفقیت ویرایش شد' : 'آگهی با موفقیت ثبت شد',
       )
+
+      if (!isEdit.value) markFirstAdCreated()
 
       if (result.data?.payment?.payment_id) {
         await navigateTo(`/r/${result.data.payment.payment_id}`)

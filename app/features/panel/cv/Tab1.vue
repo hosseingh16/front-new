@@ -1,54 +1,78 @@
 <template>
   <div id="section-basic" class="scroll-mt-24 bg-white p-4 rounded-2xl mt-5">
-    <Titr :with-icon="editMode" class="mb-8">اطلاعات پایه</Titr>
+    <div
+      class="mb-8"
+      :class="
+        editMode
+          ? 'sticky top-16 z-20 -mx-4 -mt-4 rounded-t-2xl border-b border-gray-default bg-white px-4 py-3 shadow-[0_4px_12px_rgba(15,23,42,0.06)]'
+          : undefined
+      "
+    >
+      <Titr class="mb-0!">
+        اطلاعات پایه
+        <template #actions>
+          <button
+            v-if="editMode"
+            class="btn btn-ghost h-10 rounded-lg text-sm text-text-passive"
+            type="button"
+            @click="cancelEdit"
+          >
+            <Icon name="svg:close" size="16" />
+            انصراف
+          </button>
+          <button
+            v-else
+            class="btn h-10 border-none text-sm text-primary-500 bg-[#4864E114]"
+            type="button"
+            @click="changeEditMode(true)"
+          >
+            <Icon name="svg:edit" size="18" />
+            ویرایش
+          </button>
+        </template>
+      </Titr>
+    </div>
     <form @submit="onSubmit">
       <div id="section-avatar" class="mb-8 scroll-mt-24" data-field="profileImage">
-        <p class="relative">
-          تصویر پروفایل:
-          <span
-            v-if="editMode"
-            class="text-red-400 mb-4 absolute -top-2"
-          >*</span>
-        </p>
-        <Field name="profileImage">
-          <m-upload-box
-            subtitle="یا تصویر را بکشید و در این محل رها کنید"
-            :max-size="10"
-            :accept="['png', 'jpg']"
-            :preview-url="avatarPreview"
-            @update:model-value="handleProfileImage"
-            @update:base64="(v) => (imageBase64 = v)"
-            @delete="handleProfileImage(null)"
-          />
-        </Field>
-        <ErrorMessage name="profileImage" v-slot="{ message }">
-          <div class="mt-1 text-xs text-text-passive flex items-center">
-            <icons-close color="#EF4035" />
-            <span>{{ message }}</span>
-          </div>
-        </ErrorMessage>
+        <p class="relative">تصویر پروفایل:</p>
+        <m-upload-box
+          subtitle="یا تصویر را بکشید و در این محل رها کنید"
+          :max-size="10"
+          :accept="['png', 'jpg']"
+          :preview-url="avatarPreview"
+          @update:model-value="handleProfileImage"
+          @update:base64="(v) => (imageBase64 = v)"
+          @delete="handleProfileImage(null)"
+        />
+        <div
+          v-if="profileImageError"
+          class="mt-1 text-xs text-text-passive flex items-center"
+        >
+          <icons-close color="#EF4035" />
+          <span>{{ profileImageError }}</span>
+        </div>
       </div>
 
       <div v-show="editMode" class="grid lg:grid-cols-2 gap-x-4 gap-y-8">
-        <m-form-input
-          name="name"
-          label="نام کامل"
-          placeholder="نام کامل خود را وارد کنید"
-          required
-        ></m-form-input>
+        <div id="field-name" class="scroll-mt-24">
+          <m-form-input
+            name="name"
+            label="نام کامل"
+            placeholder="نام کامل خود را وارد کنید"
+            required
+          ></m-form-input>
+        </div>
 
-        <!-- <m-form-field name="jobTitle">
-          <m-select2 label="عنوان شغلی" required :options="jobTitles"></m-select2>
-        </m-form-field> -->
+        <div id="field-jobTitle" class="scroll-mt-24">
+          <m-form-select2
+            name="jobTitle"
+            label="عنوان شغلی"
+            required
+            :options="jobTitles"
+          />
+        </div>
 
-        <m-form-select2
-          name="jobTitle"
-          label="عنوان شغلی"
-          required
-          :options="jobTitles"
-        />
-
-        <div>
+        <div id="field-jobStatus" class="scroll-mt-24">
           <p class="text-base relative mb-2">
             وضعیت اشتغال
             <span class="text-red-400 mb-4 absolute -top-2">*</span>
@@ -63,88 +87,106 @@
           />
         </div>
 
-        <m-form-select2
-          name="workExperience"
-          label="سابقه کار"
-          placeholder="میزان سابقه کار را انتخاب کنید"
-          required
-          :options="experiences"
-        />
+        <div id="field-workExperience" class="scroll-mt-24">
+          <m-form-select2
+            name="workExperience"
+            label="سابقه کار"
+            placeholder="میزان سابقه کار را انتخاب کنید"
+            required
+            :options="experiences"
+          />
+        </div>
 
-        <m-form-select2
-          name="desiredSalary"
-          label="حقوق درخواستی"
-          placeholder="میزان حقوق درخواستی را انتخاب کنید"
-          required
-          :options="salaries"
-        />
+        <div id="field-desiredSalary" class="scroll-mt-24">
+          <m-form-select2
+            name="desiredSalary"
+            label="حقوق درخواستی"
+            placeholder="میزان حقوق درخواستی را انتخاب کنید"
+            required
+            :options="salaries"
+          />
+        </div>
 
-        <m-form-select2
-          name="birthDate"
-          label="سال تولد"
-          placeholder="سال تولد را انتخاب کنید"
-          required
-          :options="years"
-        />
+        <div id="field-birthDate" class="scroll-mt-24">
+          <m-form-select2
+            name="birthDate"
+            label="سال تولد"
+            placeholder="سال تولد را انتخاب کنید"
+            required
+            :options="years"
+          />
+        </div>
 
-        <m-radio-group name="gender" inline label="جنسیت">
-          <template #default="{ modelValue, setValue }">
-            <m-radio value="1" :model-value="modelValue" :set-value="setValue">
-              آقا
-            </m-radio>
-            <m-radio value="0" :model-value="modelValue" :set-value="setValue">
-              خانم
-            </m-radio>
-          </template>
-        </m-radio-group>
+        <div id="field-gender" class="scroll-mt-24">
+          <m-radio-group name="gender" inline label="جنسیت">
+            <template #default="{ modelValue, setValue }">
+              <m-radio value="1" :model-value="modelValue" :set-value="setValue">
+                آقا
+              </m-radio>
+              <m-radio value="0" :model-value="modelValue" :set-value="setValue">
+                خانم
+              </m-radio>
+            </template>
+          </m-radio-group>
+        </div>
 
-        <m-form-select2
-          name="militaryServiceStatus"
-          label="وضعیت خدمت سربازی"
-          placeholder="وضعیت خدمت سربازی را انتخاب کنید"
-          :required="isMale"
-          :disabled="!isMale"
-          :options="militaryStatuses"
-        />
+        <div id="field-militaryServiceStatus" class="scroll-mt-24">
+          <m-form-select2
+            name="militaryServiceStatus"
+            label="وضعیت خدمت سربازی"
+            placeholder="وضعیت خدمت سربازی را انتخاب کنید"
+            :required="isMale"
+            :disabled="!isMale"
+            :options="militaryStatuses"
+          />
+        </div>
 
-        <m-radio-group name="maritalStatus" inline label="وضعیت تأهل">
-          <template #default="{ modelValue, setValue }">
-            <m-radio value="0" :model-value="modelValue" :set-value="setValue">
-              مجرد
-            </m-radio>
-            <m-radio value="1" :model-value="modelValue" :set-value="setValue">
-              متأهل
-            </m-radio>
-          </template>
-        </m-radio-group>
+        <div id="field-maritalStatus" class="scroll-mt-24">
+          <m-radio-group name="maritalStatus" inline label="وضعیت تأهل">
+            <template #default="{ modelValue, setValue }">
+              <m-radio value="0" :model-value="modelValue" :set-value="setValue">
+                مجرد
+              </m-radio>
+              <m-radio value="1" :model-value="modelValue" :set-value="setValue">
+                متأهل
+              </m-radio>
+            </template>
+          </m-radio-group>
+        </div>
 
-        <m-form-select2
-          name="province"
-          label="استان محل سکونت"
-          placeholder="استان محل سکونت را انتخاب کنید"
-          required
-          search
-          :options="provinces"
-        />
+        <div id="field-province" class="scroll-mt-24">
+          <m-form-select2
+            name="province"
+            label="استان محل سکونت"
+            placeholder="استان محل سکونت را انتخاب کنید"
+            required
+            search
+            :options="provinces"
+          />
+        </div>
 
-        <m-form-select2
-          name="city"
-          label="شهر محل سکونت"
-          placeholder="شهر محل سکونت را انتخاب کنید"
-          required
-          search
-          :options="cities"
-        />
+        <div id="field-city" class="scroll-mt-24">
+          <m-form-select2
+            name="city"
+            label="شهر محل سکونت"
+            placeholder="شهر محل سکونت را انتخاب کنید"
+            required
+            search
+            :options="cities"
+          />
+        </div>
 
-        <m-form-select2
-          name="region"
-          label="منطقه محل سکونت"
-          placeholder="منطقه محل سکونت را انتخاب کنید"
-          required
-          search
-          :options="regions"
-          :disabled="!hasRegions"
-        />
+        <div id="field-region" class="scroll-mt-24">
+          <m-form-select2
+            name="region"
+            label="منطقه محل سکونت"
+            placeholder="منطقه محل سکونت را انتخاب کنید"
+            required
+            search
+            :options="regions"
+            :disabled="!hasRegions"
+          />
+        </div>
 
         <div
           :id="editMode ? 'section-about' : undefined"
@@ -162,7 +204,7 @@
           <button
             class="btn btn-ghost h-10 rounded-lg text-sm text-text-passive"
             type="button"
-            @click="changeEditMode(false)"
+            @click="cancelEdit"
           >
             <Icon name="svg:close" size="16" />
             انصراف
@@ -178,10 +220,15 @@
         </div>
       </div>
       <div v-show="!editMode" class="grid lg:grid-cols-2 gap-x-4 gap-y-8">
-        <InfoItem title="نام کامل:" :value="values.name" />
+        <InfoItem
+          title="نام کامل:"
+          :value="values.name"
+          @edit="changeEditMode(true, 'field-name')"
+        />
         <InfoItem
           title="عنوان شغلی:"
           :value="jobTitles.find((x) => x.value === values.jobTitle)?.label"
+          @edit="changeEditMode(true, 'field-jobTitle')"
         />
         <InfoItem
           title="وضعیت اشتغال:"
@@ -192,20 +239,24 @@
               ? 'شاغل'
               : undefined
           "
+          @edit="changeEditMode(true, 'field-jobStatus')"
         />
         <InfoItem
           title="سابقه کار:"
           :value="
             experiences.find((x) => x.value === values.workExperience)?.label
           "
+          @edit="changeEditMode(true, 'field-workExperience')"
         />
         <InfoItem
           title="حقوق درخواستی:"
           :value="salaries.find((x) => x.value === values.desiredSalary)?.label"
+          @edit="changeEditMode(true, 'field-desiredSalary')"
         />
         <InfoItem
           title="سال تولد:"
           :value="years.find((x) => x.value === values.birthDate)?.label"
+          @edit="changeEditMode(true, 'field-birthDate')"
         />
         <InfoItem
           title="جنسیت:"
@@ -216,6 +267,7 @@
               ? 'خانم'
               : undefined
           "
+          @edit="changeEditMode(true, 'field-gender')"
         />
         <InfoItem
           title="وضعیت خدمت سربازی:"
@@ -224,6 +276,7 @@
               (x) => x.value === values.militaryServiceStatus,
             )?.label
           "
+          @edit="changeEditMode(true, 'field-militaryServiceStatus')"
         />
         <InfoItem
           title="وضعیت تأهل:"
@@ -234,24 +287,29 @@
               ? 'متأهل'
               : undefined
           "
+          @edit="changeEditMode(true, 'field-maritalStatus')"
         />
         <InfoItem
           title="استان محل سکونت:"
           :value="provinces.find((x) => String(x.value) === String(values.province))?.label"
+          @edit="changeEditMode(true, 'field-province')"
         />
         <InfoItem
           title="شهر محل سکونت:"
           :value="cities.find((x) => String(x.value) === String(values.city))?.label"
+          @edit="changeEditMode(true, 'field-city')"
         />
         <InfoItem
           title="منطقه محل سکونت:"
           :value="regions.find((x) => String(x.value) === String(values.region))?.label"
+          @edit="changeEditMode(true, 'field-region')"
         />
         <InfoItem
           :id="editMode ? undefined : 'section-about'"
           class="lg:col-span-2 scroll-mt-24"
           title="درباره من:"
           :value="values.about"
+          @edit="changeEditMode(true, 'section-about')"
         />
         <div class="lg:col-span-2 text-left mt-2">
           <button
@@ -270,7 +328,7 @@
 </template>
 
 <script setup lang="ts">
-import { ErrorMessage, Field, useForm } from "vee-validate";
+import { useForm } from "vee-validate";
 import Titr from "./Titr.vue";
 import * as Yup from "yup";
 import InfoItem from "./InfoItem.vue";
@@ -280,7 +338,6 @@ import { matchesCvAboutEasterEgg } from "~/utils/cv-about-easter-egg";
 
 //Import Validation Rules
 import { fullNameValidation } from "~/validations/fullName";
-import { profileImageValidation } from "~/validations/profileImage";
 
 // Variables
 const api = useApi();
@@ -293,6 +350,7 @@ const hasRegions = ref(false);
 const editMode = ref(false);
 const poetModalRef = ref<{ showModal: () => void } | null>(null);
 const imageBase64 = ref<string | null>(null);
+const profileImageError = ref<string | null>(null);
 /** After local delete, don't fall back to the still-cached server avatar. */
 const keepServerPreview = ref(true);
 const cities = ref<ISelectItem[]>([]);
@@ -315,7 +373,6 @@ const avatarPreview = computed(() => {
 
 // Form
 const formSchema = Yup.object({
-  profileImage: profileImageValidation,
   name: fullNameValidation,
   jobTitle: Yup.string().required("عنوان شغلی انتخاب نشده است"),
   jobStatus: Yup.string().required("وضعیت شغلی انتخاب نشده است"),
@@ -338,17 +395,38 @@ const formSchema = Yup.object({
   }),
   about: Yup.string(),
 });
+type BasicsFormValues = Yup.InferType<typeof formSchema>;
+
 const {
   handleSubmit,
   setFieldValue,
-  setFieldError,
-  setValues,
+  resetForm,
   values,
-} = useForm<Yup.InferType<typeof formSchema>>({
+} = useForm<BasicsFormValues>({
   initialValues: {},
 
   validationSchema: formSchema,
 });
+
+function personalToFormValues(
+  personal: Record<string, unknown> | null | undefined,
+): BasicsFormValues {
+  return {
+    name: String(personal?.name ?? ""),
+    jobTitle: String(personal?.job_title ?? ""),
+    jobStatus: String(personal?.job_status ?? "0"),
+    workExperience: String(personal?.work_experience ?? ""),
+    desiredSalary: String(personal?.desired_salary ?? ""),
+    birthDate: Number(personal?.birthdate ?? ""),
+    gender: String(personal?.gender ?? ""),
+    militaryServiceStatus: String(personal?.military_service_status ?? ""),
+    maritalStatus: String(personal?.marital_status ?? ""),
+    province: String(personal?.province_id ?? ""),
+    city: String(personal?.city_id ?? ""),
+    region: String(personal?.region_id ?? ""),
+    about: String(personal?.about ?? ""),
+  };
+}
 
 const isMale = computed(() => values.gender === "1");
 
@@ -357,15 +435,19 @@ watch(
   async (provinceId, oldValue) => {
     if (!provinceId) {
       cities.value = [];
-      setFieldValue("city", ""); // ✔ مهم
+      if (values.city) setFieldValue("city", "");
       return;
     }
 
     cities.value = await api.get(`/cities/${provinceId}`);
 
-    //If it's first load dont remove user saved city
+    // First load and cancel-restore keep the saved city when it still belongs
+    // to this province. Changing province otherwise clears the city.
     if (oldValue === undefined) return;
-    setFieldValue("city", ""); // ✔ مهم‌ترین خط
+    const cityStillValid = cities.value.some(
+      (x) => String(x.value) === String(values.city),
+    );
+    if (!cityStillValid) setFieldValue("city", "");
   },
 );
 
@@ -375,7 +457,7 @@ watch(
     if (!cityId) {
       regions.value = [];
       hasRegions.value = false;
-      setFieldValue("region", "");
+      if (values.region) setFieldValue("region", "");
       return;
     }
 
@@ -385,47 +467,91 @@ watch(
 
     hasRegions.value = res.length > 0;
 
-    //If it's first load dont remove user saved region
     if (oldValue === undefined) return;
-    setFieldValue("region", "");
+    const regionStillValid = regions.value.some(
+      (x) => String(x.value) === String(values.region),
+    );
+    if (!regionStillValid) setFieldValue("region", "");
   },
 );
 
 // Functions
-const changeEditMode = async (value: boolean) => {
+let fieldHighlightTimer: ReturnType<typeof setTimeout> | null = null;
+let highlightedField: HTMLElement | null = null;
+
+const clearFieldHighlight = () => {
+  if (fieldHighlightTimer) {
+    clearTimeout(fieldHighlightTimer);
+    fieldHighlightTimer = null;
+  }
+  highlightedField?.classList.remove("cv-field-flash");
+  highlightedField = null;
+};
+
+const highlightField = (el: HTMLElement) => {
+  clearFieldHighlight();
+  highlightedField = el;
+  // Restart animation if the same field is clicked again
+  void el.offsetWidth;
+  el.classList.add("cv-field-flash");
+  fieldHighlightTimer = setTimeout(() => {
+    el.classList.remove("cv-field-flash");
+    if (highlightedField === el) highlightedField = null;
+    fieldHighlightTimer = null;
+  }, 3000);
+};
+
+const cancelEdit = () => {
+  resetForm();
+  changeEditMode(false);
+};
+
+const changeEditMode = async (value: boolean, anchorId?: string) => {
   editMode.value = value;
+  if (!value) {
+    clearFieldHighlight();
+    return;
+  }
+
+  await nextTick();
+
+  if (anchorId) {
+    const el = document.getElementById(anchorId);
+    el?.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (el) highlightField(el);
+    return;
+  }
+
   window.scrollTo({ top: 0 });
 };
 
+const route = useRoute();
+const router = useRouter();
+
+async function openEditFromQuery() {
+  if (route.query.edit !== "basic") return;
+  await changeEditMode(true);
+  const { edit: _edit, ...query } = route.query;
+  await router.replace({ path: route.path, query });
+}
+
+onMounted(() => {
+  void openEditFromQuery();
+});
+
+watch(
+  () => route.query.edit,
+  () => {
+    void openEditFromQuery();
+  },
+);
+
 const onSubmit = handleSubmit(
   async (data) => {
-  //let result =  await api.get('/lookups?keys=all');
-
-  // خارج کردن تصویر پروفایل از فرم
-  const { profileImage, ...payload } = data;
-  //
-
-  // پیدا کردن نام استان و شهر
-  const selectedProvince = provinces.value.find(
-    (p) => String(p.value) === String(data.province),
-  );
-  const selectedCity = cities.value.find(
-    (c) => String(c.value) === String(data.city),
-  );
-
-  // اضافه کردن cityName به داده‌ها
-  // const payload = {
-  //   ...data,
-  //   cityName: selectedCity?.label || null,
-  //   cityId: selectedCity?.value || null,
-  //   provinceName: selectedProvince?.label || null,
-  //   provinceId: selectedProvince?.value || null,
-  // };
-
   try {
     const result = await api.post<{ data?: Record<string, unknown> }>(
       "/cv/save-basics",
-      payload,
+      data,
     );
     applyUserPayload(result);
     patchUser({
@@ -436,6 +562,7 @@ const onSubmit = handleSubmit(
         name: data.name,
       },
     });
+    resetForm({ values: data });
     editMode.value = false;
     if (matchesCvAboutEasterEgg(data.about)) {
       await nextTick();
@@ -464,7 +591,7 @@ const handleProfileImage = async (file: File | null) => {
       const res = await api.delete<{ data?: { avatar?: string } }>(
         "cv/profile-image",
       );
-      setFieldValue("profileImage", undefined);
+      profileImageError.value = null;
       imageBase64.value = null;
       keepServerPreview.value = false;
       // Mark as default immediately so resume completion updates before refresh.
@@ -474,20 +601,19 @@ const handleProfileImage = async (file: File | null) => {
       await refreshUser();
       $toast.success("تصویر پروفایل حذف شد");
     } catch {
-      setFieldError("profileImage", "خطا در حذف تصویر");
+      profileImageError.value = "خطا در حذف تصویر";
       $toast.error("خطا در حذف تصویر");
     }
     return;
   }
 
-  // clear previous error
-  setFieldError("profileImage", undefined);
+  profileImageError.value = null;
 
   // 1. validate type
   const isValidType = file.type === "image/png" || file.type === "image/jpeg";
 
   if (!isValidType) {
-    setFieldError("profileImage", "فقط فرمت png و jpg مجاز است");
+    profileImageError.value = "فقط فرمت png و jpg مجاز است";
     return;
   }
 
@@ -495,12 +621,12 @@ const handleProfileImage = async (file: File | null) => {
   const maxSize = 10 * 1024 * 1024;
 
   if (file.size > maxSize) {
-    setFieldError("profileImage", "حجم تصویر نباید بیشتر از 10MB باشد");
+    profileImageError.value = "حجم تصویر نباید بیشتر از 10MB باشد";
     return;
   }
 
   try {
-    // 3. upload — API returns { filename, url }
+    // 3. upload immediately — independent of the basics Save button
     const formData = new FormData();
     formData.append("profile_image", file);
 
@@ -513,19 +639,22 @@ const handleProfileImage = async (file: File | null) => {
     const url = uploaded?.url;
 
     if (!filename && !url) {
-      setFieldError("profileImage", "خطا در آپلود تصویر");
+      profileImageError.value = "خطا در آپلود تصویر";
       return;
     }
 
-    setFieldValue("profileImage", filename ?? url ?? "uploaded");
     keepServerPreview.value = true;
     if (url) {
       imageBase64.value = url;
     }
+    // Update completion immediately (avatar is 10%) before /user refresh.
+    patchUser({
+      avatar: url ?? filename,
+    });
     await refreshUser();
     $toast.success("تصویر پروفایل با موفقیت آپلود شد");
   } catch (error) {
-    setFieldError("profileImage", "خطا در آپلود تصویر");
+    profileImageError.value = "خطا در آپلود تصویر";
     $toast.error("خطا در آپلود تصویر");
   }
 };
@@ -534,22 +663,50 @@ onMounted(async () => {
   const currentUser = useSanctumUser<any>();
   const personal = currentUser.value?.data?.resume_personal;
 
-  setValues({
-    name: personal?.name ?? "",
-    jobTitle: personal?.job_title ?? "",
-    jobStatus: String(personal?.job_status ?? "0"),
-    workExperience: personal?.work_experience ?? "",
-    desiredSalary: personal?.desired_salary ?? "",
-    birthDate: Number(personal?.birthdate ?? ""),
-    gender: String(personal?.gender ?? ""),
-    militaryServiceStatus: personal?.military_service_status ?? "",
-    maritalStatus: String(personal?.marital_status ?? ""),
-    province: personal?.province_id ?? "",
-    city: personal?.city_id ?? "",
-    region: personal?.region_id ?? "",
-    about: personal?.about ?? "",
-    // Marker so required validation passes when avatar already exists
-    profileImage: userAvatar.value ? "existing" : undefined,
-  });
+  resetForm({ values: personalToFormValues(personal) });
 });
 </script>
+
+<style scoped>
+.cv-field-flash {
+  border-radius: 0.75rem;
+  animation: cv-field-flash 3s ease-in-out;
+}
+
+@keyframes cv-field-flash {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+  /* flash 1 */
+  8%,
+  18% {
+    box-shadow:
+      0 0 0 2px #eab308,
+      0 0 0 6px rgb(234 179 8 / 30%);
+  }
+  26% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+  /* flash 2 */
+  34%,
+  44% {
+    box-shadow:
+      0 0 0 2px #eab308,
+      0 0 0 6px rgb(234 179 8 / 30%);
+  }
+  52% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+  /* flash 3 */
+  60%,
+  70% {
+    box-shadow:
+      0 0 0 2px #eab308,
+      0 0 0 6px rgb(234 179 8 / 30%);
+  }
+  78% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+</style>

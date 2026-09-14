@@ -15,7 +15,7 @@
             class="mb-5"
             v-bind="welcomeAlert"
             @dismiss="dismissWelcome"
-            @action="dismissWelcome"
+            @action="hideWelcome"
           />
           <slot />
         </div>
@@ -39,6 +39,11 @@ const { userId } = useAccountAuth();
 const { isAuthenticated } = useSanctumAuth();
 const { needsRoleSelection } = useRoleGate();
 const { welcomeAlert, dismissWelcome, initWelcome } = useFirstVisitWelcome();
+
+function hideWelcome() {
+  if (welcomeAlert.value?.actionTo) return;
+  welcomeAlert.value = null;
+}
 
 onMounted(() => {
   initWelcome();

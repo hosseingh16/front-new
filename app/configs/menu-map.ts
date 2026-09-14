@@ -32,7 +32,7 @@ export const menuMap: Record<string, MenuMeta> = {
   resume_edit: {
     label: "ویرایش رزومه",
     icon: "svg:edit",
-    to: "/dashboard/cv",
+    to: "/dashboard/cv?edit=basic",
   },
 
   ads: {
@@ -154,7 +154,7 @@ export const menuMap: Record<string, MenuMeta> = {
   user_edit_resume: {
     label: "ویرایش رزومه",
     icon: "svg:edit",
-    to: "/dashboard/cv",
+    to: "/dashboard/cv?edit=basic",
   },
 
   user_ads: {

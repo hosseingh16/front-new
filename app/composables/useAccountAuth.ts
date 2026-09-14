@@ -1,4 +1,5 @@
 import type { AccountRole } from '~/features/account/types'
+import { getApiErrorData } from '~/utils/api-error'
 import { resolvePostLoginLocation } from '~/utils/entering-route'
 import { resolvePrimaryRole } from '~/utils/user-role'
 
@@ -7,10 +8,20 @@ export type AuthUserStatus = 'new_user' | 'existing_user'
 export interface RequestOtpResponse {
   request_id: string
   message: string
+  /** Seconds the code stays valid, counted from its original creation. */
+  expires_in: number
+  /** Seconds until another SMS may be requested. */
+  remaining_seconds: number
+  /** False for the first SMS of a code, true for every later delivery. */
+  resent: boolean
+  status?: AuthUserStatus
+  has_role?: boolean
 }
 
 export interface RequestOtpVoiceResponse {
   message: string
+  expires_in: number
+  remaining_seconds: number
 }
 
 export interface VerifyOtpResponse {
@@ -49,6 +60,17 @@ export function useAccountAuth() {
   const loading = useState('account.loading', () => false)
   const voiceSent = useState('account.voiceSent', () => false)
 
+  const { applyDelivery, applyRejection, clearOtpTimers } = useOtpTimers()
+
+  const needsRegistration = computed(
+    () => status.value === 'new_user' || hasRole.value === false,
+  )
+
+  /**
+   * Requests a code, and doubles as the resend call. While a code is still
+   * valid the server returns the same request_id and resends that same code, so
+   * overwriting requestId here is always safe.
+   */
   async function requestOtp(phone: string) {
     loading.value = true
     try {
@@ -58,15 +80,31 @@ export function useAccountAuth() {
       })
       mobile.value = phone
       requestId.value = res.request_id
-      status.value = null
+      status.value = res.status ?? null
       userId.value = ''
       registrationToken.value = ''
-      hasRole.value = null
+      hasRole.value = typeof res.has_role === 'boolean' ? res.has_role : null
       selectedRole.value = null
       voiceSent.value = false
+      applyDelivery(res)
       return res
     } catch (err: any) {
-      $toast.error(getErrorMessage(err, 'ارسال کد با خطا مواجه شد'))
+      // A 429 still tells us when the next send is allowed, so the countdown
+      // reflects the real wait instead of restarting at the default cooldown.
+      const rejection = applyRejection(getApiErrorData(err))
+      // A refused resend hands back the live code's request_id, so a reload
+      // that dropped ours can carry on with the code already in the user's
+      // hands rather than waiting the cooldown out.
+      if (rejection?.requestId) {
+        mobile.value = phone
+        requestId.value = rejection.requestId
+      }
+      $toast.error(
+        rejection?.block === 'rate_limit'
+          ? // The server's copy cannot name a time; this one can.
+            otpRateLimitMessage(rejection.seconds)
+          : getErrorMessage(err, 'ارسال کد با خطا مواجه شد'),
+      )
       throw err
     } finally {
       loading.value = false
@@ -87,9 +125,17 @@ export function useAccountAuth() {
       })
       $toast.success(res.message || 'تماس صوتی برقرار شد')
       voiceSent.value = true
+      // Voice is exempt from the SMS cooldown server-side, so this only
+      // refreshes the reported deadlines without counting as a new delivery.
+      applyDelivery(res, false)
       return res
     } catch (err: any) {
-      $toast.error(getErrorMessage(err, 'ارسال کد با تماس با خطا مواجه شد'))
+      const rejection = applyRejection(getApiErrorData(err))
+      $toast.error(
+        rejection?.block === 'rate_limit'
+          ? otpRateLimitMessage(rejection.seconds)
+          : getErrorMessage(err, 'ارسال کد با تماس با خطا مواجه شد'),
+      )
       throw err
     } finally {
       loading.value = false
@@ -115,6 +161,8 @@ export function useAccountAuth() {
       status.value = res.status
       hasRole.value = res.has_role
       registrationToken.value = res.registration_token || ''
+      // The code is consumed on the server the moment it verifies.
+      clearOtpTimers()
       return res
     } catch (err: any) {
       $toast.error(getErrorMessage(err, 'کد تایید نامعتبر است'))
@@ -245,6 +293,7 @@ export function useAccountAuth() {
     hasRole.value = null
     selectedRole.value = null
     voiceSent.value = false
+    clearOtpTimers()
   }
 
   return {
@@ -257,6 +306,7 @@ export function useAccountAuth() {
     selectedRole,
     loading,
     voiceSent,
+    needsRegistration,
     requestOtp,
     requestOtpViaVoice,
     verifyOtp,

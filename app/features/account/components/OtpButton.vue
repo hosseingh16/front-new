@@ -1,6 +1,6 @@
 <template>
   <div class="mt-2 flex flex-col items-end gap-2">
-    <div v-if="showResend" class="flex justify-end items-center">
+    <div v-if="canResend" class="flex justify-end items-center">
       <button
         type="button"
         class="btn btn-info btn-soft text-primary-500 h-8"
@@ -13,7 +13,7 @@
       </button>
     </div>
     <div v-else class="text-left text-sm text-[#4A4A4A]" aria-live="polite">
-      <span>ارسال مجدد کد تا {{ formatted }}</span>
+      ارسال مجدد کد تا {{ formatted }}
     </div>
 
     <button
@@ -35,7 +35,7 @@
 </template>
 
 <script setup lang="ts">
-const { otpResendSeconds, otpVoiceDelaySeconds } = useSettings();
+const { otpVoiceDelaySeconds } = useSettings();
 
 const props = defineProps<{
   loading?: boolean;
@@ -47,62 +47,33 @@ const emit = defineEmits<{
   (e: 'voice'): void;
 }>();
 
-const remaining = ref(otpResendSeconds.value);
-const voiceRemaining = ref(otpVoiceDelaySeconds.value);
-const showResend = computed(() => remaining.value <= 0);
-const voiceAvailable = computed(() => voiceRemaining.value <= 0);
+// Driven entirely by what the server reported on the last OTP response, so a
+// remount or a step change cannot hand the user a fresh minute they have not
+// actually earned. A rate-limited send only stretches this countdown; saying so
+// is left to the toast.
+const { resendRemaining, canResend, sinceSent } = useOtpCountdown();
+
+const voiceRemaining = computed(() =>
+  sinceSent.value === null
+    ? otpVoiceDelaySeconds.value
+    : Math.max(0, otpVoiceDelaySeconds.value - sinceSent.value),
+);
+// Nothing sent yet means there is no code to read out over the phone.
+const voiceAvailable = computed(
+  () => sinceSent.value !== null && voiceRemaining.value <= 0,
+);
 const showVoiceButton = computed(() => voiceAvailable.value || !!props.voiceDisabled);
 const isVoiceInactive = computed(
   () => props.loading || props.voiceDisabled || !voiceAvailable.value,
 );
-const formatted = computed(() => {
-  const m = Math.floor(remaining.value / 60);
-  const s = remaining.value % 60;
-  return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
-});
+const formatted = computed(() => formatOtpClock(resendRemaining.value));
 const voiceLabel = computed(() => {
   if (props.voiceDisabled) return 'تماس صوتی ارسال شد';
   return 'دریافت کد با تماس';
 });
 
-let timer: ReturnType<typeof setInterval> | null = null;
-
-function clearTimer() {
-  if (timer) {
-    clearInterval(timer);
-    timer = null;
-  }
-}
-
-function tickCountdowns() {
-  if (remaining.value > 0) {
-    remaining.value--;
-  }
-
-  if (voiceRemaining.value > 0) {
-    voiceRemaining.value--;
-  }
-
-  if (remaining.value <= 0 && voiceRemaining.value <= 0) {
-    clearTimer();
-  }
-}
-
-function startCountdown() {
-  clearTimer();
-  remaining.value = otpResendSeconds.value;
-  voiceRemaining.value = otpVoiceDelaySeconds.value;
-  timer = setInterval(tickCountdowns, 1000);
-}
-
 function resendCode() {
-  if (showResend.value === false) return;
+  if (!canResend.value || props.loading) return;
   emit('resend');
-  startCountdown();
 }
-
-onMounted(startCountdown);
-onUnmounted(clearTimer);
-
-defineExpose({ startCountdown });
 </script>

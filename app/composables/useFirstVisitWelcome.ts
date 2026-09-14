@@ -1,3 +1,5 @@
+import type { ApiResponse } from '~/types/api'
+import type { EmployerAdsData } from '~/types/employer-ad'
 import type { DashboardStatusAlert } from '~/utils/user-status-alerts'
 import {
   dismissFirstVisitWelcome,
@@ -11,9 +13,15 @@ type WelcomeAlertView = Omit<DashboardStatusAlert, 'id'>
 export function useFirstVisitWelcome() {
   const { user, isEmployer } = useCurrentUser()
   const route = useRoute()
+  const api = useApi()
 
   const welcomeAlert = useState<WelcomeAlertView | null>(
     'first-visit-welcome-alert',
+    () => null,
+  )
+
+  const employerHasAds = useState<boolean | null>(
+    'first-visit-welcome-employer-has-ads',
     () => null,
   )
 
@@ -25,17 +33,7 @@ export function useFirstVisitWelcome() {
     return String(id)
   }
 
-  function syncWelcome() {
-    const userId = currentUserId()
-    if (
-      !userId ||
-      !isFirstVisitWelcomePending(userId) ||
-      isFirstVisitWelcomeDismissed(userId)
-    ) {
-      welcomeAlert.value = null
-      return
-    }
-
+  function applyWelcomeAlert() {
     const alert = getFirstVisitWelcome({
       isEmployer: isEmployer.value,
       currentPath: route.path,
@@ -51,19 +49,72 @@ export function useFirstVisitWelcome() {
     }
   }
 
+  async function employerHasCreatedAd(): Promise<boolean> {
+    if (employerHasAds.value != null) return employerHasAds.value
+
+    try {
+      const result = await api.get<ApiResponse<EmployerAdsData>>('/employers/ads')
+      const total = result.data?.total
+      const hasAds = Array.isArray(total) && total.length > 0
+      employerHasAds.value = hasAds
+      return hasAds
+    } catch {
+      return false
+    }
+  }
+
+  async function syncWelcome() {
+    const userId = currentUserId()
+    if (
+      !userId ||
+      !isFirstVisitWelcomePending(userId) ||
+      isFirstVisitWelcomeDismissed(userId)
+    ) {
+      welcomeAlert.value = null
+      return
+    }
+
+    if (isEmployer.value) {
+      const hasAds = await employerHasCreatedAd()
+      if (hasAds) {
+        dismissFirstVisitWelcome(userId)
+        welcomeAlert.value = null
+        return
+      }
+
+      if (
+        currentUserId() !== userId ||
+        !isFirstVisitWelcomePending(userId) ||
+        isFirstVisitWelcomeDismissed(userId)
+      ) {
+        welcomeAlert.value = null
+        return
+      }
+    }
+
+    applyWelcomeAlert()
+  }
+
   function dismissWelcome() {
     const userId = currentUserId()
     if (userId) dismissFirstVisitWelcome(userId)
     welcomeAlert.value = null
   }
 
+  function markFirstAdCreated() {
+    employerHasAds.value = true
+    dismissWelcome()
+  }
+
   function initWelcome() {
     if (!import.meta.client) return
 
-    syncWelcome()
+    void syncWelcome()
     watch(
       [() => user.value?.id, isEmployer, () => route.path],
-      syncWelcome,
+      () => {
+        void syncWelcome()
+      },
     )
   }
 
@@ -71,6 +122,7 @@ export function useFirstVisitWelcome() {
     welcomeAlert,
     isWelcomeVisible,
     dismissWelcome,
+    markFirstAdCreated,
     syncWelcome,
     initWelcome,
   }

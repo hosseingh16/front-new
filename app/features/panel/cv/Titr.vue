@@ -7,7 +7,9 @@
       />
       <h2 class="font-yb-bold text-base text-text-primay"><slot /></h2>
     </div>
-    <Icon v-if="withIcon" name="svg:info" />
+    <slot name="actions">
+      <Icon v-if="withIcon" name="svg:info" />
+    </slot>
   </div>
 </template>
 
