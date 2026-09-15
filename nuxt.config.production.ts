@@ -30,7 +30,12 @@ export default defineNuxtConfig({
         dir: "rtl",
       },
       link: [
-        { rel: "icon", type: "image/png", sizes: "32x32", href: "/favicon.png" },
+        {
+          rel: "icon",
+          type: "image/png",
+          sizes: "32x32",
+          href: "/favicon.png",
+        },
         { rel: "apple-touch-icon", href: "/favicon.png" },
       ],
       meta: [
