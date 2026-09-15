@@ -2,6 +2,8 @@
   <div
     class="mt-2 flex items-center justify-center gap-2 [&>.input]:rounded-lg [&>.input]:border-gray-default [&>.input]:text-center [&>.input]:px-0"
     dir="ltr"
+    role="group"
+    aria-label="کد تایید"
     @paste.prevent="onPaste"
   >
     <input
@@ -10,13 +12,21 @@
       ref="inputs"
       type="text"
       inputmode="numeric"
+      pattern="[0-9]*"
+      autocapitalize="off"
+      autocorrect="off"
+      spellcheck="false"
       :autocomplete="index === 0 ? 'one-time-code' : 'off'"
       :name="index === 0 ? 'one-time-code' : undefined"
+      :maxlength="index === 0 ? otpLength : 1"
       class="input w-10 h-10"
       :aria-label="`رقم ${index + 1}`"
       :value="model[index] ?? ''"
       @keydown="onKeydown($event, index)"
+      @beforeinput="onBeforeInput($event, index)"
       @input="onInput($event, index)"
+      @change="onInput($event, index)"
+      @focus="onFocus"
     />
   </div>
 </template>
@@ -48,15 +58,39 @@ const emit = defineEmits<{
 
 const inputs = ref<HTMLInputElement[]>([])
 let submitting = false
+let lastEmitted = ""
+/** Skip the input event that follows a digit we already applied in keydown. */
+let skipInput = false
 let otpAbort: AbortController | null = null
+let otpPending = false
 
 watch(otpLength, (length) => {
   if (model.value.length === length) return
   model.value = Array.from({ length }, (_, i) => model.value[i] ?? "")
 })
 
+watch(
+  () => model.value.join(""),
+  (otp, previous) => {
+    if (!otpCompletePattern(otpLength.value).test(otp)) {
+      lastEmitted = ""
+    }
+    // After a filled code is cleared (resend / retry), listen for the next SMS.
+    if (previous && model.value.every((digit) => !digit)) {
+      listenForSmsOtp()
+    }
+  },
+)
+
 function digitsOf(value: string) {
   return value.replace(/\D/g, "")
+}
+
+function currentOtp() {
+  return Array.from(
+    { length: otpLength.value },
+    (_, i) => model.value[i] ?? "",
+  )
 }
 
 function focusAt(index: number) {
@@ -64,11 +98,43 @@ function focusAt(index: number) {
   el?.focus()
 }
 
+function emitIfComplete(otp: string) {
+  if (!otpCompletePattern(otpLength.value).test(otp)) return
+  if (submitting || otp === lastEmitted) return
+  submitting = true
+  lastEmitted = otp
+  emit("complete", otp)
+  queueMicrotask(() => {
+    submitting = false
+  })
+}
+
+function applyDigits(text: string, startIndex = 0) {
+  const cleaned = digitsOf(text)
+  if (!cleaned) return
+
+  // A full (or longer) code from SMS autofill / paste always fills from the first box.
+  const from = cleaned.length >= otpLength.value ? 0 : startIndex
+  const slice = cleaned.slice(0, otpLength.value - from)
+  if (!slice) return
+
+  const next = currentOtp()
+  for (let i = 0; i < slice.length; i++) {
+    next[from + i] = slice[i]!
+  }
+  model.value = next
+
+  const isComplete = otpCompletePattern(otpLength.value).test(next.join(""))
+  const focusIndex = isComplete
+    ? otpLength.value - 1
+    : Math.min(from + slice.length, otpLength.value - 1)
+  nextTick(() => focusAt(focusIndex))
+
+  emitIfComplete(next.join(""))
+}
+
 function setDigit(index: number, digit: string) {
-  const next = Array.from(
-    { length: otpLength.value },
-    (_, i) => model.value[i] ?? "",
-  )
+  const next = currentOtp()
   next[index] = digit
   model.value = next
 
@@ -76,25 +142,22 @@ function setDigit(index: number, digit: string) {
     nextTick(() => focusAt(index + 1))
   }
 
-  if (next.every(Boolean) && !submitting) {
-    submitting = true
-    emit("complete", next.join(""))
-    queueMicrotask(() => {
-      submitting = false
-    })
-  }
+  emitIfComplete(next.join(""))
 }
 
 function clearDigit(index: number) {
-  const next = Array.from(
-    { length: otpLength.value },
-    (_, i) => model.value[i] ?? "",
-  )
+  const next = currentOtp()
   next[index] = ""
   model.value = next
 }
 
-/** Primary path: handle digit keys before the browser inserts (avoids maxlength/replace bugs). */
+function onFocus(event: FocusEvent) {
+  const el = event.target as HTMLInputElement
+  // Avoid select() on the empty autofill target — it can block iOS SMS suggestions.
+  if (!el.value) return
+  requestAnimationFrame(() => el.select())
+}
+
 function onKeydown(event: KeyboardEvent, index: number) {
   const key = event.key
 
@@ -131,17 +194,7 @@ function onKeydown(event: KeyboardEvent, index: number) {
 
   if (key === "Enter") {
     event.preventDefault()
-    const otp = Array.from(
-      { length: otpLength.value },
-      (_, i) => model.value[i] ?? "",
-    ).join("")
-    if (otpCompletePattern(otpLength.value).test(otp) && !submitting) {
-      submitting = true
-      emit("complete", otp)
-      queueMicrotask(() => {
-        submitting = false
-      })
-    }
+    emitIfComplete(currentOtp().join(""))
     return
   }
 
@@ -149,53 +202,72 @@ function onKeydown(event: KeyboardEvent, index: number) {
     return
   }
 
-  // Single digit — set immediately and move forward (one keystroke)
+  // Android IMEs often send Unidentified / isComposing; let input handle those.
+  if (key === "Unidentified" || event.isComposing) {
+    return
+  }
+
   if (/^\d$/.test(key)) {
     event.preventDefault()
+    skipInput = true
     setDigit(index, key)
+    queueMicrotask(() => {
+      skipInput = false
+    })
+    return
+  }
+
+  if (key.length === 1) {
+    event.preventDefault()
   }
 }
 
-/** Fallback for mobile autofill / composition / paste-into-field. */
+/**
+ * Autofill and paste often insert the whole code in one shot (insertReplacementText
+ * / insertFromPaste) before an input event. Take the inserted digits here so the
+ * first box never briefly holds "12345".
+ */
+function onBeforeInput(event: InputEvent, index: number) {
+  if (skipInput || event.isComposing) return
+  const digits = digitsOf(event.data ?? "")
+  if (digits.length > 1) {
+    event.preventDefault()
+    applyDigits(digits, index)
+  }
+}
+
+/**
+ * Mobile keyboards, SMS autofill, and some paste paths never fire a digit keydown.
+ * Treat the field value as source of truth in those cases.
+ */
 function onInput(event: Event, index: number) {
   const target = event.target as HTMLInputElement
+
+  if (skipInput) {
+    const expected = model.value[index] ?? ""
+    if (target.value !== expected) target.value = expected
+    return
+  }
+
   const raw = digitsOf(target.value)
+
+  if (!raw) {
+    if (model.value[index]) clearDigit(index)
+    else target.value = ""
+    return
+  }
 
   if (raw.length > 1) {
     applyDigits(raw, index)
     return
   }
 
-  // If keydown already handled the digit, keep DOM in sync with model
-  const expected = model.value[index] ?? ""
-  if (target.value !== expected) {
-    target.value = expected
+  if (raw !== (model.value[index] ?? "")) {
+    setDigit(index, raw)
+    return
   }
-}
 
-function applyDigits(text: string, startIndex = 0) {
-  const cleaned = digitsOf(text).slice(0, otpLength.value - startIndex)
-  if (!cleaned) return
-
-  const next = Array.from(
-    { length: otpLength.value },
-    (_, i) => model.value[i] ?? "",
-  )
-  for (let i = 0; i < cleaned.length; i++) {
-    next[startIndex + i] = cleaned[i]!
-  }
-  model.value = next
-
-  const focusIndex = Math.min(startIndex + cleaned.length, otpLength.value - 1)
-  nextTick(() => focusAt(focusIndex))
-
-  if (next.every(Boolean) && !submitting) {
-    submitting = true
-    emit("complete", next.join(""))
-    queueMicrotask(() => {
-      submitting = false
-    })
-  }
+  if (target.value !== raw) target.value = raw
 }
 
 function onPaste(event: ClipboardEvent) {
@@ -205,9 +277,10 @@ function onPaste(event: ClipboardEvent) {
 async function listenForSmsOtp() {
   if (!import.meta.client) return
   if (!("OTPCredential" in window) || !navigator.credentials?.get) return
+  if (otpPending) return
 
-  otpAbort?.abort()
   otpAbort = new AbortController()
+  otpPending = true
 
   try {
     const credential = (await navigator.credentials.get({
@@ -220,6 +293,8 @@ async function listenForSmsOtp() {
     }
   } catch {
     // Unsupported, aborted, or user dismissed the SMS OTP prompt.
+  } finally {
+    otpPending = false
   }
 }
 
