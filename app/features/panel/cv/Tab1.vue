@@ -197,7 +197,16 @@
             multiline
             label="درباره من:"
             placeholder="شرح مختصری درباره خودتان، توانایی‌های شما، علاقه مندی‌ها، سرگرمی‌ها و ... در اینجا بیان کنید."
-          ></m-form-input>
+          >
+            <template #suffix>
+              <span
+                class="pointer-events-none absolute top-2.5 left-3 z-10 select-none text-sm leading-none opacity-50"
+                aria-hidden="true"
+              >
+                🥚
+              </span>
+            </template>
+          </m-form-input>
         </div>
 
         <div class="lg:col-span-2 mt-6 flex items-center justify-end gap-2">

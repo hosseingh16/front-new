@@ -28,7 +28,7 @@
       </div>
     </div>
     <label
-      class="input"
+      class="input relative"
       :class="[
         multiline ? 'textarea py-12' : '',
         'w-full rounded-lg shadow-none hover:border-[#cccccc] focus:border-[#cccccc] focus-within:outline-none focus-within:shadow-[0px_0px_0px_2px_#FFFFFF,0px_0px_0px_4px_#4A4A4A14]',
