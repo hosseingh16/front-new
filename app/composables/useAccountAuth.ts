@@ -1,7 +1,12 @@
 import type { AccountRole } from '~/features/account/types'
 import { getApiErrorData } from '~/utils/api-error'
 import { resolvePostLoginLocation } from '~/utils/entering-route'
+import { normalizeIranMobile } from '~/utils/iran-mobile'
 import { resolvePrimaryRole } from '~/utils/user-role'
+
+function normalizeMobile(phone: string) {
+  return normalizeIranMobile(phone)
+}
 
 export type AuthUserStatus = 'new_user' | 'existing_user'
 
@@ -72,13 +77,14 @@ export function useAccountAuth() {
    * overwriting requestId here is always safe.
    */
   async function requestOtp(phone: string) {
+    const normalized = normalizeMobile(phone)
     loading.value = true
     try {
       const res = await client<RequestOtpResponse>('/api/request-otp', {
         method: 'POST',
-        body: { mobile: phone },
+        body: { mobile: normalized },
       })
-      mobile.value = phone
+      mobile.value = normalized
       requestId.value = res.request_id
       status.value = res.status ?? null
       userId.value = ''
@@ -96,7 +102,7 @@ export function useAccountAuth() {
       // that dropped ours can carry on with the code already in the user's
       // hands rather than waiting the cooldown out.
       if (rejection?.requestId) {
-        mobile.value = phone
+        mobile.value = normalized
         requestId.value = rejection.requestId
       }
       $toast.error(
@@ -192,7 +198,7 @@ export function useAccountAuth() {
   }
 
   async function loginWithMobile(phone?: string, redirect = true) {
-    const username = phone || mobile.value
+    const username = normalizeMobile(phone || mobile.value)
     if (!username) {
       $toast.error('شماره موبایل یافت نشد')
       throw new Error('mobile missing')

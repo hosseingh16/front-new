@@ -17,7 +17,11 @@
 
       <!-- Step 1: phone -->
       <form v-if="step === 'phone'" class="mt-6" @submit="onSubmitPhone">
-        <m-form-input name="mobile" placeholder="شماره تلفن همراه را وارد کنید">
+        <m-form-input
+          name="mobile"
+          placeholder="شماره تلفن همراه را وارد کنید"
+          english-digits
+        >
           <template #prefix>
             <Icon name="svg:mobile" />
           </template>
@@ -127,6 +131,7 @@ import {
   createEmptyOtpDigits,
   otpCompletePattern,
 } from '~/configs/settings-defaults'
+import { iranMobileSchema } from '~/utils/iran-mobile'
 import {
   isResumeBasicInfoComplete,
   isResumeBasicInfoRequiredError,
@@ -177,9 +182,7 @@ const { user } = useCurrentUser()
 const { ensureRoleForAction } = useRoleGate()
 
 const phoneSchema = Yup.object({
-  mobile: Yup.string()
-    .required('شماره همراه وارد نشده است')
-    .matches(RegExp('^09[0-9]\\d{8}$'), { message: 'شماره همراه معتبر نیست' }),
+  mobile: iranMobileSchema(),
 })
 
 const { handleSubmit, meta, setValues, resetForm } = useForm<

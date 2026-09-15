@@ -36,6 +36,7 @@ import {
   createEmptyOtpDigits,
   otpCompletePattern,
 } from '~/configs/settings-defaults'
+import { toEnglishDigits } from '~/utils/digits'
 
 /** Chrome Android Web OTP API (not in all TS DOM libs). */
 interface OtpCredential extends Credential {
@@ -83,7 +84,7 @@ watch(
 )
 
 function digitsOf(value: string) {
-  return value.replace(/\D/g, "")
+  return toEnglishDigits(value).replace(/\D/g, "")
 }
 
 function currentOtp() {
@@ -207,10 +208,11 @@ function onKeydown(event: KeyboardEvent, index: number) {
     return
   }
 
-  if (/^\d$/.test(key)) {
+  const digit = toEnglishDigits(key)
+  if (/^\d$/.test(digit)) {
     event.preventDefault()
     skipInput = true
-    setDigit(index, key)
+    setDigit(index, digit)
     queueMicrotask(() => {
       skipInput = false
     })

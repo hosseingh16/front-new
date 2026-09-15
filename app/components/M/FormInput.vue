@@ -2,7 +2,7 @@
   <div :data-field="name">
     <Field :name="name" v-slot="{ field, value, errorMessage }">
       <m-text-field
-        v-bind="{ ...$props, ...field }"
+        v-bind="{ ...textFieldProps, ...wrapField(field) }"
         :default-value="field.value"
         :error="!!errorMessage"
         :model-value="value"
@@ -28,6 +28,12 @@
 
 <script setup lang="ts">
 import { Field, ErrorMessage } from 'vee-validate';
+import { toEnglishDigits } from '~/utils/digits';
+
+type FieldBinds = Record<string, unknown> & {
+  onInput?: (value: unknown) => void;
+  onChange?: (value: unknown) => void;
+};
 
 // Props
 const props = withDefaults(
@@ -39,7 +45,34 @@ const props = withDefaults(
     required?: boolean;
     multiline?: boolean;
     hint?: string[];
+    englishDigits?: boolean;
   }>(),
   { hint: () => [] },
 );
+
+const textFieldProps = computed(() => {
+  const { englishDigits: _englishDigits, ...rest } = props;
+  return rest;
+});
+
+function rawInputValue(event: unknown) {
+  if (event && typeof event === 'object' && 'target' in event) {
+    return String((event as { target: { value?: unknown } }).target?.value ?? '');
+  }
+  return String(event ?? '');
+}
+
+function wrapField(field: FieldBinds) {
+  if (!props.englishDigits) return field;
+
+  const withEnglishDigits = (handler?: (value: unknown) => void) => {
+    return (event: unknown) => handler?.(toEnglishDigits(rawInputValue(event)));
+  };
+
+  return {
+    ...field,
+    onInput: withEnglishDigits(field.onInput),
+    onChange: withEnglishDigits(field.onChange),
+  };
+}
 </script>

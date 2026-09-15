@@ -11,7 +11,11 @@
     </p>
 
     <form @submit="onSubmit">
-      <m-form-input name="mobile" placeholder="شماره تلفن همراه را وارد کنید">
+      <m-form-input
+        name="mobile"
+        placeholder="شماره تلفن همراه را وارد کنید"
+        english-digits
+      >
         <template #prefix>
           <Icon name="svg:mobile" />
         </template>
@@ -50,6 +54,7 @@
 <script setup lang="ts">
 import { useForm } from "vee-validate";
 import * as Yup from "yup";
+import { iranMobileSchema } from "~/utils/iran-mobile";
 
 const model = defineModel({ default: "" });
 
@@ -60,9 +65,7 @@ const emit = defineEmits<{
 const { requestOtp, loading } = useAccountAuth();
 
 const formSchema = Yup.object({
-  mobile: Yup.string()
-    .required("شماره همراه وارد نشده است")
-    .matches(RegExp("^09[0-9]\\d{8}$"), { message: "شماره همراه معتبر نیست" }),
+  mobile: iranMobileSchema(),
 });
 
 const { handleSubmit, meta, setValues } = useForm<
