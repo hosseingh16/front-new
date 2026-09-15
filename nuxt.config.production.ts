@@ -29,6 +29,10 @@ export default defineNuxtConfig({
         lang: "fa",
         dir: "rtl",
       },
+      link: [
+        { rel: "icon", type: "image/png", sizes: "32x32", href: "/favicon.png" },
+        { rel: "apple-touch-icon", href: "/favicon.png" },
+      ],
       meta: [
         {
           name: "robots",
