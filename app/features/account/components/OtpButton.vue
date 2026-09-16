@@ -1,18 +1,20 @@
 <template>
   <div class="mt-2 flex flex-col items-end gap-2">
-    <div v-if="canResend" class="flex justify-end items-center">
+    <div v-if="showResendButton" class="flex justify-end items-center">
       <button
         type="button"
         class="btn btn-info btn-soft text-primary-500 h-8"
-        :disabled="loading"
         @click="resendCode"
       >
-        <span v-if="loading" class="loading loading-spinner loading-xs" />
-        <Icon v-else name="svg:refresh" />
+        <Icon name="svg:refresh" />
         <span class="mr-1 text-sm">ارسال مجدد کد</span>
       </button>
     </div>
-    <div v-else class="text-left text-sm text-[#4A4A4A]" aria-live="polite">
+    <div
+      v-else-if="showResendCountdown"
+      class="text-left text-sm text-[#4A4A4A]"
+      aria-live="polite"
+    >
       ارسال مجدد کد تا {{ formatted }}
     </div>
 
@@ -67,13 +69,20 @@ const isVoiceInactive = computed(
   () => props.loading || props.voiceDisabled || !voiceAvailable.value,
 );
 const formatted = computed(() => formatOtpClock(resendRemaining.value));
+const hasActiveCode = computed(() => sinceSent.value !== null);
+const showResendButton = computed(
+  () => hasActiveCode.value && canResend.value && !props.loading,
+);
+const showResendCountdown = computed(
+  () => hasActiveCode.value && !canResend.value && !props.loading,
+);
 const voiceLabel = computed(() => {
   if (props.voiceDisabled) return 'تماس صوتی ارسال شد';
   return 'دریافت کد با تماس';
 });
 
 function resendCode() {
-  if (!canResend.value || props.loading) return;
+  if (!showResendButton.value) return;
   emit('resend');
 }
 </script>

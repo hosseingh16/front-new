@@ -323,7 +323,6 @@
         </div>
       </div>
     </form>
-    <PoetEasterEggModal ref="poetModalRef" />
   </div>
 </template>
 
@@ -332,9 +331,7 @@ import { useForm } from "vee-validate";
 import Titr from "./Titr.vue";
 import * as Yup from "yup";
 import InfoItem from "./InfoItem.vue";
-import PoetEasterEggModal from "./PoetEasterEggModal.vue";
 import type { ISelectItem } from "~/types/select-item.js";
-import { matchesCvAboutEasterEgg } from "~/utils/cv-about-easter-egg";
 
 //Import Validation Rules
 import { fullNameValidation } from "~/validations/fullName";
@@ -343,12 +340,11 @@ import { fullNameValidation } from "~/validations/fullName";
 const api = useApi();
 const { $toast } = useNuxtApp();
 const { notifyRequiredFieldsError } = useCvFormValidation();
-const { applyUserPayload, patchUser, refreshUser, avatar: userAvatar, user } =
+const { applyUserPayload, patchUser, refreshUser, avatar: userAvatar, user, ensureFullProfile } =
   useCurrentUser();
 const loading = api.loading;
 const hasRegions = ref(false);
 const editMode = ref(false);
-const poetModalRef = ref<{ showModal: () => void } | null>(null);
 const imageBase64 = ref<string | null>(null);
 const profileImageError = ref<string | null>(null);
 /** After local delete, don't fall back to the still-cached server avatar. */
@@ -564,12 +560,7 @@ const onSubmit = handleSubmit(
     });
     resetForm({ values: data });
     editMode.value = false;
-    if (matchesCvAboutEasterEgg(data.about)) {
-      await nextTick();
-      poetModalRef.value?.showModal();
-    } else {
-      $toast.success("اطلاعات پایه با موفقیت ذخیره شد");
-    }
+    $toast.success("اطلاعات پایه با موفقیت ذخیره شد");
     await refreshUser();
   } catch (e) {
     $toast.error("خطا در ذخیره اطلاعات پایه");
@@ -660,8 +651,10 @@ const handleProfileImage = async (file: File | null) => {
 };
 
 onMounted(async () => {
-  const currentUser = useSanctumUser<any>();
-  const personal = currentUser.value?.data?.resume_personal;
+  await ensureFullProfile();
+  const personal = user.value?.resume_personal as
+    | Record<string, unknown>
+    | undefined;
 
   resetForm({ values: personalToFormValues(personal) });
 });

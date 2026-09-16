@@ -30,7 +30,12 @@
         تایید شماره همراه
         <span class="font-semibold">{{ displayMobile }}</span>
       </p>
-      <OtpButton :loading :voice-disabled="voiceSent" @resend="onResend" @voice="onVoice" />
+      <OtpButton
+        :loading
+        :voice-disabled="voiceSent"
+        @resend="onResend"
+        @voice="onVoice"
+      />
     </div>
 
     <form @submit.prevent="onSubmit">
@@ -73,8 +78,16 @@ const emit = defineEmits<{
   (e: "verified", status: AuthUserStatus): void;
 }>();
 
-const { mobile, verifyOtp, requestOtp, requestOtpViaVoice, loginWithMobile, loading, voiceSent, needsRegistration } =
-  useAccountAuth();
+const {
+  mobile,
+  verifyOtp,
+  requestOtp,
+  requestOtpViaVoice,
+  loginWithMobile,
+  loading,
+  voiceSent,
+  needsRegistration,
+} = useAccountAuth();
 
 const displayMobile = computed(() => props.mobile || mobile.value || "—");
 const buttonEnabled = computed(() => model.value.every((x) => x !== ""));

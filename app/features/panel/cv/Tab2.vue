@@ -185,7 +185,7 @@ type PotentialForm = {
 
 const api = useApi();
 const { $toast } = useNuxtApp();
-const { user, refreshUser, patchUser } = useCurrentUser();
+const { user, refreshUser, patchUser, ensureFullProfile } = useCurrentUser();
 
 const skills = reactive<SkillForm>({
   excelScore: 0,
@@ -312,7 +312,8 @@ async function savePotential() {
   }
 }
 
-onMounted(() => {
+onMounted(async () => {
+  await ensureFullProfile();
   if (!user.value) return;
 
   loadSkillsFromUser(user.value);
