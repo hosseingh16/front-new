@@ -168,13 +168,14 @@ const companyStats = computed(() => {
     });
   }
 
-  if (company.value?.tel && isTelPublic.value) {
-    stats.push({
-      label: "شماره تماس شرکت:",
-      value: company.value.tel,
-      icon: "lucide:phone-call",
-    });
-  }
+  
+  // if (company.value?.tel && isTelPublic.value) {
+  //   stats.push({
+  //     label: "شماره تماس شرکت:",
+  //     value: company.value.tel,
+  //     icon: "lucide:phone-call",
+  //   });
+  // }
 
   return stats;
 });
