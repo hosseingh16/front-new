@@ -1,7 +1,9 @@
 <template>
-  <div class="w-80 max-w-[calc(100vw-2rem)] bg-surface-50 rounded-lg">
+  <div
+    class="flex w-80 max-w-[calc(100vw-2rem)] flex-col bg-surface-50 rounded-lg max-lg:h-full max-lg:w-full max-lg:max-w-none max-lg:rounded-none"
+  >
     <div
-      class="flex items-center justify-between gap-3 border-b border-gray-default px-4 py-3"
+      class="flex shrink-0 items-center justify-between gap-3 border-b border-gray-default px-4 py-3"
     >
       <h3 class="text-sm font-semibold text-text-tertiary">اعلان‌ها</h3>
       <button
@@ -15,7 +17,7 @@
       </button>
     </div>
 
-    <div class="max-h-96 overflow-y-auto">
+    <div class="min-h-0 flex-1 overflow-y-auto max-lg:max-h-none max-h-96">
       <div v-if="loading && !initialized" class="space-y-3 p-4">
         <div
           v-for="n in 3"
@@ -125,6 +127,12 @@ function formatDate(value: string) {
   return formatJalaliDate(value, "jD jMMMM jYYYY - HH:mm");
 }
 
+function closeMenu() {
+  if (document.activeElement instanceof HTMLElement) {
+    document.activeElement.blur();
+  }
+}
+
 async function onMarkAll() {
   try {
     await markAllAsRead();
@@ -147,9 +155,7 @@ async function onSelect(item: AppNotification) {
   if (!link) return;
 
   // Close daisyUI dropdown before navigating
-  if (document.activeElement instanceof HTMLElement) {
-    document.activeElement.blur();
-  }
+  closeMenu();
 
   // If the link is a relative path (like /dashboard/employer/company), navigate internally
   if (isExternalNotificationLink(link)) {

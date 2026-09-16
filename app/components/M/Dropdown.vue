@@ -18,9 +18,10 @@
     <div
       ref="contentRef"
       class="dropdown-content z-1100 min-w-62 w-fit max-w-[calc(100vw-2rem)] rounded-xl border-3 border-gray-default bg-surface-50 p-0 font-semibold shadow-sm"
-      :class="[contentOffsetClass, alignClass]"
+      :class="[contentOffsetClass, alignClass, contentClass]"
     >
       <Icon
+        v-if="!hideCaret"
         name="tabler:triangle-filled"
         size="12"
         class="absolute text-surface-200"
@@ -40,11 +41,15 @@ const props = withDefaults(
     hover?: boolean;
     placement?: "bottom" | "top" | "auto";
     align?: "start" | "end";
+    contentClass?: string;
+    hideCaret?: boolean;
   }>(),
   {
     hover: false,
     placement: "bottom",
     align: "start",
+    contentClass: "",
+    hideCaret: false,
   },
 );
 
@@ -89,10 +94,21 @@ function updatePlacement() {
     spaceBelow < menuHeight && spaceAbove > spaceBelow ? "top" : "bottom";
 }
 
-function closeOnScroll() {
+function closeOnScroll(event: Event) {
   const active = document.activeElement;
   if (!(active instanceof HTMLElement)) return;
   if (!rootRef.value?.contains(active)) return;
+
+  const target = event.target;
+  if (
+    target instanceof Node &&
+    contentRef.value?.contains(target) &&
+    target !== window &&
+    target !== document
+  ) {
+    return;
+  }
+
   active.blur();
 }
 

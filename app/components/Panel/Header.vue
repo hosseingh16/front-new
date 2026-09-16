@@ -48,7 +48,10 @@
       </div>
     </div>
     <div class="flex items-center">
-      <m-dropdown>
+      <m-dropdown
+        hide-caret
+        content-class="max-lg:fixed max-lg:top-16.5 max-lg:right-0 max-lg:bottom-18 max-lg:left-0 max-lg:z-1001 max-lg:mt-0! max-lg:mb-0! max-lg:h-auto max-lg:w-auto max-lg:max-w-none max-lg:overflow-hidden max-lg:rounded-none max-lg:border-0 max-lg:shadow-none max-lg:left-0! max-lg:right-0!"
+      >
         <template #btn>
           <button
             class="btn btn-ghost relative w-12 h-12 p-0"

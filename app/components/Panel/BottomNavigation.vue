@@ -32,7 +32,7 @@
         <NuxtLink
           v-else
           :to="item.to"
-          class="flex justify-center"
+          class="flex justify-center z-5000"
           aria-label="پیشخوان"
           :target="isOutsideDashboard(item.to) ? '_blank' : undefined"
           :rel="isOutsideDashboard(item.to) ? 'noopener noreferrer' : undefined"
@@ -67,7 +67,7 @@
 
       <div
         v-if="showMenu"
-        class="fixed top-16.5 right-0 bottom-40 left-0 bg-surface-50"
+        class="fixed top-16.5 right-0 bottom-18 left-0 z-1001 overflow-hidden bg-surface-50"
       >
         <panel-avatar-menu />
       </div>

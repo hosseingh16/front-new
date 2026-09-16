@@ -1,6 +1,6 @@
 <template>
   <div
-    class="users-menu bg-surface-100 z-100 max-lg:h-[110%] max-lg:overflow-scroll max-lg:p-1 rounded-xl"
+    class="users-menu relative z-100 bg-surface-100 max-lg:h-full max-lg:min-h-full max-lg:overflow-y-auto max-lg:bg-surface-50 max-lg:p-1 rounded-xl"
   >
     <NuxtLink
       to="/dashboard/cv?edit=basic"
