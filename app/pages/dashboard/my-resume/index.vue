@@ -38,7 +38,11 @@ definePageMeta({
   layout: "dashboard",
 });
 
-const { user } = useCurrentUser();
+const { user, ensureFullProfile } = useCurrentUser();
+
+onMounted(() => {
+  void ensureFullProfile();
+});
 
 const resumeUser = computed(() => mapCurrentUserToResume(user.value));
 </script>

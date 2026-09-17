@@ -5,6 +5,16 @@ import { isEmployerUser, isJobSeekerUser } from "~/utils/user-role";
  * Resolves the authenticated user payload from nuxt-auth-sanctum.
  * API shape is usually `{ data: { name, ... } }` but may also be flat.
  */
+let fullProfileInFlight: Promise<void> | null = null;
+
+function hasLoadedResumePayload(
+  user: Record<string, unknown> | null | undefined,
+) {
+  return (
+    user != null && Object.prototype.hasOwnProperty.call(user, "resume_personal")
+  );
+}
+
 export function useCurrentUser() {
   const sanctumUser = useSanctumUser<any>();
   const config = useRuntimeConfig();
@@ -131,6 +141,22 @@ export function useCurrentUser() {
     }
   }
 
+  /**
+   * Sanctum identity is lightweight. CV / apply / my-resume still need the
+   * full GET /api/v1/user payload — fetch it once when resume data is missing.
+   */
+  async function ensureFullProfile() {
+    if (hasLoadedResumePayload(user.value)) return;
+
+    if (!fullProfileInFlight) {
+      fullProfileInFlight = refreshUser().finally(() => {
+        fullProfileInFlight = null;
+      });
+    }
+
+    await fullProfileInFlight;
+  }
+
   return {
     sanctumUser,
     user,
@@ -142,5 +168,6 @@ export function useCurrentUser() {
     applyUserPayload,
     patchUser,
     refreshUser,
+    ensureFullProfile,
   };
 }

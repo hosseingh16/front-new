@@ -163,7 +163,7 @@ const BANNER_STORAGE_KEY = "cv-incomplete-banner-dismissed";
 // Variables
 const route = useRoute();
 const tab = ref(1);
-const { user, refreshUser } = useCurrentUser();
+const { user, ensureFullProfile } = useCurrentUser();
 const { isWelcomeVisible } = useFirstVisitWelcome();
 const { totalPercent } = useCvCompletion(user);
 const api = useApi();
@@ -209,9 +209,7 @@ onMounted(async () => {
   cvIncompleteBannerDismissed.value =
     localStorage.getItem(BANNER_STORAGE_KEY) === "1";
 
-  if (!cvSlug.value) {
-    await refreshUser();
-  }
+  await ensureFullProfile();
 });
 
 function dismissCvIncompleteBanner() {

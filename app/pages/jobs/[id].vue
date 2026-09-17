@@ -246,7 +246,7 @@ const route = useRoute();
 const adId = computed(() => String(route.params.id ?? ""));
 
 const { isAuthenticated } = useSanctumAuth();
-const { isEmployer, user } = useCurrentUser();
+const { isEmployer, user, ensureFullProfile } = useCurrentUser();
 const { needsRoleSelection, ensureRoleForAction } = useRoleGate();
 const { applyToAd, loading: applyLoading } = useApplyToAd();
 const { ad, loading, error, setHasApplied, refresh: refreshAd } = useAd(adId);
@@ -353,6 +353,7 @@ async function sendRequest() {
     const assigned = await ensureRoleForAction("job_seeker");
     if (!assigned) return;
 
+    await ensureFullProfile();
     if (!isResumeBasicInfoComplete(user.value)) {
       showIncompleteResumeModal();
       return;

@@ -133,7 +133,8 @@ export type ProgramItem = {
 
 const api = useApi();
 const { $toast } = useNuxtApp();
-const { refreshUser } = useCurrentUser();
+const { refreshUser, ensureFullProfile } = useCurrentUser();
+void ensureFullProfile();
 const { cvMaxSoftwares } = useSettings();
 const programsItems = ref<ProgramItem[]>([]);
 const { items: lookupItems } = useLookups("accounting_programs");

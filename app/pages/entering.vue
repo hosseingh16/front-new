@@ -34,7 +34,7 @@ const route = useRoute()
 const { isAuthenticated, refreshIdentity } = useSanctumAuth()
 const { updateUserRole, userId: authUserId } = useAccountAuth()
 const { fetchMenu } = usePanelConfig()
-const { user, refreshUser } = useCurrentUser()
+const { user } = useCurrentUser()
 
 const parsed = parseEnteringQuery(route.query)
 const message = ref(
@@ -73,12 +73,9 @@ async function runTransition() {
 
   const { destination, role, forwardQuery } = parsed
 
-  await refreshUser()
-
   const work = async () => {
     if (role && !resolvePrimaryRole(user.value)) {
       await updateUserRole(role as AccountRole)
-      await refreshUser()
     }
 
     if (destination.startsWith('/dashboard')) {

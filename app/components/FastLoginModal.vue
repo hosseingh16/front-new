@@ -68,18 +68,16 @@
 
           <div class="mt-3 flex flex-col items-end gap-2">
             <button
-              v-if="canResend"
+              v-if="showResendButton"
               type="button"
               class="btn btn-info btn-soft h-8 gap-1 px-3 text-primary-500"
-              :disabled="authLoading"
               @click="onResend"
             >
-              <span v-if="authLoading" class="loading loading-spinner loading-xs" />
-              <Icon v-else name="svg:refresh" />
+              <Icon name="svg:refresh" />
               <span class="text-sm">ارسال مجدد کد</span>
             </button>
             <div
-              v-else
+              v-else-if="showResendCountdown"
               class="inline-flex min-h-8 items-center gap-1 rounded-lg bg-[rgba(227,243,255,1)] px-3 py-1 text-sm leading-6 text-primary-500"
               aria-live="polite"
             >
@@ -178,7 +176,7 @@ const {
 } = useAccountAuth()
 
 const { applyToAd, loading: applyLoading } = useApplyToAd()
-const { user } = useCurrentUser()
+const { user, ensureFullProfile } = useCurrentUser()
 const { ensureRoleForAction } = useRoleGate()
 
 const phoneSchema = Yup.object({
@@ -210,6 +208,13 @@ const displayMobile = computed(() => {
 })
 
 const persianRemaining = computed(() => toPersianDigits(resendRemaining.value))
+const hasActiveCode = computed(() => sinceSent.value !== null)
+const showResendButton = computed(
+  () => hasActiveCode.value && canResend.value && !busy.value,
+)
+const showResendCountdown = computed(
+  () => hasActiveCode.value && !canResend.value && !busy.value,
+)
 const persianVoiceRemaining = computed(() => toPersianDigits(voiceRemaining.value))
 const voiceLabel = computed(() => {
   if (voiceSent.value) return 'تماس صوتی ارسال شد'
@@ -271,7 +276,7 @@ const onSubmitPhone = handleSubmit(async (data) => {
 })
 
 async function onResend() {
-  if (!canResend.value || !mobile.value) return
+  if (!showResendButton.value || !mobile.value) return
   otpDigits.value = emptyOtp()
   await requestOtp(mobile.value)
 }
@@ -306,11 +311,14 @@ async function onSubmitOtp(otpFromEvent?: string | Event) {
         const assigned = await ensureRoleForAction('job_seeker')
         if (!assigned) {
           applySucceeded = false
-        } else if (!isResumeBasicInfoComplete(user.value)) {
-          applySucceeded = false
-          resumeIncomplete = true
         } else {
-          await applyToAd(props.adId)
+          await ensureFullProfile()
+          if (!isResumeBasicInfoComplete(user.value)) {
+            applySucceeded = false
+            resumeIncomplete = true
+          } else {
+            await applyToAd(props.adId)
+          }
         }
       } catch (err) {
         applySucceeded = false

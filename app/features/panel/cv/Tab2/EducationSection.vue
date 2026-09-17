@@ -114,7 +114,7 @@ const { cvMaxEducations } = useSettings();
 const educationItems = ref<any[]>([]);
 const api = useApi();
 const { $toast } = useNuxtApp();
-const { refreshUser } = useCurrentUser();
+const { refreshUser, ensureFullProfile } = useCurrentUser();
 const { items: lookupItems } = useLookups(
   "education_levels,graduation_years",
 );
@@ -213,7 +213,7 @@ const { draggingIndex, itemClass, onHandlePointerDown } = useHandleReorder(
 );
 
 onMounted(async () => {
-  //Load user data
+  await ensureFullProfile();
   const currentUser = useSanctumUser<any>();
 
   educationItems.value = (currentUser.value.data?.resume_educations ?? []).map(

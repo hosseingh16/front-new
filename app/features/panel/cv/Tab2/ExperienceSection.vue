@@ -126,7 +126,7 @@ import RemoveItemModal from "~/components/M/RemoveItemModal.vue";
 
 const api = useApi();
 const { $toast } = useNuxtApp();
-const { refreshUser } = useCurrentUser();
+const { refreshUser, ensureFullProfile } = useCurrentUser();
 const { cvMaxPriors } = useSettings();
 
 // Variabels
@@ -251,6 +251,7 @@ const mapPrior = (item: any) => ({
 });
 
 onMounted(async () => {
+  await ensureFullProfile();
   const currentUser = useSanctumUser();
   const priors = (currentUser.value?.data?.resume_priors ?? []).map(mapPrior);
   console.log(currentUser.value?.data?.resume_priors);
