@@ -25,7 +25,10 @@
         <Icon name="svg:hint" />
         <p class="mr-1">
           با ورود یا ثبت نام در های‌حساب،
-          <NuxtLink to="/terms" class="text-primary-500" target="_blank"
+          <NuxtLink
+            to="/terms-and-conditions"
+            class="text-primary-500"
+            target="_blank"
             >شرایط و قوانین</NuxtLink
           >
 

@@ -188,8 +188,8 @@ const businessLinks: FooterLink[] = [
 const aboutLinks: FooterLink[] = [
   { label: "درباره ما", to: "/" },
   { label: "سوالات متداول", to: "/faq" },
-  { label: "قوانین و مقررات", to: "/terms" },
-  { label: "حریم خصوصی", to: "/privacy" },
+  { label: "قوانین و مقررات", to: "/terms-and-conditions" },
+  { label: "حریم خصوصی", to: "/privacy-policy" },
   { label: "تماس ما", to: "/contact" },
 ];
 
