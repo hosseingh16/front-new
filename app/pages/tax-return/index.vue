@@ -373,6 +373,11 @@ import step3 from "~/assets/vectors/pages/tax-return/step3.webp";
 import bannerMobile from "~/assets/vectors/pages/tax-return/banner-mobile.webp";
 import banner from "~/assets/vectors/pages/tax-return/banner.webp";
 import FaqSection from "~/components/Elements/FaqSection.vue";
+import {
+  FAQ_TYPE,
+  faqCategoriesByType,
+  faqsByType,
+} from "~/data/faqs";
 import { paths } from "~/routes";
 import type { ApiResponse } from "~/types/api";
 import type { ISelectItem } from "~/types/select-item";
@@ -606,49 +611,11 @@ const benefits = [
   },
 ];
 
-const faqCategories = [
-  { id: 1, label: "ثبت اظهارنامه" },
-  { id: 2, label: "عمومی" },
-];
-
-const faqs = [
-  {
-    type: 1,
-    question: "چه مدارکی برای ثبت درخواست اظهارنامه لازم است؟",
-    answer:
-      "اطلاعات هویتی کسب‌وکار، کد اقتصادی، سوابق مالی سال قبل و دسترسی به سامانه مالیاتی از جمله موارد مورد نیاز است. پس از ثبت درخواست، حسابدار لیست دقیق مدارک را اعلام می‌کند.",
-  },
-  {
-    type: 1,
-    question: "چقدر طول می‌کشد تا اظهارنامه من آماده شود؟",
-    answer:
-      "بسته به حجم فعالیت و تکمیل بودن مدارک، معمولاً بین ۳ تا ۱۰ روز کاری زمان نیاز است. حسابدار پس از بررسی اولیه، زمان‌بندی دقیق را اعلام می‌کند.",
-  },
-  {
-    type: 1,
-    question: "هزینه تنظیم اظهارنامه چگونه محاسبه می‌شود؟",
-    answer:
-      "هزینه بر اساس نوع کسب‌وکار، حجم عملکرد و پیچیدگی پرونده تعیین می‌شود. پس از بررسی درخواست، پیش‌فاکتور شفاف قبل از شروع کار ارائه می‌گردد.",
-  },
-  {
-    type: 1,
-    question: "آیا می‌توانم وضعیت درخواست خود را پیگیری کنم؟",
-    answer:
-      "بله. پس از ثبت درخواست، از طریق پیشخوان یا تماس با پشتیبانی می‌توانید وضعیت پیگیری پرونده را مشاهده کنید.",
-  },
-  {
-    type: 2,
-    question: "های‌حساب چه خدماتی ارائه می‌دهد؟",
-    answer:
-      "های‌حساب پلتفرم تخصصی استخدام حسابدار، ساخت رزومه، ثبت آگهی استخدام و خدمات مالیاتی از جمله تنظیم اظهارنامه عملکرد است.",
-  },
-  {
-    type: 2,
-    question: "آیا اطلاعات من محرمانه باقی می‌ماند؟",
-    answer:
-      "بله. تمامی اطلاعات مطابق سیاست حریم خصوصی های‌حساب محافظت شده و فقط در اختیار حسابدار مسئول پرونده قرار می‌گیرد.",
-  },
-];
+const faqCategories = faqCategoriesByType(
+  FAQ_TYPE.consulting,
+  FAQ_TYPE.general,
+);
+const faqs = faqsByType(FAQ_TYPE.consulting, FAQ_TYPE.general);
 
 const expandedProcessStep = ref(-1);
 

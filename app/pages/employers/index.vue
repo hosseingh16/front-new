@@ -322,6 +322,11 @@ import step4 from "~/assets/vectors/pages/employers/step4.svg";
 import processGraphic from "~/assets/vectors/pages/employers/Group 1142813134.svg";
 import TrustBar from "../../components/Elements/TrustBar.vue";
 import FaqSection from "~/components/Elements/FaqSection.vue";
+import {
+  FAQ_TYPE,
+  faqCategoriesByType,
+  faqsByType,
+} from "~/data/faqs";
 import Testimonials, {
   type Testimonial,
 } from "~/components/Elements/Testimonials.vue";
@@ -467,49 +472,8 @@ const testimonials: Testimonial[] = [
   },
 ];
 
-const faqCategories = [
-  { id: 1, label: "استخدام حسابدار" },
-  { id: 2, label: "عمومی" },
-];
-
-const faqs = [
-  {
-    type: 1,
-    question: "چگونه می‌توانم آگهی استخدام ثبت کنم؟",
-    answer:
-      "پس از ثبت‌نام به‌عنوان کارفرما، از بخش داشبورد می‌توانید آگهی استخدام جدید ایجاد کنید و فیلترهای تخصصی مورد نیاز خود را تعیین نمایید.",
-  },
-  {
-    type: 1,
-    question: "آیا می‌توانم بدون ثبت آگهی به رزومه‌ها دسترسی داشته باشم؟",
-    answer:
-      "بله. با استفاده از بانک رزومه می‌توانید مستقیماً رزومه‌های حسابداران را جستجو و فیلتر کنید و با متخصصان مورد نظر ارتباط برقرار کنید.",
-  },
-  {
-    type: 1,
-    question: "هزینه ثبت آگهی چقدر است؟",
-    answer:
-      "هزینه‌ها بر اساس نوع آگهی و خدمات انتخابی متفاوت است. جزئیات قیمت‌گذاری در بخش ثبت آگهی نمایش داده می‌شود.",
-  },
-  {
-    type: 1,
-    question: "چقدر طول می‌کشد تا رزومه دریافت کنم؟",
-    answer:
-      "معمولاً پس از انتشار آگهی، رزومه‌های مرتبط در همان روزهای اول دریافت می‌شوند. سرعت وابسته به نوع موقعیت شغلی و شرایط بازار است.",
-  },
-  {
-    type: 2,
-    question: "های‌حساب چیست؟",
-    answer:
-      "های‌حساب پلتفرم تخصصی استخدام حسابدار، ساخت رزومه، ثبت آگهی استخدام، ایجاد پروژه‌های حسابداری و خدمات مالیاتی است.",
-  },
-  {
-    type: 2,
-    question: "آیا اطلاعات شرکت من محرمانه باقی می‌ماند؟",
-    answer:
-      "بله. تمامی اطلاعات مطابق سیاست حریم خصوصی های‌حساب محافظت شده و فقط در چارچوب خدمات در اختیار کاربران مجاز قرار می‌گیرد.",
-  },
-];
+const faqCategories = faqCategoriesByType(FAQ_TYPE.hiring, FAQ_TYPE.general);
+const faqs = faqsByType(FAQ_TYPE.hiring, FAQ_TYPE.general);
 
 const expandedProcessStep = ref(-1);
 
