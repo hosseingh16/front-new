@@ -1,8 +1,9 @@
 <template>
   <div>
-    <p class="mt-2 text-base">
-      تایید شماره همراه
-      <span class="font-semibold">{{ mobile || '—' }}</span>
+    <p class="mt-1.5 text-xs text-gray">
+      کد تایید برای شماره
+      <span>{{ mobile || '—' }}</span>
+      پیامک شد
     </p>
 
     <OtpInput v-model="model" @complete="emit('complete', $event)" />

@@ -1,16 +1,7 @@
 <template>
-  <DaisyCard :class="needsRegistration ? 'w-full' : 'w-full min-[560px]:w-140'">
-    <SignUpStepper
-      v-if="needsRegistration"
-      :current="1"
-      class="hidden min-[560px]:flex flex-1"
-    />
+  <DaisyCard class="w-full min-[560px]:w-140">
     <div class="flex items-center">
-      <Icon
-        name="svg:chevron-right"
-        class="shrink-0 cursor-pointer"
-        @click="goBack"
-      />
+      <AuthBackButton @click="goBack" />
       <img
         v-if="needsRegistration"
         src="/images/1-3.png"
@@ -23,27 +14,26 @@
       />
     </div>
 
-    <p class="mt-4 text-2xl sm:text-h1 font-yb-bold">احراز هویت</p>
+    <p class="mt-6 text-xl font-yb-bold">احراز هویت</p>
 
-    <div class="flex justify-end items-center flex-wrap gap-2">
-      <p class="mt-2 text-base">
-        تایید شماره همراه
-        <span class="font-semibold">{{ displayMobile }}</span>
-      </p>
-      <OtpButton
-        :loading
-        :voice-disabled="voiceSent"
-        @resend="onResend"
-        @voice="onVoice"
-      />
-    </div>
+    <p class="mt-1.5 text-xs text-gray">
+      کد تایید برای شماره
+      <span>{{ displayMobile }}</span>
+      پیامک شد
+    </p>
+    <OtpButton
+      :loading
+      :voice-disabled="voiceSent"
+      @resend="onResend"
+      @voice="onVoice"
+    />
 
-    <form @submit.prevent="onSubmit">
+    <form class="mt-3" @submit.prevent="onSubmit">
       <OtpInput v-model="model" @complete="onSubmit" />
 
       <button
         type="submit"
-        class="mt-4 w-full btn flex justify-center gap-2 h-10 max-sm:w-full"
+        class="mt-3 w-full btn flex justify-center gap-2 h-10 max-sm:w-full"
         :class="!buttonEnabled || loading ? 'btn-disabled' : 'btn-primary'"
         :disabled="!buttonEnabled || loading"
       >
@@ -59,9 +49,9 @@
 </template>
 
 <script setup lang="ts">
+import AuthBackButton from "~/features/account/components/AuthBackButton.vue";
 import OtpButton from "~/features/account/components/OtpButton.vue";
 import OtpInput from "~/features/account/components/OtpInput.vue";
-import SignUpStepper from "~/features/account/components/SignUpStepper.vue";
 import type { DirectionT } from "../types";
 import type { AuthUserStatus } from "~/composables/useAccountAuth";
 

@@ -1,12 +1,7 @@
 <template>
   <DaisyCard class="w-full min-[1052px]:w-263">
-    <SignUpStepper :current="2" class="hidden min-[560px]:flex flex-1" />
     <div class="flex items-center">
-      <Icon
-        name="svg:chevron-right"
-        class="shrink-0 cursor-pointer"
-        @click="goBack"
-      />
+      <AuthBackButton @click="goBack" />
       <img
         src="/images/3-3.png"
         width="54"
@@ -15,7 +10,7 @@
       <span class="hidden min-[560px]:block w-6 shrink-0" />
     </div>
 
-    <p class="mt-4 text-2xl sm:text-h1 font-yb-bold">نوع آگهی:</p>
+    <p class="mt-3 text-xl font-yb-bold">نوع آگهی:</p>
     <div class="flex gap-1 items-center mt-2">
       <Icon name="svg:hint" />
       <span class="text-sm text-text-passive"
@@ -23,7 +18,7 @@
       >
     </div>
 
-    <div class="grid grid-cols-1 min-[1052px]:grid-cols-3 gap-4 mt-4">
+    <div class="grid grid-cols-1 min-[1052px]:grid-cols-3 gap-4 mt-3">
       <div
         v-for="item in items"
         :key="item.employmentType"
@@ -64,7 +59,7 @@
 </template>
 
 <script setup lang="ts">
-import SignUpStepper from "~/features/account/components/SignUpStepper.vue";
+import AuthBackButton from "~/features/account/components/AuthBackButton.vue";
 import type { DirectionT } from "../types";
 import { buildEnteringRoute } from "~/utils/entering-route";
 import { paths } from "~/routes";

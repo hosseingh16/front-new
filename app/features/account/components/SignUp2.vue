@@ -1,11 +1,9 @@
 <template>
-  <DaisyCard class="w-full">
-    <SignUpStepper :current="3" class="hidden min-[560px]:flex flex-1" />
+  <DaisyCard class="w-full min-[560px]:w-140">
     <div class="flex items-center">
-      <Icon
+      <AuthBackButton
         v-if="!inline"
-        name="svg:chevron-right"
-        class="shrink-0 cursor-pointer"
+        label="بازگشت به ابتدا"
         @click="goBack"
       />
       <span v-else class="hidden min-[560px]:block w-6 shrink-0" />
@@ -17,44 +15,10 @@
       <span class="hidden min-[560px]:block w-6 shrink-0" />
     </div>
 
-    <p class="mt-4 text-2xl sm:text-h1 font-yb-bold">تکمیل حساب کاربری</p>
+    <p class="mt-3 text-xl font-yb-bold">تکمیل حساب کاربری</p>
 
-    <p class="mt-4 text-base">تصویر پروفایل:</p>
-
-    <input
-      type="file"
-      class="hidden"
-      ref="imageInputRef"
-      accept="image/jpeg,image/png,image/jpg,image/gif,image/svg+xml"
-      @change="onSelectImage($event)"
-    />
-    <div
-      v-if="!imageBase64"
-      class="mt-2 rounded-lg border-2 border-dashed border-gray-default bg-[repeating-linear-gradient(60deg,#FCFCFC_0px,#FCFCFC_35px,white_6px,white_70px)] flex items-center gap-3 p-6 cursor-pointer"
-      @click="imageInputRef.click()"
-    >
-      <div
-        class="w-12.5 h-12.5 bg-linear-to-b from-[#3D39FF] to-white rounded-full"
-      ></div>
-      <div>
-        <div class="flex items-center gap-1 flex-wrap">
-          <Icon name="svg:upload" />
-          <span class="font-semibold text-sm text-primary-500"
-            >برای آپلود تصویر کلید کنید</span
-          >
-          <span class="text-sm text-text-muted">(اختیاری)</span>
-        </div>
-        <p class="mt-1 text-sm text-text-muted">
-          حداکثر سایز فایل: 2MB، پسوند‌های مجاز: jpg و png.
-        </p>
-      </div>
-    </div>
-    <div v-else class="mt-6 flex justify-center" @click="imageInputRef.click()">
-      <img :src="imageBase64" class="w-24 h-24 rounded-full" />
-    </div>
-
-    <form @submit="onSubmit">
-      <div class="mt-4">
+    <form autocomplete="off" @submit="onSubmit">
+      <div class="mt-3">
         <m-form-input
           name="fullName"
           label="نام کامل:"
@@ -64,41 +28,26 @@
         <m-form-input
           name="password"
           label="رمز عبور: (اختیاری)"
-          placeholder="رمز عبور را وارد کنید"
-          class="mt-4"
+          placeholder="حداقل ۶ کاراکتر"
+          class="mt-3"
           :type="showPass ? 'text' : 'password'"
-          :hint="
-            values.password
-              ? [
-                  'شامل عدد',
-                  'حداقل ۸ حرف',
-                  'شامل علامت (!@#$%&*^)',
-                  'شامل یک حرف بزرگ و کوچک',
-                ]
-              : []
-          "
+          autocomplete="new-password"
+          english-digits
         >
           <template #prefix><Icon name="svg:lock" size="24" /></template>
-          <template #suffix
-            ><Icon
-              name="svg:eye"
+          <template #suffix>
+            <Icon
+              :name="showPass ? 'lucide:eye-off' : 'lucide:eye'"
               size="24"
-              class="cursor-pointer"
+              class="cursor-pointer text-gray"
               @click="showPass = !showPass"
-          /></template>
+            />
+          </template>
         </m-form-input>
-
-        <div v-if="values.password" class="grid grid-cols-4 gap-1 mt-2">
-          <div
-            v-for="i in 4"
-            class="h-1 rounded-lg"
-            :class="i <= strength ? 'bg-info-500' : 'bg-[#F2F2F2]'"
-          ></div>
-        </div>
       </div>
 
       <button
-        class="mt-4 w-full btn flex justify-center gap-2 h-10 max-sm:w-full"
+        class="mt-3 w-full btn flex justify-center gap-2 h-10 max-sm:w-full"
         :class="!buttonEnabled || loading ? 'btn-disabled' : 'btn-primary'"
         type="submit"
         :disabled="!buttonEnabled || loading"
@@ -115,13 +64,13 @@
 </template>
 
 <script setup lang="ts">
-import { convertImageToBase64 } from "~/libs/utils";
-import SignUpStepper from "~/features/account/components/SignUpStepper.vue";
+import AuthBackButton from "~/features/account/components/AuthBackButton.vue";
 import type { DirectionT } from "../types";
 import { useForm } from "vee-validate";
 import * as Yup from "yup";
 import { firstQueryString } from "~/utils/entering-route";
 import { paths } from "~/routes";
+import { optionalUserPasswordSchema } from "~/utils/user-password";
 
 // Model
 const model = defineModel({
@@ -141,7 +90,6 @@ const props = defineProps<{
 
 // Emits
 const emits = defineEmits<{
-  (e: "passwordStrength", value: number): void;
   (e: "onChangeStep", step: number): void;
   (e: "onChangeDirection", step: DirectionT): void;
   (e: "completed"): void;
@@ -150,19 +98,14 @@ const emits = defineEmits<{
 // Auth
 const route = useRoute();
 const { completeProfile, loading } = useAccountAuth();
-const { $toast } = useNuxtApp();
 
 // Variables
 const showPass = ref(false);
-const imageInputRef = ref<any>(null);
-const imageBase64 = ref<any>(null);
-const passwordStrength = ref(0);
-const maxAvatarBytes = 2 * 1024 * 1024;
 
-// Form — name required; avatar & password optional
+// Form — name required; password optional (at least 6 characters)
 const formSchema = Yup.object({
   fullName: Yup.string().required("نام وارد نشده است"),
-  password: Yup.string().optional().nullable(),
+  password: optionalUserPasswordSchema(),
 });
 const { handleSubmit, values, setValues } = useForm<
   Yup.InferType<typeof formSchema>
@@ -170,45 +113,20 @@ const { handleSubmit, values, setValues } = useForm<
   validationSchema: formSchema,
 });
 
-// Computeds
-const strength = computed(() => {
-  const password = values.password || "";
-  let score = 0;
-  if (password.length >= 8) score++;
-  if (/\d/.test(password)) score++;
-  if (/[!@#$%&*^]/.test(password)) score++;
-  if (/[A-Z]/.test(password) && /[a-z]/.test(password)) score++;
-  passwordStrength.value = score;
-  return score;
-});
 const buttonEnabled = computed(() => {
   return !!values.fullName && !loading.value;
 });
 
-// Watches
-watch(
-  () => model.value,
-  async () => {
-    if (model.value.profile)
-      imageBase64.value = await convertImageToBase64(model.value.profile);
-  },
-  { immediate: true },
-);
-
 // Functions
 function goBack() {
   emits("onChangeDirection", "back");
-  emits("onChangeStep", props.step > 3 ? props.step - 1 : 1);
+  emits("onChangeStep", 1);
 }
 
 const onSubmit = handleSubmit(async (data) => {
   if (loading.value) return;
 
   const password = data.password?.trim() || undefined;
-  if (password && passwordStrength.value < 4) {
-    $toast.error("رمز عبور به اندازه کافی قوی نیست");
-    return;
-  }
 
   model.value = {
     ...data,
@@ -222,7 +140,6 @@ const onSubmit = handleSubmit(async (data) => {
     avatar: model.value.profile || null,
   });
 
-  emits("passwordStrength", passwordStrength.value);
   emits("onChangeDirection", "forward");
   emits("completed");
 
@@ -238,27 +155,11 @@ const onSubmit = handleSubmit(async (data) => {
   await navigateTo({ path: paths.login, query: nextQuery }, { replace: true });
 });
 
-async function onSelectImage(event: Event) {
-  const target = event.target as HTMLInputElement;
-  if (target.files && target.files.length > 0) {
-    const file = target.files[0]!;
-
-    if (file.size > maxAvatarBytes) {
-      $toast.error("حجم تصویر نباید بیشتر از 2MB باشد");
-      target.value = "";
-      return;
-    }
-
-    model.value.profile = file;
-    imageBase64.value = await convertImageToBase64(file);
-  }
-}
-
 onMounted(() => {
-  if (model.value.fullName || model.value.password)
+  if (model.value.fullName)
     setValues({
       fullName: model.value.fullName,
-      password: model.value.password,
+      password: "",
     });
 });
 </script>

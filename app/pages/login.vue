@@ -53,7 +53,7 @@
     </Transition>
     <NuxtLink
       to="/"
-      class="flex justify-center items-center mt-4 cursor-pointer"
+      class="flex justify-center items-center mt-3 cursor-pointer"
     >
       <span class="text-sm text-gray-500">بازگشت به صفحه اصلی</span>
     </NuxtLink>

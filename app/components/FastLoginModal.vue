@@ -16,7 +16,10 @@
       </div>
 
       <!-- Step 1: phone -->
-      <form v-if="step === 'phone'" class="mt-6" @submit="onSubmitPhone">
+      <form v-if="step === 'phone'" class="mt-4" @submit="onSubmitPhone">
+        <p class="mb-2 text-sm font-normal text-gray-400">
+          لطفا شماره موبایل خود را وارد کنید
+        </p>
         <m-form-input
           name="mobile"
           placeholder="شماره تلفن همراه را وارد کنید"
@@ -27,26 +30,9 @@
           </template>
         </m-form-input>
 
-        <div
-          class="mt-3 flex items-start gap-1 text-sm leading-6 text-text-passive"
-        >
-          <Icon name="svg:hint" class="mt-0.5 shrink-0" />
-          <p>
-            با ورود یا ثبت نام در های‌حساب،
-            <NuxtLink
-              to="/terms-and-conditions"
-              class="text-primary-500"
-              target="_blank"
-            >
-              شرایط و قوانین
-            </NuxtLink>
-            را می‌پذیرم.
-          </p>
-        </div>
-
         <button
           type="submit"
-          class="btn mt-4 flex h-11 w-full justify-center gap-2"
+          class="btn mt-3 flex h-11 w-full justify-center gap-2"
           :class="phoneValid && !authLoading ? 'btn-primary' : 'btn-disabled'"
           :disabled="!phoneValid || authLoading"
         >
@@ -57,9 +43,9 @@
       </form>
 
       <!-- Step 2: OTP -->
-      <div v-else class="mt-6">
-        <p class="text-sm text-text-passive">
-          تایید شماره همراه :
+      <div v-else class="mt-4">
+        <p class="text-xs text-gray">
+          کد تایید برای شماره
           <button
             type="button"
             class="text-primary-500 underline underline-offset-4"
@@ -67,9 +53,10 @@
           >
             {{ displayMobile }}
           </button>
+          پیامک شد
         </p>
 
-        <form class="mt-4" @submit.prevent="onSubmitOtp()">
+        <form class="mt-3" @submit.prevent="onSubmitOtp()">
           <OtpInput v-model="otpDigits" @complete="onSubmitOtp" />
 
           <div class="mt-3 flex flex-col items-end gap-2">
@@ -112,7 +99,7 @@
 
           <button
             type="submit"
-            class="btn mt-4 flex h-11 w-full justify-center gap-2"
+            class="btn mt-3 flex h-11 w-full justify-center gap-2"
             :class="otpReady && !busy ? 'btn-primary' : 'btn-disabled'"
             :disabled="!otpReady || busy"
           >

@@ -46,6 +46,7 @@ const props = withDefaults(
     multiline?: boolean;
     hint?: string[];
     englishDigits?: boolean;
+    autocomplete?: string;
   }>(),
   { hint: () => [] },
 );

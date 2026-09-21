@@ -1,6 +1,6 @@
 <template>
   <div
-    class="mt-2 flex items-center justify-center gap-2 [&>.input]:rounded-lg [&>.input]:border-gray-default [&>.input]:text-center [&>.input]:px-0"
+    class="mt-1.5 flex items-center justify-center gap-2"
     dir="ltr"
     role="group"
     aria-label="کد تایید"
@@ -19,7 +19,7 @@
       :autocomplete="index === 0 ? 'one-time-code' : 'off'"
       :name="index === 0 ? 'one-time-code' : undefined"
       :maxlength="index === 0 ? otpLength : 1"
-      class="input w-10 h-10"
+      class="otp-digit input w-12 h-12 border-gray-default text-gray-700 select-none text-2xl font-semibold leading-none outline-none focus:outline-none focus:shadow-none"
       :aria-label="`رقم ${index + 1}`"
       :value="model[index] ?? ''"
       @keydown="onKeydown($event, index)"
@@ -27,6 +27,8 @@
       @input="onInput($event, index)"
       @change="onInput($event, index)"
       @focus="onFocus"
+      @selectstart.prevent
+      @dblclick.prevent
     />
   </div>
 </template>
@@ -154,9 +156,10 @@ function clearDigit(index: number) {
 
 function onFocus(event: FocusEvent) {
   const el = event.target as HTMLInputElement
-  // Avoid select() on the empty autofill target — it can block iOS SMS suggestions.
-  if (!el.value) return
-  requestAnimationFrame(() => el.select())
+  requestAnimationFrame(() => {
+    const end = el.value.length
+    el.setSelectionRange(end, end)
+  })
 }
 
 function onKeydown(event: KeyboardEvent, index: number) {
@@ -310,3 +313,26 @@ onUnmounted(() => {
   otpAbort = null
 })
 </script>
+
+<style scoped>
+.otp-digit {
+  font-size: 1.5rem;
+  padding: 0.5rem;
+  text-align: center;
+  border-radius: 0.5rem;
+  color: var(--color-gray-700);
+  user-select: none;
+  -webkit-user-select: none;
+}
+.otp-digit:focus,
+.otp-digit:focus-within {
+  outline: none;
+  box-shadow: none;
+  isolation: auto;
+  --input-color: var(--color-gray-default, var(--color-gray-300));
+}
+.otp-digit::selection {
+  background: transparent;
+  color: inherit;
+}
+</style>

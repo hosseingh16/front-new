@@ -73,9 +73,14 @@
   --color-gray-100: rgba(245, 246, 248, 1);
   --color-gray-200: rgba(241, 241, 241, 1);
   --color-gray-300: rgba(200, 205, 212, 1);
+  --color-gray: rgba(123, 130, 144, 1);
   --color-gray-600: rgba(123, 130, 144, 1);
   --color-gray-700: rgba(72, 75, 91, 1);
   --color-gray-800: rgba(47, 50, 65, 1);
+}
+
+.text-gray {
+  color: var(--color-gray);
 }
 
 /* Dark theme — flips design tokens used across the dashboard */
@@ -128,6 +133,7 @@
   --color-gray-100: #1c1c1c;
   --color-gray-200: #242424;
   --color-gray-300: #3a3a3a;
+  --color-gray: #8a8a8a;
   --color-gray-600: #8a8a8a;
   --color-gray-700: #b0b0b0;
   --color-gray-800: #d4d4d4;

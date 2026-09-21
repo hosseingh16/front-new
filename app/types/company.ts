@@ -35,5 +35,6 @@ export interface CompanyList {
     province_name: string | null;
     city_name: string | null;
     activity: string | null;
+    activity_label?: string | null;
     is_bookmarked?: boolean;
 }

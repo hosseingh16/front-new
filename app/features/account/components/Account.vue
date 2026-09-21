@@ -3,42 +3,20 @@
     <div class="flex flex-col items-center">
       <NuxtImg src="/images/logo.png" class="w-10 h-10" />
       <p class="font-semibold text-caption">های‌حساب</p>
-      <p>خانه حسابداران با تجربه</p>
     </div>
-    <p class="mt-12 text-2xl sm:text-h1 font-yb-bold">ورود یا ثبت نام</p>
-    <p class="mt-2 text-base">
-      برای ورود یا ثبت نام، لطفا شماره تلفن همراه را وارد کنید:
-    </p>
+    <p class="mt-6 text-2xl font-yb-bold">ورود یا ثبت نام</p>
 
-    <form @submit="onSubmit">
-      <m-form-input
-        name="mobile"
-        placeholder="شماره تلفن همراه را وارد کنید"
-        english-digits
-      >
-        <template #prefix>
-          <Icon name="svg:mobile" />
-        </template>
-      </m-form-input>
-
-      <div class="flex items-center mt-2">
-        <Icon name="svg:hint" />
-        <p class="mr-1">
-          با ورود یا ثبت نام در های‌حساب،
-          <NuxtLink
-            to="/terms-and-conditions"
-            class="text-primary-500"
-            target="_blank"
-            >شرایط و قوانین</NuxtLink
-          >
-
-          را می پذیرم.
-        </p>
+    <form class="mt-3" @submit="onSubmit">
+      <p class="mb-2 text-base font-medium text-text-primary">
+        شماره تلفن همراه:
+      </p>
+      <div class="phone-input">
+        <m-form-input name="mobile" placeholder="اینجا بنویس" english-digits />
       </div>
 
       <button
         id="btnSendMobile"
-        class="mt-2 w-full btn flex justify-center gap-2 h-10"
+        class="mt-3 w-full btn flex justify-center gap-2 h-12"
         :class="{
           'btn-disabled': !meta.valid || loading,
           'btn-primary': meta.valid && !loading,
@@ -47,10 +25,20 @@
         :disabled="loading"
       >
         <span v-if="loading" class="loading loading-spinner loading-sm" />
-        <Icon v-else name="svg:user-1" size="24" />
-        <span>ورود یا ثبت‌نام</span>
+        <Icon v-else name="lucide:message-square" size="24" />
+        <span>دریافت کد تائید</span>
       </button>
     </form>
+
+    <p class="mt-3 text-center text-xs text-gray-400">
+      ورود شما به معنای پذیرش
+      <NuxtLink to="/terms" class="text-primary-500">شرایط های‌حساب</NuxtLink>
+      و
+      <NuxtLink to="/privacy" class="text-primary-500"
+        >قوانین حریم‌خصوصی</NuxtLink
+      >
+      است
+    </p>
   </DaisyCard>
 </template>
 
@@ -87,3 +75,30 @@ onMounted(() => {
   if (model.value) setValues({ mobile: model.value });
 });
 </script>
+
+<style scoped>
+.phone-input :deep(label.input) {
+  height: 52px;
+  min-height: 52px;
+  border-radius: 12px;
+  border: 1px solid var(--color-gray-300);
+  background: #fff;
+  padding-inline: 16px;
+  padding-block: 12px;
+  box-shadow: none;
+}
+.phone-input :deep(label.input:hover),
+.phone-input :deep(label.input:focus-within) {
+  border-color: var(--color-gray-300);
+  outline: none;
+  box-shadow: none;
+}
+.phone-input :deep(input) {
+  padding: 0;
+  font-size: 16px;
+}
+.phone-input :deep(input::placeholder) {
+  color: var(--color-gray);
+  font-size: 16px;
+}
+</style>

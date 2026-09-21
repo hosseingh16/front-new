@@ -193,16 +193,9 @@ const emit = defineEmits<{
 const ad = computed(() => props.item as AdList);
 const project = computed(() => props.item as ProjectList);
 
-const { items: lookupItems } = useLookups("industries");
-const industryOptions = lookupItems("industries");
-
 const activityLabel = computed(() => {
-  const value = props.item?.company?.activity;
-  if (!value) return "";
-  const match = industryOptions.value.find(
-    (item) => String(item.value) === String(value),
-  );
-  return match?.label ?? value;
+  const company = props.item?.company;
+  return company?.activity_label || company?.activity || "";
 });
 
 const companyName = computed(() => props.item?.company_name || "");

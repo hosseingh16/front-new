@@ -1,14 +1,10 @@
 <template>
   <DaisyCard class="w-full min-[560px]:w-140">
-    <Icon
-      name="svg:chevron-right"
-      class="cursor-pointer"
-      @click="emits('onChangeStep')"
-    />
+    <AuthBackButton @click="emits('onChangeStep')" />
 
-    <p class="mt-12 text-2xl sm:text-h1 font-yb-bold">ورود به حساب کاربری</p>
+    <p class="mt-6 text-xl font-yb-bold">ورود به حساب کاربری</p>
 
-    <div v-if="mode === 'fixedPassword'">
+    <div v-if="mode === 'fixedPassword'" class="mt-3">
       <m-text-field
         v-model="password"
         label="رمز عبور:"
@@ -16,17 +12,19 @@
         :type="showPass ? 'text' : 'password'"
       >
         <template #prefix><Icon name="svg:lock" size="24" /></template>
-        <template #suffix
-          ><Icon
-            name="svg:eye"
+        <template #suffix>
+          <Icon
+            :name="showPass ? 'lucide:eye-off' : 'lucide:eye'"
             size="24"
-            class="cursor-pointer"
+            class="cursor-pointer text-gray"
             @click="showPass = !showPass"
-        /></template>
+          />
+        </template>
       </m-text-field>
     </div>
     <SignInOtp
       v-else
+      class="mt-3"
       v-model="code"
       :mobile
       :loading
@@ -58,6 +56,7 @@
 </template>
 
 <script setup lang="ts">
+import AuthBackButton from '~/features/account/components/AuthBackButton.vue';
 import PasswordButton from '~/features/account/components/PasswordButton.vue';
 import SignInOtp from '~/features/account/components/SignInOtp.vue';
 import type { PasswordButtonT } from '~/features/account/types';

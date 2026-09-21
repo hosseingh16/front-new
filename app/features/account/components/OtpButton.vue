@@ -1,6 +1,6 @@
 <template>
-  <div class="mt-2 flex flex-col items-end gap-2">
-    <div v-if="showResendButton" class="flex justify-end items-center">
+  <div class="mt-1.5 flex flex-wrap items-center justify-start gap-3">
+    <div v-if="showResendButton" class="flex items-center">
       <button
         type="button"
         class="btn btn-info btn-soft text-primary-500 h-8"
@@ -12,7 +12,7 @@
     </div>
     <div
       v-else-if="showResendCountdown"
-      class="text-left text-sm text-[#4A4A4A]"
+      class="text-xs text-[#4A4A4A]"
       aria-live="polite"
     >
       ارسال مجدد کد تا {{ formatted }}

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="flex items-center justify-between">
+    <div v-if="label || hint.length > 0" class="flex items-center justify-between">
       <p class="text-base relative mb-2">
         {{ label }}
         <span v-if="required" class="text-red-400 mb-4 absolute -top-2">*</span>
@@ -47,6 +47,7 @@
         :name="name"
         :type="type"
         :placeholder="placeholder"
+        :autocomplete="autocomplete"
         autofocus
         class="pr-0 placeholder:text-gray-default w-full"
       />
@@ -91,6 +92,7 @@ const props = withDefaults(
     error?: boolean;
     multiline?: boolean;
     clearable?: boolean;
+    autocomplete?: string;
   }>(),
   { hint: () => [] },
 );
