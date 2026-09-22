@@ -7,6 +7,11 @@ export const paths = {
     root: '/jobs',
     detail: (id: string | number) => `/jobs/${id}`,
   },
+  taxReturn: {
+    root: '/tax-return',
+    consultants: '/tax-return/consultants',
+    termsAndConditions: '/tax-return/terms-and-conditions',
+  },
   employer: {
     ads: '/dashboard/employer/ads',
     adsCreate: '/dashboard/employer/ads/create',

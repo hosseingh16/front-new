@@ -14,143 +14,41 @@
         </nav>
       </div>
 
-      <div
-        class="custom-pad mt-8 grid items-start gap-10 lg:mt-10 lg:grid-cols-2 lg:gap-12"
-      >
-        <!-- Info -->
-        <div class="flex flex-col items-start">
-          <span
-            class="inline-flex items-center rounded-xl bg-accent-300 px-4 py-2 text-sm font-semibold text-accent-500"
-          >
-            خدمات های‌حساب
-          </span>
-
-          <h1
-            class="relative isolate mt-5 inline-block font-yb-bold text-2xl leading-10 text-text-tertiary md:text-[2rem] md:leading-12"
-          >
-            <span
-              class="absolute inset-x-0 bottom-1 -z-10 h-[55%] rounded-xl bg-accent-300"
-              aria-hidden="true"
-            />
-            فرم درخواست ثبت اظهارنامه
-          </h1>
-
-          <p
-            class="mt-4 max-w-md text-base font-semibold leading-8 text-text-tertiary"
-          >
-            اطلاعات اولیه را وارد کنید تا مشاور تأییدشده های‌حساب برای ادامه
-            فرایند با شما تماس بگیرد.
-          </p>
-
-          <div class="mt-8 flex flex-col items-start gap-3">
-            <div
-              v-for="item in heroFeatures"
-              :key="item.label"
-              class="inline-flex items-center gap-2.5 rounded-full px-4 py-2.5 text-sm font-semibold"
-              :class="item.className"
-            >
-              <span>{{ item.label }}</span>
-              <Icon :name="item.icon" size="18" class="shrink-0" />
-            </div>
-          </div>
-        </div>
-
-        <!-- Form -->
-        <div
-          class="rounded-2xl bg-white p-5 shadow-[0px_4px_24px_0px_#00000014] md:p-6"
+      <div class="custom-pad flex flex-col items-center pt-8 md:pt-12">
+        <span
+          class="inline-flex items-center rounded-xl bg-accent-300 px-4 py-2 text-sm font-semibold text-accent-500"
         >
-          <form class="space-y-8" @submit.prevent="submitHeroForm">
-            <div>
-              <div class="mb-2 flex items-center gap-2">
-                <span
-                  class="h-1 w-2 shrink-0 rounded-full bg-linear-to-b from-[#3B6EF8] to-primary-500"
-                  aria-hidden="true"
-                />
-                <h2 class="font-yb-bold text-base text-primary-500">
-                  اطلاعات هویتی و تماس
-                </h2>
-              </div>
+          خدمات های‌حساب
+        </span>
+        <h1
+          class="mt-6 max-w-4xl text-center font-yb-bold text-2xl leading-10 text-text-tertiary md:text-h1"
+        >
+          اظهارنامه عملکرد خود را به حسابداران تاییدشده بسپارید
+        </h1>
+        <p
+          class="mt-4 max-w-3xl text-center text-base font-semibold leading-8 text-text-tertiary md:text-lg"
+        >
+          درخواست خود را ثبت کنید تا حسابدار متخصص، انجام اظهارنامه مالیاتی شما
+          را پیگیری کند.
+        </p>
+        <NuxtLink
+          to="/tax-return/consultants"
+          class="btn btn-primary mt-8 gap-2 px-6"
+        >
+          <Icon name="lucide:pen-line" size="18" class="text-white" />
+          <span>ثبت درخواست اظهارنامه</span>
+        </NuxtLink>
 
-              <div class="mt-5 grid gap-4 sm:grid-cols-2">
-                <m-text-field
-                  v-model="heroForm.firstName"
-                  label="نام"
-                  required
-                  placeholder="نام خود را وارد کنید"
-                  :error="Boolean(heroErrors.firstName)"
-                />
-                <m-text-field
-                  v-model="heroForm.lastName"
-                  label="نام خانوادگی"
-                  required
-                  placeholder="نام خانوادگی خود را وارد کنید"
-                  :error="Boolean(heroErrors.lastName)"
-                />
-              </div>
-              <div class="mt-4">
-                <m-text-field
-                  v-model="heroForm.cellphone"
-                  label="شماره تماس همراه"
-                  required
-                  placeholder="۰۹۱۲۳۴۵۶۷۸"
-                  :error="Boolean(heroErrors.cellphone)"
-                />
-              </div>
-            </div>
-
-            <div>
-              <div class="mb-2 flex items-center gap-2">
-                <span
-                  class="h-1 w-2 shrink-0 rounded-full bg-linear-to-b from-[#3B6EF8] to-primary-500"
-                  aria-hidden="true"
-                />
-                <h2 class="font-yb-bold text-base text-primary-500">
-                  نوع فعالیت
-                </h2>
-              </div>
-
-              <div class="mt-5 space-y-4">
-                <m-select2
-                  v-model="heroForm.activityType"
-                  label="نوع فعالیت"
-                  required
-                  :options="activityOptions"
-                  placeholder="نوع فعالیت خود را انتخاب کنید"
-                  :error="Boolean(heroErrors.activityType)"
-                />
-                <div>
-                  <m-text-field
-                    v-model="heroForm.desc"
-                    multiline
-                    label="شرح فعالیت:"
-                    required
-                    placeholder="شرح فعالیت خود را وارد کنید"
-                    :error="Boolean(heroErrors.desc)"
-                  />
-                  <p class="mt-1 text-left text-xs text-text-passive">
-                    {{ heroForm.desc.length }} / {{ taxReturnDescMaxLength }}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <button
-                type="submit"
-                class="btn btn-primary h-12 w-full gap-2 rounded-xl font-yb-bold"
-                :disabled="heroSubmitting"
-              >
-                <Icon name="lucide:pen-line" size="18" class="text-white" />
-                <span v-if="heroSubmitting">در حال ثبت...</span>
-                <span v-else>ثبت درخواست و دریافت راهنمایی</span>
-              </button>
-              <p class="mt-3 text-center text-xs leading-6 text-text-passive">
-                ثبت درخواست اولیه رایگان است و به‌معنای شروع قطعی یا پرداخت
-                هزینه نیست
-              </p>
-            </div>
-          </form>
-        </div>
+        <img
+          :src="heroMobile"
+          alt="تقویم مهلت ارسال اظهارنامه عملکرد"
+          class="mt-10 w-full max-w-md md:hidden"
+        />
+        <img
+          :src="heroDesktop"
+          alt="تقویم مهلت ارسال اظهارنامه عملکرد"
+          class="mt-12 hidden w-full max-w-5xl md:block"
+        />
       </div>
     </section>
 
@@ -309,58 +207,21 @@
         >
           همین حالا درخواست اظهارنامه خود را ثبت کنید
         </p>
-        <IntentLink
-          :to="paths.employer.taxReturnCreate"
-          role="employer"
+        <button
+          type="button"
           class="btn btn-primary shrink-0 gap-2 px-6"
+          @click="openRequestModal"
         >
           <Icon name="lucide:pen-line" size="18" class="text-white" />
           ثبت درخواست اظهارنامه
-        </IntentLink>
+        </button>
       </div>
     </section>
 
     <!-- FAQ -->
     <FaqSection :categories="faqCategories" :items="faqs" />
 
-    <!-- Success modal -->
-    <dialog
-      ref="successDialogRef"
-      class="modal"
-      @click="onSuccessDialogBackdrop"
-    >
-      <div
-        class="modal-box relative w-full max-w-[420px] rounded-2xl p-6 pt-10 text-center"
-        @click.stop
-      >
-        <button
-          type="button"
-          class="absolute left-4 top-4 flex h-8 w-8 items-center justify-center text-text-passive transition-opacity hover:opacity-70"
-          aria-label="بستن"
-          @click="closeSuccessModal"
-        >
-          <Icon name="svg:close" size="20" />
-        </button>
-
-        <Icon name="svg:illust-consulting-user" size="200" class="mx-auto" />
-
-        <h2 class="mt-2 font-yb-bold text-xl text-text-tertiary md:text-2xl">
-          درخواست شما با موفقیت ثبت شد
-        </h2>
-        <p class="mt-3 text-sm leading-7 text-text-passive">
-          اطلاعات شما برای بررسی اولیه ارسال شد. نتیجه و ادامه مراحل از طریق
-          تماس یا پیامک به شما اطلاع داده می‌شود
-        </p>
-
-        <button
-          type="button"
-          class="btn btn-primary mt-8 h-11 w-full rounded-xl font-yb-bold"
-          @click="closeSuccessModal"
-        >
-          باشه فهمیدم
-        </button>
-      </div>
-    </dialog>
+    <TaxReturnRequestModal ref="requestModalRef" />
   </div>
 </template>
 
@@ -372,186 +233,22 @@ import step2 from "~/assets/vectors/pages/tax-return/step2.webp";
 import step3 from "~/assets/vectors/pages/tax-return/step3.webp";
 import bannerMobile from "~/assets/vectors/pages/tax-return/banner-mobile.webp";
 import banner from "~/assets/vectors/pages/tax-return/banner.webp";
+import heroDesktop from "~/assets/vectors/pages/tax-return/hero-image.svg";
+import heroMobile from "~/assets/vectors/pages/tax-return/hero-image-mobile.svg";
 import FaqSection from "~/components/Elements/FaqSection.vue";
 import {
   FAQ_TYPE,
   faqCategoriesByType,
   faqsByType,
 } from "~/data/faqs";
-import { paths } from "~/routes";
-import type { ApiResponse } from "~/types/api";
-import type { ISelectItem } from "~/types/select-item";
-import type { TaxReturnActivityType } from "~/types/tax-return-form";
-import {
-  TAX_RETURN_ACTIVITY_OPTIONS,
-} from "~/types/tax-return-form";
+import TaxReturnRequestModal from "./components/TaxReturnRequestModal.vue";
 
-type TaxReturnPayment = {
-  redirect_url?: string;
-  action?: string;
-  payment_id?: number;
-} | null;
-
-type StoreTaxReturnResponse = ApiResponse<{
-  taxReturn?: unknown;
-  payment?: TaxReturnPayment;
-}>;
-
-const api = useApi();
-const { $toast } = useNuxtApp();
-const { taxReturnDescMaxLength } = useSettings();
-
-const heroFeatures = [
-  {
-    label: "شروع سریع فرایند",
-    icon: "lucide:pen-line",
-    className: "bg-success-50 text-success-500",
-  },
-  {
-    label: "ارتباط با مشاور تایید شده",
-    icon: "lucide:user",
-    className: "bg-primary-50 text-primary-500",
-  },
-  {
-    label: "پاسخ‌گویی در کمتر از ۲۴ ساعت",
-    icon: "lucide:clock",
-    className: "bg-warning-100 text-warning-500",
-  },
-];
-
-const activityOptions: ISelectItem[] = TAX_RETURN_ACTIVITY_OPTIONS.map(
-  (item) => ({
-    label: item.label,
-    value: item.value,
-  }),
+const requestModalRef = ref<InstanceType<typeof TaxReturnRequestModal> | null>(
+  null,
 );
 
-const heroForm = reactive({
-  firstName: "",
-  lastName: "",
-  cellphone: "",
-  activityType: "" as TaxReturnActivityType | "",
-  desc: "",
-});
-
-const heroErrors = reactive({
-  firstName: "",
-  lastName: "",
-  cellphone: "",
-  activityType: "",
-  desc: "",
-});
-
-const heroSubmitting = ref(false);
-const successDialogRef = ref<HTMLDialogElement | null>(null);
-
-function showSuccessModal() {
-  successDialogRef.value?.showModal();
-}
-
-function closeSuccessModal() {
-  successDialogRef.value?.close();
-}
-
-function onSuccessDialogBackdrop(event: MouseEvent) {
-  if (event.target === event.currentTarget) {
-    closeSuccessModal();
-  }
-}
-
-function resetHeroForm() {
-  heroForm.firstName = "";
-  heroForm.lastName = "";
-  heroForm.cellphone = "";
-  heroForm.activityType = "";
-  heroForm.desc = "";
-  heroErrors.firstName = "";
-  heroErrors.lastName = "";
-  heroErrors.cellphone = "";
-  heroErrors.activityType = "";
-  heroErrors.desc = "";
-}
-
-function validateHeroForm() {
-  heroErrors.firstName = heroForm.firstName.trim() ? "" : "نام الزامی است.";
-  heroErrors.lastName = heroForm.lastName.trim()
-    ? ""
-    : "نام خانوادگی الزامی است.";
-  heroErrors.cellphone = heroForm.cellphone.trim()
-    ? ""
-    : "شماره تماس الزامی است.";
-  heroErrors.activityType = heroForm.activityType
-    ? ""
-    : "نوع فعالیت الزامی است.";
-
-  const desc = heroForm.desc.trim();
-  if (!desc) {
-    heroErrors.desc = "شرح فعالیت الزامی است.";
-  } else if (desc.length > taxReturnDescMaxLength.value) {
-    heroErrors.desc = `شرح فعالیت نباید بیشتر از ${taxReturnDescMaxLength.value} کاراکتر باشد.`;
-  } else {
-    heroErrors.desc = "";
-  }
-
-  return !Object.values(heroErrors).some(Boolean);
-}
-
-async function submitHeroForm() {
-  if (!validateHeroForm()) {
-    $toast.error("لطفا فیلدهای الزامی را تکمیل کنید");
-    return;
-  }
-
-  heroSubmitting.value = true;
-  try {
-    const name =
-      `${heroForm.firstName.trim()} ${heroForm.lastName.trim()}`.trim();
-    const result = await api.post<StoreTaxReturnResponse>("/tax-returns", {
-      name,
-      cellphone: heroForm.cellphone.trim(),
-      activity_type: heroForm.activityType,
-      desc: heroForm.desc.trim(),
-    });
-
-    const payment = result.data?.payment;
-    if (payment?.payment_id) {
-      await navigateTo(`/r/${payment.payment_id}`);
-      return;
-    }
-
-    resetHeroForm();
-    showSuccessModal();
-  } catch (err: unknown) {
-    const apiErrors =
-      err && typeof err === "object" && "errors" in err
-        ? (err as { errors?: Record<string, string[] | string> }).errors
-        : undefined;
-
-    if (apiErrors && typeof apiErrors === "object") {
-      const fieldMap: Record<string, keyof typeof heroErrors> = {
-        name: "firstName",
-        cellphone: "cellphone",
-        activity_type: "activityType",
-        desc: "desc",
-      };
-
-      for (const [key, value] of Object.entries(apiErrors)) {
-        const message = Array.isArray(value) ? value[0] : value;
-        const localKey = fieldMap[key];
-        if (localKey && typeof message === "string") {
-          heroErrors[localKey] = message;
-        }
-      }
-    }
-
-    const message =
-      err && typeof err === "object" && "message" in err
-        ? String((err as { message?: string }).message)
-        : "ثبت درخواست با خطا مواجه شد";
-    $toast.error(message);
-  } finally {
-    heroSubmitting.value = false;
-  }
+function openRequestModal() {
+  requestModalRef.value?.showModal();
 }
 
 const audienceItems = [

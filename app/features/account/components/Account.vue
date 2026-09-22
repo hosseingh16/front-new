@@ -11,7 +11,11 @@
         شماره تلفن همراه:
       </p>
       <div class="phone-input">
-        <m-form-input name="mobile" placeholder="اینجا بنویس" english-digits />
+        <m-form-input
+          name="mobile"
+          placeholder="مثال: 09123456789"
+          english-digits
+        />
       </div>
 
       <button

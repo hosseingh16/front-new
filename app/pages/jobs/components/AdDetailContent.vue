@@ -138,7 +138,7 @@
         <AdApplicationHistory :ad="ad" @resume="emit('resume')" />
       </template>
 
-      <template v-else>
+      <template v-else-if="activeTab === 'ads' && !isPublicAd">
         <AdCompanyAds :ad="ad" />
       </template>
     </main>
@@ -198,7 +198,7 @@
         </div>
         <div
           v-else-if="isEmployer"
-          class="mt-6 flex items-start gap-3 rounded-xl border border-primary-200 bg-primary-50 p-4"
+          class="mt-6 flex items-center gap-3 rounded-xl border border-primary-200 bg-primary-50 p-4"
         >
           <div
             class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-white"
@@ -212,7 +212,7 @@
         </div>
         <div
           v-else-if="isPublicAd"
-          class="mt-6 flex items-start gap-3 rounded-xl border border-primary-200 bg-primary-50 p-4"
+          class="mt-6 flex items-center gap-3 rounded-xl border border-primary-200 bg-primary-50 p-4"
         >
           <div
             class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-white"
@@ -300,6 +300,7 @@ const { isAuthenticated } = useSanctumAuth();
 const { isEmployer } = useCurrentUser();
 
 const activeTab = ref<AdTab>("about");
+const isPublicAd = computed(() => props.ad.company?.id == 1);
 
 const allTabs: { id: AdTab; label: string; icon: string }[] = [
   { id: "about", label: "جزئیات شغل", icon: "lucide:briefcase" },
@@ -313,13 +314,18 @@ const allTabs: { id: AdTab; label: string; icon: string }[] = [
 ];
 
 const tabs = computed(() =>
-  isAuthenticated.value
-    ? allTabs
-    : allTabs.filter((tab) => tab.id !== "history"),
+  allTabs.filter((tab) => {
+    if (tab.id === "history" && !isAuthenticated.value) return false;
+    if (tab.id === "ads" && isPublicAd.value) return false;
+    return true;
+  }),
 );
 
-watch(isAuthenticated, (authenticated) => {
-  if (!authenticated && activeTab.value === "history") {
+watch([isAuthenticated, isPublicAd], () => {
+  if (!isAuthenticated.value && activeTab.value === "history") {
+    activeTab.value = "about";
+  }
+  if (isPublicAd.value && activeTab.value === "ads") {
     activeTab.value = "about";
   }
 });
@@ -344,8 +350,6 @@ const workExperienceLabel = computed(() => {
 });
 
 const genderLabel = computed(() => displayValue(props.ad.gender, "مهم نیست"));
-
-const isPublicAd = computed(() => props.ad.company?.id == 1);
 
 const locationLabel = computed(() => {
   const province = props.ad.province_name;

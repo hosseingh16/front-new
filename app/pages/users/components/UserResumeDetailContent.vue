@@ -36,7 +36,7 @@
       <div class="min-w-0 space-y-4">
         <div
           v-if="hasJobTabContent"
-          class="flex items-center gap-6 border-b border-gray-default px-6"
+          class="flex items-center gap-6 border-b border-gray-default px-1 md:px-6"
         >
           <button
             type="button"

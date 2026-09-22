@@ -4,6 +4,7 @@
       v-if="!error"
       :slug="slug"
       :title="user?.name"
+      :resume-user-id="user?.id"
     />
 
     <div class="custom-pad mx-auto max-w-384 py-6 md:py-10">

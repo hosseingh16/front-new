@@ -25,15 +25,17 @@
 
         <p
           v-if="title"
-          class="hidden min-w-0 truncate text-sm font-semibold text-text-tertiary md:block"
+          class="min-w-0 truncate text-sm font-semibold text-text-tertiary md:block"
         >
           {{ title }}
         </p>
       </div>
 
-      <div class="flex flex-wrap items-center justify-end gap-2">
+      <div
+        class="flex w-full flex-wrap items-center justify-center gap-2 sm:w-auto sm:justify-end"
+      >
         <div
-          class="flex items-center gap-1 rounded-xl border border-surface-200 bg-surface-50 p-1"
+          class="flex w-full items-center justify-between gap-1 rounded-xl border border-surface-200 bg-surface-50 p-1 sm:w-auto sm:justify-start"
           role="group"
           aria-label="اشتراک‌گذاری"
         >
@@ -41,7 +43,7 @@
             v-for="item in socialLinks"
             :key="item.id"
             type="button"
-            class="flex h-9 w-9 items-center justify-center rounded-lg transition-colors hover:bg-white"
+            class="flex h-9 w-9 flex-1 items-center justify-center rounded-lg transition-colors hover:bg-white sm:flex-none"
             :aria-label="item.label"
             @click="item.onClick()"
           >
@@ -55,18 +57,30 @@
           </button>
         </div>
 
-        <div class="flex items-center gap-2">
+        <div
+          class="grid w-full grid-cols-2 gap-2 sm:flex sm:w-auto sm:justify-end"
+        >
           <NuxtLink
+            :to="paths.taxReturn.consultants"
+            class="flex h-10 w-full items-center justify-center gap-2 rounded-xl border-2 border-gray-default bg-white px-4 text-sm font-semibold text-text-tertiary transition-opacity hover:opacity-80 sm:w-auto"
+          >
+            <Icon name="lucide:chevron-right" size="18" />
+            <span>لیست مشاوران</span>
+          </NuxtLink>
+
+          <NuxtLink
+            v-if="canEditResume"
             to="/dashboard/cv"
-            class="flex h-10 items-center gap-2 rounded-xl border-2 border-gray-default bg-white px-4 text-sm font-semibold text-text-tertiary transition-opacity hover:opacity-80"
+            class="flex h-10 w-full items-center justify-center gap-2 rounded-xl border-2 border-gray-default bg-white px-4 text-sm font-semibold text-text-tertiary transition-opacity hover:opacity-80 sm:w-auto"
           >
             <Icon name="svg:edit" size="18" />
             <span>ویرایش رزومه</span>
           </NuxtLink>
 
           <button
+            v-if="canDownloadResume"
             type="button"
-            class="flex h-10 items-center gap-2 rounded-xl bg-primary-500 px-4 text-sm font-yb-bold text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+            class="flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-primary-500 px-4 text-sm font-yb-bold text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
             :disabled="downloading"
             @click="downloadPdf"
           >
@@ -80,10 +94,21 @@
               downloading ? "در حال آماده‌سازی..." : "دانلود رزومه"
             }}</span>
           </button>
+
+          <button
+            type="button"
+            class="flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-success-500 px-2 text-sm font-yb-bold text-white transition-opacity hover:opacity-90 sm:w-auto"
+            @click="openRequestModal"
+          >
+            <Icon name="lucide:users" size="18" class="text-white" />
+            <span>درخواست مشاوره</span>
+          </button>
         </div>
       </div>
     </div>
   </div>
+
+  <TaxReturnRequestModal ref="requestModalRef" />
 </template>
 
 <script setup lang="ts">
@@ -92,15 +117,48 @@ import linkedinIcon from "~/assets/vectors/social/linkedin.svg?url";
 import telegramIcon from "~/assets/vectors/social/telegram.svg?url";
 import twitterIcon from "~/assets/vectors/social/twitter.svg?url";
 import whatsappIcon from "~/assets/vectors/social/whatsapp.svg?url";
+import TaxReturnRequestModal from "~/pages/tax-return/components/TaxReturnRequestModal.vue";
+import { paths } from "~/routes";
 
-defineProps<{
+const props = defineProps<{
   slug: string;
   title?: string;
+  resumeUserId?: number | null;
 }>();
 
 const api = useApi();
 const { $toast } = useNuxtApp();
+const { isAuthenticated } = useSanctumAuth();
+const { user, isEmployer, ensureFullProfile } = useCurrentUser();
 const downloading = ref(false);
+const requestModalRef = ref<InstanceType<typeof TaxReturnRequestModal> | null>(
+  null,
+);
+
+const canDownloadResume = computed(() =>
+  Boolean(isAuthenticated.value && isEmployer.value),
+);
+
+const canEditResume = computed(() => {
+  if (!isAuthenticated.value || !user.value) return false;
+
+  if (props.resumeUserId != null && user.value.id != null) {
+    return Number(user.value.id) === Number(props.resumeUserId);
+  }
+
+  const currentSlug = String(user.value.cv_slug ?? "").trim();
+  return Boolean(currentSlug) && currentSlug === props.slug.trim();
+});
+
+onMounted(() => {
+  if (isAuthenticated.value) {
+    void ensureFullProfile();
+  }
+});
+
+function openRequestModal() {
+  requestModalRef.value?.showModal();
+}
 
 function getShareUrl() {
   if (!import.meta.client) return "";
@@ -173,7 +231,8 @@ const socialLinks = [
 ];
 
 async function downloadPdf() {
-  if (downloading.value || !import.meta.client) return;
+  if (!canDownloadResume.value || downloading.value || !import.meta.client)
+    return;
 
   downloading.value = true;
   try {
