@@ -1,7 +1,7 @@
 <template>
   <aside class="space-y-4 lg:sticky lg:top-24">
     <div class="rounded-2xl border border-gray-default bg-white p-4">
-      <Titr>میزان تکمیل رزومه</Titr>
+      <Titr>میزان تکمیل اطلاعات سازمان</Titr>
 
       <div class="mt-4 flex justify-center">
         <div class="relative h-48 w-48">

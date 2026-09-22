@@ -29,9 +29,9 @@
 
     <div class="flex flex-col gap-y-2 border-t border-gray-default">
       <NuxtLink
-        to="/dashboard/cv?edit=basic"
+        :to="profileLink"
         class="flex gap-2 rounded-lg px-4 pt-3 transition-colors hover:bg-surface-100"
-        aria-label="ویرایش اطلاعات پایه رزومه"
+        :aria-label="profileAriaLabel"
       >
         <Avatar class="h-10 w-10 shrink-0" />
         <div class="flex min-w-0 flex-col gap-1">
@@ -59,7 +59,17 @@ const props = defineProps<{
 const route = useRoute();
 const openKey = ref<string | null>(null);
 const { collapsed } = useDashboardSidebar();
-const { name: userName, cellphone } = useCurrentUser();
+const { name: userName, cellphone, isEmployer } = useCurrentUser();
+
+const profileLink = computed(() =>
+  isEmployer.value
+    ? "/dashboard/employer/company#section-logo"
+    : "/dashboard/cv?edit=basic",
+);
+
+const profileAriaLabel = computed(() =>
+  isEmployer.value ? "تغییر لوگو سازمان" : "ویرایش اطلاعات پایه رزومه",
+);
 
 const topMenu = computed(() =>
   props.sidebarMenu.filter((item) => item.placement !== "bottom"),

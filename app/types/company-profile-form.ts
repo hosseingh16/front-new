@@ -41,6 +41,7 @@ export interface CompanyProfileFormErrors {
 }
 
 export type CompanyProfileSectionKey =
+  | 'logo'
   | 'basic'
   | 'intro'
   | 'location'
@@ -54,12 +55,12 @@ export interface CompanyProfileSection {
 }
 
 export const COMPANY_PROFILE_SECTIONS: CompanyProfileSection[] = [
+  { key: 'logo', label: 'لوگو سازمان' },
   { key: 'basic', label: 'اطلاعات پایه' },
   { key: 'intro', label: 'معرفی سازمان' },
   { key: 'location', label: 'موقعیت مکانی سازمان' },
   { key: 'gallery', label: 'گالری تصاویر' },
   { key: 'cover', label: 'عکس سرصفحه' },
-  { key: 'visibility', label: 'تمایل رویت برای همه' },
 ]
 
 export function createEmptyCompanyProfileForm(): CompanyProfileFormModel {
@@ -92,6 +93,8 @@ export function isCompanyProfileSectionComplete(
   key: CompanyProfileSectionKey,
 ): boolean {
   switch (key) {
+    case 'logo':
+      return Boolean(form.logo?.url)
     case 'basic':
       return Boolean(form.name.trim() && form.activity && form.size)
     case 'intro':

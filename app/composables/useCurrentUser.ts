@@ -1,4 +1,5 @@
 import { resolveAvatarUrl } from "~/libs/utils";
+import { isDefaultCompanyLogo, resolveCompanyLogoDisplaySrc } from "~/utils/company-basic-info";
 import { isEmployerUser, isJobSeekerUser } from "~/utils/user-role";
 
 /**
@@ -13,6 +14,22 @@ function hasLoadedResumePayload(
   return (
     user != null && Object.prototype.hasOwnProperty.call(user, "resume_personal")
   );
+}
+
+/** Employer chrome uses the organization logo, not the personal account photo. */
+function employerCompanyLogo(
+  user: Record<string, unknown> | null | undefined,
+): string | null {
+  if (!user) return null;
+
+  const company = user.company;
+  if (company && typeof company === "object" && "logo" in company) {
+    const logo = (company as { logo?: unknown }).logo;
+    if (typeof logo === "string") return logo;
+    if (logo == null) return null;
+  }
+
+  return typeof user.company_logo === "string" ? user.company_logo : null;
 }
 
 export function useCurrentUser() {
@@ -31,6 +48,9 @@ export function useCurrentUser() {
     return root;
   });
 
+  const isEmployer = computed(() => isEmployerUser(user.value));
+  const isJobSeeker = computed(() => isJobSeekerUser(user.value));
+
   const name = computed(() => {
     const personal = user.value?.resume_personal as
       | Record<string, unknown>
@@ -43,11 +63,19 @@ export function useCurrentUser() {
   });
 
   const avatar = computed(() => {
+    const baseUrl = config.public.baseUrl as string;
+
+    if (isEmployer.value) {
+      const logo = employerCompanyLogo(user.value);
+      if (!logo || isDefaultCompanyLogo(logo)) return null;
+      return resolveCompanyLogoDisplaySrc(logo, baseUrl);
+    }
+
     const value =
       user.value?.avatar ??
       user.value?.profile_image ??
       user.value?.profileImage;
-    return resolveAvatarUrl(value, config.public.baseUrl as string);
+    return resolveAvatarUrl(value, baseUrl);
   });
 
   const cellphone = computed(() => {
@@ -60,9 +88,6 @@ export function useCurrentUser() {
     const trimmed = String(value).trim();
     return trimmed || "—";
   });
-
-  const isEmployer = computed(() => isEmployerUser(user.value));
-  const isJobSeeker = computed(() => isJobSeekerUser(user.value));
 
   function applyUserPayload(payload: unknown) {
     if (!payload || typeof payload !== "object") return;

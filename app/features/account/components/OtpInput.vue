@@ -6,30 +6,36 @@
     aria-label="کد تایید"
     @paste.prevent="onPaste"
   >
-    <input
+    <div
       v-for="(_, index) in otpLength"
       :key="index"
-      ref="inputs"
-      type="text"
-      inputmode="numeric"
-      pattern="[0-9]*"
-      autocapitalize="off"
-      autocorrect="off"
-      spellcheck="false"
-      :autocomplete="index === 0 ? 'one-time-code' : 'off'"
-      :name="index === 0 ? 'one-time-code' : undefined"
-      :maxlength="index === 0 ? otpLength : 1"
-      class="otp-digit input w-12 h-12 border-gray-default text-gray-700 select-none text-2xl font-semibold leading-none outline-none focus:outline-none focus:shadow-none"
-      :aria-label="`رقم ${index + 1}`"
-      :value="model[index] ?? ''"
-      @keydown="onKeydown($event, index)"
-      @beforeinput="onBeforeInput($event, index)"
-      @input="onInput($event, index)"
-      @change="onInput($event, index)"
-      @focus="onFocus"
-      @selectstart.prevent
-      @dblclick.prevent
-    />
+      class="otp-cell relative"
+      :class="{ 'is-filled': Boolean(model[index]) }"
+    >
+      <input
+        ref="inputs"
+        type="text"
+        inputmode="numeric"
+        pattern="[0-9]*"
+        autocapitalize="off"
+        autocorrect="off"
+        spellcheck="false"
+        :autocomplete="index === 0 ? 'one-time-code' : 'off'"
+        :name="index === 0 ? 'one-time-code' : undefined"
+        :maxlength="index === 0 ? otpLength : 1"
+        class="otp-digit input w-12 h-12 border-gray-default text-gray-700 select-none text-2xl font-semibold leading-none outline-none focus:outline-none focus:shadow-none"
+        :aria-label="`رقم ${index + 1}`"
+        :value="model[index] ?? ''"
+        @keydown="onKeydown($event, index)"
+        @beforeinput="onBeforeInput($event, index)"
+        @input="onInput($event, index)"
+        @change="onInput($event, index)"
+        @focus="onFocus"
+        @selectstart.prevent
+        @dblclick.prevent
+      />
+      <span class="otp-caret" aria-hidden="true" />
+    </div>
   </div>
 </template>
 
@@ -323,6 +329,7 @@ onUnmounted(() => {
   color: var(--color-gray-700);
   user-select: none;
   -webkit-user-select: none;
+  caret-color: transparent;
 }
 .otp-digit:focus,
 .otp-digit:focus-within {
@@ -334,5 +341,29 @@ onUnmounted(() => {
 .otp-digit::selection {
   background: transparent;
   color: inherit;
+}
+.otp-caret {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1.5px;
+  height: 1rem;
+  border-radius: 1px;
+  background: var(--color-gray-700);
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  pointer-events: none;
+}
+.otp-cell:focus-within:not(.is-filled) .otp-caret {
+  animation: otp-caret-blink 1s step-end infinite;
+}
+@keyframes otp-caret-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
 }
 </style>

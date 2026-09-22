@@ -19,6 +19,13 @@
 
     <div v-else class="mt-5 grid items-start gap-4 lg:grid-cols-8">
       <div class="space-y-4 lg:col-span-6">
+        <CompanyLogoSection
+          :form="form"
+          :logo-uploading="savingLogo"
+          @upload-logo="uploadLogo"
+          @remove-logo="removeLogo"
+        />
+
         <CompanyBasicInfoSection
           :form="form"
           :errors="errors"
@@ -27,7 +34,6 @@
           :saving="savingSection === 'basic'"
           @save="saveSection('basic')"
           @cancel="reload"
-          @upload-logo="(file) => uploadImage('logo', file)"
         />
 
         <CompanyIntroSection
@@ -84,6 +90,7 @@
 </template>
 
 <script setup lang="ts">
+import CompanyLogoSection from './components/CompanyLogoSection.vue'
 import CompanyBasicInfoSection from './components/CompanyBasicInfoSection.vue'
 import CompanyIntroSection from './components/CompanyIntroSection.vue'
 import CompanyLocationSection from './components/CompanyLocationSection.vue'
@@ -96,11 +103,14 @@ definePageMeta({
   layout: 'dashboard',
 })
 
+const route = useRoute()
+
 const {
   form,
   errors,
   loading,
   savingSection,
+  savingLogo,
   activityOptions,
   sizeOptions,
   cityOptions,
@@ -111,8 +121,18 @@ const {
   reload,
   saveSection,
   uploadImage,
+  uploadLogo,
+  removeLogo,
   removeGalleryImage,
 } = useCompanyProfileForm()
+
+watch(loading, async (isLoading) => {
+  if (isLoading || route.hash !== '#section-logo') return
+  await nextTick()
+  document
+    .getElementById('section-logo')
+    ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+})
 
 useSeoMeta({
   title: 'پروفایل سازمان',

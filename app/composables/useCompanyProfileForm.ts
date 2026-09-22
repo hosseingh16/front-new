@@ -14,6 +14,7 @@ import {
   toMediaPayload,
 } from '~/types/company-profile-form'
 import type { ISelectItem } from '~/types/select-item'
+import { shrinkLogoForUpload } from '~/utils/shrink-logo-upload'
 
 export type CompanyMediaCollection = 'logo' | 'cover' | 'gallery'
 
@@ -31,6 +32,22 @@ const DEFAULT_LOGO_MARKERS = [
   'images/company-default',
   'default-avatar',
 ]
+
+function uploadErrorMessage(err: unknown): string {
+  const fallback = 'آپلود تصویر با خطا مواجه شد'
+  if (!err || typeof err !== 'object') return fallback
+
+  const status = 'status' in err ? Number((err as { status?: number }).status) : NaN
+  if (status === 413) return 'حجم فایل بیشتر از حد مجاز سرور است.'
+
+  const message =
+    'message' in err ? String((err as { message?: string }).message ?? '') : ''
+  if (/failed to fetch|networkerror|load failed|content too large/i.test(message)) {
+    return 'آپلود تصویر انجام نشد.'
+  }
+
+  return message.trim() || fallback
+}
 
 function isDefaultLogoUrl(url: string | null | undefined) {
   if (!url) return true
@@ -120,6 +137,11 @@ function buildSectionPayload(
   }
 
   switch (section) {
+    case 'logo':
+      return {
+        ...base,
+        logo: toMediaPayload(form.logo),
+      }
     case 'basic':
       return {
         ...base,
@@ -208,12 +230,17 @@ export function useCompanyProfileForm() {
   const api = useApi()
   const { $toast } = useNuxtApp()
   const sanctumUser = useSanctumUser()
+  const { user, patchUser } = useCurrentUser()
 
   const form = ref<CompanyProfileFormModel>(createEmptyCompanyProfileForm())
   const errors = ref<CompanyProfileFormErrors>({})
   const loading = ref(true)
   const savingSection = ref<CompanyProfileSectionKey | null>(null)
   const uploading = ref(false)
+  const savingLogo = ref(false)
+  /** Last name stored on the company, so a logo save does not write unsaved field edits. */
+  const persistedName = ref('')
+  let logoSaveSeq = 0
 
   const { items } = useLookups('industries,company_sizes,provinces')
   const activityOptions = items('industries')
@@ -222,6 +249,18 @@ export function useCompanyProfileForm() {
 
   const cityOptions = ref<ISelectItem[]>([])
   const citiesLoading = ref(false)
+
+  function syncEmployerLogo(url: string | null) {
+    const fields: Record<string, unknown> = { company_logo: url }
+    const current = user.value?.company
+    if (current && typeof current === 'object') {
+      fields.company = {
+        ...(current as Record<string, unknown>),
+        logo: url,
+      }
+    }
+    patchUser(fields)
+  }
 
   const sectionStates = computed(() =>
     COMPANY_PROFILE_SECTIONS.map((section) => ({
@@ -296,12 +335,16 @@ export function useCompanyProfileForm() {
 
       if (company) {
         fillFormFromCompany(form.value, company, provinceOptions.value)
+        persistedName.value = (company.name ?? '').trim()
+        syncEmployerLogo(form.value.logo?.url ?? null)
         await syncLocationFields()
       } else {
         Object.assign(form.value, createEmptyCompanyProfileForm())
+        persistedName.value = ''
       }
     } catch {
       Object.assign(form.value, createEmptyCompanyProfileForm())
+      persistedName.value = ''
     } finally {
       loading.value = false
     }
@@ -337,6 +380,8 @@ export function useCompanyProfileForm() {
 
       if (result.data) {
         fillFormFromCompany(form.value, result.data, provinceOptions.value)
+        persistedName.value = (result.data.name ?? '').trim()
+        syncEmployerLogo(form.value.logo?.url ?? null)
         await syncLocationFields()
       }
 
@@ -354,11 +399,16 @@ export function useCompanyProfileForm() {
     }
   }
 
-  async function uploadImage(kind: CompanyMediaCollection, file: File) {
+  async function uploadImage(
+    kind: CompanyMediaCollection,
+    file: File,
+    options?: { apply?: boolean },
+  ) {
     uploading.value = true
     try {
+      const payload = kind === 'logo' ? await shrinkLogoForUpload(file) : file
       const formData = new FormData()
-      formData.append('file', file)
+      formData.append('file', payload)
       formData.append('collection', kind)
 
       const res = await api.post<ApiResponse<UploadedMedia>>('/media', formData)
@@ -370,18 +420,16 @@ export function useCompanyProfileForm() {
 
       const media = mediaFromUpload(uploaded)
 
-      if (kind === 'logo') form.value.logo = media
-      else if (kind === 'cover') form.value.cover = media
-      else form.value.gallery = [...form.value.gallery, media]
+      if (options?.apply !== false) {
+        if (kind === 'logo') form.value.logo = media
+        else if (kind === 'cover') form.value.cover = media
+        else form.value.gallery = [...form.value.gallery, media]
+      }
 
-      return true
+      return media
     } catch (err: unknown) {
-      const message =
-        err && typeof err === 'object' && 'message' in err
-          ? String((err as { message?: string }).message)
-          : 'آپلود تصویر با خطا مواجه شد'
-      $toast.error(message)
-      return false
+      $toast.error(uploadErrorMessage(err))
+      return null
     } finally {
       uploading.value = false
     }
@@ -389,6 +437,96 @@ export function useCompanyProfileForm() {
 
   function removeGalleryImage(index: number) {
     form.value.gallery = form.value.gallery.filter((_, i) => i !== index)
+  }
+
+  async function uploadLogo(file: File) {
+    const seq = ++logoSaveSeq
+    const previous = form.value.logo
+    const previewUrl = URL.createObjectURL(file)
+    form.value.logo = { id: null, path: null, url: previewUrl }
+    savingLogo.value = true
+
+    try {
+      const media = await uploadImage('logo', file, { apply: false })
+      if (seq !== logoSaveSeq) return false
+      if (!media) {
+        form.value.logo = previous
+        return false
+      }
+
+      form.value.logo = media
+
+      if (!form.value.id) return true
+
+      const name = persistedName.value.trim()
+      if (!name) return true
+
+      const result = await api.put<ApiResponse<Company>>(
+        `/companies/${form.value.id}`,
+        {
+          name,
+          logo: toMediaPayload(media),
+        },
+      )
+
+      if (seq !== logoSaveSeq) return false
+
+      const savedLogo = mediaFromUrl(result.data?.logo)
+      if (savedLogo) form.value.logo = savedLogo
+      syncEmployerLogo(form.value.logo?.url ?? null)
+
+      $toast.success('لوگو با موفقیت ذخیره شد')
+      return true
+    } catch (err: unknown) {
+      if (seq !== logoSaveSeq) return false
+      form.value.logo = previous
+      const message =
+        err && typeof err === 'object' && 'message' in err
+          ? String((err as { message?: string }).message)
+          : 'ذخیره لوگو با خطا مواجه شد'
+      $toast.error(message)
+      return false
+    } finally {
+      URL.revokeObjectURL(previewUrl)
+      if (seq === logoSaveSeq) savingLogo.value = false
+    }
+  }
+
+  async function removeLogo() {
+    const seq = ++logoSaveSeq
+    const previous = form.value.logo
+    form.value.logo = null
+    savingLogo.value = true
+
+    try {
+      if (!form.value.id) return true
+
+      const name = persistedName.value.trim()
+      if (!name) return true
+
+      await api.put<ApiResponse<Company>>(`/companies/${form.value.id}`, {
+        name,
+        logo: null,
+      })
+
+      if (seq !== logoSaveSeq) return false
+
+      form.value.logo = null
+      syncEmployerLogo(null)
+      $toast.success('لوگو حذف شد')
+      return true
+    } catch (err: unknown) {
+      if (seq !== logoSaveSeq) return false
+      form.value.logo = previous
+      const message =
+        err && typeof err === 'object' && 'message' in err
+          ? String((err as { message?: string }).message)
+          : 'حذف لوگو با خطا مواجه شد'
+      $toast.error(message)
+      return false
+    } finally {
+      if (seq === logoSaveSeq) savingLogo.value = false
+    }
   }
 
   onMounted(() => {
@@ -401,6 +539,7 @@ export function useCompanyProfileForm() {
     loading,
     savingSection,
     uploading,
+    savingLogo,
     activityOptions,
     sizeOptions,
     cityOptions,
@@ -411,6 +550,8 @@ export function useCompanyProfileForm() {
     reload: load,
     saveSection,
     uploadImage,
+    uploadLogo,
+    removeLogo,
     removeGalleryImage,
   }
 }

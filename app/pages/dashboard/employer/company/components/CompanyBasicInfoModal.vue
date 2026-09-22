@@ -47,11 +47,18 @@
           </p>
 
           <div v-if="form.logo?.url" class="mb-3 flex items-center gap-4">
-            <img
-              :src="form.logo.url"
-              alt=""
-              class="h-20 w-20 rounded-2xl border border-gray-default object-cover"
-            />
+            <button
+              type="button"
+              class="shrink-0 cursor-pointer rounded-2xl"
+              aria-label="تغییر لوگو"
+              @click="logoUpload?.open()"
+            >
+              <img
+                :src="form.logo.url"
+                alt=""
+                class="h-20 w-20 rounded-2xl border border-gray-default object-cover"
+              />
+            </button>
             <button
               type="button"
               class="btn btn-error btn-outline h-9 text-sm"
@@ -62,8 +69,9 @@
           </div>
 
           <CompanyImageUpload
-            v-else
-          :max-size="uploadCompanyLogoModalMaxMb"
+            ref="logoUpload"
+            :hide-dropzone="Boolean(form.logo?.url)"
+            :max-size="uploadCompanyLogoModalMaxMb"
             :accept="['jpg', 'jpeg', 'png']"
             @select="onUploadLogo"
           />
@@ -141,6 +149,7 @@ const emit = defineEmits<{
 }>()
 
 const dialogRef = ref<HTMLDialogElement | null>(null)
+const logoUpload = ref<{ open: () => void } | null>(null)
 const showAlert = ref(true)
 const saving = ref(false)
 const localErrors = ref<{ name?: string; logo?: string }>({})

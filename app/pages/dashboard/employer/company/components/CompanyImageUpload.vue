@@ -8,8 +8,9 @@
       @change="onSelect"
     />
     <div
+      v-show="!hideDropzone"
       class="upload-dropzone-bg flex cursor-pointer items-center gap-3 rounded-lg border-2 border-dashed border-gray-default p-6"
-      @click="inputRef?.click()"
+      @click="open"
     >
       <Icon name="svg:upload" size="28" class="shrink-0 text-primary-500" />
       <div>
@@ -41,10 +42,12 @@ const props = withDefaults(
     title?: string;
     accept?: string[];
     maxSize?: number;
+    hideDropzone?: boolean;
   }>(),
   {
     title: "برای آپلود تصویر کلیک کنید",
     accept: () => ["jpg", "jpeg", "png", "webp", "gif"],
+    hideDropzone: false,
   },
 );
 
@@ -58,6 +61,10 @@ const emit = defineEmits<{
 
 const inputRef = ref<HTMLInputElement | null>(null);
 const localError = ref("");
+
+function open() {
+  inputRef.value?.click();
+}
 
 function onSelect(event: Event) {
   const target = event.target as HTMLInputElement;
@@ -80,4 +87,6 @@ function onSelect(event: Event) {
 
   emit("select", file);
 }
+
+defineExpose({ open });
 </script>

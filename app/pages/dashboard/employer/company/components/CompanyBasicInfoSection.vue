@@ -4,29 +4,6 @@
 
     <div class="mt-6 grid gap-6 lg:grid-cols-2">
       <div class="lg:col-span-2">
-        <p class="mb-2 text-base">لوگو سازمان:</p>
-        <div v-if="form.logo?.url" class="mb-3 flex items-center gap-4">
-          <img
-            :src="form.logo.url"
-            alt=""
-            class="h-20 w-20 rounded-2xl border border-gray-default object-cover"
-          />
-          <button
-            type="button"
-            class="btn btn-error btn-outline h-9 text-sm"
-            @click="form.logo = null"
-          >
-            حذف لوگو
-          </button>
-        </div>
-        <CompanyImageUpload
-          v-else
-          :accept="['jpg', 'jpeg', 'png', 'webp', 'gif']"
-          @select="(file) => emit('upload-logo', file)"
-        />
-      </div>
-
-      <div class="lg:col-span-2">
         <m-text-field
           v-model="form.name"
           label="نام شرکت:"
@@ -105,7 +82,6 @@
 
 <script setup lang="ts">
 import Titr from '~/features/panel/cv/Titr.vue'
-import CompanyImageUpload from './CompanyImageUpload.vue'
 import CompanySectionActions from './CompanySectionActions.vue'
 import type {
   CompanyProfileFormErrors,
@@ -125,7 +101,6 @@ const props = defineProps<{
 const emit = defineEmits<{
   save: []
   cancel: []
-  'upload-logo': [file: File]
 }>()
 
 const canSave = computed(() =>
