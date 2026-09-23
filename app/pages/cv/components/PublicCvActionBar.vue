@@ -58,9 +58,11 @@
         </div>
 
         <div
+          v-if="showActionGroup"
           class="grid w-full grid-cols-2 gap-2 sm:flex sm:w-auto sm:justify-end"
         >
           <NuxtLink
+            v-if="isTaxReturnConsultant"
             :to="paths.taxReturn.consultants"
             class="flex h-10 w-full items-center justify-center gap-2 rounded-xl border-2 border-gray-default bg-white px-4 text-sm font-semibold text-text-tertiary transition-opacity hover:opacity-80 sm:w-auto"
           >
@@ -96,6 +98,7 @@
           </button>
 
           <button
+            v-if="isTaxReturnConsultant"
             type="button"
             class="flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-success-500 px-2 text-sm font-yb-bold text-white transition-opacity hover:opacity-90 sm:w-auto"
             @click="openRequestModal"
@@ -108,7 +111,10 @@
     </div>
   </div>
 
-  <TaxReturnRequestModal ref="requestModalRef" />
+  <TaxReturnRequestModal
+    v-if="isTaxReturnConsultant"
+    ref="requestModalRef"
+  />
 </template>
 
 <script setup lang="ts">
@@ -124,6 +130,7 @@ const props = defineProps<{
   slug: string;
   title?: string;
   resumeUserId?: number | null;
+  isTaxReturnConsultant?: boolean;
 }>();
 
 const api = useApi();
@@ -149,6 +156,13 @@ const canEditResume = computed(() => {
   const currentSlug = String(user.value.cv_slug ?? "").trim();
   return Boolean(currentSlug) && currentSlug === props.slug.trim();
 });
+
+const showActionGroup = computed(
+  () =>
+    Boolean(props.isTaxReturnConsultant) ||
+    canEditResume.value ||
+    canDownloadResume.value,
+);
 
 onMounted(() => {
   if (isAuthenticated.value) {

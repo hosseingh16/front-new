@@ -102,6 +102,7 @@ export interface UserResume {
   description?: string
   notes?: string
   cv_slug?: string | null
+  is_tax_return_consultant?: boolean
   resume_file?: string | null
   resume_personal?: UserResumePersonal | null
   resume_educations?: UserResumeEducation[]
