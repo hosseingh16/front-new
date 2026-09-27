@@ -297,7 +297,7 @@ const {
 );
 
 const coverImage = computed(
-  () => ad.value?.company?.cover || "/images/ad-cover-bg.jpg",
+  () => ad.value?.company?.cover || "/images/ad-cover-bg.webp",
 );
 
 const publishDateLabel = computed(() => {

@@ -80,8 +80,9 @@
           <div class="flex gap-2 w-full">
             <NuxtImg
               v-for="img in badgeImages"
-              :key="img"
-              :src="img"
+              :key="img.src"
+              :src="img.src"
+              :alt="img.alt"
               class="min-w-0 flex-1 h-auto object-contain"
             />
           </div>
@@ -150,8 +151,9 @@
         <div class="mt-8 flex gap-2 justify-center">
           <NuxtImg
             v-for="img in badgeImages"
-            :key="img"
-            :src="img"
+            :key="img.src"
+            :src="img.src"
+            :alt="img.alt"
             class="h-20 w-20 rounded-xl bg-white object-contain p-2"
           />
         </div>
@@ -200,9 +202,9 @@ const socials = [
 ] as const;
 
 const badgeImages = [
-  "/images/footer-img-1.png",
-  "/images/footer-img-2.png",
-  "/images/footer-img-3.png",
+  { src: "/images/footer-img-1.webp", alt: "نماد اعتماد الکترونیکی" },
+  { src: "/images/footer-img-2.webp", alt: "نشان ملی ثبت رسانه‌های دیجیتال" },
+  { src: "/images/footer-img-3.webp", alt: "نماد اعتماد الکترونیکی" },
 ];
 
 const mobileSections = [
