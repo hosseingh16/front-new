@@ -49,6 +49,21 @@
       </p>
     </div>
 
+    <div
+      v-else-if="isPublicAd"
+      class="mt-4 flex items-start gap-3 rounded-xl border border-primary-200 bg-primary-50 p-5"
+    >
+      <div
+        class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-white"
+        aria-hidden="true"
+      >
+        <Icon name="lucide:info" size="20" class="text-primary-500" />
+      </div>
+      <p class="text-sm leading-7 text-text-secondary">
+        برای ارسال رزومه با شماره تماس موجود درآگهی تماس بگیرید
+      </p>
+    </div>
+
     <NoResult
       v-else
       title="سابقه‌ای ثبت نشده است"
@@ -88,6 +103,8 @@ const emit = defineEmits<{
 const { isAuthenticated } = useSanctumAuth();
 const { isEmployer } = useCurrentUser();
 const api = useApi();
+
+const isPublicAd = computed(() => props.ad.company?.id == 1);
 
 const loading = ref(false);
 const error = ref<string | null>(null);
