@@ -134,13 +134,15 @@
         <AdCompanyProfile :ad="ad" />
       </template>
 
-      <template v-else-if="activeTab === 'history'">
-        <AdApplicationHistory :ad="ad" @resume="emit('resume')" />
-      </template>
-
       <template v-else-if="activeTab === 'ads' && !isPublicAd">
         <AdCompanyAds :ad="ad" />
       </template>
+
+      <AdApplicationHistory
+        v-show="activeTab === 'history'"
+        :ad="ad"
+        @resume="emit('resume')"
+      />
     </main>
 
     <aside class="lg:sticky lg:top-6">

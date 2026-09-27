@@ -6,6 +6,7 @@ export function useApiClient() {
   const baseURL = config.public.apiBase;
 
   const client = useSanctumClient();
+  const sanctumUser = useSanctumUser();
   const router = useRouter()
 
   const user = useState<any | null>('user', () => null);
@@ -13,9 +14,11 @@ export function useApiClient() {
   const loading = useState<boolean>('api-loading', () => false);
 
   const request = async <T>(url: string, options: any = {}): Promise<T> => {
-    loading.value = true;    
+    loading.value = true;
+    const skipAuthRedirect = Boolean(options.skipAuthRedirect);
+    const sessionSnapshot = skipAuthRedirect ? sanctumUser.value : null;
     try {
-      const { headers, ...rest } = options;
+      const { headers, skipAuthRedirect: _skipAuthRedirect, ...rest } = options;
       return await client<T>(url, {
         baseURL,
         ...rest,
@@ -25,11 +28,13 @@ export function useApiClient() {
         },
       });
     } catch (err: any) {
-      const status = err?.response?.status;
-      const data = err?.response?._data;
+      const status = err?.response?.status ?? err?.statusCode ?? err?.status;
+      const data = err?.response?._data ?? err?.data;
 
-      if (status === 401) {
-        user.value = null;      
+      if (status === 401 && skipAuthRedirect) {
+        if (sessionSnapshot != null) sanctumUser.value = sessionSnapshot;
+      } else if (status === 401 && import.meta.client) {
+        user.value = null;
         await router.push(paths.login)
       }
 

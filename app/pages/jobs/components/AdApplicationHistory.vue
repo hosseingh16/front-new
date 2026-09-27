@@ -106,9 +106,7 @@ const api = useApi();
 
 const isPublicAd = computed(() => props.ad.company?.id == 1);
 
-const loading = ref(false);
-const error = ref<string | null>(null);
-const request = ref<MyRequest | null>(null);
+const loadError = ref<string | null>(null);
 
 function fallbackRequest(): MyRequest | null {
   if (!props.ad.has_applied) return null;
@@ -124,50 +122,52 @@ function fallbackRequest(): MyRequest | null {
   };
 }
 
-async function fetchRequest() {
-  if (!isAuthenticated.value) {
-    request.value = null;
-    error.value = null;
-    loading.value = false;
-    return;
-  }
+function readRequestItems(result: ApiResponse<JobSeekerAdsRequestApi[]>) {
+  const payload = result.data as
+    | JobSeekerAdsRequestApi[]
+    | { data?: JobSeekerAdsRequestApi[] }
+    | undefined;
 
-  loading.value = true;
-  error.value = null;
-
-  try {
-    const result = await api.get<ApiResponse<JobSeekerAdsRequestApi[]>>(
-      "/ads/requests",
-      { query: { count: 100 } },
-    );
-
-    const items = (
-      Array.isArray(result.data)
-        ? result.data
-        : Array.isArray(
-            (result.data as { data?: JobSeekerAdsRequestApi[] } | undefined)
-              ?.data,
-          )
-        ? (result.data as { data: JobSeekerAdsRequestApi[] }).data
-        : []
-    ).map(mapJobSeekerAdsRequestToMyRequest);
-
-    const adId = Number(props.ad.id);
-    const match = items.find((item) => Number(item.ad_id) === adId) ?? null;
-    request.value = match ?? fallbackRequest();
-  } catch {
-    error.value = "خطا در دریافت سوابق ارسال";
-    request.value = fallbackRequest();
-  } finally {
-    loading.value = false;
-  }
+  if (Array.isArray(payload)) return payload;
+  if (payload && Array.isArray(payload.data)) return payload.data;
+  return [];
 }
 
-watch(
-  () => [isAuthenticated.value, props.ad.id, props.ad.has_applied] as const,
-  () => {
-    fetchRequest();
+const { data, pending } = useCachedAsyncData(
+  () => `ad-application-history-${props.ad.id}`,
+  async () => {
+    loadError.value = null;
+
+    // Guests and employers must not hit the job-seeker endpoint.
+    // A 401 from that call clears the Sanctum session.
+    if (!isAuthenticated.value || isEmployer.value) return null;
+
+    try {
+      const result = await api.get<ApiResponse<JobSeekerAdsRequestApi[]>>(
+        "/ads/requests",
+        { query: { count: 100 }, skipAuthRedirect: true },
+      );
+
+      const items = readRequestItems(result).map(
+        mapJobSeekerAdsRequestToMyRequest,
+      );
+      const adId = Number(props.ad.id);
+      const match = items.find((item) => Number(item.ad_id) === adId) ?? null;
+      return match ?? fallbackRequest();
+    } catch {
+      loadError.value = "خطا در دریافت سوابق ارسال";
+      return null;
+    }
   },
-  { immediate: true },
+  {
+    watch: [() => props.ad.id, isAuthenticated, isEmployer],
+  },
 );
+
+const request = computed(() => data.value ?? null);
+const loading = computed(
+  () =>
+    pending.value && isAuthenticated.value && !isEmployer.value,
+);
+const error = computed(() => loadError.value);
 </script>

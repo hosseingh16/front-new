@@ -36,4 +36,6 @@ export interface ApiRequestOptions {
   headers?: Record<string, string>;
   query?: Record<string, unknown>;
   responseType?: "json" | "blob" | "text" | "arrayBuffer" | "stream";
+  /** A 401 on this call must not clear the session or send the user to login. */
+  skipAuthRedirect?: boolean;
 }
