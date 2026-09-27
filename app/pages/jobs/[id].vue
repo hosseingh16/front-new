@@ -1,11 +1,20 @@
 <template>
   <div :class="embedded ? 'pb-10' : 'bg-surface-50 pb-12'">
     <section
-      class="bg-cover bg-center bg-no-repeat"
+      class="relative"
       :class="embedded ? 'overflow-hidden rounded-2xl' : ''"
-      :style="{ backgroundImage: `url('${coverImage}')` }"
     >
-      <div :class="embedded ? 'px-4 pt-4 pb-10' : 'custom-pad pt-6 pb-12'">
+      <img
+        :src="coverImage"
+        alt=""
+        fetchpriority="high"
+        loading="eager"
+        class="pointer-events-none absolute inset-0 h-full w-full object-cover"
+      />
+      <div
+        class="relative"
+        :class="embedded ? 'px-4 pt-4 pb-10' : 'custom-pad pt-6 pb-12'"
+      >
         <nav class="text-sm text-text-passive">
           <NuxtLink
             :to="embedded ? '/dashboard' : '/'"
@@ -25,7 +34,10 @@
         </nav>
       </div>
 
-      <div :class="embedded ? 'px-4 pb-0' : 'custom-pad pb-0'">
+      <div
+        class="relative"
+        :class="embedded ? 'px-4 pb-0' : 'custom-pad pb-0'"
+      >
         <div
           v-if="loading && !ad"
           class="animate-pulse rounded-t-2xl bg-surface-50 p-6"
@@ -299,6 +311,17 @@ const {
 const coverImage = computed(
   () => ad.value?.company?.cover || "/images/ad-cover-bg.webp",
 );
+
+useHead(() => ({
+  link: [
+    {
+      rel: "preload",
+      as: "image",
+      href: coverImage.value,
+      fetchpriority: "high",
+    },
+  ],
+}));
 
 const publishDateLabel = computed(() => {
   const date = ad.value?.publish_date || ad.value?.created_at;
