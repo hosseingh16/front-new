@@ -78,13 +78,19 @@
 
         <div class="min-w-0">
           <div class="flex gap-2 w-full">
-            <NuxtImg
+            <NuxtLink
               v-for="img in badgeImages"
               :key="img.src"
-              :src="img.src"
-              :alt="img.alt"
-              class="min-w-0 flex-1 h-auto object-contain"
-            />
+              to="/licenses"
+              class="min-w-0 flex-1"
+              :aria-label="img.alt"
+            >
+              <NuxtImg
+                :src="img.src"
+                :alt="img.alt"
+                class="h-auto w-full object-contain"
+              />
+            </NuxtLink>
           </div>
         </div>
       </div>
@@ -149,13 +155,19 @@
         </div>
 
         <div class="mt-8 flex gap-2 justify-center">
-          <NuxtImg
+          <NuxtLink
             v-for="img in badgeImages"
             :key="img.src"
-            :src="img.src"
-            :alt="img.alt"
-            class="h-20 w-20 rounded-xl bg-white object-contain p-2"
-          />
+            to="/licenses"
+            class="flex h-20 w-20 items-center justify-center rounded-xl bg-white p-2"
+            :aria-label="img.alt"
+          >
+            <NuxtImg
+              :src="img.src"
+              :alt="img.alt"
+              class="h-full w-full object-contain"
+            />
+          </NuxtLink>
         </div>
       </div>
     </div>
@@ -192,6 +204,7 @@ const aboutLinks: FooterLink[] = [
   { label: "سوالات متداول", to: "/faq" },
   { label: "قوانین و مقررات", to: "/terms-and-conditions" },
   { label: "حریم خصوصی", to: "/privacy-policy" },
+  { label: "نمادها و مجوزها", to: "/licenses" },
   { label: "تماس ما", to: "/contact" },
 ];
 
