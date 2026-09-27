@@ -82,7 +82,7 @@
 
     <!-- [START] Services -->
     <section
-      class="custom-pad mt-16 bg-[url('/images/bg-8.png')] lg:bg-[url('/images/bg-7.png')] bg-no-repeat bg-cover max-lg:pb-6 py-20"
+      class="custom-pad mt-16 bg-[url('/images/bg-8.webp')] lg:bg-[url('/images/bg-7.webp')] bg-no-repeat bg-cover max-lg:pb-6 py-20"
     >
       <div class="grid lg:grid-cols-5 gap-12 items-center">
         <div
@@ -195,7 +195,9 @@
       >
         مقالات آموزشی و تخصصی حسابداری های‌حساب
       </p>
-      <p class="mt-3 text-text-tertiary font-semibold text-center text-sm lg:text-base">
+      <p
+        class="mt-3 text-text-tertiary font-semibold text-center text-sm lg:text-base"
+      >
         آموزشی -خبری - مسیرشغلی
       </p>
       <div class="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-4">
