@@ -167,6 +167,7 @@ import "moment/locale/fa";
 import BookmarkToggleButton from "~/components/Elements/BookmarkToggleButton.vue";
 import type { AdList } from "~/types/ad";
 import type { ProjectList } from "~/types/project";
+import { paths } from "~/routes";
 
 moment.updateLocale("fa", {
   relativeTime: {
@@ -212,7 +213,7 @@ const itemUrl = computed(() => {
   if (props.variant === "project") {
     return `/project/${props.item.id}`;
   }
-  return `/jobs/${props.item.id}`;
+  return paths.jobs.detail(props.item);
 });
 
 function onBookmarkChange(value: boolean) {

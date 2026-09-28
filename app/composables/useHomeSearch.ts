@@ -8,6 +8,7 @@ import type { CompanyList } from '~/types/company'
 import type { Opportunity } from '~/types/opportunity'
 import type { AdList } from '~/types/ad'
 import type { ProjectList } from '~/types/project'
+import { paths } from '~/routes'
 
 type SearchOpportunity = Opportunity | Record<string, unknown>
 
@@ -20,7 +21,7 @@ function mapOpportunityToSearchItem(opportunity: SearchOpportunity): HomeSearchI
       title: `استخدام ${item.title}`,
       detailLabel: 'نام شرکت',
       detailValue: item.company_name,
-      url: `/jobs/${item.id}`,
+      url: paths.jobs.detail(item),
       image: item.company_logo,
     }
   }

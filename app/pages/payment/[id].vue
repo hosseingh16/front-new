@@ -105,6 +105,7 @@
 <script setup lang="ts">
 import { formatJalaliDate } from "~/utils/format-jalali-date";
 import { formatPayablePrice } from "~/utils/tax-return-payload";
+import { paths } from "~/routes";
 
 definePageMeta({
   layout: false,
@@ -201,7 +202,7 @@ const primaryAction = computed(() => {
         label: "مشاهده آگهی",
         icon: "lucide:store",
         to: modelId.value
-          ? `/jobs/${modelId.value}`
+          ? paths.jobs.detail(modelId.value)
           : "/dashboard/employer/ads",
       };
     case "Project":

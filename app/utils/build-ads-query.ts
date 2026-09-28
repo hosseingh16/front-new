@@ -17,10 +17,11 @@ export function buildAdsQueryFromFilters(
   const employmentType = joinParam(employmentTypes)
   if (employmentType) query.employment_type = employmentType
 
-  const titleParts = filters.jobGroups.map(String)
+  const position = joinParam(filters.jobGroups)
+  if (position) query.position = position
+
   const search = filters.titleSearch.trim()
-  if (search) titleParts.push(search)
-  if (titleParts.length) query.title = titleParts.join(',')
+  if (search) query.title = search
 
   const province = joinParam(filters.provinces)
   if (province) query.province = province

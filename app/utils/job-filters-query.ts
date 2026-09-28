@@ -56,7 +56,7 @@ export function jobFiltersToRouteQuery(
   if (search) query.search = search
 
   const jobGroup = joinParam(filters.jobGroups)
-  if (jobGroup) query.job_group = jobGroup
+  if (jobGroup) query.position = jobGroup
 
   const province = provinceIdsToQueryValue(filters.provinces, provinces)
   if (province) query.province = province
@@ -88,7 +88,9 @@ export function routeQueryToJobFilters(
   const search = queryValue(query.search)
   filters.titleSearch = typeof search === 'string' ? search : (search?.[0] ?? '')
 
-  filters.jobGroups = splitParam(queryValue(query.job_group))
+  filters.jobGroups = splitParam(
+    queryValue(query.position) ?? queryValue(query.job_group),
+  )
   filters.provinces = resolveProvinceIdsFromQueryValue(
     queryValue(query.province),
     provinces,

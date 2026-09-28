@@ -394,6 +394,7 @@ import twitterIcon from "~/assets/vectors/social/twitter.svg?url";
 import whatsappIcon from "~/assets/vectors/social/whatsapp.svg?url";
 import { formatRelativeDate } from "~/utils/format-relative-date";
 import { resolveCompanyLogoDisplaySrc } from "~/utils/company-basic-info";
+import { paths } from "~/routes";
 import type { Company } from "~/types/company";
 
 type CompanyTab = "about" | "ads";
@@ -505,7 +506,11 @@ const companyAds = computed(() => {
     logo: ad.company_logo || c.logo,
     highlight: index % 2 === 1,
     variant: "ad" as const,
-    to: `/jobs/${ad.id}`,
+    to: paths.jobs.detail({
+      ...ad,
+      company: { slug: c.slug, name: c.name },
+      company_name: c.name,
+    }),
   }));
 });
 

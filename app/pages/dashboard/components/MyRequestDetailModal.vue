@@ -22,7 +22,13 @@
         <div class="flex shrink-0 items-center gap-2">
           <NuxtLink
             v-if="request"
-            :to="`/jobs/${request.ad_id}`"
+            :to="
+              paths.jobs.detail({
+                id: request.ad_id,
+                title: request.job_title,
+                company_name: request.company_name,
+              })
+            "
             class="btn btn-primary inline-flex h-10 items-center gap-1 px-4 text-base font-semibold"
             @click="closeModal"
           >
@@ -115,6 +121,7 @@ import MyRequestTimeline from '~/components/Elements/MyRequestTimeline.vue'
 import type { MyRequest } from '~/types/my-request'
 import { formatJalaliDate } from '~/utils/format-jalali-date'
 import { resolveCompanyLogoDisplaySrc } from '~/utils/company-basic-info'
+import { paths } from '~/routes'
 
 const props = withDefaults(
   defineProps<{

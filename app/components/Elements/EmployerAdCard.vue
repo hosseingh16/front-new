@@ -81,7 +81,7 @@
               </li>
               <li>
                 <NuxtLink
-                  :to="`/jobs/${ad.id}`"
+                  :to="paths.jobs.detail(ad)"
                   target="_blank"
                   class="flex w-full items-center gap-2 px-4 py-2 text-sm text-text-secondary hover:bg-surface-100"
                 >
@@ -131,6 +131,7 @@
 import type { EmployerAd } from "~/types/employer-ad";
 import { formatRelativeDate } from "~/utils/format-relative-date";
 import MDropdown from "~/components/M/Dropdown.vue";
+import { paths } from "~/routes";
 import {
   getEmployerAdStatItems,
   getEmployerAdStatusMeta,

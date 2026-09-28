@@ -241,8 +241,8 @@
 import ItemBox from "~/components/Elements/item-box.vue";
 import BookmarkToggleButton from "~/components/Elements/BookmarkToggleButton.vue";
 import FastLoginModal from "~/components/FastLoginModal.vue";
-import AdDetailContent from "./components/AdDetailContent.vue";
-import ReportIssueModal from "./components/ReportIssueModal.vue";
+import AdDetailContent from "../components/AdDetailContent.vue";
+import ReportIssueModal from "../components/ReportIssueModal.vue";
 import AdResumeIncompleteModal from "~/pages/jobs/components/AdResumeIncompleteModal.vue";
 import { useAd, useSimilarAds } from "~/composables/useAd";
 import { formatJalaliDate } from "~/utils/format-jalali-date";
@@ -250,12 +250,21 @@ import { getAdDetailSeoMeta } from "~/utils/ad-seo";
 import createAccountIllust from "~/assets/vectors/illustrations/create-account.svg";
 import { paths } from "~/routes";
 import {
+  buildJobDetailSlug,
+  jobDetailPath,
+} from "~/utils/job-detail-path";
+import {
   isResumeBasicInfoComplete,
   isResumeBasicInfoRequiredError,
 } from "~/utils/api-error";
 
 const route = useRoute();
 const adId = computed(() => String(route.params.id ?? ""));
+const routeSlug = computed(() => String(route.params.slug ?? ""));
+
+if (!/^\d+$/.test(adId.value)) {
+  throw createError({ statusCode: 404, statusMessage: "آگهی یافت نشد" });
+}
 
 const { isAuthenticated } = useSanctumAuth();
 const { isEmployer, user, ensureFullProfile } = useCurrentUser();
@@ -263,6 +272,20 @@ const { needsRoleSelection, ensureRoleForAction } = useRoleGate();
 const { applyToAd, loading: applyLoading } = useApplyToAd();
 const { ad, loading, error, setHasApplied, refresh: refreshAd } = useAd(adId);
 const { similarAds, loadingSimilar } = useSimilarAds(adId);
+
+watch(
+  ad,
+  (value) => {
+    if (!value?.id) return;
+
+    const canonicalSlug = buildJobDetailSlug(value);
+    const currentSlug = decodeURIComponent(routeSlug.value);
+    if (!canonicalSlug || currentSlug === canonicalSlug) return;
+
+    navigateTo(jobDetailPath(value), { replace: true });
+  },
+  { immediate: true },
+);
 const reportIssueModalRef = ref<InstanceType<typeof ReportIssueModal> | null>(
   null,
 );

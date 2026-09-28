@@ -47,6 +47,7 @@ import type { ApiResponse } from "~/types/api";
 import type { Company } from "~/types/company";
 import ItemBoxVertical from "~/components/Elements/item-box-vertical.vue";
 import { formatRelativeDate } from "~/utils/format-relative-date";
+import { paths } from "~/routes";
 
 const props = defineProps<{
   ad: Ad;
@@ -86,7 +87,11 @@ const companyAds = computed(() => {
       logo: item.company_logo || c.logo || props.ad.company_logo,
       highlight: index % 2 === 1,
       variant: "ad" as const,
-      to: `/jobs/${item.id}`,
+      to: paths.jobs.detail({
+        ...item,
+        company: { slug: c.slug, name: c.name },
+        company_name: c.name || props.ad.company_name,
+      }),
     }));
 });
 

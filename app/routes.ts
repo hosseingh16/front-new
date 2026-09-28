@@ -1,3 +1,7 @@
+import { jobCategoryPath } from '~/utils/job-category'
+import { jobCityPath } from '~/utils/job-city'
+import { jobDetailPath } from '~/utils/job-detail-path'
+
 export const paths = {
   root: '/',
   login: '/login',
@@ -5,7 +9,9 @@ export const paths = {
   dashboard: '/dashboard',
   jobs: {
     root: '/jobs',
-    detail: (id: string | number) => `/jobs/${id}`,
+    detail: jobDetailPath,
+    category: jobCategoryPath,
+    city: jobCityPath,
   },
   taxReturn: {
     root: '/tax-return',
