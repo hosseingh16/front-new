@@ -4,7 +4,9 @@
       v-if="!error"
       :slug="slug"
       :title="user?.name"
+      :avatar="user?.avatar"
       :resume-user-id="user?.id"
+      :city-name="user?.city_name"
       :is-tax-return-consultant="user?.is_tax_return_consultant"
     />
 

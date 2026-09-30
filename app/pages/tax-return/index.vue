@@ -248,7 +248,7 @@ const requestModalRef = ref<InstanceType<typeof TaxReturnRequestModal> | null>(
 );
 
 function openRequestModal() {
-  requestModalRef.value?.showModal();
+  requestModalRef.value?.showModal({ autoAssign: true });
 }
 
 const audienceItems = [

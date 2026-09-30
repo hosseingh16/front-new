@@ -21,9 +21,32 @@ type StoreTaxReturnResponse = ApiResponse<{
 export type TaxReturnLeadErrors = {
   cellphone: string;
   activityType: string;
+  financialTurnover: string;
+  city: string;
   desc: string;
   acceptedTerms: string;
 };
+
+export const TAX_RETURN_TURNOVER_OPTIONS = [
+  {
+    label: "کمتر از ۳۰ میلیارد",
+    value: "under_30b",
+  },
+  {
+    label: "بین ۳۰ تا ۷۵ میلیارد",
+    value: "30b_to_75b",
+  },
+  {
+    label: "بیش از ۷۵ میلیارد",
+    value: "over_75b",
+  },
+] as const;
+
+export const TAX_RETURN_LEAD_CITY_OPTIONS: ISelectItem[] = [
+  { label: "تهران", value: "تهران" },
+  { label: "کرج", value: "کرج" },
+  { label: "مشهد", value: "مشهد" },
+];
 
 export function useTaxReturnLeadForm() {
   const api = useApi();
@@ -38,16 +61,30 @@ export function useTaxReturnLeadForm() {
     }),
   );
 
+  const turnoverOptions: ISelectItem[] = TAX_RETURN_TURNOVER_OPTIONS.map(
+    (item) => ({
+      label: item.label,
+      value: item.value,
+    }),
+  );
+
+  const cityOptions = TAX_RETURN_LEAD_CITY_OPTIONS;
+
   const form = reactive({
     cellphone: "",
     activityType: "" as TaxReturnActivityType | "",
+    financialTurnover: "",
+    city: "",
     desc: "",
     acceptedTerms: false,
+    consultantId: null as number | null,
   });
 
   const errors = reactive<TaxReturnLeadErrors>({
     cellphone: "",
     activityType: "",
+    financialTurnover: "",
+    city: "",
     desc: "",
     acceptedTerms: "",
   });
@@ -66,6 +103,8 @@ export function useTaxReturnLeadForm() {
   function clearErrors() {
     errors.cellphone = "";
     errors.activityType = "";
+    errors.financialTurnover = "";
+    errors.city = "";
     errors.desc = "";
     errors.acceptedTerms = "";
   }
@@ -73,8 +112,11 @@ export function useTaxReturnLeadForm() {
   function reset() {
     form.cellphone = "";
     form.activityType = "";
+    form.financialTurnover = "";
+    form.city = "";
     form.desc = "";
     form.acceptedTerms = false;
+    form.consultantId = null;
     clearErrors();
   }
 
@@ -95,6 +137,10 @@ export function useTaxReturnLeadForm() {
     }
 
     errors.activityType = form.activityType ? "" : "نوع فعالیت الزامی است.";
+    errors.financialTurnover = form.financialTurnover
+      ? ""
+      : "میزان گردش مالی الزامی است.";
+    errors.city = form.city ? "" : "شهر الزامی است.";
 
     const desc = form.desc.trim();
     if (!desc) {
@@ -116,6 +162,17 @@ export function useTaxReturnLeadForm() {
     return !Object.values(errors).some(Boolean);
   }
 
+  const isValid = computed(() => {
+    return Boolean(
+      form.cellphone.trim() &&
+        form.activityType &&
+        form.financialTurnover &&
+        form.city &&
+        form.desc.trim() &&
+        form.acceptedTerms,
+    );
+  });
+
   async function submit(
     options?: { requireTerms?: boolean },
   ): Promise<"payment" | "success" | false> {
@@ -126,19 +183,20 @@ export function useTaxReturnLeadForm() {
 
     submitting.value = true;
     try {
-      const payload: {
-        name?: string;
-        cellphone: string;
-        activity_type: TaxReturnActivityType | "";
-        desc: string;
-      } = {
+      const payload: Record<string, unknown> = {
         cellphone: normalizeIranMobile(form.cellphone.trim()),
         activity_type: form.activityType,
+        financial_turnover: form.financialTurnover,
+        city_name: form.city,
         desc: form.desc.trim(),
       };
 
       if (name.value && name.value !== "—") {
         payload.name = name.value.trim();
+      }
+
+      if (form.consultantId != null) {
+        payload.consultant_id = form.consultantId;
       }
 
       const result = await api.post<StoreTaxReturnResponse>(
@@ -164,6 +222,9 @@ export function useTaxReturnLeadForm() {
         const fieldMap: Record<string, keyof TaxReturnLeadErrors> = {
           cellphone: "cellphone",
           activity_type: "activityType",
+          financial_turnover: "financialTurnover",
+          city_name: "city",
+          city: "city",
           desc: "desc",
         };
 
@@ -191,7 +252,10 @@ export function useTaxReturnLeadForm() {
     form,
     errors,
     submitting,
+    isValid,
     activityOptions,
+    turnoverOptions,
+    cityOptions,
     taxReturnDescMaxLength,
     reset,
     prefillFromUser,

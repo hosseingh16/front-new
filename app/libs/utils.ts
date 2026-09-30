@@ -24,7 +24,7 @@ const DEFAULT_AVATAR_MARKERS = [
 ];
 
 /** Job seeker placeholder when no custom photo exists. */
-export const DEFAULT_AVATAR_SRC = '/images/default-avatar.png';
+export const DEFAULT_AVATAR_SRC = '/images/default-avatar.svg';
 
 /** Company / employer placeholder when no custom logo/photo exists. */
 export const DEFAULT_COMPANY_LOGO_SRC = '/images/company-default.png';

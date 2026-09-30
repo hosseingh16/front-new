@@ -124,12 +124,15 @@ import telegramIcon from "~/assets/vectors/social/telegram.svg?url";
 import twitterIcon from "~/assets/vectors/social/twitter.svg?url";
 import whatsappIcon from "~/assets/vectors/social/whatsapp.svg?url";
 import TaxReturnRequestModal from "~/pages/tax-return/components/TaxReturnRequestModal.vue";
+import type { TaxReturnConsultant } from "~/types/tax-return-consultant";
 import { paths } from "~/routes";
 
 const props = defineProps<{
   slug: string;
   title?: string;
+  avatar?: string | null;
   resumeUserId?: number | null;
+  cityName?: string | null;
   isTaxReturnConsultant?: boolean;
 }>();
 
@@ -171,7 +174,18 @@ onMounted(() => {
 });
 
 function openRequestModal() {
-  requestModalRef.value?.showModal();
+  const consultant: TaxReturnConsultant | null = props.isTaxReturnConsultant
+    ? {
+        id: Number(props.resumeUserId ?? 0),
+        name: props.title?.trim() || "مشاور",
+        avatar: props.avatar,
+        cv_slug: props.slug,
+        city_name: props.cityName,
+        is_tax_return_consultant: true,
+      }
+    : null;
+
+  requestModalRef.value?.showModal({ consultant });
 }
 
 function getShareUrl() {

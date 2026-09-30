@@ -587,7 +587,7 @@ const handleProfileImage = async (file: File | null) => {
       keepServerPreview.value = false;
       // Mark as default immediately so resume completion updates before refresh.
       patchUser({
-        avatar: res?.data?.avatar ?? "files/default-avatar.png",
+        avatar: res?.data?.avatar ?? "files/default-avatar.svg",
       });
       await refreshUser();
       $toast.success("تصویر پروفایل حذف شد");

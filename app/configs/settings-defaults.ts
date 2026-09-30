@@ -18,7 +18,7 @@ export const SETTINGS_DEFAULTS = {
   'pagination.tax_returns': 12,
   'search.home_result_limit': 5,
   'tax_return.desc_max_length': 500,
-  'tax_return.payable_price': 1_000_000,
+  'tax_return.payable_price': 2_000_000,
   'upload.company_image_max_mb': 2,
   'upload.company_logo_modal_max_mb': 10,
   'upload.cv_avatar_max_mb': 10,
