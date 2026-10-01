@@ -20,7 +20,7 @@
         </nav>
 
         <!-- Section 1: selection mode -->
-        <section class="flex flex-col items-center">
+        <section id="consultant-selection" class="flex flex-col items-center">
           <span
             class="inline-flex items-center rounded-xl bg-[#4864E114] px-4 py-2 text-sm font-semibold text-primary-500"
           >
@@ -83,7 +83,8 @@
         <!-- Section 2: city filter -->
         <section
           v-if="selectionMode === 'self'"
-          class="md:my-6 rounded-2xl border border-primary-500 bg-white p-5 md:p-6"
+          id="consultant-city"
+          class="mt-6 rounded-2xl border border-primary-500 bg-white p-5 md:my-6 md:p-6"
         >
           <h2 class="font-yb-bold text-lg text-text-tertiary md:text-xl">
             مشاور را در کدام شهر می‌خواهید؟
@@ -103,7 +104,7 @@
                   ? 'border-primary-500 bg-[#F8FAFF] text-primary-500'
                   : 'border-gray-default bg-white text-text-tertiary hover:border-primary-500/40'
               "
-              @click="selectedCity = city.value"
+              @click="onSelectCity(city.value)"
             >
               <span
                 class="flex h-4 w-4 items-center justify-center rounded-full border"
@@ -143,7 +144,7 @@
         <div
           v-if="selectionMode === 'self'"
           id="consultants-results"
-          class="space-y-4"
+          class="mt-6 space-y-4"
         >
           <template v-if="loading">
             <ConsultantListCard v-for="n in 6" :key="`skeleton-${n}`" loading />
@@ -208,8 +209,16 @@ type CityValue = "all" | "tehran" | "karaj" | "mashhad";
 
 const route = useRoute();
 const router = useRouter();
+const { logActivity } = useActivityLog();
 
-const selectionMode = ref<SelectionMode | null>(null);
+function parseSelectionMode(value: unknown): SelectionMode | null {
+  const raw = Array.isArray(value) ? value[0] : value;
+  return raw === "self" || raw === "auto" ? raw : null;
+}
+
+const selectionMode = ref<SelectionMode | null>(
+  parseSelectionMode(route.query.mode),
+);
 const selectedCity = ref<CityValue>("all");
 const requestModalRef = ref<InstanceType<typeof TaxReturnRequestModal> | null>(
   null,
@@ -238,20 +247,56 @@ const cityOptions: { value: CityValue; label: string }[] = [
   { value: "mashhad", label: "مشهد" },
 ];
 
+function scrollToSection(id: string) {
+  nextTick(() => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const y = el.getBoundingClientRect().top + window.pageYOffset - 100;
+    window.scrollTo({ top: y, behavior: "smooth" });
+  });
+}
+
 function onSelectMode(mode: SelectionMode) {
   selectionMode.value = mode;
+  const option = selectionOptions.find((item) => item.value === mode);
+  logActivity("tax_return.consultants.mode", option?.title ?? mode);
+
   if (mode === "auto") {
+    logActivity(
+      "tax_return.consultants.modal",
+      "انتخاب مشاور توسط های‌حساب",
+    );
     nextTick(() => requestModalRef.value?.showModal({ autoAssign: true }));
+    return;
   }
+
+  scrollToSection("consultant-city");
+}
+
+function onSelectCity(city: CityValue) {
+  selectedCity.value = city;
+  const label = cityOptions.find((item) => item.value === city)?.label ?? city;
+  logActivity("tax_return.consultants.city", label);
+  scrollToSection("consultants-results");
 }
 
 function onSelectConsultant(consultant: TaxReturnConsultant) {
   requestModalRef.value?.showModal({ consultant });
+  logActivity("tax_return.consultants.modal", `مشاور: ${consultant.name}`);
 }
 
-function onChangeConsultantMode() {
-  selectionMode.value = null;
+function onChangeConsultantMode(mode?: SelectionMode) {
+  selectionMode.value = mode ?? null;
+  if (mode === "self") scrollToSection("consultant-selection");
 }
+
+watch(
+  () => route.query.mode,
+  (queryMode) => {
+    const nextMode = parseSelectionMode(queryMode);
+    if (nextMode) selectionMode.value = nextMode;
+  },
+);
 
 function parsePageQuery(value: unknown): number {
   const raw = Array.isArray(value) ? value[0] : value;
@@ -308,12 +353,7 @@ watch(page, async (nextPage) => {
 
 function onPageChange(nextPage: number) {
   page.value = nextPage;
-  nextTick(() => {
-    const el = document.getElementById("consultants-results");
-    if (!el) return;
-    const y = el.getBoundingClientRect().top + window.pageYOffset - 100;
-    window.scrollTo({ top: y, behavior: "smooth" });
-  });
+  scrollToSection("consultants-results");
 }
 
 const faqCategories = faqCategoriesByType(

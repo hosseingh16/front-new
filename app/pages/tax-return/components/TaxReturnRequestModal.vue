@@ -97,7 +97,7 @@
           <button
             type="button"
             class="inline-flex shrink-0 items-center gap-1.5 text-sm text-text-passive transition-opacity hover:opacity-80"
-            @click="onChangeConsultant"
+            @click="onChangeConsultant('self')"
           >
             <Icon name="lucide:refresh-cw" size="14" class="shrink-0" />
             <span>تغییر</span>
@@ -270,7 +270,7 @@ import { formatPayablePrice } from "~/utils/tax-return-payload";
 import { paths } from "~/routes";
 
 const emit = defineEmits<{
-  "change-consultant": [];
+  "change-consultant": [mode?: "self"];
 }>();
 
 const route = useRoute();
@@ -345,9 +345,22 @@ function onBackdropClick(event: MouseEvent) {
   }
 }
 
-function onChangeConsultant() {
-  emit("change-consultant");
+function onChangeConsultant(mode?: "self") {
+  emit("change-consultant", mode);
   closeModal();
+
+  if (mode === "self") {
+    const query =
+      route.path === paths.taxReturn.consultants
+        ? { ...route.query, mode: "self" }
+        : { mode: "self" };
+
+    void navigateTo({
+      path: paths.taxReturn.consultants,
+      query,
+    });
+    return;
+  }
 
   if (route.path !== paths.taxReturn.consultants) {
     void navigateTo(paths.taxReturn.consultants);
