@@ -23,13 +23,12 @@
         <h1
           class="mt-6 max-w-4xl text-center font-yb-bold text-2xl leading-10 text-text-tertiary md:text-h1"
         >
-          اظهارنامه عملکرد خود را به حسابداران تاییدشده بسپارید
+        تنظیم و ارسال اظهارنامه مالیاتی با مشاوران تأییدشده های‌حساب
         </h1>
         <p
           class="mt-4 max-w-3xl text-center text-base font-semibold leading-8 text-text-tertiary md:text-lg"
         >
-          درخواست خود را ثبت کنید تا حسابدار متخصص، انجام اظهارنامه مالیاتی شما
-          را پیگیری کند.
+        درخواست خود را ثبت کنید تا پس از بررسی شرایط پرونده، به مشاور مالیاتی متناسب با شرایط کسب‌وکارتان معرفی شوید.
         </p>
         <NuxtLink
           to="/tax-return/consultants"
@@ -58,7 +57,7 @@
         <h2
           class="flex items-center justify-center gap-3 text-center font-yb-bold text-xl md:text-xl bg-white text-text-tertiary py-2 px-6 rounded-full shadow-lg w-fit mx-auto"
         >
-          چه کسانی می‌توانند ثبت درخواست کنند؟
+        خدمات اظهارنامه مالیاتی برای چه کسب‌وکارهایی ارائه می‌شود؟
         </h2>
       </div>
       <div
@@ -102,7 +101,7 @@
           فرآیند کار
         </span>
         <h2 class="mt-4 font-yb-bold text-xl text-text-tertiary md:text-2xl">
-          چطور انجام می‌شود؟
+          فرآیند ثبت درخواست اظهارنامه مالیاتی در های‌حساب چگونه است؟
         </h2>
       </div>
 
@@ -163,7 +162,7 @@
         <h2
           class="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded-full bg-white shadow-lg px-6 py-2.5 text-center font-yb-bold text-sm text-text-tertiary md:px-8 md:text-base"
         >
-          چرا به های‌حساب اعتماد کنم؟
+        چرا برای ارسال اظهارنامه مالیاتی به های‌حساب اعتماد کنم؟
         </h2>
 
         <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
@@ -219,7 +218,7 @@
     </section>
 
     <!-- FAQ -->
-    <FaqSection :categories="faqCategories" :items="faqs" />
+    <FaqSection :categories="faqCategories" :items="faqs" title="سوالی درباره اظهارنامه مالیاتی دارید؟ پاسخگوی شما هستیم" />
 
     <TaxReturnRequestModal ref="requestModalRef" />
   </div>
@@ -267,19 +266,19 @@ const painPoints = [
 
 const processSteps = [
   {
-    title: "فرم را تکمیل کنید",
+    title: "انتخاب مشاور",
     description:
-      "اطلاعات کسب‌وکار و جزئیات مورد نیاز برای اظهارنامه عملکرد را در فرم آنلاین وارد کنید.",
+      "مشاور موردنظر خود را از بین متخصصان تأییدشده های‌حساب انتخاب کنید یا انتخاب مشاور را به ما بسپارید.",
   },
   {
-    title: "درخواست شما بررسی می‌شود",
+    title: "بررسی اطلاعات و ثبت درخواست",
     description:
-      "تیم های‌حساب درخواست شما را بررسی کرده و مناسب‌ترین حسابدار متخصص را معرفی می‌کند.",
+      "رزومه مشاور، تخصص‌ها و بازه هزینه انجام اظهارنامه را بررسی کنید و درخواست خود را ثبت کنید.",
   },
   {
-    title: "حسابدار با شما تماس می‌گیرد",
+    title: "تکمیل فرم و پرداخت هزینه ثبت درخواست",
     description:
-      "حسابدار تاییدشده با شما هماهنگ کرده و فرآیند تنظیم و ارسال اظهارنامه را آغاز می‌کند.",
+      "اطلاعات کسب‌وکار خود را وارد کنید و هزینه ثبت درخواست را پرداخت کنید.",
   },
 ];
 
@@ -287,7 +286,7 @@ const processIllustrations = [step0, step1, step2, step3];
 
 const benefits = [
   {
-    title: "حسابداران تایید شده",
+    title: "مشاوران مالیاتی تأییدشده",
     description:
       "پروژه‌های اظهارنامه در های‌حساب تنها توسط حسابداران و مشاوران مالیاتی بررسی‌شده انجام می‌شوند تا با اطمینان بیشتری همکاری کنید.",
   },
