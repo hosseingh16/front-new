@@ -64,7 +64,7 @@
       </div>
     </section>
 
-    <TrustBar />
+    <!-- <TrustBar /> -->
 
     <!-- Service Cards -->
     <section class="custom-pad bg-surface-100 py-12 md:py-16">
