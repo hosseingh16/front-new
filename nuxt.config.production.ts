@@ -13,14 +13,6 @@ export default defineNuxtConfig({
     enabled: true,
   },
 
-  experimental: {
-    purgeCachedData: false,
-  },
-
-  nitro: {
-    preset: "node-server",
-  },
-
   css: ["~/assets/css/main.css"],
 
   app: {
@@ -55,9 +47,28 @@ export default defineNuxtConfig({
         {
           key: "microsoft-clarity",
           type: "text/javascript",
-          tagPosition: "head",
+          tagPosition: "bodyClose",
           textContent:
             '(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window, document, "clarity", "script", "u7z4wy6ec4");',
+        },
+
+        {
+          key: "google-analytics",
+          type: "text/javascript",
+          tagPosition: "head",
+          src: "https://www.googletagmanager.com/gtag/js?id=G-B0KNZBSKMY",
+          async: true,
+        },
+        {
+          key: "google-analytics-config",
+          type: "text/javascript",
+          tagPosition: "head",
+          textContent: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-B0KNZBSKMY');
+          `,
         },
       ],
     },
