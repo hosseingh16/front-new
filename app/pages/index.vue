@@ -7,14 +7,15 @@
         <div
           class="text-primary-500 font-semibold text-sm flex justify-center items-center p-2 bg-[#4864E114] rounded-xl mt-12 md:mt-28"
         >
-          استخدام سریع و مطمئن
+          پلتفرم تخصصی حسابداری
         </div>
         <h1 class="font-yb-bold text-[23px] lg:text-h1 text-center">
-          های‌حساب؛ سایت استخدام حسابدار و مرجع فرصت‌های شغلی حسابداری
+          های‌حساب؛ نقطه اتصال حسابداران و کسب‌وکارها
         </h1>
-        <h2 class="font-semibold text-lg text-center">
-          پلی میان کارفرمایان و حسابداران برای استخدام و همکاری حرفه‌ای
-        </h2>
+        <p class="font-semibold text-lg text-center">
+          از فرصت‌های شغلی و پروژه‌های جدید برای حسابداران تا تأمین نیروی متخصص
+          و خدمات مالی موردنیاز کسب‌وکارها.
+        </p>
         <div class="flex flex-wrap gap-2 mt-5 justify-center">
           <IntentLink
             :to="paths.employer.adsCreate"
@@ -39,9 +40,9 @@
     <section class="custom-pad mt-28">
       <div class="flex items-center gap-2">
         <Icon name="svg:bag-1" size="24" />
-        <p class="text-text-tertiary font-semibold text-xl">
+        <h2 class="text-text-tertiary font-semibold text-xl">
           جدیدترین فرصت‌های شغلی حسابداری ثبت شده
-        </p>
+        </h2>
       </div>
       <div class="mt-6 flex items-center justify-between">
         <m-toggle v-model="jobType" :items="HOME_JOB_TYPE_OPTIONS" />
@@ -93,14 +94,15 @@
           >
             خدمات های‌حساب
           </div>
-          <p class="font-yb-bold text-2xl mt-5 leading-10 max-lg:text-center">
-            های‌حساب چه خدماتی برای استخدام حسابدار و همکاری مالی ارائه می‌دهد؟
-          </p>
+          <h2 class="font-yb-bold text-2xl mt-5 leading-10 max-lg:text-center">
+            های‌حساب چه خدماتی به حسابداران و کسب‌وکارها ارائه می‌دهد؟
+          </h2>
           <p
             class="text-base lg:text-[18px] font-semibold mt-6 leading-10 max-lg:text-center"
           >
-            استخدام حسابدار، پیدا کردن فرصت‌های شغلی و دریافت مشاوره تخصصی؛ هر
-            کاری که در مسیر شغلی و کاری‌ات داری، از همین‌جا شروع می‌شود.
+            های‌حساب با هدف شکل‌گیری شبکه‌ای تخصصی برای جامعه حسابداری،
+            مجموعه‌ای از خدمات را برای گسترش فرصت‌های حرفه‌ای حسابداران و پاسخ
+            به نیازهای مالی کسب‌وکارها ارائه می‌دهد.
           </p>
         </div>
         <div class="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -119,9 +121,9 @@
             >
               {{ item.title1 }}
             </div>
-            <p class="mt-2 font-yb-bold text-[18px]">
+            <h3 class="mt-2 font-yb-bold text-[18px]">
               {{ item.title2 }}
-            </p>
+            </h3>
             <p class="mt-4 text-sm">
               {{ item.text }}
             </p>
@@ -190,11 +192,11 @@
     <m-divider class="mt-12" />
 
     <section class="custom-pad mt-8 pb-8">
-      <p
+      <h2
         class="text-xl lg:text-2xl text-text-tertiary font-yb-bold text-center"
       >
         مقالات آموزشی و تخصصی حسابداری های‌حساب
-      </p>
+      </h2>
       <p
         class="mt-3 text-text-tertiary font-semibold text-center text-sm lg:text-base"
       >
