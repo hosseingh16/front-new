@@ -37,7 +37,10 @@ export function formatTaxReturnConsultantPriceRange(
   max: number | null | undefined,
 ): string {
   const minText = formatTaxReturnConsultantPriceShort(min)
-  const maxText = formatTaxReturnConsultantPriceShort(max)
+  const maxText =
+    max == null
+      ? 'متناسب با شرایط پرونده'
+      : formatTaxReturnConsultantPriceShort(max)
 
   if (minText && maxText) return `حداقل ${minText} - حداکثر ${maxText}`
   if (minText) return `حداقل ${minText}`
