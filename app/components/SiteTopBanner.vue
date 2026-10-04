@@ -53,25 +53,30 @@
 <script setup lang="ts">
 const { banner } = useLatestBanner()
 
-const defaultImage = computed(
-  () =>
+/** srcset treats spaces as URL/descriptor separators — encode before use. */
+function toSrcSetUrl(value: string | null | undefined): string {
+  const url = value?.trim()
+  if (!url) return ''
+  try {
+    return encodeURI(decodeURI(url))
+  } catch {
+    return encodeURI(url)
+  }
+}
+
+const defaultImage = computed(() =>
+  toSrcSetUrl(
     banner.value?.default_image ||
-    banner.value?.tablet_image ||
-    banner.value?.mobile_image ||
-    '',
+      banner.value?.tablet_image ||
+      banner.value?.mobile_image,
+  ),
 )
 
-const tabletImage = computed(
-  () => banner.value?.tablet_image || banner.value?.default_image || '',
-)
+// Only emit <source> when that size has its own asset.
+// Falling back to default_image makes every breakpoint identical.
+const tabletImage = computed(() => toSrcSetUrl(banner.value?.tablet_image))
 
-const mobileImage = computed(
-  () =>
-    banner.value?.mobile_image ||
-    banner.value?.tablet_image ||
-    banner.value?.default_image ||
-    '',
-)
+const mobileImage = computed(() => toSrcSetUrl(banner.value?.mobile_image))
 
 const bannerStyle = computed(() => {
   const color = banner.value?.background_color?.trim()

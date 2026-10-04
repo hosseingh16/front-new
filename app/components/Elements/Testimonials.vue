@@ -4,15 +4,20 @@
     :class="sectionClass"
   >
     <div
-      class="flex items-center justify-center rounded-xl bg-[#4864E114] px-4 py-2 text-sm font-semibold text-primary-500"
+      class="flex items-center justify-center rounded-full bg-[#4864E114] px-4 py-2 text-sm font-semibold text-primary-500"
       :class="badgeClass"
     >
       {{ badge }}
     </div>
-    <p class="mt-6 text-center font-yb-bold text-2xl text-text-tertiary">
+    <p
+      class="mt-6 max-w-4xl text-center font-yb-bold text-xl leading-10 text-text-tertiary md:text-2xl"
+    >
       {{ title }}
     </p>
-    <p class="mt-4 text-center text-[18px] font-semibold text-text-tertiary">
+    <p
+      v-if="subtitle"
+      class="mt-4 text-center text-[18px] font-semibold text-text-tertiary"
+    >
       {{ subtitle }}
     </p>
     <div
@@ -28,33 +33,53 @@
         >
           {{ index + 1 }}
         </div>
-        <div class="rounded-3xl rounded-br-none p-10 shadow-[0px_0px_10px_0px_#00000024]">
-          <p class="mb-12 text-center text-caption text-text-tertiary">
+        <div
+          class="rounded-3xl border border-[#E8E8E8] bg-white px-6 py-8 shadow-[0px_4px_24px_0px_#0000000F] md:px-8 md:py-10"
+        >
+          <p class="mb-12 text-center text-sm leading-7 text-[#6f6f6f]">
             «{{ testimonial.text }}»
           </p>
         </div>
         <div class="-mt-15 flex flex-col items-center">
           <div
-            class="h-32 w-32 rounded-full bg-surface-50 p-2 shadow-[0px_4px_10px_0px_#0000001A]"
+            class="flex h-28 w-28 items-center justify-center rounded-full border-2 border-dashed border-[#C5C9DE] p-1.5"
           >
             <div
-              class="h-full w-full rounded-full border-2 border-dashed border-primary-500 p-4"
+              class="flex h-full w-full items-center justify-center overflow-hidden rounded-full bg-linear-to-b"
+              :class="[
+                testimonial.image ? 'from-50% to-100%' : '',
+                testimonial.avatarClass,
+              ]"
             >
-              <div
-                class="flex h-full w-full items-center justify-center rounded-full bg-linear-to-b from-50% to-100%"
-                :class="testimonial.avatarClass"
+              <img
+                v-if="testimonial.image"
+                :src="`/images/${testimonial.image}`"
+                alt=""
+                class="max-h-full max-w-full object-contain"
+                :class="testimonial.imageClass"
+              />
+              <svg
+                v-else
+                viewBox="0 0 16 17"
+                class="h-14 w-14"
+                :class="testimonial.iconClass"
+                fill="currentColor"
+                aria-hidden="true"
               >
-                <img
-                  :src="`/images/${testimonial.image}`"
-                  alt=""
-                  :class="testimonial.imageClass"
+                <path
+                  d="M7.99935 8.41129C9.8403 8.41129 11.3327 6.91891 11.3327 5.07796C11.3327 3.23701 9.8403 1.74463 7.99935 1.74463C6.1584 1.74463 4.66602 3.23701 4.66602 5.07796C4.66602 6.91891 6.1584 8.41129 7.99935 8.41129Z"
                 />
-              </div>
+                <path
+                  d="M7.99945 10.0776C4.65945 10.0776 1.93945 12.3176 1.93945 15.0776C1.93945 15.2643 2.08612 15.411 2.27279 15.411H13.7261C13.9128 15.411 14.0595 15.2643 14.0595 15.0776C14.0595 12.3176 11.3395 10.0776 7.99945 10.0776Z"
+                />
+              </svg>
             </div>
           </div>
           <div class="mt-5 w-full text-center">
-            <p class="text-sm font-semibold">{{ testimonial.name }}</p>
-            <p class="mt-2 w-full text-caption text-primary-500">
+            <p class="text-sm font-semibold text-[#5c5c5c]">
+              {{ testimonial.name }}
+            </p>
+            <p class="mt-2 w-full text-caption text-[#7881A2]">
               {{ testimonial.role }}
             </p>
           </div>
@@ -69,21 +94,23 @@ export interface Testimonial {
   text: string
   name: string
   role: string
-  image: string
+  image?: string
   avatarClass: string
   imageClass?: string
+  iconClass?: string
 }
 
 withDefaults(
   defineProps<{
     badge: string
     title: string
-    subtitle: string
+    subtitle?: string
     testimonials: Testimonial[]
     badgeClass?: string
     sectionClass?: string
   }>(),
   {
+    subtitle: '',
     badgeClass: '',
     sectionClass: '',
   },

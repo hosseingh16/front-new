@@ -42,8 +42,8 @@ export function formatTaxReturnConsultantPriceRange(
       ? 'متناسب با شرایط پرونده'
       : formatTaxReturnConsultantPriceShort(max)
 
-  if (minText && maxText) return `حداقل ${minText} - حداکثر ${maxText}`
-  if (minText) return `حداقل ${minText}`
-  if (maxText) return `حداکثر ${maxText}`
+  if (minText && maxText) return `حداقل: ${minText} - حداکثر: ${maxText}`
+  if (minText) return `حداقل: ${minText}`
+  if (maxText) return `حداکثر: ${maxText}`
   return 'قیمت نامشخص'
 }

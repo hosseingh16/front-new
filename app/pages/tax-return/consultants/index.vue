@@ -216,8 +216,8 @@ function parseSelectionMode(value: unknown): SelectionMode | null {
   return raw === "self" || raw === "auto" ? raw : null;
 }
 
-const selectionMode = ref<SelectionMode | null>(
-  parseSelectionMode(route.query.mode),
+const selectionMode = ref<SelectionMode>(
+  parseSelectionMode(route.query.mode) ?? "self",
 );
 const selectedCity = ref<CityValue>("all");
 const requestModalRef = ref<InstanceType<typeof TaxReturnRequestModal> | null>(
@@ -286,15 +286,14 @@ function onSelectConsultant(consultant: TaxReturnConsultant) {
 }
 
 function onChangeConsultantMode(mode?: SelectionMode) {
-  selectionMode.value = mode ?? null;
-  if (mode === "self") scrollToSection("consultant-selection");
+  selectionMode.value = mode ?? "self";
+  if (selectionMode.value === "self") scrollToSection("consultant-selection");
 }
 
 watch(
   () => route.query.mode,
   (queryMode) => {
-    const nextMode = parseSelectionMode(queryMode);
-    if (nextMode) selectionMode.value = nextMode;
+    selectionMode.value = parseSelectionMode(queryMode) ?? "self";
   },
 );
 
@@ -362,9 +361,17 @@ const faqCategories = faqCategoriesByType(
 );
 const faqs = faqsByType(FAQ_TYPE.consulting, FAQ_TYPE.general);
 
+definePageMeta({
+  robots: true,
+});
+
 useSeoMeta({
   title: "مشاوره مالی و مالیاتی بهترین متخصصان کشور | های‌حساب",
   description:
+    "از میان بهترین مشاوران تأیید شده های‌حساب مشاور مورد نظر خود را انتخاب کنید و صفر تا صد امور مالیاتی را به متخصصان بسپارید.",
+  robots: "index, follow",
+  ogTitle: "مشاوره مالی و مالیاتی بهترین متخصصان کشور | های‌حساب",
+  ogDescription:
     "از میان بهترین مشاوران تأیید شده های‌حساب مشاور مورد نظر خود را انتخاب کنید و صفر تا صد امور مالیاتی را به متخصصان بسپارید.",
 });
 </script>
