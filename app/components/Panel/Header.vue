@@ -150,7 +150,7 @@ const createMenuItems = [
   },
   {
     title: "درخواست اظهار نامه",
-    to: "/dashboard/tax-returns/create",
+    to: "/tax-return/consultants",
     icon: "svg:new-notepad-text",
   },
 ];

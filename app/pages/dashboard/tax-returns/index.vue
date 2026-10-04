@@ -6,7 +6,7 @@
       </h1>
 
       <NuxtLink
-        to="/dashboard/tax-returns/create"
+        to="/tax-return/consultants"
         class="inline-flex h-10 items-center gap-2 rounded-xl bg-[#EEF1FC] px-4 text-sm font-semibold text-primary-500 transition-opacity hover:opacity-80"
       >
         <Icon name="lucide:briefcase" size="16" />

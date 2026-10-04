@@ -22,7 +22,7 @@ export const paths = {
     ads: '/dashboard/employer/ads',
     adsCreate: '/dashboard/employer/ads/create',
     resumeBank: '/dashboard/employer/resumes',
-    taxReturnCreate: '/dashboard/tax-returns/create',
+    taxReturnCreate: '/tax-return/consultants',
   },
   jobSeeker: {
     jobs: '/dashboard/jobs',

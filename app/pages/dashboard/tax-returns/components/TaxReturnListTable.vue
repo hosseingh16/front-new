@@ -88,7 +88,7 @@
       :icon-size="180"
       action-label="ثبت درخواست جدید"
       action-icon="lucide:file-plus-corner"
-      action-to="/dashboard/tax-returns/create"
+      action-to="/tax-return/consultants"
     />
   </div>
 </template>

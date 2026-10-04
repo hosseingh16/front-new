@@ -93,7 +93,7 @@ export const menuMap: Record<string, MenuMeta> = {
   create_tax_return: {
     label: "ثبت درخواست اظهارنامه",
     icon: "lucide:file-plus-corner",
-    to: "/dashboard/tax-returns/create",
+    to: "/tax-return/consultants",
   },
 
   tax_return_management: {
