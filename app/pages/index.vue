@@ -41,7 +41,7 @@
       <div class="flex items-center gap-2">
         <Icon name="svg:bag-1" size="24" />
         <h2 class="text-text-tertiary font-semibold text-xl">
-          جدیدترین فرصت‌های شغلی حسابداری ثبت شده
+          جدیدترین فرصت‌های شغلی حسابداری
         </h2>
       </div>
       <div class="mt-6 flex items-center justify-between">
