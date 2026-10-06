@@ -120,7 +120,13 @@ const hasCta = computed(() => Boolean(banner.value?.button_title?.trim()))
 const isOnBannerTarget = computed(() => {
   const target = pathFromHref(href.value)
   if (!target) return false
-  return normalizePath(target) === normalizePath(route.path)
+
+  const current = normalizePath(route.path)
+  const base = normalizePath(target)
+
+  // Hide on the linked page and all nested routes (e.g. /tax-return/*).
+  if (base === '/') return current === '/'
+  return current === base || current.startsWith(`${base}/`)
 })
 
 const NuxtLink = resolveComponent('NuxtLink')
