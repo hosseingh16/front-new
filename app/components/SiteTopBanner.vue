@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="banner"
+    v-if="banner && !isOnBannerTarget"
     class="w-full"
     :style="bannerStyle"
   >
@@ -51,6 +51,8 @@
 </template>
 
 <script setup lang="ts">
+const route = useRoute()
+const requestURL = useRequestURL()
 const { banner } = useLatestBanner()
 
 /** srcset treats spaces as URL/descriptor separators — encode before use. */
@@ -62,6 +64,30 @@ function toSrcSetUrl(value: string | null | undefined): string {
   } catch {
     return encodeURI(url)
   }
+}
+
+function normalizePath(path: string): string {
+  if (!path) return '/'
+  if (path.length > 1 && path.endsWith('/')) return path.slice(0, -1)
+  return path
+}
+
+/** Path of the banner link when it points at this site; otherwise null. */
+function pathFromHref(value: string): string | null {
+  const trimmed = value.trim()
+  if (!trimmed) return null
+
+  if (/^https?:\/\//i.test(trimmed)) {
+    try {
+      const url = new URL(trimmed)
+      if (url.origin !== requestURL.origin) return null
+      return url.pathname
+    } catch {
+      return null
+    }
+  }
+
+  return trimmed.split(/[?#]/)[0] || '/'
 }
 
 const defaultImage = computed(() =>
@@ -90,6 +116,12 @@ const buttonStyle = computed(() => ({
 const href = computed(() => banner.value?.url?.trim() || '')
 const isExternal = computed(() => /^https?:\/\//i.test(href.value))
 const hasCta = computed(() => Boolean(banner.value?.button_title?.trim()))
+
+const isOnBannerTarget = computed(() => {
+  const target = pathFromHref(href.value)
+  if (!target) return false
+  return normalizePath(target) === normalizePath(route.path)
+})
 
 const NuxtLink = resolveComponent('NuxtLink')
 
