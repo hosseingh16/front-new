@@ -1,4 +1,5 @@
 export const SETTINGS_DEFAULTS = {
+  'lookups.version': 1,
   'ads.max_softwares': 3,
   'ads.paid_cities': ['مشهد', 'تهران'],
   'ads.paid_city_price': 345_000,

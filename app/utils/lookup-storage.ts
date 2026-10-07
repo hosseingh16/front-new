@@ -1,13 +1,14 @@
 import type { ISelectItem } from '~/types/select-item'
 
 /** Bump when lookup catalog shape / strategy changes. */
-const STORAGE_KEY = 'hihesab:lookups:v2:all'
+const STORAGE_KEY = 'hihesab:lookups:v3:all'
 
-/** Client persistence TTL (24h). */
+/** Client persistence TTL (24h) — also invalidated by lookups.version mismatch. */
 export const LOOKUPS_STORAGE_TTL_MS = 24 * 60 * 60 * 1000
 
-type StoredLookupCatalog = {
+export type StoredLookupCatalog = {
   savedAt: number
+  version: number
   data: Record<string, ISelectItem[]>
 }
 
@@ -19,20 +20,21 @@ function isFresh(savedAt: number): boolean {
   return Date.now() - savedAt < LOOKUPS_STORAGE_TTL_MS
 }
 
-/** Full catalog from localStorage, or null if missing/(optionally) expired. */
+/** Full catalog from localStorage, or null if missing/expired/wrong version. */
 export function readLookupCatalogFromStorage(
-  options: { allowStale?: boolean } = {},
-): Record<string, ISelectItem[]> | null {
+  options: { allowStale?: boolean; expectedVersion?: number | null } = {},
+): StoredLookupCatalog | null {
   if (!canUseStorage()) return null
 
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
     if (!raw) return null
 
-    const parsed = JSON.parse(raw) as StoredLookupCatalog
+    const parsed = JSON.parse(raw) as Partial<StoredLookupCatalog>
     if (
       !parsed ||
       typeof parsed.savedAt !== 'number' ||
+      typeof parsed.version !== 'number' ||
       !parsed.data ||
       typeof parsed.data !== 'object'
     ) {
@@ -45,7 +47,15 @@ export function readLookupCatalogFromStorage(
       return null
     }
 
-    return parsed.data
+    if (
+      options.expectedVersion != null &&
+      parsed.version !== options.expectedVersion
+    ) {
+      localStorage.removeItem(STORAGE_KEY)
+      return null
+    }
+
+    return parsed as StoredLookupCatalog
   } catch {
     try {
       localStorage.removeItem(STORAGE_KEY)
@@ -58,12 +68,14 @@ export function readLookupCatalogFromStorage(
 
 export function writeLookupCatalogToStorage(
   data: Record<string, ISelectItem[]>,
+  version: number,
 ): void {
   if (!canUseStorage()) return
 
   try {
     const payload: StoredLookupCatalog = {
       savedAt: Date.now(),
+      version: Math.max(1, version),
       data,
     }
     localStorage.setItem(STORAGE_KEY, JSON.stringify(payload))
@@ -77,6 +89,8 @@ export function removeLookupCatalogFromStorage(): void {
 
   try {
     localStorage.removeItem(STORAGE_KEY)
+    // Drop legacy keys from earlier strategies.
+    localStorage.removeItem('hihesab:lookups:v2:all')
   } catch {
     // ignore
   }

@@ -14,13 +14,15 @@ export interface ApiError {
 export interface ApiResponse<T = any> {
   data: T;
   meta?: {
-    current_page: number;
-    from: number;
-    last_page: number | null;
-    path: string;
-    per_page: number;
-    to: number;
-    total: number;
+    current_page?: number;
+    from?: number;
+    last_page?: number | null;
+    path?: string;
+    per_page?: number;
+    to?: number;
+    total?: number;
+    /** Lookups catalog stamp from API (`LookupsVersion`). */
+    version?: number;
   };
   links?: {
     first: string;

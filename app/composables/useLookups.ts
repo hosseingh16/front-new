@@ -39,11 +39,13 @@ function normalizeCatalog(
 
 export function useLookups(keys: MaybeRef<LookupKey | LookupKey[]>) {
   const api = useApi()
+  const { ensure: ensureSettings, lookupsVersion } = useSettings()
   const cache = useState<Record<string, ISelectItem[]>>(
     'lookup-cache',
     () => ({}),
   )
   const catalogLoaded = useState<boolean>('lookup-catalog-loaded', () => false)
+  const catalogVersion = useState<number>('lookup-catalog-version', () => 0)
   const catalogPending = useState<boolean>('lookup-catalog-pending', () => false)
   const catalogError = useState<unknown>('lookup-catalog-error', () => null)
 
@@ -78,10 +80,9 @@ export function useLookups(keys: MaybeRef<LookupKey | LookupKey[]>) {
     cache.value = { ...cache.value, ...entries }
   }
 
-  function applyCatalog(data: Record<string, ISelectItem[]>) {
+  function applyCatalog(data: Record<string, ISelectItem[]>, version: number) {
     setCacheEntries(data)
 
-    // Ensure requested keys exist even if API omitted them.
     const fillers: Record<string, ISelectItem[]> = {}
     for (const key of normalizedKeys.value) {
       if (!(key in data) && !isCached(cache.value, key)) {
@@ -92,6 +93,7 @@ export function useLookups(keys: MaybeRef<LookupKey | LookupKey[]>) {
       setCacheEntries(fillers)
     }
 
+    catalogVersion.value = Math.max(1, version)
     catalogLoaded.value = true
   }
 
@@ -107,23 +109,52 @@ export function useLookups(keys: MaybeRef<LookupKey | LookupKey[]>) {
     }
   }
 
-  function hydrateFromLocalStorage(): boolean {
-    if (catalogLoaded.value && Object.keys(cache.value).length) {
+  function invalidateLocalCatalog() {
+    removeLookupCatalogFromStorage()
+    cache.value = {}
+    catalogLoaded.value = false
+    catalogVersion.value = 0
+  }
+
+  function hydrateFromLocalStorage(expectedVersion: number): boolean {
+    if (
+      catalogLoaded.value &&
+      Object.keys(cache.value).length &&
+      catalogVersion.value === expectedVersion
+    ) {
       fillMissingRequestedKeys()
       return true
     }
 
-    const stored = readLookupCatalogFromStorage()
+    if (
+      catalogLoaded.value &&
+      catalogVersion.value > 0 &&
+      catalogVersion.value !== expectedVersion
+    ) {
+      invalidateLocalCatalog()
+    }
+
+    const stored = readLookupCatalogFromStorage({
+      expectedVersion,
+    })
     if (!stored) return false
 
-    applyCatalog(stored)
+    applyCatalog(stored.data, stored.version)
     return true
   }
 
   async function fetchAllLookups(force = false) {
-    if (!force && hydrateFromLocalStorage()) return
+    await ensureSettings()
+    const expectedVersion = lookupsVersion.value
 
-    if (!force && catalogLoaded.value && Object.keys(cache.value).length) {
+    if (!force && hydrateFromLocalStorage(expectedVersion)) return
+
+    if (
+      !force &&
+      catalogLoaded.value &&
+      Object.keys(cache.value).length &&
+      catalogVersion.value === expectedVersion
+    ) {
       fillMissingRequestedKeys()
       return
     }
@@ -139,21 +170,25 @@ export function useLookups(keys: MaybeRef<LookupKey | LookupKey[]>) {
       catalogError.value = null
 
       try {
-        // Do not send Cache-Control request headers — API CORS allow-list
-        // only includes accept/authorization/content-type/xsrf/etc.
         const response = await api.get<
-          ApiResponse<Record<string, ISelectItem[]>>
+          ApiResponse<Record<string, ISelectItem[]>> & {
+            meta?: { version?: number }
+          }
         >('/lookups', {
           query: { keys: 'all' },
         })
 
         const entries = normalizeCatalog(response.data)
-        applyCatalog(entries)
-        writeLookupCatalogToStorage(entries)
+        const version = Math.max(
+          1,
+          Number(response.meta?.version) || expectedVersion || 1,
+        )
+        applyCatalog(entries, version)
+        writeLookupCatalogToStorage(entries, version)
       } catch (err) {
-        const stored = readLookupCatalogFromStorage()
+        const stored = readLookupCatalogFromStorage({ allowStale: true })
         if (stored) {
-          applyCatalog(stored)
+          applyCatalog(stored.data, stored.version)
         } else {
           fillMissingRequestedKeys()
           catalogLoaded.value = true
@@ -184,14 +219,20 @@ export function useLookups(keys: MaybeRef<LookupKey | LookupKey[]>) {
     { immediate: true },
   )
 
+  // When settings load a newer lookups.version (e.g. after admin bump), refetch.
+  watch(lookupsVersion, (version, previous) => {
+    if (!previous || version === previous) return
+    if (catalogVersion.value === version) return
+    invalidateLocalCatalog()
+    void ensure(true).catch(() => {})
+  })
+
   function items(key: string) {
     return computed(() => cache.value[key] ?? [])
   }
 
   async function refresh() {
-    removeLookupCatalogFromStorage()
-    cache.value = {}
-    catalogLoaded.value = false
+    invalidateLocalCatalog()
     await ensure(true)
   }
 

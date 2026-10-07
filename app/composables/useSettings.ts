@@ -102,6 +102,13 @@ export function useSettings() {
 
   void ensure()
 
+  const lookupsVersion = computed(() =>
+    readPositiveInt(
+      cache.value,
+      'lookups.version',
+      SETTINGS_DEFAULTS['lookups.version'],
+    ),
+  )
   const adsMaxSoftwares = computed(() =>
     readPositiveInt(
       cache.value,
@@ -282,6 +289,7 @@ export function useSettings() {
   )
 
   const resolved = computed<AppSettings>(() => ({
+    'lookups.version': lookupsVersion.value,
     'ads.max_softwares': adsMaxSoftwares.value,
     'ads.paid_cities': adsPaidCities.value,
     'ads.paid_city_price': adsPaidCityPrice.value,
@@ -314,6 +322,7 @@ export function useSettings() {
     ensure,
     loaded,
     resolved,
+    lookupsVersion,
     adsMaxSoftwares,
     adsPaidCities,
     adsPaidCityPrice,
