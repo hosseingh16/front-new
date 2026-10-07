@@ -45,9 +45,17 @@ export function resolveProvinceIdsFromQueryValue(
     if (!provinces.length) continue
 
     const normalized = normalizeProvinceToken(token)
-    const match = provinces.find(
-      (item) => normalizeProvinceToken(item.label) === normalized,
+    const slugForm = provinceLabelToSlug(
+      normalizePersianText(decodeURIComponent(token).trim()),
     )
+    const match = provinces.find((item) => {
+      const labelToken = normalizeProvinceToken(item.label)
+      return (
+        labelToken === normalized ||
+        provinceLabelToSlug(item.label) === slugForm ||
+        provinceLabelToSlug(item.label) === provinceLabelToSlug(token)
+      )
+    })
 
     if (match) result.push(Number(match.value))
   }

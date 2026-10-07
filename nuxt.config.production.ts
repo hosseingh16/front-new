@@ -1,4 +1,5 @@
 import tailwindcss from "@tailwindcss/vite";
+import { createSitemapConfig } from "./shared/sitemap";
 
 const nonPagePatterns = [
   "!**/components/**",
@@ -116,22 +117,19 @@ export default defineNuxtConfig({
   pages: {
     pattern: ["**/*.{vue,js,jsx,mjs,ts,tsx}", ...nonPagePatterns],
   },
-  sitemap: {
-    exclude: [
-      "/dashboard/**",
-      new RegExp("/.+/components/.*"),
-      new RegExp("/.+/data/.*"),
-      new RegExp("/.+/utils/.*"),
-    ],
-  },
+  sitemap: createSitemapConfig(),
 
   robots: {
     groups: [
       {
         userAgent: "*",
         disallow: ["/"],
+        // allow: ["/"],
+        // disallow: ["/dashboard", "/login", "/entering", "/payment"],
+      
       },
     ],
+    sitemap: ["/sitemap_index.xml"],
   },
 
   vite: {

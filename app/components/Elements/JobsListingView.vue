@@ -128,7 +128,10 @@ import {
   useResolveProvinceFiltersFromRoute,
 } from "~/composables/useJobFilterProvinceOptions";
 import { paths } from "~/routes";
-import type { JobFiltersModel } from "~/types/job-filters";
+import {
+  JOB_FILTERS_LOOKUP_KEYS,
+  type JobFiltersModel,
+} from "~/types/job-filters";
 import { provinceIdsToQueryValue } from "~/utils/province-filter-query";
 
 const props = defineProps<{
@@ -138,6 +141,7 @@ const props = defineProps<{
 
 const route = useRoute();
 const router = useRouter();
+const { ensure: ensureFilterLookups } = useLookups(JOB_FILTERS_LOOKUP_KEYS);
 const provinceOptions = useJobFilterProvinceOptions();
 const { items: lookupItems } = useLookups("job_titles");
 const jobTitles = lookupItems("job_titles");
@@ -184,6 +188,11 @@ function filtersFromRoute(
   }
 
   return next;
+}
+
+// Province slugs in the path need lookup labels before the first /opportunities fetch.
+if (routeCitySlug.value) {
+  await ensureFilterLookups();
 }
 
 const initialState = filtersFromRoute(
@@ -372,6 +381,9 @@ watch(
 );
 
 onMounted(() => {
+  // Avoid stripping /jobs/city/:slug before province filters are applied.
+  if (routeCitySlug.value && !jobFilters.value.provinces.length) return;
+
   // Canonicalize query filters into path routes when possible:
   // `/jobs?position=accountant` → `/jobs/category/accountant`
   // `/jobs?province=تهران` → `/jobs/city/تهران`
