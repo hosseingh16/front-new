@@ -1,10 +1,15 @@
 import type { ApiResponse } from '~/types/api'
 import type { ISelectItem } from '~/types/select-item'
+import {
+  readLookupCatalogFromStorage,
+  removeLookupCatalogFromStorage,
+  writeLookupCatalogToStorage,
+} from '~/utils/lookup-storage'
 
 export type LookupKey = string
 
-/** In-flight promises keyed by lookup key (module-level for cross-composable dedupe). */
-const inflightByKey = new Map<string, Promise<void>>()
+/** Single in-flight catalog fetch shared across all useLookups callers. */
+let catalogInflight: Promise<void> | null = null
 
 function normalizeLookupKeys(input: LookupKey | LookupKey[]) {
   const rawKeys = Array.isArray(input) ? input : String(input).split(',')
@@ -19,20 +24,28 @@ function isCached(
   return Object.prototype.hasOwnProperty.call(cache, key)
 }
 
+function normalizeCatalog(
+  data: Record<string, ISelectItem[] | undefined> | null | undefined,
+): Record<string, ISelectItem[]> {
+  const entries: Record<string, ISelectItem[]> = {}
+  if (!data) return entries
+
+  for (const [key, value] of Object.entries(data)) {
+    entries[key] = Array.isArray(value) ? value : []
+  }
+
+  return entries
+}
+
 export function useLookups(keys: MaybeRef<LookupKey | LookupKey[]>) {
   const api = useApi()
   const cache = useState<Record<string, ISelectItem[]>>(
     'lookup-cache',
     () => ({}),
   )
-  const pendingMap = useState<Record<string, boolean>>(
-    'lookup-pending-map',
-    () => ({}),
-  )
-  const errorMap = useState<Record<string, unknown>>(
-    'lookup-error-map',
-    () => ({}),
-  )
+  const catalogLoaded = useState<boolean>('lookup-catalog-loaded', () => false)
+  const catalogPending = useState<boolean>('lookup-catalog-pending', () => false)
+  const catalogError = useState<unknown>('lookup-catalog-error', () => null)
 
   const normalizedKeys = computed(() => normalizeLookupKeys(toValue(keys)))
 
@@ -46,136 +59,126 @@ export function useLookups(keys: MaybeRef<LookupKey | LookupKey[]>) {
     ),
   )
 
-  const pending = computed(() =>
-    normalizedKeys.value.some((key) => Boolean(pendingMap.value[key])),
+  const pending = computed(
+    () =>
+      catalogPending.value &&
+      normalizedKeys.value.some((key) => !isCached(cache.value, key)),
   )
 
   const ready = computed(
     () =>
+      catalogLoaded.value &&
       normalizedKeys.value.every((key) => isCached(cache.value, key)) &&
       !pending.value,
   )
 
-  const error = computed(() => {
-    const failedKey = normalizedKeys.value.find(
-      (key) => errorMap.value[key] != null,
-    )
-    return failedKey != null ? errorMap.value[failedKey] : null
-  })
-
-  function setPending(keysToUpdate: string[], value: boolean) {
-    const next = { ...pendingMap.value }
-    for (const key of keysToUpdate) {
-      next[key] = value
-    }
-    pendingMap.value = next
-  }
+  const error = computed(() => catalogError.value)
 
   function setCacheEntries(entries: Record<string, ISelectItem[]>) {
     cache.value = { ...cache.value, ...entries }
   }
 
-  function setErrors(keysToUpdate: string[], err: unknown) {
-    const next = { ...errorMap.value }
-    for (const key of keysToUpdate) {
-      next[key] = err
+  function applyCatalog(data: Record<string, ISelectItem[]>) {
+    setCacheEntries(data)
+
+    // Ensure requested keys exist even if API omitted them.
+    const fillers: Record<string, ISelectItem[]> = {}
+    for (const key of normalizedKeys.value) {
+      if (!(key in data) && !isCached(cache.value, key)) {
+        fillers[key] = []
+      }
     }
-    errorMap.value = next
-  }
-
-  function clearErrors(keysToUpdate: string[]) {
-    const next = { ...errorMap.value }
-    for (const key of keysToUpdate) {
-      next[key] = null
-    }
-    errorMap.value = next
-  }
-
-  /**
-   * Recover from HMR / aborted SSR where pending stayed true but the
-   * module-level promise map was wiped.
-   */
-  function clearStalePending(keysToCheck: string[]) {
-    const stale = keysToCheck.filter(
-      (key) => pendingMap.value[key] && !inflightByKey.has(key),
-    )
-    if (!stale.length) return
-    setPending(stale, false)
-  }
-
-  async function fetchLookupBatch(requestedKeys: string[], force = false) {
-    if (!requestedKeys.length) return
-
-    clearStalePending(requestedKeys)
-
-    // Wait for any overlapping in-flight fetches so callers don't race.
-    const waiting = requestedKeys
-      .map((key) => inflightByKey.get(key))
-      .filter((promise): promise is Promise<void> => promise != null)
-
-    if (waiting.length) {
-      await Promise.allSettled(waiting)
+    if (Object.keys(fillers).length) {
+      setCacheEntries(fillers)
     }
 
-    const keysToFetch = requestedKeys.filter((key) => {
-      if (inflightByKey.has(key)) return false
-      if (force) return true
-      return !isCached(cache.value, key)
-    })
+    catalogLoaded.value = true
+  }
 
-    if (!keysToFetch.length) return
+  function fillMissingRequestedKeys() {
+    const fillers: Record<string, ISelectItem[]> = {}
+    for (const key of normalizedKeys.value) {
+      if (!isCached(cache.value, key)) {
+        fillers[key] = []
+      }
+    }
+    if (Object.keys(fillers).length) {
+      setCacheEntries(fillers)
+    }
+  }
 
-    const promise = (async () => {
-      setPending(keysToFetch, true)
-      clearErrors(keysToFetch)
+  function hydrateFromLocalStorage(): boolean {
+    if (catalogLoaded.value && Object.keys(cache.value).length) {
+      fillMissingRequestedKeys()
+      return true
+    }
+
+    const stored = readLookupCatalogFromStorage()
+    if (!stored) return false
+
+    applyCatalog(stored)
+    return true
+  }
+
+  async function fetchAllLookups(force = false) {
+    if (!force && hydrateFromLocalStorage()) return
+
+    if (!force && catalogLoaded.value && Object.keys(cache.value).length) {
+      fillMissingRequestedKeys()
+      return
+    }
+
+    if (catalogInflight) {
+      await catalogInflight
+      fillMissingRequestedKeys()
+      return
+    }
+
+    catalogInflight = (async () => {
+      catalogPending.value = true
+      catalogError.value = null
 
       try {
+        // Do not send Cache-Control request headers — API CORS allow-list
+        // only includes accept/authorization/content-type/xsrf/etc.
         const response = await api.get<
           ApiResponse<Record<string, ISelectItem[]>>
         >('/lookups', {
-          query: { keys: keysToFetch.join(',') },
+          query: { keys: 'all' },
         })
-        const data = response.data ?? {}
-        const entries: Record<string, ISelectItem[]> = {}
 
-        for (const key of keysToFetch) {
-          entries[key] = data[key] ?? []
-        }
-
-        setCacheEntries(entries)
+        const entries = normalizeCatalog(response.data)
+        applyCatalog(entries)
+        writeLookupCatalogToStorage(entries)
       } catch (err) {
-        // Cache empty arrays so consumers (forms/selects) are not blocked forever.
-        const entries: Record<string, ISelectItem[]> = {}
-        for (const key of keysToFetch) {
-          entries[key] = cache.value[key] ?? []
+        const stored = readLookupCatalogFromStorage()
+        if (stored) {
+          applyCatalog(stored)
+        } else {
+          fillMissingRequestedKeys()
+          catalogLoaded.value = true
         }
-        setCacheEntries(entries)
-        setErrors(keysToFetch, err)
+        catalogError.value = err
         throw err
       } finally {
-        for (const key of keysToFetch) {
-          inflightByKey.delete(key)
-        }
-        setPending(keysToFetch, false)
+        catalogPending.value = false
+        catalogInflight = null
       }
     })()
 
-    for (const key of keysToFetch) {
-      inflightByKey.set(key, promise)
-    }
-
-    await promise
+    await catalogInflight
   }
 
   async function ensure(force = false) {
-    await fetchLookupBatch(normalizedKeys.value, force)
+    if (!normalizedKeys.value.length && !force) return
+    await fetchAllLookups(force)
   }
 
   watch(
     normalizedKeys,
     () => {
       void ensure().catch(() => {
-        // Errors are stored in errorMap; avoid unhandled rejection from watch.
+        // Errors are stored in catalogError; avoid unhandled rejection from watch.
       })
     },
     { immediate: true },
@@ -186,15 +189,9 @@ export function useLookups(keys: MaybeRef<LookupKey | LookupKey[]>) {
   }
 
   async function refresh() {
-    const keysToRefresh = normalizedKeys.value
-    if (!keysToRefresh.length) return
-
-    const nextCache = { ...cache.value }
-    for (const key of keysToRefresh) {
-      delete nextCache[key]
-    }
-    cache.value = nextCache
-
+    removeLookupCatalogFromStorage()
+    cache.value = {}
+    catalogLoaded.value = false
     await ensure(true)
   }
 
