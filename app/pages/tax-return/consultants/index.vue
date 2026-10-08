@@ -6,7 +6,7 @@
       <div class="custom-pad pt-6">
         <nav class="text-sm text-text-passive">
           <NuxtLink to="/" class="hover:text-primary-500 transition-colors">
-            <Icon name="svg:home" size="16" />
+            صفحه اصلی
           </NuxtLink>
           <span class="mx-2">/</span>
           <NuxtLink
@@ -262,10 +262,7 @@ function onSelectMode(mode: SelectionMode) {
   logActivity("tax_return.consultants.mode", option?.title ?? mode);
 
   if (mode === "auto") {
-    logActivity(
-      "tax_return.consultants.modal",
-      "انتخاب مشاور توسط های‌حساب",
-    );
+    logActivity("tax_return.consultants.modal", "انتخاب مشاور توسط های‌حساب");
     nextTick(() => requestModalRef.value?.showModal({ autoAssign: true }));
     return;
   }

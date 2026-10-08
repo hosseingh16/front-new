@@ -7,7 +7,7 @@
       <div class="custom-pad pt-6">
         <nav class="text-sm text-text-passive">
           <NuxtLink to="/" class="hover:text-primary-500 transition-colors">
-            <Icon name="svg:home" size="16" />
+            صفحه اصلی
           </NuxtLink>
           <span class="mx-2">/</span>
           <span>خدمات</span>
@@ -321,11 +321,7 @@ import step4 from "~/assets/vectors/pages/employers/step4.svg";
 import processGraphic from "~/assets/vectors/pages/employers/Group 1142813134.svg";
 import TrustBar from "../../components/Elements/TrustBar.vue";
 import FaqSection from "~/components/Elements/FaqSection.vue";
-import {
-  FAQ_TYPE,
-  faqCategoriesByType,
-  faqsByType,
-} from "~/data/faqs";
+import { FAQ_TYPE, faqCategoriesByType, faqsByType } from "~/data/faqs";
 import Testimonials, {
   type Testimonial,
 } from "~/components/Elements/Testimonials.vue";

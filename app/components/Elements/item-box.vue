@@ -152,8 +152,8 @@
           <span
             class="btn border-none px-2 h-8 text-sm text-primary-500 bg-[#4864E114]"
           >
-            <icons-chevron class="rotate-90" color="#4864e1" />
             مشاهده
+            <icons-chevron class="rotate-90" color="#4864e1" />
           </span>
         </div>
       </NuxtLink>

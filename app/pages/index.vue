@@ -134,7 +134,7 @@
               :query="item.query"
               class="btn btn-ghost-primary mt-6 w-full text-sm"
             >
-              <Icon name="svg:open-link" />
+              <Icon :name="item.icon" />
               {{ item.btnText }}
             </IntentLink>
             <NuxtLink
@@ -142,11 +142,11 @@
               :to="item.to"
               class="btn btn-ghost-primary mt-6 w-full text-sm"
             >
-              <Icon name="svg:open-link" />
+              <Icon :name="item.icon" />
               {{ item.btnText }}
             </NuxtLink>
             <button v-else class="btn btn-ghost-primary mt-6 w-full text-sm">
-              <Icon name="svg:open-link" />
+              <Icon :name="item.icon" />
               {{ item.btnText }}
             </button>
           </div>
@@ -345,6 +345,7 @@ const services: {
   text: string;
   btnText: string;
   to?: string;
+  icon: string;
   role?: AccountRole;
   query?: Record<string, string>;
 }[] = [
@@ -354,6 +355,7 @@ const services: {
     text: "جدیدترین فرصت‌های شغلی حسابداری را مشاهده کنید و برای موقعیت مناسب درخواست ارسال کنید.",
     btnText: "فرصت های شغلی",
     to: "/jobs",
+    icon: "lucide:briefcase",
   },
   {
     title1: "آگهی",
@@ -362,6 +364,7 @@ const services: {
     btnText: "ایجاد آگهی",
     to: paths.employer.adsCreate,
     role: "employer",
+    icon: "lucide:file-pen",
   },
   {
     title1: "رزومه ساز",
@@ -370,6 +373,7 @@ const services: {
     btnText: "رزومه ساز",
     to: "/dashboard/cv",
     role: "job_seeker",
+    icon: "lucide:newspaper",
   },
   {
     title1: "استخدام نیرو",
@@ -378,6 +382,7 @@ const services: {
     btnText: "استخدام حسابدار",
     to: paths.employer.adsCreate,
     role: "employer",
+    icon: "lucide:user-star",
   },
 ];
 

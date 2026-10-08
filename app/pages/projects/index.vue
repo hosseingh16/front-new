@@ -7,7 +7,7 @@
       <div class="custom-pad pt-6">
         <nav class="text-sm text-text-passive">
           <NuxtLink to="/" class="hover:text-primary-500 transition-colors">
-            <Icon name="svg:home" size="16" />
+            صفحه اصلی
           </NuxtLink>
           <span class="mx-2">/</span>
           <span>خدمات</span>
@@ -302,11 +302,7 @@ import type { Testimonial } from "~/components/Elements/Testimonials.vue";
 import type { ApiResponse } from "~/types/api";
 import type { ProjectList } from "~/types/project";
 import FaqSection from "~/components/Elements/FaqSection.vue";
-import {
-  FAQ_TYPE,
-  faqCategoriesByType,
-  faqsByType,
-} from "~/data/faqs";
+import { FAQ_TYPE, faqCategoriesByType, faqsByType } from "~/data/faqs";
 import type { AccountRole } from "~/features/account/types";
 import { paths } from "~/routes";
 

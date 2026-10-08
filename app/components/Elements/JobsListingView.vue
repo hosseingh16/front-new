@@ -6,13 +6,10 @@
       <div class="custom-pad pt-6">
         <nav class="text-sm text-text-passive">
           <NuxtLink to="/" class="hover:text-primary-500 transition-colors">
-            <Icon name="svg:home" size="16" />
+            صفحه اصلی
           </NuxtLink>
           <span class="mx-2">/</span>
-          <NuxtLink
-            to="/jobs"
-            class="hover:text-primary-500 transition-colors"
-          >
+          <NuxtLink to="/jobs" class="hover:text-primary-500 transition-colors">
             فرصت های شغلی
           </NuxtLink>
           <template v-if="breadcrumbLabel">
@@ -100,11 +97,7 @@ import JobFiltersSidebar from "~/components/Elements/JobFiltersSidebar.vue";
 import NoResult from "~/components/Elements/NoResult.vue";
 import Pagination from "~/components/Elements/Pagination.vue";
 import FaqSection from "~/components/Elements/FaqSection.vue";
-import {
-  FAQ_TYPE,
-  faqCategoriesByType,
-  faqsByType,
-} from "~/data/faqs";
+import { FAQ_TYPE, faqCategoriesByType, faqsByType } from "~/data/faqs";
 import {
   areRouteQueriesEqual,
   jobFiltersToRouteQuery,
@@ -214,10 +207,7 @@ watch(
   (options) => {
     if (!routeCitySlug.value || !options.length) return;
 
-    const provinceIds = resolveJobCityProvinceIds(
-      routeCitySlug.value,
-      options,
-    );
+    const provinceIds = resolveJobCityProvinceIds(routeCitySlug.value, options);
     if (
       !provinceIds.length ||
       JSON.stringify(provinceIds) === JSON.stringify(jobFilters.value.provinces)
@@ -278,10 +268,9 @@ function buildJobsLocation(filters: JobFiltersModel, currentPage: number) {
   const groups = filters.jobGroups
     .map((group) => normalizeJobCategorySlug(group))
     .filter(Boolean);
-  const provinceSlugs = (provinceIdsToQueryValue(
-    filters.provinces,
-    provinceOptions.value,
-  ) ?? "")
+  const provinceSlugs = (
+    provinceIdsToQueryValue(filters.provinces, provinceOptions.value) ?? ""
+  )
     .split(",")
     .map((slug) => normalizeJobCitySlug(slug))
     .filter(Boolean);
@@ -354,7 +343,13 @@ watch(
 
 watch(
   () =>
-    [route.path, route.query, route.params.slug, routeCategorySlug.value, routeCitySlug.value] as const,
+    [
+      route.path,
+      route.query,
+      route.params.slug,
+      routeCategorySlug.value,
+      routeCitySlug.value,
+    ] as const,
   () => {
     if (syncingFromRoute) {
       syncingFromRoute = false;
@@ -404,15 +399,11 @@ const jobsListSeo = computed(() => {
     return getJobCategorySeoMeta(categoryLabel.value);
   }
 
-  return getCityAdsListSeoMeta(
-    cityLabel.value || selectedLocationName.value,
-    {
-      title:
-        "فرصت های شغلی حسابداری | آگهی استخدام حسابدار در شرکت‌های معتبر",
-      description:
-        "جدیدترین فرصت های شغلی حسابداری و آگهی‌های استخدام حسابدار تمام‌وقت، پاره‌وقت و پروژه‌ای را در های‌حساب ببینید و سریع‌تر موقعیت شغلی مناسب خود را پیدا کنید.",
-    },
-  );
+  return getCityAdsListSeoMeta(cityLabel.value || selectedLocationName.value, {
+    title: "فرصت های شغلی حسابداری | آگهی استخدام حسابدار در شرکت‌های معتبر",
+    description:
+      "جدیدترین فرصت های شغلی حسابداری و آگهی‌های استخدام حسابدار تمام‌وقت، پاره‌وقت و پروژه‌ای را در های‌حساب ببینید و سریع‌تر موقعیت شغلی مناسب خود را پیدا کنید.",
+  });
 });
 
 useSeoMeta({

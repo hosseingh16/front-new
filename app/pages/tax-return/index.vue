@@ -7,7 +7,7 @@
       <div class="custom-pad pt-6">
         <nav class="text-sm text-text-passive">
           <NuxtLink to="/" class="hover:text-primary-500 transition-colors">
-            <Icon name="svg:home" size="16" />
+            صفحه اصلی
           </NuxtLink>
           <span class="mx-2">/</span>
           <span class="text-text-tertiary">اظهارنامه</span>
@@ -23,12 +23,13 @@
         <h1
           class="mt-6 max-w-4xl text-center font-yb-bold text-2xl leading-10 text-text-tertiary md:text-h1"
         >
-        تنظیم و ارسال اظهارنامه مالیاتی با مشاوران تأییدشده های‌حساب
+          تنظیم و ارسال اظهارنامه مالیاتی با مشاوران تأییدشده های‌حساب
         </h1>
         <p
           class="mt-4 max-w-3xl text-center text-base font-semibold leading-8 text-text-tertiary md:text-lg"
         >
-        درخواست خود را ثبت کنید تا پس از بررسی شرایط پرونده، به مشاور مالیاتی متناسب با شرایط کسب‌وکارتان معرفی شوید.
+          درخواست خود را ثبت کنید تا پس از بررسی شرایط پرونده، به مشاور مالیاتی
+          متناسب با شرایط کسب‌وکارتان معرفی شوید.
         </p>
         <NuxtLink
           to="/tax-return/consultants"
@@ -57,7 +58,7 @@
         <h2
           class="flex items-center justify-center gap-3 text-center font-yb-bold text-xl md:text-xl bg-white text-text-tertiary py-2 px-6 rounded-full shadow-lg w-fit mx-auto"
         >
-        خدمات اظهارنامه مالیاتی برای چه کسب‌وکارهایی ارائه می‌شود؟
+          خدمات اظهارنامه مالیاتی برای چه کسب‌وکارهایی ارائه می‌شود؟
         </h2>
       </div>
       <div
@@ -162,7 +163,7 @@
         <h2
           class="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded-full bg-white shadow-lg px-6 py-2.5 text-center font-yb-bold text-sm text-text-tertiary md:px-8 md:text-base"
         >
-        چرا برای ارسال اظهارنامه مالیاتی به های‌حساب اعتماد کنم؟
+          چرا برای ارسال اظهارنامه مالیاتی به های‌حساب اعتماد کنم؟
         </h2>
 
         <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
@@ -218,7 +219,11 @@
     </section>
 
     <!-- FAQ -->
-    <FaqSection :categories="faqCategories" :items="faqs" title="سوالی درباره اظهارنامه مالیاتی دارید؟ پاسخگوی شما هستیم" />
+    <FaqSection
+      :categories="faqCategories"
+      :items="faqs"
+      title="سوالی درباره اظهارنامه مالیاتی دارید؟ پاسخگوی شما هستیم"
+    />
 
     <TaxReturnRequestModal ref="requestModalRef" />
   </div>
@@ -235,11 +240,7 @@ import banner from "~/assets/vectors/pages/tax-return/banner.webp";
 import heroDesktop from "~/assets/vectors/pages/tax-return/hero-image.svg";
 import heroMobile from "~/assets/vectors/pages/tax-return/hero-image-mobile.svg";
 import FaqSection from "~/components/Elements/FaqSection.vue";
-import {
-  FAQ_TYPE,
-  faqCategoriesByType,
-  faqsByType,
-} from "~/data/faqs";
+import { FAQ_TYPE, faqCategoriesByType, faqsByType } from "~/data/faqs";
 import TaxReturnRequestModal from "./components/TaxReturnRequestModal.vue";
 
 const requestModalRef = ref<InstanceType<typeof TaxReturnRequestModal> | null>(

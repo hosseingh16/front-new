@@ -1,7 +1,7 @@
 <template>
   <footer class="bg-surface-100">
     <div class="max-w-384 w-full m-auto">
-      <section class="custom-pad mt-16 bg-surface-100">
+      <section class="custom-pad mt-16 bg-surface-100 pt-4">
         <div class="bg-primary-500 p-6 rounded-lg text-white">
           <h2 class="text-2xl font-yb-bold max-sm:text-center">
             های‌حساب؛ اولین شبکه تخصصی حسابداران ایران

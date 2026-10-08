@@ -1,6 +1,6 @@
 <template>
   <header
-    class="py-4 px-5 flex justify-between items-center bg-transparent max-md:border-b-2 max-md:border-gray-default"
+    class="custom-pad py-4 px-5 flex justify-between items-center bg-transparent max-md:border-b-2 max-md:border-gray-default"
   >
     <div class="flex gap-12">
       <div class="flex gap-2 items-center">
