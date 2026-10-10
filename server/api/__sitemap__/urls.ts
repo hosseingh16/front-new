@@ -141,7 +141,7 @@ export default defineEventHandler(async (event) => {
 
   if (requested === 'pages-sitemap') return toSitemapUrls(PAGE_FALLBACK)
   if (requested === 'projects-sitemap') {
-    return toSitemapUrls(['/projects/type/remote'])
+    return toSitemapUrls([])
   }
 
   return []
