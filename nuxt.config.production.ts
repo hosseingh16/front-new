@@ -123,10 +123,8 @@ export default defineNuxtConfig({
     groups: [
       {
         userAgent: "*",
-        disallow: ["/"],
-        // allow: ["/"],
-        // disallow: ["/dashboard", "/login", "/entering", "/payment"],
-      
+        allow: ["/"],
+        disallow: ["/dashboard", "/login", "/register", "/entering", "/payment", "/cart"],
       },
     ],
     sitemap: ["/sitemap_index.xml"],
