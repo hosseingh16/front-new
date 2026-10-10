@@ -51,7 +51,7 @@
       </div>
     </section>
 
-    <!-- Map -->
+    <!-- Address -->
     <section class="bg-surface-100 py-12">
       <div class="custom-pad flex flex-col items-center">
         <h2 class="text-xl text-text-tertiary font-yb-bold text-center">
@@ -67,13 +67,9 @@
           />
           <p>خراسان رضوی - هاشمیه ۶ - برج اداری آبان - طبقه چهارم - واحد ۴۰۴</p>
         </div>
-        <div class="mt-6 w-full max-w-4xl relative rounded-lg overflow-hidden">
-          <img
-            src="/images/contact-us-map.webp"
-            alt="دفتر مرکزی های حساب"
-            class="w-full h-full object-cover"
-          />
-        </div>
+        <p class="mt-4 w-full max-w-4xl text-center text-sm text-text-tertiary">
+          این آدرس صرفاً دفتر اداری های حساب است و امکان مراجعه حضوری وجود ندارد.
+        </p>
       </div>
     </section>
 
