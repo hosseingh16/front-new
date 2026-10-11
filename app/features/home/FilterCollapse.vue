@@ -1,6 +1,6 @@
 <template>
   <div class="collapse join-item border-base-300 border-b">
-    <input v-model="open" type="checkbox" name="my-accordion-4" />
+    <input v-model="open" type="checkbox" />
     <div
       class="collapse-title px-3 font-semibold flex justify-between items-center gap-1"
     >
@@ -20,14 +20,14 @@ const props = defineProps<{
   expand?: boolean;
 }>();
 
-const open = ref(props.expand);
+const open = ref(!!props.expand);
 
+// Keep open when expand becomes true (e.g. section has active filters).
+// Do not force-close when expand is false — user may have opened it manually.
 watch(
   () => props.expand,
   (val) => {
-    if (props.expand != null) {
-      open.value = val;
-    }
+    if (val) open.value = true;
   },
   { immediate: true },
 );

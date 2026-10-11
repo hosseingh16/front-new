@@ -27,7 +27,7 @@
       <FilterCollapse
         v-for="(section, index) in JOB_FILTER_SECTIONS"
         :key="section.title"
-        :expand="index === 0"
+        :expand="index === 0 || sectionHasSelection(index)"
       >
         <template #title>
           <Icon :name="`svg:${section.icon}`" />
@@ -62,4 +62,25 @@ const model = defineModel<JobFiltersModel>({ required: true });
 
 const filters = reactive(useJobFilters(model)) as JobFiltersState;
 provide(JOB_FILTERS_INJECTION_KEY, filters);
+
+function sectionHasSelection(sectionIndex: number) {
+  switch (sectionIndex) {
+    case 0:
+      return filters.selectedJobTypes.length > 0;
+    case 1:
+      return filters.selectedJobGroups.length > 0;
+    case 2:
+      return filters.selectedProvinces.length > 0;
+    case 3:
+      return filters.selectedSalaries.length > 0;
+    case 4:
+      return filters.selectedWorkHistory.length > 0;
+    case 5:
+      return filters.selectedContractTypes.length > 0;
+    case 6:
+      return filters.selectedBenefits.length > 0;
+    default:
+      return false;
+  }
+}
 </script>
