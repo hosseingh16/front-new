@@ -19,13 +19,6 @@
 
   <div v-else-if="sectionIndex === 1" class="pb-1">
     <FilterSearchField
-      v-model="filters.jobTitleSearch"
-      placeholder="جستجوی عنوان شغلی و ..."
-    />
-  </div>
-
-  <div v-else-if="sectionIndex === 2" class="pb-1">
-    <FilterSearchField
       v-model="filters.jobGroupSearch"
       placeholder="جستجو در گروه‌های شغلی"
       wrapper-class="mb-3"
@@ -36,7 +29,7 @@
     />
   </div>
 
-  <div v-else-if="sectionIndex === 3" class="pb-1">
+  <div v-else-if="sectionIndex === 2" class="pb-1">
     <FilterSearchField
       v-model="filters.provinceSearch"
       placeholder="جستجو در استان‌ها"
@@ -50,28 +43,28 @@
   </div>
 
   <FilterCheckboxList
-    v-else-if="sectionIndex === 4"
+    v-else-if="sectionIndex === 3"
     v-model="filters.selectedSalaries"
     :options="filters.salaryRanges"
     list-class="pb-1"
   />
 
   <FilterCheckboxList
-    v-else-if="sectionIndex === 5"
+    v-else-if="sectionIndex === 4"
     v-model="filters.selectedWorkHistory"
     :options="filters.experienceLevels"
     list-class="pb-1"
   />
 
   <FilterCheckboxList
-    v-else-if="sectionIndex === 6"
+    v-else-if="sectionIndex === 5"
     v-model="filters.selectedContractTypes"
     :options="filters.contractTypeOptions"
     list-class="pb-1"
   />
 
   <FilterCheckboxList
-    v-else-if="sectionIndex === 7"
+    v-else-if="sectionIndex === 6"
     v-model="filters.selectedBenefits"
     :options="filters.benefits"
     list-class="pb-1"

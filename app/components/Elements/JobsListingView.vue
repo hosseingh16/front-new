@@ -112,7 +112,9 @@ import {
 } from "~/utils/job-category";
 import {
   findJobCityLabel,
+  findJobCityProvince,
   jobCityPath,
+  jobCitySlugForProvince,
   normalizeJobCitySlug,
   resolveJobCityProvinceIds,
 } from "~/utils/job-city";
@@ -125,7 +127,7 @@ import {
   JOB_FILTERS_LOOKUP_KEYS,
   type JobFiltersModel,
 } from "~/types/job-filters";
-import { provinceIdsToQueryValue } from "~/utils/province-filter-query";
+import { isFeaturedProvince } from "~/utils/province-filter-query";
 
 const props = defineProps<{
   categorySlug?: string;
@@ -183,10 +185,8 @@ function filtersFromRoute(
   return next;
 }
 
-// Province slugs in the path need lookup labels before the first /opportunities fetch.
-if (routeCitySlug.value) {
-  await ensureFilterLookups();
-}
+// Province slugs need lookup data before building ?province= / city routes.
+await ensureFilterLookups();
 
 const initialState = filtersFromRoute(
   route.query,
@@ -207,9 +207,18 @@ watch(
   (options) => {
     if (!routeCitySlug.value || !options.length) return;
 
-    const provinceIds = resolveJobCityProvinceIds(routeCitySlug.value, options);
+    const province = findJobCityProvince(routeCitySlug.value, options);
+    if (!province) {
+      if (!jobFilters.value.provinces.length) return;
+      jobFilters.value = {
+        ...jobFilters.value,
+        provinces: [],
+      };
+      return;
+    }
+
+    const provinceIds = [Number(province.value)];
     if (
-      !provinceIds.length ||
       JSON.stringify(provinceIds) === JSON.stringify(jobFilters.value.provinces)
     ) {
       return;
@@ -257,7 +266,8 @@ const subheading = computed(() => {
 });
 
 let urlSyncTimer: ReturnType<typeof setTimeout> | null = null;
-let syncingFromRoute = false;
+/** Ignore the next route→filters sync after we push filters→route. */
+let ignoreRouteSync = false;
 
 function buildJobsLocation(filters: JobFiltersModel, currentPage: number) {
   const query = jobFiltersToRouteQuery(
@@ -268,12 +278,6 @@ function buildJobsLocation(filters: JobFiltersModel, currentPage: number) {
   const groups = filters.jobGroups
     .map((group) => normalizeJobCategorySlug(group))
     .filter(Boolean);
-  const provinceSlugs = (
-    provinceIdsToQueryValue(filters.provinces, provinceOptions.value) ?? ""
-  )
-    .split(",")
-    .map((slug) => normalizeJobCitySlug(slug))
-    .filter(Boolean);
 
   if (groups.length === 1) {
     const { position: _position, job_group: _jobGroup, ...rest } = query;
@@ -283,12 +287,20 @@ function buildJobsLocation(filters: JobFiltersModel, currentPage: number) {
     };
   }
 
-  if (provinceSlugs.length === 1) {
-    const { province: _province, ...rest } = query;
-    return {
-      path: jobCityPath(provinceSlugs[0]!),
-      query: rest,
-    };
+  // Featured single province → /jobs/city/:slug
+  // All other province selections → /jobs?province=:slug
+  if (filters.provinces.length === 1) {
+    const province = provinceOptions.value.find(
+      (item) => Number(item.value) === Number(filters.provinces[0]),
+    );
+    const slug = jobCitySlugForProvince(province);
+    if (province && isFeaturedProvince(province) && slug) {
+      const { province: _province, ...rest } = query;
+      return {
+        path: jobCityPath(slug),
+        query: rest,
+      };
+    }
   }
 
   return {
@@ -298,15 +310,22 @@ function buildJobsLocation(filters: JobFiltersModel, currentPage: number) {
 }
 
 function syncRoute() {
-  if (syncingFromRoute) return;
-
   const next = buildJobsLocation(jobFilters.value, page.value);
   const samePath = route.path === next.path;
   const sameQuery = areRouteQueriesEqual(route.query, next.query);
   if (samePath && sameQuery) return;
 
-  syncingFromRoute = true;
-  router.replace(next);
+  ignoreRouteSync = true;
+  void router.replace(next).finally(() => {
+    nextTick(() => {
+      ignoreRouteSync = false;
+    });
+  });
+}
+
+function scheduleRouteSync() {
+  if (urlSyncTimer) clearTimeout(urlSyncTimer);
+  urlSyncTimer = setTimeout(syncRoute, 300);
 }
 
 function onPageChange(nextPage: number) {
@@ -314,7 +333,7 @@ function onPageChange(nextPage: number) {
 }
 
 watch(page, () => {
-  syncRoute();
+  scheduleRouteSync();
   nextTick(() => {
     const el = document.getElementById("jobs-results");
     if (!el) return;
@@ -327,16 +346,16 @@ watch(page, () => {
 watch(
   jobFilters,
   (value, oldValue) => {
+    // Always push filters → URL. ignoreRouteSync only blocks route → filters.
     if (
-      !syncingFromRoute &&
+      !ignoreRouteSync &&
       JSON.stringify(value) !== JSON.stringify(oldValue) &&
       page.value !== 1
     ) {
       page.value = 1;
     }
 
-    if (urlSyncTimer) clearTimeout(urlSyncTimer);
-    urlSyncTimer = setTimeout(syncRoute, 300);
+    scheduleRouteSync();
   },
   { deep: true },
 );
@@ -351,10 +370,7 @@ watch(
       routeCitySlug.value,
     ] as const,
   () => {
-    if (syncingFromRoute) {
-      syncingFromRoute = false;
-      return;
-    }
+    if (ignoreRouteSync) return;
 
     const next = filtersFromRoute(
       route.query,
@@ -366,22 +382,19 @@ watch(
 
     if (filtersJson === currentJson && next.page === page.value) return;
 
-    syncingFromRoute = true;
+    ignoreRouteSync = true;
     jobFilters.value = next.filters;
     page.value = next.page;
     nextTick(() => {
-      syncingFromRoute = false;
+      ignoreRouteSync = false;
     });
   },
 );
 
 onMounted(() => {
-  // Avoid stripping /jobs/city/:slug before province filters are applied.
-  if (routeCitySlug.value && !jobFilters.value.provinces.length) return;
-
-  // Canonicalize query filters into path routes when possible:
+  // Featured province → /jobs/city/:slug
+  // Otherwise → /jobs?province=:slug
   // `/jobs?position=accountant` → `/jobs/category/accountant`
-  // `/jobs?province=تهران` → `/jobs/city/تهران`
   syncRoute();
 });
 

@@ -244,18 +244,16 @@ function chipHasSelection(sectionIndex: number) {
     case 0:
       return filters.selectedJobTypes.length > 0;
     case 1:
-      return filters.jobTitleSearch.trim().length > 0;
-    case 2:
       return filters.selectedJobGroups.length > 0;
-    case 3:
+    case 2:
       return filters.selectedProvinces.length > 0;
-    case 4:
+    case 3:
       return filters.selectedSalaries.length > 0;
-    case 5:
+    case 4:
       return filters.selectedWorkHistory.length > 0;
-    case 6:
+    case 5:
       return filters.selectedContractTypes.length > 0;
-    case 7:
+    case 6:
       return filters.selectedBenefits.length > 0;
     default:
       return false;
@@ -264,10 +262,6 @@ function chipHasSelection(sectionIndex: number) {
 
 function chipLabel(sectionIndex: number, title: string) {
   if (!chipHasSelection(sectionIndex)) return title;
-
-  if (sectionIndex === 1) {
-    return filters.jobTitleSearch.trim();
-  }
 
   const options = sectionOptions(sectionIndex);
   const selected = sectionSelectedValues(sectionIndex);
@@ -281,17 +275,17 @@ function sectionOptions(sectionIndex: number) {
   switch (sectionIndex) {
     case 0:
       return filters.adTypeOptions;
-    case 2:
+    case 1:
       return filters.jobTitles;
-    case 3:
+    case 2:
       return filters.filteredProvinces;
-    case 4:
+    case 3:
       return filters.salaryRanges;
-    case 5:
+    case 4:
       return filters.experienceLevels;
-    case 6:
+    case 5:
       return filters.contractTypeOptions;
-    case 7:
+    case 6:
       return filters.benefits;
     default:
       return [];
@@ -302,17 +296,17 @@ function sectionSelectedValues(sectionIndex: number) {
   switch (sectionIndex) {
     case 0:
       return filters.selectedJobTypes;
-    case 2:
+    case 1:
       return filters.selectedJobGroups;
-    case 3:
+    case 2:
       return filters.selectedProvinces;
-    case 4:
+    case 3:
       return filters.selectedSalaries;
-    case 5:
+    case 4:
       return filters.selectedWorkHistory;
-    case 6:
+    case 5:
       return filters.selectedContractTypes;
-    case 7:
+    case 6:
       return filters.selectedBenefits;
     default:
       return [];

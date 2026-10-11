@@ -15,6 +15,17 @@ export function provinceLabelToSlug(label: string): string {
   return normalizePersianText(label.trim()).replace(/[\s\u200c]+/g, '-')
 }
 
+export function getProvinceSlug(item: ISelectItem): string {
+  const fromApi = item.slug?.trim()
+  if (fromApi) return fromApi
+  return provinceLabelToSlug(item.label)
+}
+
+export function isFeaturedProvince(item: ISelectItem): boolean {
+  const value = item.is_featured as unknown
+  return value === true || value === 1 || value === '1' || value === 'true'
+}
+
 function splitQueryTokens(value: string | string[] | undefined): string[] {
   if (!value) return []
   const raw = Array.isArray(value) ? value.join(',') : value
@@ -22,6 +33,32 @@ function splitQueryTokens(value: string | string[] | undefined): string[] {
     .split(',')
     .map((token) => token.trim())
     .filter(Boolean)
+}
+
+function provinceMatchesToken(item: ISelectItem, token: string): boolean {
+  const normalized = normalizeProvinceToken(token)
+  const slugForm = provinceLabelToSlug(
+    normalizePersianText(decodeURIComponent(token).trim()),
+  )
+  const itemSlug = getProvinceSlug(item)
+
+  return (
+    normalizeProvinceToken(item.label) === normalized ||
+    normalizeProvinceToken(itemSlug) === normalized ||
+    itemSlug === slugForm ||
+    provinceLabelToSlug(item.label) === slugForm ||
+    provinceLabelToSlug(item.label) === provinceLabelToSlug(token)
+  )
+}
+
+export function findProvinceBySlugOrLabel(
+  slugOrLabel: string | number | null | undefined,
+  provinces: ISelectItem[],
+): ISelectItem | undefined {
+  if (slugOrLabel == null) return undefined
+  const token = String(slugOrLabel).trim()
+  if (!token) return undefined
+  return provinces.find((item) => provinceMatchesToken(item, token))
 }
 
 export function resolveProvinceIdsFromQueryValue(
@@ -44,19 +81,7 @@ export function resolveProvinceIdsFromQueryValue(
 
     if (!provinces.length) continue
 
-    const normalized = normalizeProvinceToken(token)
-    const slugForm = provinceLabelToSlug(
-      normalizePersianText(decodeURIComponent(token).trim()),
-    )
-    const match = provinces.find((item) => {
-      const labelToken = normalizeProvinceToken(item.label)
-      return (
-        labelToken === normalized ||
-        provinceLabelToSlug(item.label) === slugForm ||
-        provinceLabelToSlug(item.label) === provinceLabelToSlug(token)
-      )
-    })
-
+    const match = provinces.find((item) => provinceMatchesToken(item, token))
     if (match) result.push(Number(match.value))
   }
 
@@ -71,8 +96,11 @@ export function provinceIdsToQueryValue(
 
   return ids
     .map((id) => {
-      const match = provinces.find((item) => Number(item.value) === id)
-      return match ? provinceLabelToSlug(match.label) : String(id)
+      const numericId = Number(id)
+      const match = provinces.find(
+        (item) => Number(item.value) === numericId,
+      )
+      return match ? getProvinceSlug(match) : String(id)
     })
     .join(',')
 }
