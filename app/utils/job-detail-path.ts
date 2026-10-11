@@ -22,13 +22,7 @@ export function slugifyJobSegment(
 }
 
 export function buildJobDetailSlug(source: JobDetailPathSource): string {
-  const titlePart = slugifyJobSegment(source.title)
-  const companyPart = slugifyJobSegment(
-    source.company?.slug || source.company?.name || source.company_name,
-  )
-
-  if (titlePart && companyPart) return `${titlePart}-${companyPart}`
-  return titlePart || companyPart || 'ad'
+  return slugifyJobSegment(source.title) || 'ad'
 }
 
 export function jobDetailPath(
