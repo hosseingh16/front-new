@@ -37,6 +37,8 @@ export interface MyRequest {
   id: number
   ad_id: number
   job_title: string
+  /** Job ad URL slug when provided by the API */
+  ad_slug?: string | null
   company_name: string
   company_logo?: string
   company_website?: string

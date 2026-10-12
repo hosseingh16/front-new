@@ -1,5 +1,6 @@
 export type JobDetailPathSource = {
   id: string | number
+  slug?: string | null
   title?: string | null
   company_name?: string | null
   company?: { slug?: string | null; name?: string | null } | null
@@ -22,7 +23,11 @@ export function slugifyJobSegment(
 }
 
 export function buildJobDetailSlug(source: JobDetailPathSource): string {
-  return slugifyJobSegment(source.title) || 'ad'
+  return (
+    slugifyJobSegment(source.slug) ||
+    slugifyJobSegment(source.title) ||
+    'ad'
+  )
 }
 
 export function jobDetailPath(

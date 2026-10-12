@@ -5,6 +5,7 @@ export interface AdList {
     company?: CompanyList
     order_id: number
     title: string
+    slug?: string | null
     company_logo: string
     company_name: string
     category: string
@@ -30,6 +31,7 @@ export interface Ad {
     company?: Company
     order_id: number
     title: string
+    slug?: string | null
     company_logo: string
     company_name: string
     category?: string

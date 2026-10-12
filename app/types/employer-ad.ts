@@ -9,6 +9,7 @@ export interface EmployerAdRequests {
 export interface EmployerAd {
   id: number
   title: string
+  slug?: string | null
   company_logo?: string
   company_name?: string
   status?: string

@@ -25,6 +25,7 @@
             :to="
               paths.jobs.detail({
                 id: request.ad_id,
+                slug: request.ad_slug,
                 title: request.job_title,
                 company_name: request.company_name,
               })

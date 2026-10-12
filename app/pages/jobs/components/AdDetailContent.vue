@@ -1,6 +1,6 @@
 <template>
   <div
-    class="grid items-start gap-4 bg-surface-50 p-5 lg:grid-cols-[minmax(0,1fr)_300px]"
+    class="grid items-start gap-4 bg-surface-50 p-md-5 lg:grid-cols-[minmax(0,1fr)_300px]"
   >
     <main class="min-w-0 space-y-4">
       <div
