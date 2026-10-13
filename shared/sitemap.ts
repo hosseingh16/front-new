@@ -1,3 +1,5 @@
+import type { ModuleOptions } from '@nuxtjs/sitemap'
+
 /**
  * Child sitemaps match GET {apiBase}/sitemap groups:
  * pages-sitemap, blog-sitemap, jobs-sitemap, projects-sitemap.
@@ -16,7 +18,7 @@ function childSitemap(group: (typeof sitemapGroups)[number]) {
   }
 }
 
-export function createSitemapConfig() {
+export function createSitemapConfig(): Partial<ModuleOptions> {
   return {
     sitemaps: {
       'pages-sitemap': childSitemap('pages-sitemap'),
