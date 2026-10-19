@@ -1,81 +1,94 @@
 <template>
   <header
-    class="custom-pad py-4 px-5 flex justify-between items-center bg-transparent max-md:border-b-2 max-md:border-gray-default"
+    class="sticky top-0 z-50 w-full transition-[background-color,box-shadow,border-color,backdrop-filter] duration-300"
+    :class="
+      isScrolled
+        ? 'border-b border-gray-default/80 bg-white/95 shadow-[0_4px_20px_rgba(15,23,42,0.06)] backdrop-blur-md'
+        : 'border-b border-transparent bg-transparent max-md:border-b-2 max-md:border-gray-default'
+    "
   >
-    <div class="flex gap-12">
-      <div class="flex gap-2 items-center">
-        <button
-          type="button"
-          class="lg:hidden flex h-9 w-9 items-center justify-center rounded-lg text-text-tertiary"
-          aria-label="باز کردن منو"
-          :aria-expanded="isDrawerOpen"
-          @click="openDrawer"
-        >
-          <Icon name="svg:menu" size="20" />
-        </button>
-        <NuxtLink to="/" class="flex items-center">
-          <NuxtImg src="/images/logo.png" alt="Logo" class="lg:w-10 lg:h-12" />
+    <div
+      class="custom-pad mx-auto flex max-w-384 items-center justify-between px-5 py-4"
+    >
+      <div class="flex gap-12">
+        <div class="flex items-center gap-2">
+          <button
+            type="button"
+            class="flex h-9 w-9 items-center justify-center rounded-lg text-text-tertiary lg:hidden"
+            aria-label="باز کردن منو"
+            :aria-expanded="isDrawerOpen"
+            @click="openDrawer"
+          >
+            <Icon name="svg:menu" size="20" />
+          </button>
+          <NuxtLink to="/" class="flex items-center">
+            <NuxtImg
+              src="/images/logo.png"
+              alt="Logo"
+              class="lg:h-12 lg:w-10"
+            />
 
-          <div class="max-lg:hidden">
-            <div class="font-semibold text-text-tertiary">های‌حساب</div>
-            <div class="text-caption text-text-secondary">
-              خانه حسابداران با تجربه
+            <div class="max-lg:hidden">
+              <div class="font-semibold text-text-tertiary">های‌حساب</div>
+              <div class="text-caption text-text-secondary">
+                خانه حسابداران با تجربه
+              </div>
             </div>
-          </div>
-        </NuxtLink>
+          </NuxtLink>
+        </div>
+        <div class="flex items-center gap-12 max-lg:hidden">
+          <NuxtLink
+            v-for="link in navLinks"
+            :key="link.to"
+            :to="link.to"
+            :target="link.blank ? '_blank' : undefined"
+            :rel="link.blank ? 'noopener noreferrer' : undefined"
+            class="text-sm hover:opacity-80"
+          >
+            {{ link.label }}
+          </NuxtLink>
+          <!-- #future
+          <NuxtLink to="/companies" class="text-sm hover:opacity-80"
+            >شرکت‌ها</NuxtLink
+          >
+          <NuxtLink to="/" class="flex text-sm hover:opacity-80"
+            >رزومه‌های شغلی
+            <icons-chevron />
+          </NuxtLink>
+          -->
+        </div>
       </div>
-      <div class="flex items-center gap-12 max-lg:hidden">
-        <NuxtLink
-          v-for="link in navLinks"
-          :key="link.to"
-          :to="link.to"
-          :target="link.blank ? '_blank' : undefined"
-          :rel="link.blank ? 'noopener noreferrer' : undefined"
-          class="text-sm hover:opacity-80"
-        >
-          {{ link.label }}
-        </NuxtLink>
+      <div class="flex items-center gap-1">
         <!-- #future
-        <NuxtLink to="/companies" class="text-sm hover:opacity-80"
-          >شرکت‌ها</NuxtLink
-        >
-        <NuxtLink to="/" class="flex text-sm hover:opacity-80"
-          >رزومه‌های شغلی
-          <icons-chevron />
-        </NuxtLink>
+        <button class="btn border-none">
+          <icons-search2 color="#4A4A4A" />
+        </button>
         -->
+
+        <NuxtLink v-if="canAccessDashboard" to="/dashboard">
+          <button class="btn btn-primary">
+            <Icon name="lucide:home" size="16" />
+            پیشخوان
+          </button>
+        </NuxtLink>
+
+        <NuxtLink
+          v-else-if="needsRoleSelection"
+          :to="{ path: '/login', query: { step: '5' } }"
+        >
+          <button class="btn btn-primary">
+            <Icon name="svg:user-plus-white" size="16" />
+            تکمیل ثبت‌نام
+          </button>
+        </NuxtLink>
+
+        <NuxtLink v-else to="/login">
+          <button class="btn btn-primary">
+            <Icon name="svg:user-plus-white" size="16" />
+            ورود | ثبت نام
+          </button>
+        </NuxtLink>
       </div>
-    </div>
-    <div class="flex items-center gap-1">
-      <!-- #future
-      <button class="btn border-none">
-        <icons-search2 color="#4A4A4A" />
-      </button>
-      -->
-
-      <NuxtLink v-if="canAccessDashboard" to="/dashboard">
-        <button class="btn btn-primary">
-          <Icon name="lucide:home" size="16" />
-          پیشخوان
-        </button>
-      </NuxtLink>
-
-      <NuxtLink
-        v-else-if="needsRoleSelection"
-        :to="{ path: '/login', query: { step: '5' } }"
-      >
-        <button class="btn btn-primary">
-          <Icon name="svg:user-plus-white" size="16" />
-          تکمیل ثبت‌نام
-        </button>
-      </NuxtLink>
-
-      <NuxtLink v-else to="/login">
-        <button class="btn btn-primary">
-          <Icon name="svg:user-plus-white" size="16" />
-          ورود | ثبت نام
-        </button>
-      </NuxtLink>
     </div>
   </header>
 
@@ -146,6 +159,8 @@
 <script setup lang="ts">
 import { resolvePrimaryRole } from "~/utils/user-role";
 
+const SCROLL_THRESHOLD = 12;
+
 const route = useRoute();
 const { isAuthenticated } = useSanctumAuth();
 const { user } = useCurrentUser();
@@ -159,6 +174,7 @@ const navLinks = [
 ] as const;
 
 const isDrawerOpen = ref(false);
+const isScrolled = ref(false);
 
 const canAccessDashboard = computed(
   () => isAuthenticated.value && resolvePrimaryRole(user.value) !== null,
@@ -182,6 +198,19 @@ function setBodyScrollLock(lock: boolean) {
   document.body.style.overflow = lock ? "hidden" : "";
 }
 
+function getScrollTop() {
+  if (!import.meta.client) return 0;
+  return Math.max(
+    window.scrollY || 0,
+    document.documentElement.scrollTop || 0,
+    document.body.scrollTop || 0,
+  );
+}
+
+function updateScrolledState() {
+  isScrolled.value = getScrollTop() > SCROLL_THRESHOLD;
+}
+
 watch(isDrawerOpen, (open) => {
   setBodyScrollLock(open);
 });
@@ -190,8 +219,23 @@ watch(
   () => route.fullPath,
   () => {
     closeDrawer();
+    nextTick(updateScrolledState);
   },
 );
+
+onMounted(() => {
+  nextTick(updateScrolledState);
+  window.addEventListener("scroll", updateScrolledState, { passive: true });
+  document.addEventListener("scroll", updateScrolledState, {
+    passive: true,
+    capture: true,
+  });
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener("scroll", updateScrolledState);
+  document.removeEventListener("scroll", updateScrolledState, true);
+});
 
 onUnmounted(() => {
   setBodyScrollLock(false);

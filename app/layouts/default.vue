@@ -1,8 +1,8 @@
 <template>
   <div class="bg-surface-50">
     <SiteTopBanner />
-    <div class="max-w-384 w-full m-auto">
-      <Header />
+    <Header />
+    <div class="m-auto w-full max-w-384">
       <slot />
     </div>
     <Footer />

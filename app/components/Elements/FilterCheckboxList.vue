@@ -3,15 +3,14 @@
     class="max-h-[280px] space-y-2 overflow-y-scroll md:overflow-y-auto overflow-x-hidden"
     :class="listClass"
   >
-    <component
-      :is="variant === 'card' ? 'label' : 'div'"
+    <label
       v-for="option in options"
       :key="option.value"
-      class="flex items-center gap-2"
+      class="flex w-full cursor-pointer items-center gap-2"
       :class="
         variant === 'card'
           ? [
-              'max-h-[48px] cursor-pointer rounded-xl p-3',
+              'max-h-[48px] rounded-xl p-3',
               isSelected(option) ? 'bg-surface-soft' : 'bg-surface-50',
             ]
           : ''
@@ -26,7 +25,7 @@
       <slot name="label" :option="option">
         <span class="text-text-tertiary">{{ option.label }}</span>
       </slot>
-    </component>
+    </label>
   </div>
 </template>
 

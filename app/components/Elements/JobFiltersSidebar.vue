@@ -2,10 +2,10 @@
   <JobFiltersMobile class="col-span-full min-w-0 md:hidden" />
 
   <aside
-    class="hidden md:block bg-surface-50 rounded-lg border border-b-0 border-gray-default text-text-tertiary text-sm"
+    class="hidden self-start bg-surface-50 rounded-lg border border-b-0 border-gray-default text-text-tertiary text-sm md:sticky md:top-24 md:flex md:max-h-[calc(100vh-7rem)] md:flex-col md:overflow-hidden"
     :class="props.class"
   >
-    <div class="flex w-full items-center justify-between px-4 py-2 mt-2">
+    <div class="flex w-full shrink-0 items-center justify-between px-4 py-2 mt-2">
       <span class="text-sm font-semibold text-text-passive">فیلترها</span>
       <button
         type="button"
@@ -23,7 +23,7 @@
       </button>
     </div>
 
-    <div class="join join-vertical w-full">
+    <div class="join join-vertical min-h-0 w-full overflow-y-auto overscroll-contain">
       <FilterCollapse
         v-for="(section, index) in JOB_FILTER_SECTIONS"
         :key="section.title"

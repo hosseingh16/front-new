@@ -9,7 +9,7 @@
     "
   >
     <div
-      class="flex h-16 shrink-0 items-center rounded-lg border-4 border-surface-100 bg-surface-50 p-2"
+      class="flex h-16 shrink-0 items-center rounded-lg border-4 border-surface-100 bg-surface-50 p-2 transition-colors hover:border-primary-100 focus-within:border-primary-100"
       :class="showDropdown ? 'max-md:h-12 max-md:gap-2' : ''"
     >
       <icons-search-2 color="#D1D1D1" class="shrink-0" />

@@ -156,10 +156,10 @@
               }}</span>
             </div>
 
-            <div
+            <label
               v-for="toggle in quickToggles"
               :key="toggle.value"
-              class="flex flex-row-reverse items-center justify-between border-b border-gray-default py-4"
+              class="flex w-full cursor-pointer flex-row-reverse items-center justify-between border-b border-gray-default py-4"
             >
               <input
                 type="checkbox"
@@ -170,7 +170,7 @@
               <span class="font-semibold text-text-tertiary">{{
                 toggle.label
               }}</span>
-            </div>
+            </label>
           </template>
 
           <div v-else class="py-4 text-sm text-text-tertiary">

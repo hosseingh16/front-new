@@ -20,46 +20,41 @@
       <div
         class="custom-pad bg-surface-100 pt-12 text-sm font-semibold grid md:grid-cols-6 gap-8 pb-20 max-md:hidden"
       >
-        <div class="flex flex-col gap-3">
-          <NuxtLink
-            v-for="link in jobseekerLinks"
-            :key="link.to + link.label"
-            :to="link.to"
-          >
-            {{ link.label }}
-          </NuxtLink>
+        <div
+          v-for="column in columns"
+          :key="column.title"
+          class="flex flex-col gap-3"
+        >
+          <template v-for="link in column.links" :key="link.label">
+            <IntentLink
+              v-if="link.role"
+              :to="link.to"
+              :role="link.role"
+              :query="link.query"
+            >
+              {{ link.label }}
+            </IntentLink>
+            <NuxtLink v-else :to="link.to">
+              {{ link.label }}
+            </NuxtLink>
+          </template>
         </div>
 
-        <div class="flex flex-col gap-3">
-          <NuxtLink
-            v-for="link in businessLinks"
-            :key="link.to + link.label"
-            :to="link.to"
-          >
-            {{ link.label }}
-          </NuxtLink>
-        </div>
-
-        <div class="flex flex-col gap-3">
-          <NuxtLink
-            v-for="link in aboutLinks"
-            :key="link.to + link.label"
-            :to="link.to"
-          >
-            {{ link.label }}
-          </NuxtLink>
-        </div>
-
-        <div class="flex flex-col gap-3">
+        <div class="flex flex-col items-start gap-3">
           <p>راه های ارتباطی</p>
-          <p v-for="phone in contactPhones" :key="phone" dir="ltr">
+          <a
+            v-for="phone in contactPhones"
+            :key="phone"
+            :href="phoneHref(phone)"
+            dir="ltr"
+          >
             {{ phone }}
-          </p>
+          </a>
         </div>
 
-        <div class="flex flex-col gap-3">
+        <div class="flex flex-col items-start gap-3">
           <p>شبکه های اجتماعی</p>
-          <div class="flex justify-center items-center gap-1">
+          <div class="flex items-center gap-1">
             <NuxtLink
               v-for="item in socials"
               :key="item.name"
@@ -120,15 +115,26 @@
                 expandedIndex === index ? 'mt-4 h-fit' : 'h-0 overflow-hidden'
               "
             >
-              <NuxtLink
-                v-for="link in section.links"
-                :key="link.to + link.label"
-                :to="link.to"
-                class="text-text-passive"
-                @click.stop
-              >
-                {{ link.label }}
-              </NuxtLink>
+              <template v-for="link in section.links" :key="link.label">
+                <IntentLink
+                  v-if="link.role"
+                  :to="link.to"
+                  :role="link.role"
+                  :query="link.query"
+                  class="text-text-passive"
+                  @click.stop
+                >
+                  {{ link.label }}
+                </IntentLink>
+                <NuxtLink
+                  v-else
+                  :to="link.to"
+                  class="text-text-passive"
+                  @click.stop
+                >
+                  {{ link.label }}
+                </NuxtLink>
+              </template>
             </div>
           </div>
         </div>
@@ -174,38 +180,66 @@
 </template>
 
 <script setup lang="ts">
+import type { AccountRole } from "~/features/account/types";
+import { paths } from "~/routes";
+
 interface FooterLink {
   label: string;
   to: string;
+  role?: AccountRole;
+  query?: Record<string, string>;
 }
 
 const { contactPhones } = useSettings();
 
 const jobseekerLinks: FooterLink[] = [
-  { label: "حسابدار", to: "/" },
-  { label: "رزومه‌ساز", to: "/" },
+  { label: "حسابدار", to: "/jobs" },
+  { label: "رزومه‌ساز", to: "/resume-builder" },
   { label: "جست‌وجوی فرصت‌های‌ شغلی", to: "/jobs" },
-  { label: "ایجاد پروژه حسابداری", to: "/" },
+  { label: "ایجاد پروژه حسابداری", to: "/projects" },
   { label: "سوالات متداول", to: "/faq" },
 ];
 
 const businessLinks: FooterLink[] = [
-  { label: "کسب و کار", to: "/" },
-  { label: "ایجاد آگهی استخدام", to: "/" },
-  { label: "ایجاد پروژه حسابداری", to: "/" },
+  { label: "کسب و کار", to: "/employers" },
+  {
+    label: "ایجاد آگهی استخدام",
+    to: paths.employer.adsCreate,
+    role: "employer",
+  },
+  {
+    label: "ایجاد پروژه حسابداری",
+    to: paths.employer.adsCreate,
+    role: "employer",
+    query: { employment_type: "project_based" },
+  },
   { label: "سوالات متداول", to: "/faq" },
   { label: "اظهارنامه عملکرد", to: "/tax-return" },
-  // { label: "پروژه های حسابداری", to: "/projects" },
 ];
 
 const aboutLinks: FooterLink[] = [
-  { label: "درباره ما", to: "/" },
+  { label: "درباره ما", to: "/about-us" },
   { label: "سوالات متداول", to: "/faq" },
   { label: "قوانین و مقررات", to: "/terms-and-conditions" },
   { label: "حریم خصوصی", to: "/privacy-policy" },
   { label: "نمادها و مجوزها", to: "/licenses" },
   { label: "تماس ما", to: "/contact" },
 ];
+
+const columns = [
+  { title: "حسابدار", links: jobseekerLinks },
+  { title: "کسب و کار", links: businessLinks },
+  { title: "درباره ما", links: aboutLinks },
+];
+
+function phoneHref(phone: string) {
+  const digits = phone
+    .replace(/[۰-۹]/g, (digit) => String("۰۱۲۳۴۵۶۷۸۹".indexOf(digit)))
+    .replace(/[٠-٩]/g, (digit) => String("٠١٢٣٤٥٦٧٨٩".indexOf(digit)))
+    .replace(/[^\d+]/g, "");
+
+  return `tel:${digits}`;
+}
 
 const socials = [
   { name: "telegram", href: "https://t.me/hihesabchannel" },
