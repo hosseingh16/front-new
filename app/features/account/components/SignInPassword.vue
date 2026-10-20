@@ -35,11 +35,18 @@
     />
 
     <div class="sm:flex justify-between items-center mt-2">
-      <PasswordButton :mode class="max-sm:hidden" @on-change-mode="mode = $event" />
+      <PasswordButton
+        :mode
+        class="max-sm:hidden"
+        @on-change-mode="mode = $event"
+      />
       <button
         type="button"
         class="btn flex justify-center gap-2 h-10 max-sm:w-full"
-        :class="{ 'btn-primary': buttonEnabled && !loading, 'btn-disabled': !buttonEnabled || loading }"
+        :class="{
+          'btn-primary': buttonEnabled && !loading,
+          'btn-disabled': !buttonEnabled || loading,
+        }"
         :disabled="!buttonEnabled || loading"
         @click="onSubmit"
       >
@@ -56,10 +63,10 @@
 </template>
 
 <script setup lang="ts">
-import AuthBackButton from '~/features/account/components/AuthBackButton.vue';
-import PasswordButton from '~/features/account/components/PasswordButton.vue';
-import SignInOtp from '~/features/account/components/SignInOtp.vue';
-import type { PasswordButtonT } from '~/features/account/types';
+import AuthBackButton from "~/features/account/components/AuthBackButton.vue";
+import PasswordButton from "~/features/account/components/PasswordButton.vue";
+import SignInOtp from "~/features/account/components/SignInOtp.vue";
+import type { PasswordButtonT } from "~/features/account/types";
 
 const props = defineProps<{
   mobile?: string;
@@ -68,37 +75,37 @@ const props = defineProps<{
 }>();
 
 const emits = defineEmits<{
-  (e: 'onChangeStep'): void;
-  (e: 'submitPassword', password: string): void;
-  (e: 'submitOtp', otp: string): void;
-  (e: 'resend'): void;
-  (e: 'voice'): void;
+  (e: "onChangeStep"): void;
+  (e: "submitPassword", password: string): void;
+  (e: "submitOtp", otp: string): void;
+  (e: "resend"): void;
+  (e: "voice"): void;
 }>();
 
 const showPass = ref(false);
-const mode = ref<PasswordButtonT>('fixedPassword');
-const password = ref('');
-const code = ref(['', '', '', '', '']);
+const mode = ref<PasswordButtonT>("fixedPassword");
+const password = ref("");
+const code = ref(["", "", "", "", ""]);
 
 const buttonEnabled = computed(
   () =>
-    (mode.value === 'fixedPassword' && password.value.length > 0) ||
-    (mode.value === 'otp' && code.value.every((digit) => digit !== '')),
+    (mode.value === "fixedPassword" && password.value.length > 0) ||
+    (mode.value === "otp" && code.value.every((digit) => digit !== "")),
 );
 
 function onSubmit() {
   if (!buttonEnabled.value || props.loading) return;
 
-  if (mode.value === 'fixedPassword') {
-    emits('submitPassword', password.value);
+  if (mode.value === "fixedPassword") {
+    emits("submitPassword", password.value);
     return;
   }
 
-  emits('submitOtp', code.value.join(''));
+  emits("submitOtp", code.value.join(""));
 }
 
 function onOtpComplete(otp: string) {
   if (props.loading) return;
-  emits('submitOtp', otp);
+  emits("submitOtp", otp);
 }
 </script>

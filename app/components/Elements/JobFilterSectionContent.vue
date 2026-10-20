@@ -1,9 +1,9 @@
 <template>
   <div v-if="sectionIndex === 0" class="space-y-2">
-    <div
+    <label
       v-for="jobType in filters.adTypeOptions"
       :key="jobType.value"
-      class="flex items-center gap-2"
+      class="flex w-full cursor-pointer items-center gap-2"
     >
       <input
         v-model="filters.selectedJobTypes"
@@ -14,7 +14,7 @@
 
       <Icon :name="jobTypeIcon(jobType.value)" />
       <span class="text-text-tertiary">{{ jobType.label }}</span>
-    </div>
+    </label>
   </div>
 
   <div v-else-if="sectionIndex === 1" class="pb-1">

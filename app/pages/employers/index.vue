@@ -5,9 +5,13 @@
       class="bg-[url('/images/bg-5.png')] bg-no-repeat bg-top pb-10 md:pb-16"
     >
       <div class="custom-pad pt-6">
-        <nav class="text-sm text-text-passive">
-          <NuxtLink to="/" class="hover:text-primary-500 transition-colors">
-            صفحه اصلی
+        <nav class="flex items-center text-sm text-text-passive">
+          <NuxtLink
+            to="/"
+            class="inline-flex items-center gap-1.5 transition-colors hover:text-primary-500"
+          >
+            <Icon name="svg:home" size="16" />
+            خانه
           </NuxtLink>
           <span class="mx-2">/</span>
           <span>خدمات</span>
@@ -15,90 +19,111 @@
           <span class="text-text-tertiary">کارفرمایان</span>
         </nav>
       </div>
-      <div class="custom-pad flex flex-col items-center pt-8 md:pt-12">
+      <div class="custom-pad flex flex-col items-center pt-6 md:pt-8">
         <span
-          class="inline-flex items-center rounded-xl bg-[#4864E114] px-4 py-2 text-sm font-semibold text-primary-500"
+          class="inline-flex h-8 items-center rounded-lg bg-[#4864E114] px-3 text-[13px] font-semibold text-primary-500"
         >
-          استخدام سریع و مطمئن
+          نشر تخصصی جذب و همکاری با حسابداران
         </span>
         <h1
-          class="mt-6 max-w-4xl text-center font-yb-bold text-2xl leading-10 text-text-tertiary md:text-h1"
+          class="mt-4 max-w-[764px] text-center font-yb-bold text-2xl leading-[56px] text-text-tertiary md:text-[32px]"
         >
-          استخدام، پروژه و خدمات مالیاتی کسب‌وکارت را در های‌حساب مدیریت کن
+          پلی میان کسب‌وکارها و متخصصان حسابداری و مالی
         </h1>
         <p
-          class="mt-4 max-w-3xl text-center text-base font-semibold leading-8 text-text-tertiary md:text-lg"
+          class="mt-2 max-w-[828px] text-center text-base font-semibold leading-[35px] text-text-tertiary md:text-lg"
         >
-          در های‌حساب می‌توانید آگهی استخدام ثبت کنید، پروژه حسابداری بسپارید،
-          درخواست انجام اظهارنامه بدهید و از بانک رزومه حسابداران برای جذب نیروی
-          مناسب استفاده کنید.
+          در های‌حساب می‌توانید برای جذب نیروی حسابداری آگهی منتشر کنید و
+          پروژه‌های حسابداری و تنظیم اظهارنامه مالیاتی خود را به متخصصان
+          بسپارید.
         </p>
-        <div class="mt-8 flex flex-wrap justify-center gap-3">
+        <div class="mt-6 flex flex-wrap justify-center gap-4">
           <IntentLink
             :to="paths.employer.adsCreate"
             role="employer"
-            class="btn btn-primary gap-2 px-6"
+            class="btn btn-primary h-10 w-[179px] px-4 text-sm"
           >
-            <Icon name="svg:user-plus-white" size="20" />
-            ایجاد اولین آگهی
+            ثبت آگهی جدید
           </IntentLink>
           <IntentLink
-            :to="paths.employer.taxReturnCreate"
+            :to="paths.employer.adsCreate"
             role="employer"
-            class="btn btn-outline border-success text-success px-6"
+            :query="{ employment_type: 'project_based' }"
+            class="btn btn-outline h-10 w-[179px] border-[#D6DCF5] bg-white px-4 text-sm text-primary-500 hover:bg-primary-50"
           >
-            درخواست اظهارنامه مالیاتی
+            ثبت پروژه جدید
           </IntentLink>
         </div>
+        <IntentLink
+          :to="paths.employer.taxReturnCreate"
+          role="employer"
+          class="mt-3 text-sm font-semibold text-success underline decoration-success underline-offset-[6px]"
+        >
+          درخواست تنظیم اظهارنامه
+        </IntentLink>
 
         <img
           :src="heroMobile"
           alt="پنل کارفرمایان های‌حساب"
-          class="mt-10 w-full max-w-md md:hidden"
+          class="mt-6 w-full max-w-md md:hidden"
         />
         <img
           :src="heroDesktop"
           alt="پنل کارفرمایان های‌حساب"
-          class="mt-12 hidden w-full max-w-5xl md:block"
+          class="mt-6 hidden w-full max-w-[1137px] md:block"
         />
       </div>
     </section>
 
-    <!-- <TrustBar /> -->
+    <TrustBar
+      title="به جمع بیش از دو میلیون کسب و کار در های‌حساب بپیوندید"
+      subtitle="های‌حساب ، مورد اعتماد بهترین سازمان‌ها همراه شما در جذب حرفه ای ترین نیروها"
+      :stats="trustStats"
+    />
 
     <!-- Service Cards -->
-    <section class="custom-pad bg-surface-100 py-12 md:py-16">
-      <div class="flex flex-col items-center">
+    <section class="relative overflow-hidden bg-surface-100 py-12 md:py-16">
+      <img
+        :src="empLeftPattern"
+        alt=""
+        class="pointer-events-none absolute -left-10 top-8 hidden w-40 opacity-80 lg:block"
+      />
+      <img
+        :src="empRightPattern"
+        alt=""
+        class="pointer-events-none absolute -right-10 top-16 hidden w-40 opacity-80 lg:block"
+      />
+      <div class="custom-pad relative">
+      <div class="mx-auto flex w-full max-w-[976px] flex-col items-center">
         <span
-          class="inline-flex items-center rounded-xl bg-[#4864E114] px-4 py-2 text-sm font-semibold text-primary-500"
+          class="inline-flex h-8 items-center rounded-lg bg-[#4864E114] px-3 text-sm font-semibold text-primary-500"
         >
           ارزش ها
         </span>
         <h2
-          class="mt-4 text-center font-yb-bold text-xl text-text-tertiary md:text-2xl"
+          class="mt-4 text-center font-yb-bold text-xl leading-[39px] text-text-tertiary md:text-[28px]"
         >
           های‌حساب برای کارفرما چه کاری انجام می‌دهد؟
         </h2>
       </div>
 
-      <div class="mt-10 space-y-6">
+      <div class="mx-auto mt-8 w-full max-w-[976px] space-y-6">
         <div
           v-for="(card, index) in serviceCards"
           :key="card.featureTitle"
-          class="flex flex-col-reverse gap-6 overflow-hidden rounded-2xl bg-white p-6 md:flex-row md:items-stretch md:gap-10 md:p-8"
+          class="flex flex-col-reverse items-center gap-6 overflow-hidden rounded-2xl bg-white px-4 py-6 md:h-[271px] md:flex-row md:gap-8 md:px-8"
           :class="index != 1 ? 'md:flex-row-reverse' : ''"
         >
-          <div class="flex flex-1 flex-col">
-            <ol class="space-y-4">
+          <div class="flex w-full flex-1 flex-col md:max-w-[504px]">
+            <ol class="space-y-2">
               <li
-                v-for="(point, i) in servicePoints"
+                v-for="(point, i) in card.points"
                 :key="point"
-                class="flex items-start gap-3 text-sm leading-7 text-text-tertiary md:text-base"
+                class="flex items-center gap-2 text-sm leading-[27px] text-text-tertiary md:text-base"
               >
                 <span :class="card.numberClass">
                   {{ i + 1 }}
                 </span>
-
                 <span>{{ point }}</span>
               </li>
             </ol>
@@ -106,7 +131,7 @@
               :to="card.to"
               :role="card.role"
               :query="card.query"
-              class="mt-8 flex w-full items-center justify-center gap-2 rounded-xl py-3.5 text-sm font-semibold transition-opacity hover:opacity-80"
+              class="mt-2.5 flex h-8 w-full items-center justify-center gap-2 rounded-lg text-sm font-semibold transition-opacity hover:opacity-80"
               :class="card.ctaClass"
             >
               {{ card.btnText }}
@@ -119,18 +144,16 @@
           </div>
 
           <div
-            class="flex w-full shrink-0 flex-col items-center justify-center rounded-2xl px-6 py-10 text-center md:w-72 lg:w-[450px]"
+            class="flex h-[207px] w-full shrink-0 flex-col items-center justify-center rounded-2xl px-6 text-center md:w-[368px]"
             :class="card.boxClass"
           >
-            <Icon :name="card.icon" size="92" class="mb-5 text-white" />
-            <p class="font-yb-bold text-base text-text-tertiary md:text-lg">
+            <Icon :name="card.icon" size="61" />
+            <p class="mt-3 font-yb-bold text-base text-text-tertiary md:text-lg">
               {{ card.featureTitle }}
-            </p>
-            <p class="mt-2 text-xs leading-6 text-text-tertiary md:text-sm">
-              {{ card.featureSubtitle }}
             </p>
           </div>
         </div>
+      </div>
       </div>
     </section>
 
@@ -248,7 +271,7 @@
                 class="shrink-0 text-text-passive"
               />
               <span class="flex-1 font-semibold text-sm md:text-base">
-                {{ index }} : {{ step.title }}
+                {{ index + 1 }} : {{ step.title }}
               </span>
               <icons-chevron
                 :color="expandedProcessStep === index ? 'white' : '#757575'"
@@ -303,7 +326,12 @@
       class="pt-10 pb-12"
     />
 
-    <FaqSection :categories="faqCategories" :items="faqs" />
+    <FaqSection
+      :categories="faqCategories"
+      :items="faqs"
+      title="سوالی دارید ؟ ما پاسخگو هستیم"
+      tabs-class="max-w-[736px] grid-cols-2"
+    />
   </div>
 </template>
 
@@ -321,7 +349,7 @@ import step4 from "~/assets/vectors/pages/employers/step4.svg";
 import processGraphic from "~/assets/vectors/pages/employers/Group 1142813134.svg";
 import TrustBar from "../../components/Elements/TrustBar.vue";
 import FaqSection from "~/components/Elements/FaqSection.vue";
-import { FAQ_TYPE, faqCategoriesByType, faqsByType } from "~/data/faqs";
+import { FAQ_TYPE, faqsByType } from "~/data/faqs";
 import Testimonials, {
   type Testimonial,
 } from "~/components/Elements/Testimonials.vue";
@@ -331,8 +359,8 @@ const PROCESS_STEP_OFFSETS = [0, 217, 449, 680];
 const PROCESS_VIEWPORT_HEIGHTS = [217, 232, 241, 220];
 const PROCESS_IMAGE_HEIGHTS = [853, 853, 853, 853, 903];
 
-const servicePoints = [
-  "جستجو بر روی بانک رزومه با ۱۴ فیلتر کاربردی مخصوص حسابداران",
+const resumeBankPoints = [
+  "جستجو بر روی بانک رزومه با 14 فیلتر کاربردی مخصوص حسابداران",
   "انتقال رزومه های متناسب با کسب و کار شما به پوشه منتخب",
   "ایجاد آگهی استخدامی با توجه به نرم افزار و دانش مد نظر مجموعه شما",
   "استخدام توانمند ترین حسابدار",
@@ -341,7 +369,7 @@ const servicePoints = [
 type ServiceCard = {
   featureTitle: string;
   icon: string;
-  featureSubtitle: string;
+  points: string[];
   boxClass: string;
   numberClass: string;
   ctaClass: string;
@@ -354,14 +382,18 @@ type ServiceCard = {
 
 const serviceCards: ServiceCard[] = [
   {
-    featureTitle: "آگهی استخدام رو ثبت کن",
+    featureTitle: "آگهی استخدام‌تان را ثبت کنید",
     icon: "svg:bag-icon",
-    featureSubtitle:
-      "نوع نیازت رو انتخاب کن: استخدام دائم، حسابدار پاره وقت یا تمام وقت",
+    points: [
+      "تعیین تخصص و مهارت‌های موردنیاز برای جذب هدفمندتر",
+      "دیده‌شدن آگهی در میان حسابداران با تخصص‌ها و سوابق متنوع",
+      "مقایسه آسان رزومه‌ها با قالب یکسان و دسته‌بندی تخصصی",
+      "انتخاب توانمندترین حسابدار",
+    ],
     boxClass:
       "bg-gradient-to-bl from-[#708FEA] to-[#fff] border-2 border-[#C6D2F7]",
     numberClass:
-      "text-[#4864e1] rounded-xl bg-[#EBF0FC] w-[28px] h-[32px] text-center leading-[32px]",
+      "text-[#4864e1] shrink-0 rounded-xl bg-[#EBF0FC] w-[28px] h-[32px] text-center leading-[32px]",
     ctaClass: "bg-[#EBF0FC] text-primary-500",
     ctaArrowColor: "#4864e1",
     btnText: "ایجاد آگهی استخدام",
@@ -369,14 +401,13 @@ const serviceCards: ServiceCard[] = [
     role: "employer" as const,
   },
   {
-    featureTitle: "پروژه حسابداری رو ثبت کن",
+    featureTitle: "پروژه حسابداری ثبت کن",
     icon: "svg:bag-icon",
-    featureSubtitle:
-      "نوع نیازت رو انتخاب کن: نوع پروژه، میزان کار، بودجه مدنظر",
+    points: resumeBankPoints,
     boxClass:
       "bg-gradient-to-bl from-[#2BDCAF] to-[#fff] border-2 border-[#A0F8D5]",
     numberClass:
-      "text-[#0ea972] rounded-xl bg-[#E6FAF3] w-[28px] h-[32px] text-center leading-[32px]",
+      "text-[#0ea972] shrink-0 rounded-xl bg-[#E6FAF3] w-[28px] h-[32px] text-center leading-[32px]",
     ctaClass: "bg-[#E6FAF3] text-accent-500",
     ctaArrowColor: "#0ea972",
     btnText: "ایجاد پروژه حسابداری",
@@ -385,20 +416,24 @@ const serviceCards: ServiceCard[] = [
     query: { employment_type: "project_based" },
   },
   {
-    featureTitle: "درخواست انجام اظهارنامه مالیاتی",
+    featureTitle: "درخواست انجام اظهار نامه مالیاتی",
     icon: "svg:bag-icon",
-    featureSubtitle:
-      "نوع نیازت رو انتخاب کن: نوع پروژه، میزان کار، بودجه مدنظر",
+    points: resumeBankPoints,
     boxClass:
       "bg-gradient-to-bl from-[#C5772E] to-[#fff] border-2 border-[#DCAE82]",
     numberClass:
-      "text-[#b95c04] rounded-xl bg-[#FFF5EB] w-[28px] h-[32px] text-center leading-[32px]",
+      "text-[#b95c04] shrink-0 rounded-xl bg-[#FFF5EB] w-[28px] h-[32px] text-center leading-[32px]",
     ctaClass: "bg-[#FFF5EB] text-warning-500",
     ctaArrowColor: "#b95c04",
-    btnText: "ایجاد پروژه حسابداری",
+    btnText: "درخواست اظهارنامه مالیاتی",
     to: paths.employer.taxReturnCreate,
     role: "employer" as const,
   },
+];
+
+const trustStats = [
+  { value: 24000, label: "متخصص و حسابدار" },
+  { value: 36000, label: "پروژه ثبت شده" },
 ];
 
 const darkFeatures = [
@@ -466,7 +501,10 @@ const testimonials: Testimonial[] = [
   },
 ];
 
-const faqCategories = faqCategoriesByType(FAQ_TYPE.hiring, FAQ_TYPE.general);
+const faqCategories = [
+  { id: FAQ_TYPE.hiring, label: "کارفرمایان" },
+  { id: FAQ_TYPE.general, label: "عمومی" },
+];
 const faqs = faqsByType(FAQ_TYPE.hiring, FAQ_TYPE.general);
 
 const expandedProcessStep = ref(-1);

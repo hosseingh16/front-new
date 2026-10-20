@@ -1,33 +1,36 @@
 <template>
   <div class="overflow-x-clip bg-surface-50 text-text-tertiary">
-    <!-- Hero -->
-    <section
-      class="relative isolate flex flex-col overflow-hidden bg-black text-white xl:h-[795px]"
-      :style="heroStyle"
-    >
+    <!-- Hero + problem. Desktop positions match the 1536px Figma frame
+         (header is outside this page, so frame Y is shifted up by 72px). -->
+    <section class="relative">
       <div
-        class="mx-auto flex w-full max-w-[1536px] flex-col gap-10 px-5 pb-12 pt-10 sm:px-8 xl:grid xl:flex-1 xl:grid-cols-[minmax(0,1fr)_548px] xl:items-start xl:gap-x-[13px] xl:pb-0 xl:pt-[86px] 2xl:pl-[201px] 2xl:pr-[154px]"
-      >
-        <div class="flex flex-col items-start xl:pt-[28px]">
+        class="pointer-events-none absolute inset-x-0 top-0 h-[640px] bg-black 2xl:h-[795px]"
+        :style="heroStyle"
+      />
+
+      <div class="relative mx-auto w-full 2xl:h-[1104px] 2xl:max-w-[1536px]">
+      <!-- Below 1536: stacked -->
+      <div class="relative flex flex-col gap-10 px-5 pb-8 pt-10 sm:px-8 2xl:hidden">
+        <div class="flex flex-col items-start text-white">
           <span
-            class="inline-flex h-[29px] items-center rounded-lg bg-accent-300 px-2 text-[13px] font-semibold text-accent-500"
+            class="inline-flex h-8 items-center rounded-lg bg-accent-300 px-2 text-[13px] font-semibold text-accent-500"
           >
             رزومه‌ساز تخصصی برای حسابداران
           </span>
           <h1
-            class="mt-[18px] font-yb-bold text-[28px] leading-[1.7] sm:text-[36px] sm:leading-[58px]"
+            class="mt-[18px] font-yb-bold text-[28px] leading-[1.7] sm:text-[36px] sm:leading-[61px]"
           >
             رزومه حسابداری بساز؛
             <br />
             تخصصت را دقیق به کارفرما نشان بده
           </h1>
           <p
-            class="mt-[19px] max-w-[620px] text-[16px] font-semibold leading-[1.9] sm:text-[18px] sm:leading-[33px]"
+            class="mt-4 max-w-[620px] text-[16px] font-semibold leading-[31px] sm:text-[18px]"
           >
             مهارت‌ها، نرم‌افزارها و تجربه حسابداری‌ات را در یک رزومه تخصصی ثبت
             کن و شانس دیده‌شدنت توسط کارفرما را بیشتر کن.
           </p>
-          <div class="mt-8 flex flex-wrap gap-2 xl:mt-10">
+          <div class="mt-8 flex flex-wrap gap-[9px]">
             <IntentLink
               to="/dashboard/cv"
               role="job_seeker"
@@ -44,58 +47,107 @@
             </IntentLink>
           </div>
         </div>
-
         <img
           :src="heroIllustration"
           alt="نمونه رزومه حسابداری ساخته‌شده در های‌حساب"
-          class="mx-auto w-full max-w-[548px] rounded-[20px] xl:mx-0 xl:max-w-none"
+          class="mx-auto w-full max-w-[548px]"
         />
       </div>
 
-      <!-- White tab that overlaps the hero's bottom edge -->
       <div
-        class="relative mx-auto flex min-h-[117px] w-full max-w-[1128px] items-center justify-center rounded-t-[10px] bg-white px-5 py-5 xl:h-[117px] xl:py-0"
+        class="relative z-10 mx-5 rounded-t-[20px] bg-white px-5 pb-6 pt-6 sm:mx-8 2xl:absolute 2xl:left-[201px] 2xl:top-[677px] 2xl:mx-0 2xl:h-[373px] 2xl:w-[1129px] 2xl:px-0 2xl:pb-0 2xl:pt-[55px]"
       >
-        <h2
-          class="text-center font-yb-bold text-[20px] leading-[1.7] text-text-primary sm:text-[28px]"
-        >
-          رزومه‌های عمومی همه توانایی‌های یک حسابدار را نشان نمی‌دهند
-        </h2>
+        <div class="mx-auto w-full max-w-[764px] text-center">
+          <h2
+            class="font-yb-bold text-[20px] leading-[47px] text-text-primary sm:text-[28px]"
+          >
+            رزومه‌های عمومی همه توانایی‌های یک حسابدار را نشان نمی‌دهند
+          </h2>
+          <p
+            class="mt-2 text-[16px] font-semibold leading-[31px] text-text-tertiary sm:text-[18px] xl:mt-[8px]"
+          >
+            برای یک موقعیت حسابداری، فقط عنوان شغلی و سابقه کار کافی نیست.
+            کارفرما می‌خواهد بداند با چه نرم‌افزارهایی کار کرده‌ای، در چه
+            حوزه‌هایی تجربه داری و سطح مهارتت در هر بخش چقدر است.
+          </p>
+        </div>
+
         <div
-          class="absolute right-[16px] top-[-48px] hidden h-[121px] w-[151px] rounded-[29px] bg-[linear-gradient(180deg,#171a46_0%,#05060f_60%,#000_100%)] xl:block"
+          class="absolute left-[960px] top-[-69px] hidden h-[144px] w-[151px] rounded-[29px] bg-[linear-gradient(180deg,#171a46_0%,#05060f_60%,#000_100%)] 2xl:block"
         >
-          <img :src="pdfBadge" alt="" class="absolute left-[31px] top-[5px]" />
+          <img
+            :src="pdfBadge"
+            alt=""
+            class="absolute left-[42px] top-[22px] h-[94px] w-[88px]"
+          />
         </div>
       </div>
-    </section>
 
-    <!-- Problem -->
-    <section class="px-5 pb-0 pt-6 xl:px-0 xl:pt-0">
-      <p
-        class="mx-auto max-w-[747px] text-center text-[16px] font-semibold leading-[1.75] text-text-tertiary sm:text-[18px] xl:-mt-[10px]"
-      >
-        برای یک موقعیت حسابداری، فقط عنوان شغلی و سابقه کار کافی نیست. کارفرما
-        می‌خواهد بداند با چه نرم‌افزارهایی کار کرده‌ای، در چه حوزه‌هایی تجربه
-        داری و سطح مهارتت در هر بخش چقدر است.
-      </p>
+      <img
+        :src="heroIllustration"
+        alt=""
+        class="pointer-events-none absolute left-[201px] top-[77px] z-[1] hidden h-[836px] w-[548px] max-w-none 2xl:block"
+      />
 
       <div
-        class="relative mx-auto mt-8 grid w-full max-w-[1128px] gap-4 lg:mt-[47px] lg:grid-cols-3 lg:gap-[17px]"
+        class="absolute left-[762px] top-[105px] z-20 hidden w-[620px] flex-col items-end pt-2 text-white 2xl:flex"
+      >
+        <span
+          class="inline-flex h-8 items-center rounded-lg bg-accent-300 px-2 text-[13px] font-semibold text-accent-500"
+        >
+          رزومه‌ساز تخصصی برای حسابداران
+        </span>
+        <h1
+          class="mt-[16px] w-[550px] text-right font-yb-bold text-[36px] leading-[61px]"
+        >
+          رزومه حسابداری بساز؛
+          <br />
+          تخصصت را دقیق به کارفرما نشان بده
+        </h1>
+        <p
+          class="mt-[16px] w-full text-right text-[18px] font-semibold leading-[31px]"
+        >
+          مهارت‌ها، نرم‌افزارها و تجربه حسابداری‌ات را در یک رزومه تخصصی ثبت کن
+          و شانس دیده‌شدنت توسط کارفرما را بیشتر کن.
+        </p>
+      </div>
+
+      <div
+        class="absolute left-[1015px] top-[404px] z-20 hidden w-[367px] items-center justify-between 2xl:flex"
+      >
+        <IntentLink
+          to="/dashboard/cv"
+          role="job_seeker"
+          class="btn btn-success h-10 w-[179px] px-4"
+        >
+          رایگان رزومه بساز
+        </IntentLink>
+        <IntentLink
+          to="/dashboard/my-resume"
+          role="job_seeker"
+          class="btn h-10 w-[179px] border border-[#e8e8e8] bg-transparent px-4 text-accent-500 hover:bg-white/10"
+        >
+          نمونه رزومه ببینم
+        </IntentLink>
+      </div>
+
+      <div
+        class="relative z-20 mx-5 mt-4 grid gap-4 sm:mx-8 lg:grid-cols-3 lg:gap-[17px] 2xl:absolute 2xl:left-[200px] 2xl:top-[895px] 2xl:mx-0 2xl:mt-0 2xl:w-[1129px] 2xl:grid-cols-3"
       >
         <img
           :src="squiggleWarning"
           alt=""
-          class="pointer-events-none absolute left-[calc(33.08%-26px)] top-[22px] z-10 hidden lg:block"
+          class="pointer-events-none absolute left-[346px] top-[18px] z-10 hidden h-[56px] w-[52px] 2xl:block"
         />
         <img
           :src="squiggle"
           alt=""
-          class="pointer-events-none absolute left-[calc(66.92%-26px)] top-[18px] z-10 hidden lg:block"
+          class="pointer-events-none absolute left-[728px] top-[18px] z-10 hidden h-[56px] w-[52px] 2xl:block"
         />
         <article
           v-for="card in problemCards"
           :key="card.title"
-          class="flex flex-col rounded-[22px] border px-4 pb-[13px] pt-[15px]"
+          class="flex h-auto flex-col rounded-[22px] border px-4 pb-[13px] pt-4 2xl:h-[209px] 2xl:w-[365px] 2xl:px-4 2xl:pb-0 2xl:pt-4"
           :class="card.shellClass"
         >
           <h3
@@ -105,7 +157,7 @@
             {{ card.title }}
           </h3>
           <div
-            class="mt-[15px] flex flex-1 items-center justify-center rounded-[22px] bg-white px-4 py-4 xl:h-[140px] xl:flex-none"
+            class="mt-[13px] flex flex-1 items-center justify-center rounded-[22px] bg-white px-[21px] py-4 2xl:h-[140px] 2xl:w-[337px] 2xl:flex-none 2xl:px-[21.5px]"
           >
             <p
               class="text-center text-[16px] font-semibold leading-[27px] text-text-tertiary"
@@ -114,6 +166,7 @@
             </p>
           </div>
         </article>
+      </div>
       </div>
     </section>
 
