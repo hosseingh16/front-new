@@ -14,27 +14,28 @@
       <div class="mb-4 flex items-start justify-between gap-3">
         <h2
           id="my-request-detail-title"
-          class="min-w-0 flex-1 text-right font-yb-bold text-xl leading-[1.7] text-text-primary sm:text-h1"
+          class="min-w-0 flex-1 text-right font-yb-bold text-xl leading-[1.7] text-text-primary sm:text-h2"
         >
           {{ request?.job_title }}
         </h2>
 
         <div class="flex shrink-0 items-center gap-2">
           <NuxtLink
-            v-if="request"
-            :to="
-              paths.jobs.detail({
-                id: request.ad_id,
-                slug: request.ad_slug,
-                title: request.job_title,
-                company_name: request.company_name,
-              })
-            "
+            v-if="request && detailLink"
+            :to="detailLink"
             class="btn btn-primary inline-flex h-10 items-center gap-1 px-4 text-base font-semibold"
             @click="closeModal"
           >
-            مشاهده آگهی
-            <Icon name="svg:receive-briefcase" size="24" class="size-6 shrink-0" />
+            {{ request.type === "project" ? "مشاهده پروژه" : "مشاهده آگهی" }}
+            <Icon
+              :name="
+                request.type === 'project'
+                  ? 'lucide:folder-kanban'
+                  : 'svg:receive-briefcase'
+              "
+              size="24"
+              class="size-6 shrink-0"
+            />
           </NuxtLink>
 
           <button
@@ -80,7 +81,7 @@
               {{ request.company_name }}
             </p>
             <p
-              class="font-yb-bold text-xl leading-[1.7] text-text-primary sm:text-h1"
+              class="font-yb-bold text-xl leading-[1.7] text-text-primary sm:text-h2"
             >
               {{ request.job_title }}
             </p>
@@ -117,126 +118,187 @@
 </template>
 
 <script setup lang="ts">
-import Titr from '~/features/panel/cv/Titr.vue'
-import MyRequestTimeline from '~/components/Elements/MyRequestTimeline.vue'
-import type { MyRequest } from '~/types/my-request'
-import { formatJalaliDate } from '~/utils/format-jalali-date'
-import { resolveCompanyLogoDisplaySrc } from '~/utils/company-basic-info'
-import { paths } from '~/routes'
+import Titr from "~/features/panel/cv/Titr.vue";
+import MyRequestTimeline from "~/components/Elements/MyRequestTimeline.vue";
+import type { MyRequest } from "~/types/my-request";
+import { formatJalaliDate } from "~/utils/format-jalali-date";
+import { resolveCompanyLogoDisplaySrc } from "~/utils/company-basic-info";
+import { paths } from "~/routes";
 
 const props = withDefaults(
   defineProps<{
-    request: MyRequest | null
-    width?: number
+    request: MyRequest | null;
+    width?: number;
   }>(),
   {
     width: 1100,
   },
-)
+);
 
-const dialogRef = ref<HTMLDialogElement | null>(null)
+const dialogRef = ref<HTMLDialogElement | null>(null);
 
 const companyLogoSrc = computed(() =>
   resolveCompanyLogoDisplaySrc(props.request?.company_logo),
-)
+);
 
 const locationLabel = computed(() => {
-  if (!props.request) return ''
+  if (!props.request) return "";
   const parts = [props.request.province_name, props.request.city_name].filter(
     Boolean,
-  )
-  return parts.join('، ')
-})
+  );
+  return parts.join("، ");
+});
 
 const workExperienceLabel = computed(() => {
-  const value = props.request?.minimum_work_experience
-  if (!value) return ''
-  return value.includes('سال') ? value : `${value} سال`
-})
+  const value = props.request?.minimum_work_experience;
+  if (!value) return "";
+  if (props.request?.type === "project") return value;
+  return value.includes("سال") ? value : `${value} سال`;
+});
 
 const websiteLabel = computed(() => {
-  const website = props.request?.company_website?.trim()
-  if (!website) return ''
-  return website.replace(/^https?:\/\//i, '').replace(/\/$/, '')
-})
+  const website = props.request?.company_website?.trim();
+  if (!website) return "";
+  return website.replace(/^https?:\/\//i, "").replace(/\/$/, "");
+});
 
 const websiteHref = computed(() => {
-  const website = props.request?.company_website?.trim()
-  if (!website) return ''
-  if (/^https?:\/\//i.test(website)) return website
-  return `https://${website}`
-})
+  const website = props.request?.company_website?.trim();
+  if (!website) return "";
+  if (/^https?:\/\//i.test(website)) return website;
+  return `https://${website}`;
+});
+
+const detailLink = computed(() => {
+  const request = props.request;
+  if (!request) return null;
+
+  if (request.type === "project" && request.project_id) {
+    return paths.projects.detail(request.project_id);
+  }
+
+  if (request.ad_id) {
+    return paths.jobs.detail({
+      id: request.ad_id,
+      slug: request.ad_slug,
+      title: request.job_title,
+      company_name: request.company_name,
+    });
+  }
+
+  return null;
+});
 
 const sidebarItems = computed(() => {
-  if (!props.request) return []
+  if (!props.request) return [];
+
+  if (props.request.type === "project") {
+    return [
+      {
+        label: "نوع درخواست",
+        value: "پروژه",
+        icon: "lucide:folder-kanban",
+      },
+      {
+        label: "دسته‌بندی",
+        value: props.request.category || "",
+        icon: "svg:bag-1",
+      },
+      {
+        label: "نوع پروژه",
+        value: props.request.project_type || "",
+        icon: "tabler:file-text",
+      },
+      {
+        label: "موقعیت مکانی",
+        value: locationLabel.value,
+        icon: "svg:location-4",
+      },
+      {
+        label: "بودجه",
+        value: props.request.salary || "",
+        icon: "svg:wallet",
+      },
+      {
+        label: "مدت زمان",
+        value: workExperienceLabel.value,
+        icon: "svg:work-history",
+      },
+      {
+        label: "تاریخ انتشار پروژه",
+        value: formatJalaliDate(props.request.publish_date, "jD jMMMM"),
+        icon: "lucide:calendar-clock",
+      },
+    ].filter((item) => Boolean(item.value));
+  }
 
   const items = [
     {
-      label: 'نوع آگهی',
-      value: props.request.ad_type || 'استخدامی',
-      icon: 'svg:bag-1',
+      label: "نوع آگهی",
+      value: props.request.ad_type || "استخدامی",
+      icon: "svg:bag-1",
     },
     {
-      label: 'گروه شغلی',
-      value: props.request.category || '',
-      icon: 'svg:bag-1',
+      label: "گروه شغلی",
+      value: props.request.category || "",
+      icon: "svg:bag-1",
     },
     {
-      label: 'نوع قرارداد',
-      value: props.request.employment_type || '',
-      icon: 'tabler:file-text',
+      label: "نوع قرارداد",
+      value: props.request.employment_type || "",
+      icon: "tabler:file-text",
     },
     {
-      label: 'موقعیت مکانی',
+      label: "موقعیت مکانی",
       value: locationLabel.value,
-      icon: 'svg:location-4',
+      icon: "svg:location-4",
     },
     {
-      label: 'حقوق',
-      value: props.request.salary || '',
-      icon: 'svg:wallet',
+      label: "حقوق",
+      value: props.request.salary || "",
+      icon: "svg:wallet",
     },
     {
-      label: 'سابقه کار',
+      label: "سابقه کار",
       value: workExperienceLabel.value,
-      icon: 'svg:work-history',
+      icon: "svg:work-history",
     },
     {
-      label: 'مدرک تحصیلی',
-      value: props.request.minimum_degree || '',
-      icon: 'svg:edu-item',
+      label: "مدرک تحصیلی",
+      value: props.request.minimum_degree || "",
+      icon: "svg:edu-item",
     },
     {
-      label: 'جنسیت',
-      value: props.request.gender || 'مهم نیست',
-      icon: 'svg:user-2',
+      label: "جنسیت",
+      value: props.request.gender || "مهم نیست",
+      icon: "svg:user-2",
     },
     {
-      label: 'تاریخ انتشار آگهی',
-      value: formatJalaliDate(props.request.publish_date, 'jD jMMMM'),
-      icon: 'lucide:calendar-clock',
+      label: "تاریخ انتشار آگهی",
+      value: formatJalaliDate(props.request.publish_date, "jD jMMMM"),
+      icon: "lucide:calendar-clock",
     },
-  ]
+  ];
 
-  return items.filter((item) => Boolean(item.value))
-})
+  return items.filter((item) => Boolean(item.value));
+});
 
 function showModal() {
-  dialogRef.value?.showModal()
+  dialogRef.value?.showModal();
 }
 
 function closeModal() {
-  dialogRef.value?.close()
+  dialogRef.value?.close();
 }
 
 function handleBackdropClick(event: MouseEvent) {
   if (event.target === event.currentTarget) {
-    closeModal()
+    closeModal();
   }
 }
 
 defineExpose({
   showModal,
   closeModal,
-})
+});
 </script>

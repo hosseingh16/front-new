@@ -49,8 +49,8 @@ export const menuMap: Record<string, MenuMeta> = {
 
   projects: {
     label: "پروژه ها",
-    icon: "svg:projects",
-    to: "/dashboard/jobs",
+    icon: "lucide:folder-kanban",
+    to: "/projects",
   },
 
   bookmarks: {
@@ -82,6 +82,18 @@ export const menuMap: Record<string, MenuMeta> = {
     label: "مدیریت آگهی‌ها",
     icon: "lucide:briefcase",
     to: "/dashboard/employer/ads",
+  },
+
+  manage_projects: {
+    label: "مدیریت پروژه‌ها",
+    icon: "lucide:folder-kanban",
+    to: "/dashboard/employer/projects",
+  },
+
+  create_project: {
+    label: "ایجاد پروژه",
+    icon: "lucide:file-plus-2",
+    to: "/dashboard/employer/projects/create",
   },
 
   tax_returns: {
@@ -130,13 +142,13 @@ export const menuMap: Record<string, MenuMeta> = {
   user_create_project: {
     label: "ایجاد پروژه",
     icon: "svg:projects",
-    to: "/dashboard/jobs",
+    to: "/dashboard/employer/projects/create",
   },
 
   user_manage_projects: {
     label: "مدیریت پروژه ها",
     icon: "svg:projects",
-    to: "/dashboard/jobs",
+    to: "/dashboard/employer/projects",
   },
 
   user_edit_company: {
@@ -172,7 +184,7 @@ export const menuMap: Record<string, MenuMeta> = {
   user_projects: {
     label: "پروژه‌های من",
     icon: "svg:projects",
-    to: "/dashboard/jobs",
+    to: "/dashboard/employer/projects",
   },
 
   user_bookmarks: {
@@ -219,14 +231,15 @@ export const menuMap: Record<string, MenuMeta> = {
   //   to: "/dashboard/employer/ads/create?employment_type=part_time",
   // },
 
-  // #future
-  // dashboard_action_accounting_project: {
-  //   label: "پروژه حسابداری",
-  //   icon: "svg:illust-project-user",
-  //   dashboardIcon: "svg:illust-project-user",
-  //   dashboardSubtitle: "به زودی",
-  //   to: "",
-  // },
+  dashboard_action_accounting_project: {
+    label: "پروژه حسابداری",
+    icon: "svg:illust-project-user",
+    dashboardIcon: "svg:illust-project-user",
+    dashboardSubtitle: "به زودی",
+    // to: "", // TODO: Remove this after testing
+    to: "/dashboard/employer/projects/create",
+
+  },
 
   // #future
   // dashboard_action_consulting: {

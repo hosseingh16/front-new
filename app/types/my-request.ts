@@ -1,3 +1,5 @@
+export type MyRequestKind = 'ad' | 'project'
+
 export type MyRequestStatus =
   | 'sent'
   | 'priority'
@@ -35,7 +37,9 @@ export interface MyRequestTimelineEvent {
 
 export interface MyRequest {
   id: number
-  ad_id: number
+  type: MyRequestKind
+  ad_id?: number
+  project_id?: number
   job_title: string
   /** Job ad URL slug when provided by the API */
   ad_slug?: string | null
@@ -47,6 +51,12 @@ export interface MyRequest {
   city_name?: string
   employment_type?: string
   ad_type?: string
+  project_type?: string
+  scopes?: string | string[]
+  min_time?: number | null
+  max_time?: number | null
+  min_budget?: number | null
+  max_budget?: number | null
   salary?: string
   gender?: string
   minimum_work_experience?: string

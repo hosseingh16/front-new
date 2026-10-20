@@ -111,24 +111,58 @@ const highlightedIndex = ref(-1);
 
 const hasModelValue = computed(() => model.value != null && model.value !== "");
 
+function normalizeOptions(options: ISelectItem[] | null | undefined) {
+  if (!Array.isArray(options)) return [] as ISelectItem[];
+
+  return options
+    .filter((item): item is ISelectItem => item != null && typeof item === "object")
+    .map((item) => {
+      const raw = item as ISelectItem & { key?: string | number };
+      const value = raw.value ?? raw.key ?? "";
+      const label =
+        raw.label != null && String(raw.label).length > 0
+          ? String(raw.label)
+          : String(value);
+
+      return {
+        ...raw,
+        value,
+        label,
+      };
+    });
+}
+
 const selectedOption = computed(
   () =>
-    props.options.find((x) => String(x.value) === String(model.value)) ?? null,
+    normalizeOptions(props.options).find(
+      (x) => String(x.value) === String(model.value),
+    ) ?? null,
 );
+
+function applyOptions(options: ISelectItem[] | null | undefined) {
+  const normalized = normalizeOptions(options);
+  allOptions.value = normalized;
+  const query = keyword.value.trim();
+  options2.value = query
+    ? normalized.filter((x) => x.label.includes(query))
+    : normalized;
+}
 
 // Watches
 watch(
   () => props.options,
-  () => {
-    options2.value = props.options;
-    allOptions.value = props.options;
+  (options) => {
+    applyOptions(options);
   },
-  { immediate: true },
+  { immediate: true, deep: true },
 );
 watch(
   () => keyword.value,
   (val) => {
-    options2.value = [...allOptions.value].filter((x) => x.label.includes(val));
+    const query = val.trim();
+    options2.value = query
+      ? allOptions.value.filter((x) => x.label.includes(query))
+      : [...allOptions.value];
     highlightedIndex.value = options2.value.length ? 0 : -1;
   },
 );

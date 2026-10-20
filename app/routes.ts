@@ -13,6 +13,10 @@ export const paths = {
     category: jobCategoryPath,
     city: jobCityPath,
   },
+  projects: {
+    root: '/projects',
+    detail: (id: string | number) => `/project/${id}`,
+  },
   taxReturn: {
     root: '/tax-return',
     consultants: '/tax-return/consultants',
@@ -21,6 +25,8 @@ export const paths = {
   employer: {
     ads: '/dashboard/employer/ads',
     adsCreate: '/dashboard/employer/ads/create',
+    projects: '/dashboard/employer/projects',
+    projectsCreate: '/dashboard/employer/projects/create',
     resumeBank: '/dashboard/employer/resumes',
     taxReturnCreate: '/tax-return/consultants',
   },

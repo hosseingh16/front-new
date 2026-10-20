@@ -1,6 +1,11 @@
 <template>
   <article class="rounded-lg bg-white p-1">
-    <div class="rounded-md border-2 border-primary-50 bg-primary-50 p-2">
+    <div
+      class="rounded-lg p-3"
+      :class="
+        request.type === 'project' ? 'bg-[#FCF7F3]' : 'bg-surface-soft'
+      "
+    >
       <div class="flex items-center gap-1">
         <div
           class="flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-2xl"
@@ -17,8 +22,9 @@
               {{ request.job_title }}
             </h2>
             <BookmarkToggleButton
-              :target-id="request.ad_id"
-              type="ads"
+              v-if="bookmarkTargetId"
+              :target-id="bookmarkTargetId"
+              :type="request.type === 'project' ? 'projects' : 'ads'"
               :initial-bookmarked="Boolean(request.is_bookmarked)"
               icon-only
               class="h-8! w-8! shrink-0 border-none! bg-transparent! p-1.5!"
@@ -131,6 +137,12 @@ const relativeDate = computed(() =>
 );
 const companyLogoSrc = computed(() =>
   resolveCompanyLogoDisplaySrc(props.request.company_logo),
+);
+
+const bookmarkTargetId = computed(() =>
+  props.request.type === "project"
+    ? props.request.project_id
+    : props.request.ad_id,
 );
 
 const locationLabel = computed(() => {

@@ -33,13 +33,13 @@
       <div v-else-if="requests.length" class="space-y-3">
         <div
           v-for="request in requests"
-          :key="request.id"
+          :key="`${request.type}-${request.id}`"
           class="flex flex-col gap-3 rounded-lg bg-surface-50 p-2 md:grid md:h-[52px] md:min-w-[860px] md:grid-cols-[minmax(140px,220px)_minmax(100px,1fr)_minmax(100px,1fr)_minmax(140px,220px)_minmax(120px,1fr)_minmax(200px,auto)] md:items-center md:gap-2 md:p-0"
         >
           <div
             class="flex items-center justify-between gap-2 p-2 md:justify-start"
           >
-            <span class="text-xs text-text-passive md:hidden">عنوان آگهی</span>
+            <span class="text-xs text-text-passive md:hidden">عنوان</span>
             <p
               class="truncate text-sm font-semibold text-text-primary"
               :title="request.job_title"
@@ -51,7 +51,7 @@
           <div
             class="flex items-center justify-between gap-2 p-2 md:justify-start"
           >
-            <span class="text-xs text-text-passive md:hidden">نوع آگهی</span>
+            <span class="text-xs text-text-passive md:hidden">نوع</span>
             <span
               class="inline-flex h-8 items-center gap-1 rounded-xl px-2 text-sm text-text-secondary"
               :class="employmentTypeMeta(request).className"
@@ -122,7 +122,7 @@
       <NoResult
         v-else-if="initialized"
         title="درخواستی یافت نشد"
-        description="هنوز درخواستی برای فرصت‌های شغلی ارسال نکرده‌اید."
+        description="هنوز درخواستی برای آگهی‌ها یا پروژه‌ها ارسال نکرده‌اید."
         icon="svg:no-jobs"
         action-label="فرصت‌های شغلی"
         action-icon="svg:jobs"
@@ -150,11 +150,11 @@ const emit = defineEmits<{
 }>();
 
 const columns = [
-  { key: "title", label: "عنوان آگهی", sortable: false },
-  { key: "type", label: "نوع آگهی", sortable: true },
+  { key: "title", label: "عنوان", sortable: false },
+  { key: "type", label: "نوع", sortable: true },
   { key: "company", label: "نام شرکت", sortable: false },
   { key: "status", label: "وضعیت", sortable: true },
-  { key: "salary", label: "قیمت", sortable: true },
+  { key: "salary", label: "حقوق / بودجه", sortable: true },
   { key: "actions", label: "", sortable: false },
 ] as const;
 

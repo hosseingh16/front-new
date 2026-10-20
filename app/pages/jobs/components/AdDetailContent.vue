@@ -1,10 +1,10 @@
 <template>
   <div
-    class="grid items-start gap-4 bg-surface-50 p-md-5 lg:grid-cols-[minmax(0,1fr)_300px]"
+    class="grid items-start gap-4 bg-surface-50 p-md-5 lg:grid-cols-[minmax(0,1fr)_300px] sm:px-5"
   >
     <main class="min-w-0 space-y-4">
       <div
-        class="no-scrollbar -mx-1 flex justify-start gap-3 overflow-x-auto overscroll-x-contain border-b border-gray-default sm:gap-4 md:gap-6"
+        class="no-scrollbar -mx-1 flex justify-start gap-3 overflow-x-auto overscroll-x-contain border-b border-gray-default sm:gap-4 md:gap-6 sm:px-2"
       >
         <button
           v-for="tab in tabs"

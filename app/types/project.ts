@@ -13,16 +13,24 @@ export interface Project {
     company_type?: string
     company_size?: string
     user?: User
+    title?: string
+    category?: string
     type?: string
     desc?: string
-    scopes?: string
+    scopes?: string | string[]
+    needs_presence?: boolean
     min_time?: number
     max_time?: number
-    min_budget?: number
-    max_budget?: number
+    min_budget?: number | string
+    max_budget?: number | string
+    /** Pre-formatted budget label from API (e.g. "25 میلیون - 50 میلیون") */
+    budget?: string | null
     payable_price?: number
     paid_at?: string
+    publish_date?: string
+    created_at?: string
     status?: string
+    has_applied?: boolean
     is_bookmarked?: boolean
 }
 
@@ -40,8 +48,10 @@ export interface ProjectList {
     scopes?: string
     min_time?: number
     max_time?: number
-    min_budget?: number
-    max_budget?: number
+    min_budget?: number | string
+    max_budget?: number | string
+    /** Pre-formatted budget label from API (e.g. "25 میلیون - 50 میلیون") */
+    budget?: string | null
     payable_price?: number
     paid_at?: string
     status?: string

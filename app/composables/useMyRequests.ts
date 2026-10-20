@@ -1,6 +1,6 @@
 import { SETTINGS_DEFAULTS } from '~/configs/settings-defaults'
 import type { ApiResponse } from '~/types/api'
-import type { MyRequest, MyRequestTab } from '~/types/my-request'
+import type { MyRequest, MyRequestKind, MyRequestTab } from '~/types/my-request'
 import {
   filterMyRequestsBySearch,
   filterMyRequestsByTab,
@@ -17,7 +17,11 @@ function getFetchErrorMessage(err: unknown) {
   if (err && typeof err === 'object' && 'message' in err) {
     return String((err as { message?: string }).message)
   }
-  return 'خطا در دریافت درخواست‌های شغلی'
+  return 'خطا در دریافت درخواست‌ها'
+}
+
+function requestKey(type: MyRequestKind, id: number) {
+  return `${type}-${id}`
 }
 
 export function useMyRequests(options: { immediate?: boolean } = {}) {
@@ -74,13 +78,25 @@ export function useMyRequests(options: { immediate?: boolean } = {}) {
     currentPage.value = page
   }
 
-  async function cancelRequest(id: number) {
-    await api.delete(`/ads/requests/${id}`)
-    requests.value = requests.value.filter((request) => request.id !== id)
+  async function cancelRequest(request: MyRequest) {
+    const endpoint =
+      request.type === 'project'
+        ? `/projects/requests/${request.id}`
+        : `/ads/requests/${request.id}`
+
+    await api.delete(endpoint)
+    requests.value = requests.value.filter(
+      (item) => requestKey(item.type, item.id) !== requestKey(request.type, request.id),
+    )
   }
 
-  function updateBookmark(id: number, bookmarked: boolean) {
-    const target = requests.value.find((request) => request.id === id)
+  function updateBookmark(
+    request: Pick<MyRequest, 'id' | 'type'>,
+    bookmarked: boolean,
+  ) {
+    const target = requests.value.find(
+      (item) => requestKey(item.type, item.id) === requestKey(request.type, request.id),
+    )
     if (target) target.is_bookmarked = bookmarked
   }
 

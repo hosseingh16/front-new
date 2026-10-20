@@ -82,7 +82,7 @@
         >
           <img
             :src="image"
-            :alt="`تصویر ${index + 1} ${company.name}`"
+            :alt="`تصویر ${index + 1} ${company?.name ?? ''}`"
             class="h-45.5 w-full object-cover transition-opacity hover:opacity-90"
             loading="lazy"
           />
@@ -117,14 +117,16 @@
 
 <script setup lang="ts">
 import type { Ad } from "~/types/ad";
+import type { Company } from "~/types/company";
 import AdSectionTitle from "./AdSectionTitle.vue";
 import AdRequirementStat from "./AdRequirementStat.vue";
 
 const props = defineProps<{
-  ad: Ad;
+  ad?: Ad;
+  company?: Company | null;
 }>();
 
-const company = computed(() => props.ad.company);
+const company = computed(() => props.company ?? props.ad?.company);
 
 const { items: lookupItems } = useLookups("industries,company_sizes");
 const industryOptions = lookupItems("industries");

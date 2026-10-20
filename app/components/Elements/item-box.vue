@@ -168,6 +168,7 @@ import BookmarkToggleButton from "~/components/Elements/BookmarkToggleButton.vue
 import type { AdList } from "~/types/ad";
 import type { ProjectList } from "~/types/project";
 import { paths } from "~/routes";
+import { formatProjectBudgetLabel } from "~/utils/project-display";
 
 moment.updateLocale("fa", {
   relativeTime: {
@@ -231,9 +232,7 @@ const truncatedCompanyName = computed(() => {
 
 const footerValue = computed(() => {
   if (props.variant === "project") {
-    const min = project.value.min_budget ?? "-";
-    const max = project.value.max_budget ?? "-";
-    return `${min} - ${max}`;
+    return formatProjectBudgetLabel(project.value) || "-";
   }
 
   return ad.value.salary || "-";

@@ -1,7 +1,7 @@
 <template>
   <button
     type="button"
-    class="flex cursor-pointer items-center justify-center gap-1 rounded-lg border-2 border-gray-default bg-surface-50 text-sm text-text-tertiary transition-opacity hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-60"
+    class="flex cursor-pointer items-center justify-center gap-1 rounded-lg border-2 border-gray-default bg-surface-50 text-sm text-text-tertiary transition-opacity hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-60 ml-2.5 sm:ml-0"
     :class="iconOnly ? 'h-9 w-9 p-0' : 'h-9 px-4'"
     :disabled="loading"
     :aria-label="bookmarked ? 'حذف نشان' : 'نشان کردن'"

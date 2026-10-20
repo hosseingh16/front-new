@@ -134,9 +134,11 @@ import {
 const props = withDefaults(
   defineProps<{
     adId?: string | number;
+    projectId?: string | number;
   }>(),
   {
     adId: "",
+    projectId: "",
   },
 );
 
@@ -171,9 +173,13 @@ const {
   reset: resetAuth,
 } = useAccountAuth();
 
-const { applyToAd, loading: applyLoading } = useApplyToAd();
+const { applyToAd, loading: applyAdLoading } = useApplyToAd();
+const { applyToProject, loading: applyProjectLoading } = useApplyToProject();
 const { user, ensureFullProfile } = useCurrentUser();
 const { ensureRoleForAction } = useRoleGate();
+const applyLoading = computed(
+  () => applyAdLoading.value || applyProjectLoading.value,
+);
 
 const phoneSchema = Yup.object({
   mobile: iranMobileSchema(),
@@ -227,11 +233,15 @@ const isVoiceInactive = computed(
   () => authLoading.value || voiceSent.value || !voiceAvailable.value,
 );
 
-const stepTitle = computed(() =>
-  step.value === "phone"
-    ? "برای ارسال درخواست شغلی، شماره موبایل خود را وارد کنید"
-    : "برای ادامه، شماره موبایل خود را تایید کنید",
-);
+const stepTitle = computed(() => {
+  if (step.value === "otp") {
+    return "برای ادامه، شماره موبایل خود را تایید کنید";
+  }
+
+  return props.projectId
+    ? "برای ارسال درخواست پروژه، شماره موبایل خود را وارد کنید"
+    : "برای ارسال درخواست شغلی، شماره موبایل خود را وارد کنید";
+});
 
 function emptyOtp() {
   return createEmptyOtpDigits(otpLength.value);
@@ -306,7 +316,8 @@ async function onSubmitOtp(otpFromEvent?: string | Event) {
 
     let applySucceeded = true;
     let resumeIncomplete = false;
-    if (props.adId) {
+    const targetId = props.projectId || props.adId;
+    if (targetId) {
       try {
         const assigned = await ensureRoleForAction("job_seeker");
         if (!assigned) {
@@ -316,6 +327,8 @@ async function onSubmitOtp(otpFromEvent?: string | Event) {
           if (!isResumeBasicInfoComplete(user.value)) {
             applySucceeded = false;
             resumeIncomplete = true;
+          } else if (props.projectId) {
+            await applyToProject(props.projectId);
           } else {
             await applyToAd(props.adId);
           }

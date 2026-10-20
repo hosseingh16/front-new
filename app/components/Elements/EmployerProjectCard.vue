@@ -1,0 +1,141 @@
+<template>
+  <article class="rounded-2xl border border-gray-default bg-surface-50 p-1">
+    <div class="rounded-lg bg-surface-soft p-3">
+      <div class="flex items-start justify-between gap-4">
+        <h2 class="min-w-0 font-yb-bold text-base text-text-tertiary">
+          <NuxtLink
+            :to="`/dashboard/employer/projects/${project.id}/requests`"
+            class="transition-colors hover:text-primary-500"
+          >
+            {{ title }}
+          </NuxtLink>
+        </h2>
+        <span v-if="publishedLabel" class="shrink-0 text-sm text-text-passive">
+          {{ publishedLabel }}
+        </span>
+      </div>
+
+      <div class="mt-5 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+        <NuxtLink
+          v-for="item in statItems"
+          :key="item.label"
+          :to="statLink(item.status)"
+          class="flex flex-col items-center gap-2 rounded-lg p-1 transition-opacity hover:opacity-80"
+        >
+          <div class="min-w-0">
+            <p class="font-yb-bold text-sm text-text-tertiary">
+              {{ item.value }}
+            </p>
+          </div>
+          <div class="flex items-center gap-2">
+            <span
+              class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full"
+              :style="{ backgroundColor: item.iconBgColor }"
+            >
+              <Icon
+                :name="item.icon"
+                size="18"
+                :style="{ color: item.iconColor }"
+              />
+            </span>
+            <p class="text-sm text-text-passive">{{ item.label }}</p>
+          </div>
+        </NuxtLink>
+      </div>
+    </div>
+
+    <div class="my-2 flex flex-wrap items-center justify-between gap-3 px-2">
+      <span
+        class="flex justify-center rounded-lg px-3 py-1 text-sm font-semibold"
+        :class="statusMeta.className"
+      >
+        <span
+          class="ml-1 my-auto inline-block h-2 w-2 rounded-full"
+          :class="statusMeta.dotClassName"
+        />
+        {{ statusMeta.label }}
+      </span>
+
+      <div class="flex flex-wrap items-center gap-2">
+        <MDropdown hover>
+          <template #btn>
+            <button
+              type="button"
+              class="btn btn-ghost h-9 min-h-9 gap-2 px-4 text-sm text-primary-500 hover:bg-primary-50 hover:text-primary-600"
+            >
+              <Icon name="material-symbols:more-vert" size="16" />
+              <span class="hidden md:block">مدیریت پروژه</span>
+            </button>
+          </template>
+          <template #content>
+            <ul class="min-w-56">
+              <li>
+                <NuxtLink
+                  :to="`/project/${project.id}`"
+                  target="_blank"
+                  class="flex w-full items-center gap-2 px-4 py-2 text-sm text-text-secondary hover:bg-surface-100"
+                >
+                  <Icon name="material-symbols:visibility-outline" size="16" />
+                  مشاهده پروژه در سایت
+                </NuxtLink>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  class="flex w-full items-center gap-2 px-4 py-2 text-sm text-red-500 dark:text-red-400 hover:bg-surface-100"
+                  @click="emit('delete', project.id)"
+                >
+                  <Icon name="material-symbols:delete-outline" size="16" />
+                  حذف پروژه
+                </button>
+              </li>
+            </ul>
+          </template>
+        </MDropdown>
+
+        <NuxtLink
+          :to="`/dashboard/employer/projects/${project.id}/requests`"
+          class="group btn btn-ghost h-9 min-h-9 gap-2 px-4 text-sm text-primary-500 hover:bg-primary-50 hover:text-primary-600"
+        >
+          <icons-search-briefcase class="text-current" />
+          رزومه‌ها
+        </NuxtLink>
+      </div>
+    </div>
+  </article>
+</template>
+
+<script setup lang="ts">
+import type { EmployerProject } from "~/types/employer-project";
+import { formatRelativeDate } from "~/utils/format-relative-date";
+import MDropdown from "~/components/M/Dropdown.vue";
+import {
+  getEmployerProjectStatItems,
+  getEmployerProjectStatusMeta,
+  getEmployerProjectTitle,
+} from "~/pages/dashboard/employer/utils/employer-project";
+
+const props = defineProps<{
+  project: EmployerProject;
+}>();
+
+const emit = defineEmits<{
+  delete: [id: number];
+}>();
+
+const title = computed(() => getEmployerProjectTitle(props.project));
+
+const publishedLabel = computed(() =>
+  formatRelativeDate(props.project.publish_date || props.project.created_at),
+);
+
+const statItems = computed(() => getEmployerProjectStatItems(props.project));
+
+const statusMeta = computed(() => getEmployerProjectStatusMeta(props.project));
+
+function statLink(status?: number) {
+  const path = `/dashboard/employer/projects/${props.project.id}/requests`;
+  if (status == null) return path;
+  return { path, query: { status: String(status) } };
+}
+</script>

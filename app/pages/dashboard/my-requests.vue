@@ -34,14 +34,14 @@
     >
       <div class="w-full text-right">
         <h1 class="text-h1 font-yb-bold leading-[1.7] text-text-primary">
-          درخواست‌های شغلی
+          درخواست‌های من
         </h1>
       </div>
 
       <div class="flex flex-1 flex-col items-center justify-center">
         <NoResult
-          title="فرصت شغلی موجود نیست"
-          description="هنوز هیچ درخواستی برای فرصت‌های شغلی ارسال نکرده‌اید."
+          title="درخواستی موجود نیست"
+          description="هنوز هیچ درخواستی برای آگهی‌ها یا پروژه‌ها ارسال نکرده‌اید."
           :icon-src="noJobIllustration"
           :icon-size="240"
           action-label="فرصت‌های شغلی"
@@ -57,7 +57,7 @@
       <div class="flex flex-wrap items-center justify-between gap-4">
         <div class="flex items-center gap-2.5">
           <h1 class="text-h1 font-yb-bold leading-[1.7] text-text-primary">
-            درخواست‌های شغلی
+            درخواست‌های من
           </h1>
 
           <span
@@ -97,7 +97,7 @@
       </div>
 
       <div
-        class="flex flex-wrap items-center gap-6 border-b border-gray-default px-0 lg:px-6"
+        class="flex flex-wrap gap-6 border-b border-gray-default px-0 lg:px-6"
       >
         <button
           v-for="tab in MY_REQUEST_TABS"
@@ -134,7 +134,7 @@
       <div v-if="paginatedRequests.length" class="space-y-4">
         <MyRequestCard
           v-for="request in paginatedRequests"
-          :key="request.id"
+          :key="`${request.type}-${request.id}`"
           :request="request"
           @cancel="openCancelDialog"
           @details="openDetailsModal"
@@ -194,7 +194,7 @@ definePageMeta({
 });
 
 useSeoMeta({
-  title: "درخواست‌های شغلی | های‌حساب",
+  title: "درخواست‌های من | های‌حساب",
 });
 
 const {
@@ -236,9 +236,8 @@ function openDetailsModal(request: MyRequest) {
 async function handleCancelConfirm() {
   if (!pendingCancel.value) return;
 
-  const requestId = pendingCancel.value.id;
   try {
-    await cancelRequest(requestId);
+    await cancelRequest(pendingCancel.value);
     pendingCancel.value = null;
     confirmDialogRef.value?.closeModal();
   } catch (err: unknown) {
@@ -252,6 +251,6 @@ async function handleCancelConfirm() {
 }
 
 function onBookmarkChange(request: MyRequest, bookmarked: boolean) {
-  updateBookmark(request.id, bookmarked);
+  updateBookmark(request, bookmarked);
 }
 </script>
