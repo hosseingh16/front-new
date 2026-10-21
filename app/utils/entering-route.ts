@@ -265,6 +265,10 @@ export function enteringMessageForDestination(destination: string) {
     return 'در حال ورود به صفحه ایجاد آگهی ...'
   }
 
+  if (matchesPath(destination, paths.employer.projectsCreate)) {
+    return 'در حال ورود به صفحه ایجاد پروژه ...'
+  }
+
   if (matchesPath(destination, paths.employer.taxReturnCreate)) {
     return 'در حال ورود به صفحه درخواست اظهارنامه ...'
   }

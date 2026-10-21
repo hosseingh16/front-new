@@ -76,6 +76,7 @@ import CreateAdRequirementsEditor from "./components/create/CreateAdRequirements
 import CreateAdSpecializedFields from "./components/create/CreateAdSpecializedFields.vue";
 import CreateAdWorkingHoursSection from "./components/create/CreateAdWorkingHoursSection.vue";
 import CompanyBasicInfoModal from "../company/components/CompanyBasicInfoModal.vue";
+import { paths } from "~/routes";
 
 definePageMeta({
   layout: "dashboard",
@@ -123,19 +124,23 @@ async function onCompanyBasicCompleted() {
 
 const route = useRoute();
 
+const employmentTypeQuery = computed(() => {
+  const raw = route.query.employment_type;
+  return Array.isArray(raw) ? raw[0] : raw;
+});
+
+if (employmentTypeQuery.value === "project_based") {
+  await navigateTo(paths.employer.projectsCreate, { replace: true });
+}
+
 const pageTitle = computed(() => {
   if (isCopy.value) return "کپی آگهی";
 
-  const raw = route.query.employment_type;
-  const employmentType = Array.isArray(raw) ? raw[0] : raw;
-
-  switch (employmentType) {
+  switch (employmentTypeQuery.value) {
     case "full_time":
       return "ایجاد آگهی تمام وقت";
     case "part_time":
       return "ایجاد آگهی نیمه وقت";
-    case "project_based":
-      return "ایجاد آگهی پروژه ای";
     default:
       return "ایجاد آگهی";
   }

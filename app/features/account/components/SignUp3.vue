@@ -150,6 +150,15 @@ async function onSelect(item: RequestTypeItem) {
       emits("onChangeDirection", "forward");
 
       const cta = enteringFromAuthQuery(route.query);
+      if (cta?.query?.employment_type === "project_based") {
+        await navigateTo(
+          buildEnteringRoute({
+            to: paths.employer.projectsCreate,
+            role: item.role,
+          }),
+        );
+        return;
+      }
       if (cta?.query?.employment_type) {
         await navigateTo(
           buildEnteringRoute({

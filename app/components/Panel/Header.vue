@@ -138,15 +138,15 @@ const createMenuItems = [
   //   to: "/dashboard/employer/ads/create?employment_type=part_time",
   //   icon: "svg:new-briefcase",
   // },
-  // {
-  //   title: "آگهی پروژه ای",
-  //   to: "/dashboard/employer/ads/create?employment_type=project_based",
-  //   icon: "svg:new-notepad-text",
-  // },
   {
     title: "ایجاد آگهی",
     to: "/dashboard/employer/ads/create",
     icon: "svg:new-briefcase",
+  },
+  {
+    title: "ایجاد پروژه",
+    to: "/dashboard/employer/projects/create",
+    icon: "svg:new-notepad-text",
   },
   {
     title: "درخواست اظهار نامه",

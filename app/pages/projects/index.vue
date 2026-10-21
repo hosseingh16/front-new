@@ -53,9 +53,8 @@
               پروژه خود را ثبت کنید و متخصص مناسب پیدا کنید.
             </p>
             <IntentLink
-              :to="paths.employer.adsCreate"
+              :to="paths.employer.projectsCreate"
               role="employer"
-              :query="{ employment_type: 'project_based' }"
               class="mt-auto pt-6 flex justify-center"
             >
               <span class="btn btn-primary gap-2">ثبت پروژه حسابداری</span>

@@ -46,22 +46,13 @@
             ثبت آگهی جدید
           </IntentLink>
           <IntentLink
-            :to="paths.employer.adsCreate"
+            :to="paths.employer.projectsCreate"
             role="employer"
-            :query="{ employment_type: 'project_based' }"
             class="btn btn-outline h-10 w-[179px] border-[#D6DCF5] bg-white px-4 text-sm text-primary-500 hover:bg-primary-50"
           >
             ثبت پروژه جدید
           </IntentLink>
         </div>
-        <IntentLink
-          :to="paths.employer.taxReturnCreate"
-          role="employer"
-          class="mt-3 text-sm font-semibold text-success underline decoration-success underline-offset-[6px]"
-        >
-          درخواست تنظیم اظهارنامه
-        </IntentLink>
-
         <img
           :src="heroMobile"
           alt="پنل کارفرمایان های‌حساب"
@@ -94,66 +85,68 @@
         class="pointer-events-none absolute -right-10 top-16 hidden w-40 opacity-80 lg:block"
       />
       <div class="custom-pad relative">
-      <div class="mx-auto flex w-full max-w-[976px] flex-col items-center">
-        <span
-          class="inline-flex h-8 items-center rounded-lg bg-[#4864E114] px-3 text-sm font-semibold text-primary-500"
-        >
-          ارزش ها
-        </span>
-        <h2
-          class="mt-4 text-center font-yb-bold text-xl leading-[39px] text-text-tertiary md:text-[28px]"
-        >
-          های‌حساب برای کارفرما چه کاری انجام می‌دهد؟
-        </h2>
-      </div>
-
-      <div class="mx-auto mt-8 w-full max-w-[976px] space-y-6">
-        <div
-          v-for="(card, index) in serviceCards"
-          :key="card.featureTitle"
-          class="flex flex-col-reverse items-center gap-6 overflow-hidden rounded-2xl bg-white px-4 py-6 md:h-[271px] md:flex-row md:gap-8 md:px-8"
-          :class="index != 1 ? 'md:flex-row-reverse' : ''"
-        >
-          <div class="flex w-full flex-1 flex-col md:max-w-[504px]">
-            <ol class="space-y-2">
-              <li
-                v-for="(point, i) in card.points"
-                :key="point"
-                class="flex items-center gap-2 text-sm leading-[27px] text-text-tertiary md:text-base"
-              >
-                <span :class="card.numberClass">
-                  {{ i + 1 }}
-                </span>
-                <span>{{ point }}</span>
-              </li>
-            </ol>
-            <IntentLink
-              :to="card.to"
-              :role="card.role"
-              :query="card.query"
-              class="mt-2.5 flex h-8 w-full items-center justify-center gap-2 rounded-lg text-sm font-semibold transition-opacity hover:opacity-80"
-              :class="card.ctaClass"
-            >
-              {{ card.btnText }}
-              <icons-arrow
-                :color="card.ctaArrowColor"
-                :size="14"
-                class="rotate-45"
-              />
-            </IntentLink>
-          </div>
-
-          <div
-            class="flex h-[207px] w-full shrink-0 flex-col items-center justify-center rounded-2xl px-6 text-center md:w-[368px]"
-            :class="card.boxClass"
+        <div class="mx-auto flex w-full max-w-[976px] flex-col items-center">
+          <span
+            class="inline-flex h-8 items-center rounded-lg bg-[#4864E114] px-3 text-sm font-semibold text-primary-500"
           >
-            <Icon :name="card.icon" size="61" />
-            <p class="mt-3 font-yb-bold text-base text-text-tertiary md:text-lg">
-              {{ card.featureTitle }}
-            </p>
+            ارزش ها
+          </span>
+          <h2
+            class="mt-4 text-center font-yb-bold text-xl leading-[39px] text-text-tertiary md:text-[28px]"
+          >
+            های‌حساب برای کارفرما چه کاری انجام می‌دهد؟
+          </h2>
+        </div>
+
+        <div class="mx-auto mt-8 w-full max-w-[976px] space-y-6">
+          <div
+            v-for="(card, index) in serviceCards"
+            :key="card.featureTitle"
+            class="flex flex-col-reverse items-center gap-6 overflow-hidden rounded-2xl bg-white px-4 py-6 md:h-[271px] md:flex-row md:gap-8 md:px-8"
+            :class="index != 1 ? 'md:flex-row-reverse' : ''"
+          >
+            <div class="flex w-full flex-1 flex-col md:max-w-[504px]">
+              <ol class="space-y-2">
+                <li
+                  v-for="(point, i) in card.points"
+                  :key="point"
+                  class="flex items-center gap-2 text-sm leading-[27px] text-text-tertiary md:text-base"
+                >
+                  <span :class="card.numberClass">
+                    {{ i + 1 }}
+                  </span>
+                  <span>{{ point }}</span>
+                </li>
+              </ol>
+              <IntentLink
+                :to="card.to"
+                :role="card.role"
+                :query="card.query"
+                class="mt-2.5 flex h-8 w-full items-center justify-center gap-2 rounded-lg text-sm font-semibold transition-opacity hover:opacity-80"
+                :class="card.ctaClass"
+              >
+                {{ card.btnText }}
+                <icons-arrow
+                  :color="card.ctaArrowColor"
+                  :size="14"
+                  class="rotate-45"
+                />
+              </IntentLink>
+            </div>
+
+            <div
+              class="flex h-[207px] w-full shrink-0 flex-col items-center justify-center rounded-2xl px-6 text-center md:w-[368px]"
+              :class="card.boxClass"
+            >
+              <Icon :name="card.icon" size="61" />
+              <p
+                class="mt-3 font-yb-bold text-base text-text-tertiary md:text-lg"
+              >
+                {{ card.featureTitle }}
+              </p>
+            </div>
           </div>
         </div>
-      </div>
       </div>
     </section>
 
@@ -412,9 +405,8 @@ const serviceCards: ServiceCard[] = [
     ctaClass: "bg-[#E6FAF3] text-accent-500",
     ctaArrowColor: "#0ea972",
     btnText: "ایجاد پروژه حسابداری",
-    to: paths.employer.adsCreate,
+    to: paths.employer.projectsCreate,
     role: "employer" as const,
-    query: { employment_type: "project_based" },
   },
   {
     featureTitle: "درخواست انجام اظهار نامه مالیاتی",

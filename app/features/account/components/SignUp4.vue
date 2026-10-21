@@ -112,6 +112,15 @@ async function goCreate(employmentType: string) {
 
   pendingType.value = employmentType;
   try {
+    if (employmentType === "project_based") {
+      await navigateTo(
+        buildEnteringRoute({
+          to: paths.employer.projectsCreate,
+        }),
+      );
+      return;
+    }
+
     await navigateTo(
       buildEnteringRoute({
         to: paths.employer.adsCreate,
