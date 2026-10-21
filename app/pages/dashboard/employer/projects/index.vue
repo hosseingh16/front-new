@@ -19,9 +19,7 @@
       v-else-if="initialized && !projects.length"
       title="ایجاد پروژه جدید"
       description="در حال حاضر هیچ پروژه‌ای جهت نمایش نیست. جهت ثبت اولین پروژه خود کلیک کنید."
-      icon="svg:projects"
       action-label="پروژه جدید"
-      action-icon="svg:projects"
       action-to="/dashboard/employer/projects/create"
     />
 
@@ -49,7 +47,7 @@
             to="/dashboard/employer/projects/create"
             class="btn btn-success h-10 gap-2 px-4"
           >
-            <Icon name="svg:projects" size="16" class="text-white" />
+            <Icon name="lucide:file-plus-2" size="16" class="text-white" />
             پروژه جدید
           </NuxtLink>
         </div>
@@ -64,7 +62,9 @@
         />
       </div>
 
-      <div class="mt-6 flex flex-wrap items-center gap-6 border-b border-gray-default">
+      <div
+        class="mt-6 flex flex-wrap items-center gap-6 border-b border-gray-default"
+      >
         <button
           v-for="tab in filterTabs"
           :key="tab.id"
@@ -135,14 +135,8 @@ definePageMeta({
   layout: "dashboard",
 });
 
-const {
-  projectGroups,
-  projects,
-  loading,
-  initialized,
-  error,
-  deleteProject,
-} = useEmployerProjects();
+const { projectGroups, projects, loading, initialized, error, deleteProject } =
+  useEmployerProjects();
 const { $toast } = useNuxtApp();
 
 const activeFilter = ref<EmployerProjectFilter>("all");

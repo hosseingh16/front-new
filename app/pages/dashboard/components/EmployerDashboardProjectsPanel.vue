@@ -63,7 +63,6 @@
       v-if="!loading && initialized && !projects.length"
       title="هیچ پروژه‌ای موجود نیست"
       description="در حال حاضر هیچ پروژه‌ای جهت نمایش نیست."
-      icon="svg:projects"
       action-label="پروژه جدید"
       action-icon="svg:projects"
       action-to="/dashboard/employer/projects/create"

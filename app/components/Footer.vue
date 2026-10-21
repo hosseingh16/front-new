@@ -34,7 +34,13 @@
             >
               {{ link.label }}
             </IntentLink>
-            <NuxtLink v-else :to="link.to">
+            <NuxtLink
+              v-else
+              :to="link.to"
+              :target="link.blank ? '_blank' : undefined"
+              :rel="link.blank ? 'noopener noreferrer' : undefined"
+              :external="link.blank || undefined"
+            >
               {{ link.label }}
             </NuxtLink>
           </template>
@@ -130,6 +136,9 @@
                   v-else
                   :to="link.to"
                   class="text-text-passive"
+                  :target="link.blank ? '_blank' : undefined"
+                  :rel="link.blank ? 'noopener noreferrer' : undefined"
+                  :external="link.blank || undefined"
                   @click.stop
                 >
                   {{ link.label }}
@@ -188,42 +197,38 @@ interface FooterLink {
   to: string;
   role?: AccountRole;
   query?: Record<string, string>;
+  blank?: boolean;
 }
 
 const { contactPhones } = useSettings();
 
 const jobseekerLinks: FooterLink[] = [
-  { label: "حسابدار", to: "/jobs" },
-  { label: "رزومه‌ساز", to: "/resume-builder" },
-  { label: "جست‌وجوی فرصت‌های‌ شغلی", to: "/jobs" },
-  { label: "ایجاد پروژه حسابداری", to: "/projects" },
-  { label: "سوالات متداول", to: "/faq" },
+  { label: "جستجوی فرصت‌های شغلی", to: paths.jobs.root },
+  { label: "جستجوی پروژه‌های حسابداری", to: "/projects/list" },
+  { label: "ساخت رزومه حسابداری", to: "/resume-builder" },
 ];
 
 const businessLinks: FooterLink[] = [
-  { label: "کسب و کار", to: "/employers" },
   {
-    label: "ایجاد آگهی استخدام",
+    label: "ثبت آگهی استخدام",
     to: paths.employer.adsCreate,
     role: "employer",
   },
   {
-    label: "ایجاد پروژه حسابداری",
-    to: paths.employer.adsCreate,
+    label: "ثبت پروژه حسابداری",
+    to: paths.employer.projectsCreate,
     role: "employer",
-    query: { employment_type: "project_based" },
   },
-  { label: "سوالات متداول", to: "/faq" },
-  { label: "اظهارنامه عملکرد", to: "/tax-return" },
+  { label: "تنظیم و ارسال اظهارنامه مالیاتی", to: paths.taxReturn.root },
 ];
 
 const aboutLinks: FooterLink[] = [
   { label: "درباره ما", to: "/about-us" },
+  { label: "وبلاگ", to: "/blog/", blank: true },
   { label: "سوالات متداول", to: "/faq" },
+  { label: "تماس با ما", to: "/contact" },
   { label: "قوانین و مقررات", to: "/terms-and-conditions" },
   { label: "حریم خصوصی", to: "/privacy-policy" },
-  { label: "نمادها و مجوزها", to: "/licenses" },
-  { label: "تماس ما", to: "/contact" },
 ];
 
 const columns = [

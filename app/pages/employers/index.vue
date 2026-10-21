@@ -157,8 +157,9 @@
       </div>
     </section>
 
+    <!-- @todo: After adding the Resume Bank -->
     <!-- Dark Feature Section -->
-    <section
+    <!-- <section
       class="custom-pad bg-surface-100 md:pb-24 min-h-[950px] md:min-h-0"
     >
       <div
@@ -224,7 +225,7 @@
           </div>
         </div>
       </div>
-    </section>
+    </section> -->
 
     <!-- How It Works -->
     <section class="relative bg-surface-100 py-10 md:py-16">
