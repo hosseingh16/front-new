@@ -36,9 +36,9 @@
         <button
           type="button"
           class="btn btn-ghost-primary mt-8 h-11 rounded-xl px-6"
-          @click="handleGoHome"
+          @click="handleAction"
         >
-          بازگشت به صفحه اصلی
+          {{ actionLabel }}
         </button>
       </div>
     </div>
@@ -58,6 +58,14 @@ const isNotFound = computed(
   () => props.error.statusCode === 404 || props.error.status === 404,
 );
 
+const isUnavailable = computed(
+  () => props.error.statusCode === 503 || props.error.status === 503,
+);
+
+const actionLabel = computed(() =>
+  isUnavailable.value ? "تلاش مجدد" : "بازگشت به صفحه اصلی",
+);
+
 const title = computed(() =>
   isNotFound.value ? "این یکی توی حساب‌وکتاب ما نبود!" : "مشکلی پیش آمده است",
 );
@@ -73,7 +81,11 @@ useSeoMeta({
   title: () => (isNotFound.value ? "صفحه پیدا نشد" : "خطا"),
 });
 
-function handleGoHome() {
+function handleAction() {
+  if (isUnavailable.value) {
+    if (import.meta.client) window.location.reload();
+    return;
+  }
   clearError({ redirect: "/" });
 }
 </script>

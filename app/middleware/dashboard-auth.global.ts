@@ -29,17 +29,14 @@ function matchesPrefix(path: string, prefixes: string[]) {
 export default defineNuxtRouteMiddleware(async (to) => {
   if (!to.path.startsWith('/dashboard')) return
 
-  const { isAuthenticated, refreshIdentity } = useSanctumAuth()
+  const { ensureIdentity } = useAuthIdentity()
+  const outcome = await ensureIdentity({ ignoreGuestHint: true })
 
-  if (!isAuthenticated.value) {
-    try {
-      await refreshIdentity()
-    } catch {
-      // still unauthenticated
-    }
+  if (outcome === 'unavailable') {
+    return authIdentityUnavailableError()
   }
 
-  if (!isAuthenticated.value) {
+  if (outcome !== 'auth') {
     return navigateTo(
       {
         path: paths.login,

@@ -31,7 +31,7 @@ definePageMeta({
 const MIN_DISPLAY_MS = 400
 
 const route = useRoute()
-const { isAuthenticated, refreshIdentity } = useSanctumAuth()
+const { ensureIdentity, unavailableMessage } = useAuthIdentity()
 const { updateUserRole, userId: authUserId } = useAccountAuth()
 const { fetchMenu } = usePanelConfig()
 const { user } = useCurrentUser()
@@ -43,15 +43,14 @@ const message = ref(
 const error = ref('')
 
 async function ensureAuth() {
-  if (!isAuthenticated.value) {
-    try {
-      await refreshIdentity()
-    } catch {
-      // still unauthenticated
-    }
+  const outcome = await ensureIdentity({ ignoreGuestHint: true })
+
+  if (outcome === 'unavailable') {
+    error.value = unavailableMessage
+    return false
   }
 
-  if (!isAuthenticated.value) {
+  if (outcome !== 'auth') {
     await navigateTo(
       { path: paths.login, query: { redirect: route.fullPath } },
       { replace: true },
@@ -97,7 +96,9 @@ async function runTransition() {
 }
 
 async function retry() {
+  error.value = ''
   try {
+    if (!(await ensureAuth())) return
     await runTransition()
   } catch {
     error.value = 'ورود ناموفق بود. لطفاً دوباره تلاش کنید.'

@@ -6,17 +6,14 @@ import { resolvePostLoginLocation } from '~/utils/entering-route'
  * selection (SignUp3), even when a CTA already implies their role.
  */
 export default defineNuxtRouteMiddleware(async (to) => {
-  const { isAuthenticated, refreshIdentity } = useSanctumAuth()
+  const { ensureIdentity } = useAuthIdentity()
+  const outcome = await ensureIdentity({ ignoreGuestHint: true })
 
-  if (!isAuthenticated.value) {
-    try {
-      await refreshIdentity()
-    } catch {
-      // still unauthenticated
-    }
+  if (outcome === 'unavailable') {
+    return authIdentityUnavailableError()
   }
 
-  if (!isAuthenticated.value) return
+  if (outcome !== 'auth') return
 
   const { needsRoleSelection, ensureUserLoaded } = useRoleGate()
   await ensureUserLoaded()
