@@ -22,6 +22,7 @@ export default defineNuxtConfig({
         lang: "fa",
         dir: "rtl",
       },
+      titleTemplate: "%s",
       link: [
         {
           rel: "icon",

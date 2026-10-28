@@ -9,164 +9,166 @@
       />
 
       <div class="relative mx-auto w-full 2xl:h-[1104px] 2xl:max-w-[1536px]">
-      <!-- Below 1536: stacked -->
-      <div class="relative flex flex-col gap-10 px-5 pb-8 pt-10 sm:px-8 2xl:hidden">
-        <div class="flex flex-col items-start text-white">
+        <!-- Below 1536: stacked -->
+        <div
+          class="relative flex flex-col gap-10 px-5 pb-8 pt-10 sm:px-8 2xl:hidden"
+        >
+          <div class="flex flex-col items-start text-white">
+            <span
+              class="inline-flex h-8 items-center rounded-lg bg-accent-300 px-2 text-[13px] font-semibold text-accent-500"
+            >
+              رزومه‌ساز تخصصی برای حسابداران
+            </span>
+            <h1
+              class="mt-[18px] font-yb-bold text-[28px] leading-[1.7] sm:text-[36px] sm:leading-[61px]"
+            >
+              رزومه حسابداری بساز؛
+              <br />
+              تخصصت را دقیق به کارفرما نشان بده
+            </h1>
+            <p
+              class="mt-4 max-w-[620px] text-[16px] font-semibold leading-[31px] sm:text-[18px]"
+            >
+              مهارت‌ها، نرم‌افزارها و تجربه حسابداری‌ات را در یک رزومه تخصصی ثبت
+              کن و شانس دیده‌شدنت توسط کارفرما را بیشتر کن.
+            </p>
+            <div class="mt-8 flex flex-wrap gap-[9px]">
+              <IntentLink
+                to="/dashboard/cv"
+                role="job_seeker"
+                class="btn btn-success h-10 w-[179px] px-4"
+              >
+                رایگان رزومه بساز
+              </IntentLink>
+              <IntentLink
+                to="/dashboard/my-resume"
+                role="job_seeker"
+                class="btn h-10 w-[179px] border border-[#e8e8e8] bg-transparent px-4 text-accent-500 hover:bg-white/10"
+              >
+                نمونه رزومه ببینم
+              </IntentLink>
+            </div>
+          </div>
+          <img
+            :src="heroIllustration"
+            alt="نمونه رزومه حسابداری ساخته‌شده در های‌حساب"
+            class="mx-auto w-full max-w-[548px]"
+          />
+        </div>
+
+        <div
+          class="relative z-10 mx-5 rounded-t-[20px] bg-white px-5 pb-6 pt-6 sm:mx-8 2xl:absolute 2xl:left-[201px] 2xl:top-[677px] 2xl:mx-0 2xl:h-[373px] 2xl:w-[1129px] 2xl:px-0 2xl:pb-0 2xl:pt-[55px]"
+        >
+          <div class="mx-auto w-full max-w-[764px] text-center">
+            <h2
+              class="font-yb-bold text-[20px] leading-[47px] text-text-primary sm:text-[28px]"
+            >
+              رزومه‌های عمومی همه توانایی‌های یک حسابدار را نشان نمی‌دهند
+            </h2>
+            <p
+              class="mt-2 text-[16px] font-semibold leading-[31px] text-text-tertiary sm:text-[18px] xl:mt-[8px]"
+            >
+              برای یک موقعیت حسابداری، فقط عنوان شغلی و سابقه کار کافی نیست.
+              کارفرما می‌خواهد بداند با چه نرم‌افزارهایی کار کرده‌ای، در چه
+              حوزه‌هایی تجربه داری و سطح مهارتت در هر بخش چقدر است.
+            </p>
+          </div>
+
+          <div
+            class="absolute left-[960px] top-[-69px] hidden h-[144px] w-[151px] rounded-[29px] bg-[linear-gradient(180deg,#171a46_0%,#05060f_60%,#000_100%)] 2xl:block"
+          >
+            <img
+              :src="pdfBadge"
+              alt=""
+              class="absolute left-[42px] top-[22px] h-[94px] w-[88px]"
+            />
+          </div>
+        </div>
+
+        <img
+          :src="heroIllustration"
+          alt=""
+          class="pointer-events-none absolute left-[201px] top-[77px] z-[1] hidden h-[836px] w-[548px] max-w-none 2xl:block"
+        />
+
+        <div
+          class="absolute left-[762px] top-[105px] z-20 hidden w-[620px] flex-col items-end pt-2 text-white 2xl:flex"
+        >
           <span
             class="inline-flex h-8 items-center rounded-lg bg-accent-300 px-2 text-[13px] font-semibold text-accent-500"
           >
             رزومه‌ساز تخصصی برای حسابداران
           </span>
           <h1
-            class="mt-[18px] font-yb-bold text-[28px] leading-[1.7] sm:text-[36px] sm:leading-[61px]"
+            class="mt-[16px] w-[550px] text-right font-yb-bold text-[36px] leading-[61px]"
           >
             رزومه حسابداری بساز؛
             <br />
             تخصصت را دقیق به کارفرما نشان بده
           </h1>
           <p
-            class="mt-4 max-w-[620px] text-[16px] font-semibold leading-[31px] sm:text-[18px]"
+            class="mt-[16px] w-full text-right text-[18px] font-semibold leading-[31px]"
           >
             مهارت‌ها، نرم‌افزارها و تجربه حسابداری‌ات را در یک رزومه تخصصی ثبت
             کن و شانس دیده‌شدنت توسط کارفرما را بیشتر کن.
           </p>
-          <div class="mt-8 flex flex-wrap gap-[9px]">
-            <IntentLink
-              to="/dashboard/cv"
-              role="job_seeker"
-              class="btn btn-success h-10 w-[179px] px-4"
-            >
-              رایگان رزومه بساز
-            </IntentLink>
-            <IntentLink
-              to="/dashboard/my-resume"
-              role="job_seeker"
-              class="btn h-10 w-[179px] border border-[#e8e8e8] bg-transparent px-4 text-accent-500 hover:bg-white/10"
-            >
-              نمونه رزومه ببینم
-            </IntentLink>
-          </div>
-        </div>
-        <img
-          :src="heroIllustration"
-          alt="نمونه رزومه حسابداری ساخته‌شده در های‌حساب"
-          class="mx-auto w-full max-w-[548px]"
-        />
-      </div>
-
-      <div
-        class="relative z-10 mx-5 rounded-t-[20px] bg-white px-5 pb-6 pt-6 sm:mx-8 2xl:absolute 2xl:left-[201px] 2xl:top-[677px] 2xl:mx-0 2xl:h-[373px] 2xl:w-[1129px] 2xl:px-0 2xl:pb-0 2xl:pt-[55px]"
-      >
-        <div class="mx-auto w-full max-w-[764px] text-center">
-          <h2
-            class="font-yb-bold text-[20px] leading-[47px] text-text-primary sm:text-[28px]"
-          >
-            رزومه‌های عمومی همه توانایی‌های یک حسابدار را نشان نمی‌دهند
-          </h2>
-          <p
-            class="mt-2 text-[16px] font-semibold leading-[31px] text-text-tertiary sm:text-[18px] xl:mt-[8px]"
-          >
-            برای یک موقعیت حسابداری، فقط عنوان شغلی و سابقه کار کافی نیست.
-            کارفرما می‌خواهد بداند با چه نرم‌افزارهایی کار کرده‌ای، در چه
-            حوزه‌هایی تجربه داری و سطح مهارتت در هر بخش چقدر است.
-          </p>
         </div>
 
         <div
-          class="absolute left-[960px] top-[-69px] hidden h-[144px] w-[151px] rounded-[29px] bg-[linear-gradient(180deg,#171a46_0%,#05060f_60%,#000_100%)] 2xl:block"
+          class="absolute left-[1015px] top-[404px] z-20 hidden w-[367px] items-center justify-between 2xl:flex"
+        >
+          <IntentLink
+            to="/dashboard/cv"
+            role="job_seeker"
+            class="btn btn-success h-10 w-[179px] px-4"
+          >
+            رایگان رزومه بساز
+          </IntentLink>
+          <IntentLink
+            to="/dashboard/my-resume"
+            role="job_seeker"
+            class="btn h-10 w-[179px] border border-[#e8e8e8] bg-transparent px-4 text-accent-500 hover:bg-white/10"
+          >
+            نمونه رزومه ببینم
+          </IntentLink>
+        </div>
+
+        <div
+          class="relative z-20 mx-5 mt-4 grid gap-4 sm:mx-8 lg:grid-cols-3 lg:gap-[17px] 2xl:absolute 2xl:left-[200px] 2xl:top-[895px] 2xl:mx-0 2xl:mt-0 2xl:w-[1129px] 2xl:grid-cols-3"
         >
           <img
-            :src="pdfBadge"
+            :src="squiggleWarning"
             alt=""
-            class="absolute left-[42px] top-[22px] h-[94px] w-[88px]"
+            class="pointer-events-none absolute left-[346px] top-[18px] z-10 hidden h-[56px] w-[52px] 2xl:block"
           />
-        </div>
-      </div>
-
-      <img
-        :src="heroIllustration"
-        alt=""
-        class="pointer-events-none absolute left-[201px] top-[77px] z-[1] hidden h-[836px] w-[548px] max-w-none 2xl:block"
-      />
-
-      <div
-        class="absolute left-[762px] top-[105px] z-20 hidden w-[620px] flex-col items-end pt-2 text-white 2xl:flex"
-      >
-        <span
-          class="inline-flex h-8 items-center rounded-lg bg-accent-300 px-2 text-[13px] font-semibold text-accent-500"
-        >
-          رزومه‌ساز تخصصی برای حسابداران
-        </span>
-        <h1
-          class="mt-[16px] w-[550px] text-right font-yb-bold text-[36px] leading-[61px]"
-        >
-          رزومه حسابداری بساز؛
-          <br />
-          تخصصت را دقیق به کارفرما نشان بده
-        </h1>
-        <p
-          class="mt-[16px] w-full text-right text-[18px] font-semibold leading-[31px]"
-        >
-          مهارت‌ها، نرم‌افزارها و تجربه حسابداری‌ات را در یک رزومه تخصصی ثبت کن
-          و شانس دیده‌شدنت توسط کارفرما را بیشتر کن.
-        </p>
-      </div>
-
-      <div
-        class="absolute left-[1015px] top-[404px] z-20 hidden w-[367px] items-center justify-between 2xl:flex"
-      >
-        <IntentLink
-          to="/dashboard/cv"
-          role="job_seeker"
-          class="btn btn-success h-10 w-[179px] px-4"
-        >
-          رایگان رزومه بساز
-        </IntentLink>
-        <IntentLink
-          to="/dashboard/my-resume"
-          role="job_seeker"
-          class="btn h-10 w-[179px] border border-[#e8e8e8] bg-transparent px-4 text-accent-500 hover:bg-white/10"
-        >
-          نمونه رزومه ببینم
-        </IntentLink>
-      </div>
-
-      <div
-        class="relative z-20 mx-5 mt-4 grid gap-4 sm:mx-8 lg:grid-cols-3 lg:gap-[17px] 2xl:absolute 2xl:left-[200px] 2xl:top-[895px] 2xl:mx-0 2xl:mt-0 2xl:w-[1129px] 2xl:grid-cols-3"
-      >
-        <img
-          :src="squiggleWarning"
-          alt=""
-          class="pointer-events-none absolute left-[346px] top-[18px] z-10 hidden h-[56px] w-[52px] 2xl:block"
-        />
-        <img
-          :src="squiggle"
-          alt=""
-          class="pointer-events-none absolute left-[728px] top-[18px] z-10 hidden h-[56px] w-[52px] 2xl:block"
-        />
-        <article
-          v-for="card in problemCards"
-          :key="card.title"
-          class="flex h-auto flex-col rounded-[22px] border px-4 pb-[13px] pt-4 2xl:h-[209px] 2xl:w-[365px] 2xl:px-4 2xl:pb-0 2xl:pt-4"
-          :class="card.shellClass"
-        >
-          <h3
-            class="text-center font-yb-bold text-[16px] leading-[27px]"
-            :class="card.titleClass"
+          <img
+            :src="squiggle"
+            alt=""
+            class="pointer-events-none absolute left-[728px] top-[18px] z-10 hidden h-[56px] w-[52px] 2xl:block"
+          />
+          <article
+            v-for="card in problemCards"
+            :key="card.title"
+            class="flex h-auto flex-col rounded-[22px] border px-4 pb-[13px] pt-4 2xl:h-[209px] 2xl:w-[365px] 2xl:px-4 2xl:pb-0 2xl:pt-4"
+            :class="card.shellClass"
           >
-            {{ card.title }}
-          </h3>
-          <div
-            class="mt-[13px] flex flex-1 items-center justify-center rounded-[22px] bg-white px-[21px] py-4 2xl:h-[140px] 2xl:w-[337px] 2xl:flex-none 2xl:px-[21.5px]"
-          >
-            <p
-              class="text-center text-[16px] font-semibold leading-[27px] text-text-tertiary"
+            <h3
+              class="text-center font-yb-bold text-[16px] leading-[27px]"
+              :class="card.titleClass"
             >
-              {{ card.body }}
-            </p>
-          </div>
-        </article>
-      </div>
+              {{ card.title }}
+            </h3>
+            <div
+              class="mt-[13px] flex flex-1 items-center justify-center rounded-[22px] bg-white px-[21px] py-4 2xl:h-[140px] 2xl:w-[337px] 2xl:flex-none 2xl:px-[21.5px]"
+            >
+              <p
+                class="text-center text-[16px] font-semibold leading-[27px] text-text-tertiary"
+              >
+                {{ card.body }}
+              </p>
+            </div>
+          </article>
+        </div>
       </div>
     </section>
 
@@ -185,7 +187,9 @@
         <div
           class="mx-auto mt-10 flex w-full max-w-[1100px] flex-col items-center gap-10 lg:mt-[54px] lg:flex-row lg:justify-between lg:gap-[93px]"
         >
-          <div class="flex w-full flex-col items-start lg:w-[396px] lg:shrink-0">
+          <div
+            class="flex w-full flex-col items-start lg:w-[396px] lg:shrink-0"
+          >
             <span
               class="inline-flex h-8 items-center rounded-xl bg-accent-300 px-2 text-[14px] font-semibold text-accent-500"
             >
@@ -289,7 +293,11 @@
                   :key="slide.title"
                   type="button"
                   class="h-1.5 w-1.5 rounded-[2px]"
-                  :class="index === activeSlideIndex ? 'bg-primary-500' : 'bg-text-muted'"
+                  :class="
+                    index === activeSlideIndex
+                      ? 'bg-primary-500'
+                      : 'bg-text-muted'
+                  "
                   :aria-label="`اسلاید ${index + 1}`"
                   @click="activeSlideIndex = index"
                 />
@@ -340,7 +348,11 @@
                   v-for="(slide, index) in slides"
                   :key="slide.title"
                   class="h-1.5 w-1.5 rounded-[2px]"
-                  :class="index === activeSlideIndex ? 'bg-primary-500' : 'bg-text-muted'"
+                  :class="
+                    index === activeSlideIndex
+                      ? 'bg-primary-500'
+                      : 'bg-text-muted'
+                  "
                 />
               </div>
               <button
@@ -362,7 +374,9 @@
         <BackgroundPattern position="right" side="-6.25rem" top="36%" />
         <BackgroundPattern position="left" side="-6.25rem" top="67%" />
 
-        <div class="relative mx-auto flex w-full max-w-[944px] flex-col items-center">
+        <div
+          class="relative mx-auto flex w-full max-w-[944px] flex-col items-center"
+        >
           <span
             class="inline-flex h-8 items-center rounded-xl bg-[#4864E114] px-2 text-[14px] font-semibold text-primary-500"
           >
@@ -455,17 +469,27 @@
             >
               <Icon name="lucide:check" size="24" />
             </span>
-            <span class="absolute left-[10px] top-[74px] size-[18px] rounded-full bg-[#006a43]" />
-            <span class="absolute left-[26px] top-[66px] size-[26px] rounded-full bg-[#006a43]" />
-            <span class="absolute left-[34px] top-[86px] size-[12px] rounded-full bg-[#006a43]" />
-            <span class="absolute left-[8px] top-[96px] size-[14px] rounded-full bg-[#006a43]" />
+            <span
+              class="absolute left-[10px] top-[74px] size-[18px] rounded-full bg-[#006a43]"
+            />
+            <span
+              class="absolute left-[26px] top-[66px] size-[26px] rounded-full bg-[#006a43]"
+            />
+            <span
+              class="absolute left-[34px] top-[86px] size-[12px] rounded-full bg-[#006a43]"
+            />
+            <span
+              class="absolute left-[8px] top-[96px] size-[14px] rounded-full bg-[#006a43]"
+            />
             <Icon
               name="lucide:x"
               size="16"
               class="absolute right-[14px] top-[48px] text-text-primary"
             />
             <div class="absolute right-[44px] top-[45px] w-[196px] text-right">
-              <p class="font-yb-bold text-[15px] leading-[24px] text-text-primary">
+              <p
+                class="font-yb-bold text-[15px] leading-[24px] text-text-primary"
+              >
                 های‌حساب
               </p>
               <p class="mt-[2px] text-[12px] leading-[22px] text-text-primary">
@@ -518,56 +542,58 @@
         <div
           class="relative flex h-full items-center gap-6 overflow-x-auto py-[31px] [scrollbar-width:none] xl:py-0 [&::-webkit-scrollbar]:hidden"
         >
-        <div class="flex w-[176px] shrink-0 flex-col items-start gap-2 xl:mr-4">
-          <span
-            class="inline-flex h-8 items-center rounded-xl bg-[#4864E114] px-2 text-[14px] font-semibold text-primary-500"
+          <div
+            class="flex w-[176px] shrink-0 flex-col items-start gap-2 xl:mr-4"
           >
-            خدمات دیگر
-          </span>
-          <h2
-            class="font-yb-bold text-[23px] leading-[1.7] text-text-primary"
-          >
-            خدمات مکمل برای کسب‌وکارها و حسابداران
-          </h2>
-        </div>
+            <span
+              class="inline-flex h-8 items-center rounded-xl bg-[#4864E114] px-2 text-[14px] font-semibold text-primary-500"
+            >
+              خدمات دیگر
+            </span>
+            <h2
+              class="font-yb-bold text-[23px] leading-[1.7] text-text-primary"
+            >
+              خدمات مکمل برای کسب‌وکارها و حسابداران
+            </h2>
+          </div>
 
-        <article
-          v-for="service in services"
-          :key="service.title"
-          class="relative flex h-[258px] w-[353px] shrink-0 flex-col rounded-[18px] border border-[#e8e8e8] bg-white px-[51px] pb-[19px] pt-[44px]"
-        >
-          <span
-            class="inline-flex h-6 w-fit items-center rounded-lg px-1 text-[13px] font-semibold"
-            :class="service.badgeClass"
+          <article
+            v-for="service in services"
+            :key="service.title"
+            class="relative flex h-[258px] w-[353px] shrink-0 flex-col rounded-[18px] border border-[#e8e8e8] bg-white px-[51px] pb-[19px] pt-[44px]"
           >
-            {{ service.badge }}
-          </span>
-          <h3
-            class="mt-[4px] font-yb-bold text-[19px] leading-[32px] text-[#1d1f4e]"
-          >
-            {{ service.title }}
-          </h3>
-          <p class="mt-4 text-[13.4px] leading-[1.7] text-text-tertiary">
-            {{ service.body }}
-          </p>
-          <IntentLink
-            v-if="service.to"
-            :to="service.to"
-            :role="service.role"
-            class="mt-auto flex h-[38px] items-center justify-center gap-1 rounded-lg bg-[#4864E114] text-[15px] font-semibold text-primary-500"
-          >
-            {{ service.action }}
-            <img :src="externalLink" alt="" class="size-[22px]" />
-          </IntentLink>
-          <NuxtLink
-            v-else
-            :to="service.href"
-            class="mt-auto flex h-[38px] items-center justify-center gap-1 rounded-lg bg-[#4864E114] text-[15px] font-semibold text-primary-500"
-          >
-            {{ service.action }}
-            <img :src="externalLink" alt="" class="size-[22px]" />
-          </NuxtLink>
-        </article>
+            <span
+              class="inline-flex h-6 w-fit items-center rounded-lg px-1 text-[13px] font-semibold"
+              :class="service.badgeClass"
+            >
+              {{ service.badge }}
+            </span>
+            <h3
+              class="mt-[4px] font-yb-bold text-[19px] leading-[32px] text-[#1d1f4e]"
+            >
+              {{ service.title }}
+            </h3>
+            <p class="mt-4 text-[13.4px] leading-[1.7] text-text-tertiary">
+              {{ service.body }}
+            </p>
+            <IntentLink
+              v-if="service.to"
+              :to="service.to"
+              :role="service.role"
+              class="mt-auto flex h-[38px] items-center justify-center gap-1 rounded-lg bg-[#4864E114] text-[15px] font-semibold text-primary-500"
+            >
+              {{ service.action }}
+              <img :src="externalLink" alt="" class="size-[22px]" />
+            </IntentLink>
+            <NuxtLink
+              v-else
+              :to="service.href"
+              class="mt-auto flex h-[38px] items-center justify-center gap-1 rounded-lg bg-[#4864E114] text-[15px] font-semibold text-primary-500"
+            >
+              {{ service.action }}
+              <img :src="externalLink" alt="" class="size-[22px]" />
+            </NuxtLink>
+          </article>
         </div>
       </div>
     </section>
@@ -723,8 +749,7 @@ const steps = [
 // Decorative mint tabs on both sides of the quote panel.
 const quoteTabs = [
   {
-    className:
-      "left-0.5 top-[0] bg-[linear-gradient(90deg,#9fe6c6,#d6e4ee)]",
+    className: "left-0.5 top-[0] bg-[linear-gradient(90deg,#9fe6c6,#d6e4ee)]",
   },
   {
     className:
@@ -735,8 +760,7 @@ const quoteTabs = [
       "left-0.5 top-[156px] bg-[linear-gradient(90deg,#9fe6c6,#d9e8e8)]",
   },
   {
-    className:
-      "right-0 top-[0] bg-[linear-gradient(270deg,#9fe6c6,#e0ede8)]",
+    className: "right-0 top-[0] bg-[linear-gradient(270deg,#9fe6c6,#e0ede8)]",
   },
   {
     className:
@@ -787,8 +811,8 @@ const services: {
 ];
 
 useSeoMeta({
-  title: "رزومه‌ساز حسابداری | رزومه تخصصی خود را در های‌حساب بسازید",
+  title: "رزومه ساز حسابداری، تخصصی و رایگان | های‌حساب",
   description:
-    "مهارت‌ها، نرم‌افزارها و تجربه حسابداری‌ات را در رزومه‌ساز های‌حساب ثبت کن و شانس دیده‌شدنت توسط کارفرما را بیشتر کن.",
+    "با رزومه‌ساز تخصصی حسابداری، مهارت و تجربه‌تان را شفاف به کارفرما نشان دهید و شانس استخدامتان را بیشتر کنید؛ همین حالا رزومه‌تان را بسازید.",
 });
 </script>

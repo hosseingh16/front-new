@@ -170,7 +170,6 @@ const companyStats = computed(() => {
     });
   }
 
-  
   // if (company.value?.tel && isTelPublic.value) {
   //   stats.push({
   //     label: "شماره تماس شرکت:",
@@ -185,7 +184,7 @@ const companyStats = computed(() => {
 const fullAddress = computed(() => {
   const c = company.value;
   if (!c) return "";
-  return [c.province_name, c.city_name, c.address].filter(Boolean).join("، ");
+  return [c.address].filter(Boolean).join("، ");
 });
 
 const galleryDialogRef = ref<HTMLDialogElement | null>(null);

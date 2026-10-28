@@ -292,7 +292,7 @@ const embedded = computed(
   () => isAuthenticated.value && !needsRoleSelection.value,
 );
 const projectsListPath = computed(() =>
-  embedded.value ? "/dashboard" : "/projects",
+  embedded.value ? "/dashboard" : "/jobs?job_type=project_based",
 );
 
 function syncLayout(useDashboard: boolean) {
