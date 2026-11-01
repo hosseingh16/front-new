@@ -361,7 +361,7 @@ const locationLabel = computed(() => {
 });
 
 const expireDateLabel = computed(() => {
-  const expireDate = (props.ad as { expire_date?: string }).expire_date;
+  const expireDate = props.ad.expire_date;
   if (!expireDate) return "—";
   return formatJalaliDate(expireDate, "jD jMMMM");
 });

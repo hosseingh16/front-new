@@ -247,6 +247,7 @@ import AdResumeIncompleteModal from "~/pages/jobs/components/AdResumeIncompleteM
 import { useAd, useSimilarAds } from "~/composables/useAd";
 import { formatJalaliDate } from "~/utils/format-jalali-date";
 import { getAdDetailSeoMeta } from "~/utils/ad-seo";
+import { buildAdJobPostingSchema } from "~/utils/ad-job-posting-schema";
 import createAccountIllust from "~/assets/vectors/illustrations/create-account.svg";
 import { paths } from "~/routes";
 import {
@@ -334,17 +335,6 @@ const {
 const coverImage = computed(
   () => ad.value?.company?.cover || "/images/ad-cover-bg.webp",
 );
-
-useHead(() => ({
-  link: [
-    {
-      rel: "preload",
-      as: "image",
-      href: coverImage.value,
-      fetchpriority: "high",
-    },
-  ],
-}));
 
 const publishDateLabel = computed(() => {
   const date = ad.value?.publish_date || ad.value?.created_at;
@@ -449,9 +439,34 @@ async function shareAd() {
 }
 
 const adSeo = computed(() => getAdDetailSeoMeta(ad.value));
+const jobPostingSchema = computed(() => buildAdJobPostingSchema(ad.value));
 
 useSeoMeta({
   title: () => adSeo.value.title,
   description: () => adSeo.value.description,
+});
+
+useHead(() => {
+  const scripts = [];
+
+  if (jobPostingSchema.value) {
+    scripts.push({
+      key: "ld-job-posting",
+      type: "application/ld+json",
+      innerHTML: JSON.stringify(jobPostingSchema.value),
+    });
+  }
+
+  return {
+    link: [
+      {
+        rel: "preload",
+        as: "image",
+        href: coverImage.value,
+        fetchpriority: "high",
+      },
+    ],
+    script: scripts,
+  };
 });
 </script>

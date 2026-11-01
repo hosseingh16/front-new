@@ -304,6 +304,7 @@ import type { AccountRole } from "~/features/account/types";
 import { paths } from "~/routes";
 import { matchesEmploymentType } from "~/utils/ad-seo";
 import { asyncDataCacheKey } from "~/utils/async-data-cache-key";
+import { buildHomeOrganizationWebsiteSchema } from "~/utils/ad-job-posting-schema";
 
 type HomeJobType = "all" | "full_time" | "part_time" | "project_based";
 
@@ -454,4 +455,17 @@ useSeoMeta({
   description:
     "های‌حساب، پلی میان حسابداران و کارفرمایان؛ برای رشد حرفه‌ای حسابداران و پاسخ به نیازهای مالی و حسابداری کسب‌وکارها.",
 });
+
+const siteConfig = useSiteConfig();
+useHead(() => ({
+  script: [
+    {
+      key: "ld-org-website",
+      type: "application/ld+json",
+      innerHTML: JSON.stringify(
+        buildHomeOrganizationWebsiteSchema(siteConfig.url || "https://hihesab.com"),
+      ),
+    },
+  ],
+}));
 </script>

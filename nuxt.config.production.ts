@@ -114,7 +114,9 @@ export default defineNuxtConfig({
   site: {
     url: "https://hihesab.com",
     name: "های‌حساب",
+    defaultLocale: "fa-IR",
   },
+
   pages: {
     pattern: ["**/*.{vue,js,jsx,mjs,ts,tsx}", ...nonPagePatterns],
   },

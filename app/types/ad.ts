@@ -68,6 +68,7 @@ export interface Ad {
     verified: boolean
     expired: boolean
     publish_date: string
+    expire_date?: string
     created_by?: number | string
     updated_by?: number | string
     deleted_at?: string | null
