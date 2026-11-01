@@ -1,9 +1,7 @@
 <template>
   <div class="bg-surface-50">
     <!-- Hero -->
-    <section
-      class="bg-[url('/images/bg-5.png')] bg-no-repeat bg-top pb-10 md:pb-16"
-    >
+    <section class="pb-10 md:pb-16">
       <div class="custom-pad pt-6">
         <nav class="text-sm text-text-passive">
           <NuxtLink to="/" class="hover:text-primary-500 transition-colors">
@@ -17,7 +15,7 @@
       </div>
       <div class="custom-pad flex flex-col items-center pt-8 md:pt-12">
         <span
-          class="inline-flex items-center rounded-xl bg-[#4864E114] px-4 py-2 text-sm font-semibold text-primary-500"
+          class="inline-flex items-center rounded-xl bg-[#00b0e014] px-4 py-2 text-sm font-semibold text-primary-500"
         >
           ثبت پروژه
         </span>
@@ -35,7 +33,7 @@
           class="mt-10 flex w-full max-w-5xl flex-col items-center gap-4 md:flex-row md:items-stretch md:gap-6"
         >
           <div
-            class="flex w-full flex-1 flex-col rounded-2xl bg-surface-soft p-5 shadow-[0px_4px_20px_0px_#4864E114] md:p-6"
+            class="flex w-full flex-1 flex-col rounded-2xl bg-surface-soft p-5 shadow-[0px_4px_20px_0px_#00b0e014] md:p-6"
           >
             <img
               :src="heroImage2"
@@ -194,7 +192,7 @@
           @click="navigateTo('/jobs')"
         >
           مشاهده همه
-          <icons-arrow color="#4864e1" :size="15" class="mr-1" />
+          <icons-arrow color="#00115b" :size="15" class="mr-1" />
         </button>
       </div>
 
@@ -246,22 +244,22 @@
                 :to="post.to"
                 :role="post.role"
                 :query="post.query"
-                class="btn border-none h-8 text-md text-primary-500 bg-[#4864E114] p-4 w-full"
+                class="btn border-none h-8 text-md text-primary-500 bg-[#00b0e014] p-4 w-full"
               >
                 {{ post.btnText }}
                 <icons-arrow
-                  color="#4864e1"
+                  color="#00115b"
                   :size="14"
                   class="mr-1 rotate-45"
                 />
               </IntentLink>
               <NuxtLink v-else-if="post.link" :to="post.link" target="_blank">
                 <button
-                  class="btn border-none h-8 text-md text-primary-500 bg-[#4864E114] p-4 w-full"
+                  class="btn border-none h-8 text-md text-primary-500 bg-[#00b0e014] p-4 w-full"
                 >
                   {{ post.btnText }}
                   <icons-arrow
-                    color="#4864e1"
+                    color="#00115b"
                     :size="14"
                     class="mr-1 rotate-45"
                   />
@@ -396,7 +394,7 @@ const posts: {
     title: "استخدام و جذب حسابدار",
     excerpt:
       "برای استخدام حسابدار و جذب نیرو، آگهی استخدام ثبت کنید و رزومه حسابداران متخصص را بررسی کنید.",
-    color: "#4864E1",
+    color: "#00115b",
     badgeClass: "bg-[#E6FAF3] text-accent-500",
     badgeTitle: "استخدام نیرو",
     btnText: "استخدام حسابدار",

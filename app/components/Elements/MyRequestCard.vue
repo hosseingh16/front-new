@@ -96,10 +96,10 @@
       <div class="flex items-center gap-2">
         <button
           type="button"
-          class="inline-flex h-8 items-center gap-1 rounded-md bg-[#4864E114] px-3 text-sm font-semibold text-primary-500"
+          class="inline-flex h-8 items-center gap-1 rounded-md bg-[#00b0e014] px-3 text-sm font-semibold text-primary-500"
           @click="emit('details', request)"
         >
-          <icons-chevron class="rotate-90" color="#4864e1" />
+          <icons-chevron class="rotate-90" color="#00115b" />
           جزئیات
         </button>
         <button

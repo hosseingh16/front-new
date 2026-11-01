@@ -98,7 +98,7 @@ let markerSource: any = null;
 let createMarkerFeature: ((long: number, lat: number) => any) | null = null;
 
 const PIN_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="36" height="46" viewBox="0 0 36 46">
-  <path fill="#4864E1" d="M18 1C8.6 1 1 8.6 1 18c0 12.4 15.1 25.6 15.7 26.2a2 2 0 0 0 2.6 0C19.9 43.6 35 30.4 35 18 35 8.6 27.4 1 18 1Z"/>
+  <path fill="#00115b" d="M18 1C8.6 1 1 8.6 1 18c0 12.4 15.1 25.6 15.7 26.2a2 2 0 0 0 2.6 0C19.9 43.6 35 30.4 35 18 35 8.6 27.4 1 18 1Z"/>
   <circle cx="18" cy="18" r="6.5" fill="#FFFFFF"/>
 </svg>`;
 

@@ -1,9 +1,7 @@
 <template>
   <div>
     <!-- Hero -->
-    <section
-      class="bg-[url('/images/bg-6.png')] md:bg-[url('/images/bg-6.png')] bg-no-repeat bg-top pb-8"
-    >
+    <section class="md: pb-8">
       <div class="custom-pad flex flex-col items-center pt-16 md:pt-24">
         <span
           class="mb-6 inline-flex items-center rounded-full bg-primary-100 px-4 py-1.5 text-sm font-semibold text-primary-500"

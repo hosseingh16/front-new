@@ -110,7 +110,7 @@ const bannerStyle = computed(() => {
 })
 
 const buttonStyle = computed(() => ({
-  backgroundColor: banner.value?.button_color?.trim() || '#4864e1',
+  backgroundColor: banner.value?.button_color?.trim() || '#00115b',
 }))
 
 const href = computed(() => banner.value?.url?.trim() || '')

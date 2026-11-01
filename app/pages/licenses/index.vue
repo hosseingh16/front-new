@@ -1,20 +1,20 @@
 <template>
   <div>
-    <section class="bg-[url('/images/bg-6.png')] bg-no-repeat bg-top pb-8">
+    <section class="pb-8">
       <div class="custom-pad flex flex-col items-center pt-16 md:pt-24">
         <h1 class="text-center text-2xl font-yb-bold text-text-tertiary">
           نمادها و مجوزها
         </h1>
-        <p class="mt-4 max-w-3xl text-center text-[18px] leading-8 text-text-tertiary">
+        <p
+          class="mt-4 max-w-3xl text-center text-[18px] leading-8 text-text-tertiary"
+        >
           نماد اعتماد الکترونیکی و سایر مجوزهای رسمی های‌حساب
         </p>
       </div>
     </section>
 
     <section class="custom-pad pb-16">
-      <div
-        class="mx-auto grid max-w-3xl gap-4 sm:grid-cols-2"
-      >
+      <div class="mx-auto grid max-w-3xl gap-4 sm:grid-cols-2">
         <article
           class="flex flex-col items-center gap-4 rounded-2xl bg-white p-6 text-center"
         >
@@ -53,7 +53,6 @@ const otherLogos = [
 
 useSeoMeta({
   title: "نمادها و مجوزها",
-  description:
-    "نماد اعتماد الکترونیکی و سایر مجوزهای رسمی های‌حساب.",
+  description: "نماد اعتماد الکترونیکی و سایر مجوزهای رسمی های‌حساب.",
 });
 </script>

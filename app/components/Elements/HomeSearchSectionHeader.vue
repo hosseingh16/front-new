@@ -12,7 +12,7 @@
       @click="emit('view-all')"
     >
       <span>مشاهده همه</span>
-      <icons-chevron class="rotate-90" color="#4864e1" size="14" />
+      <icons-chevron class="rotate-90" color="#00115b" size="14" />
     </NuxtLink>
   </div>
 </template>

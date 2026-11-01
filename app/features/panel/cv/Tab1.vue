@@ -22,7 +22,7 @@
           </button>
           <button
             v-else
-            class="btn h-10 border-none text-sm text-primary-500 bg-[#4864E114]"
+            class="btn h-10 border-none text-sm text-primary-500 bg-[#00b0e014]"
             type="button"
             @click="changeEditMode(true)"
           >
@@ -313,7 +313,7 @@
         />
         <div class="lg:col-span-2 text-left mt-2">
           <button
-            class="btn h-10 border-none text-sm text-primary-500 bg-[#4864E114] max-md:btn-block"
+            class="btn h-10 border-none text-sm text-primary-500 bg-[#00b0e014] max-md:btn-block"
             type="button"
             @click="changeEditMode(true)"
           >

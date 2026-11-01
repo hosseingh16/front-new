@@ -19,7 +19,7 @@
               cy="60"
               r="52"
               fill="none"
-              :stroke="percent >= 100 ? '#0EA972' : '#4864E1'"
+              :stroke="percent >= 100 ? '#0EA972' : '#00115b'"
               stroke-width="12"
               stroke-linecap="round"
               :stroke-dasharray="circumference"

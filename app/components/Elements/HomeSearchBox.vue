@@ -58,7 +58,9 @@
       class="z-50 flex min-h-0 flex-col overflow-hidden bg-surface-50 max-md:flex-1 md:absolute md:inset-x-0 md:top-[calc(100%+8px)] md:rounded-xl md:border md:border-surface-100 md:shadow-[0_12px_40px_rgba(18,18,18,0.12)]"
       @mousedown.prevent
     >
-      <div class="shrink-0 border-b border-surface-100 py-3 max-md:border-t max-md:pt-4 md:p-2">
+      <div
+        class="shrink-0 border-b border-surface-100 py-3 max-md:border-t max-md:pt-4 md:p-2"
+      >
         <div
           class="flex gap-2 overflow-x-auto no-scrollbar md:gap-1 rounded-xl bg-surface-100 md:p-1 [&>.btn]:h-8 [&>.btn]:text-sm p-1"
         >
@@ -75,25 +77,24 @@
             @mousedown.prevent
             @click="activeTab = tab.value"
           >
-            <Icon
-              v-if="tab.icon"
-              :name="tab.icon"
-              size="16"
-              class="shrink-0"
-            />
+            <Icon v-if="tab.icon" :name="tab.icon" size="16" class="shrink-0" />
             {{ tab.label }}
           </button>
         </div>
       </div>
 
-      <div class="min-h-0 flex-1 overflow-y-auto p-2 max-md:px-0 md:max-h-[420px]">
+      <div
+        class="min-h-0 flex-1 overflow-y-auto p-2 max-md:px-0 md:max-h-[420px]"
+      >
         <div v-if="loading" class="space-y-2 px-2 py-3">
           <div
             v-for="n in 4"
             :key="`skeleton-${n}`"
             class="flex items-center gap-3 rounded-lg px-3 py-3"
           >
-            <div class="h-10 w-10 shrink-0 rounded-lg bg-surface-200 animate-pulse" />
+            <div
+              class="h-10 w-10 shrink-0 rounded-lg bg-surface-200 animate-pulse"
+            />
             <div class="grow space-y-2">
               <div class="h-4 w-3/4 rounded bg-surface-200 animate-pulse" />
               <div class="h-3 w-1/2 rounded bg-surface-200 animate-pulse" />
@@ -189,15 +190,15 @@
 </template>
 
 <script setup lang="ts">
-import HomeSearchResultItem from '~/components/Elements/HomeSearchResultItem.vue'
-import HomeSearchSectionHeader from '~/components/Elements/HomeSearchSectionHeader.vue'
-import NoResult from '~/components/Elements/NoResult.vue'
+import HomeSearchResultItem from "~/components/Elements/HomeSearchResultItem.vue";
+import HomeSearchSectionHeader from "~/components/Elements/HomeSearchSectionHeader.vue";
+import NoResult from "~/components/Elements/NoResult.vue";
 import {
   HOME_SEARCH_ALL_EMPTY,
   HOME_SEARCH_EMPTY_STATE,
   HOME_SEARCH_TABS,
-} from '~/types/home-search'
-import type { HomeSearchItem } from '~/types/home-search'
+} from "~/types/home-search";
+import type { HomeSearchItem } from "~/types/home-search";
 
 const {
   keyword,
@@ -218,50 +219,50 @@ const {
   submitSearch,
   onKeydown,
   viewAllPath,
-} = useHomeSearch()
+} = useHomeSearch();
 
-const rootRef = ref<HTMLElement | null>(null)
-const inputRef = ref<HTMLInputElement | null>(null)
+const rootRef = ref<HTMLElement | null>(null);
+const inputRef = ref<HTMLInputElement | null>(null);
 
 const activeTabMeta = computed(() =>
   HOME_SEARCH_TABS.find((tab) => tab.value === activeTab.value),
-)
+);
 
 function closeMobileSearch() {
-  closeDropdown()
+  closeDropdown();
 }
 
 function isItemHighlighted(item: HomeSearchItem) {
-  const highlighted = flatSelectableItems.value[highlightedIndex.value]
-  if (!highlighted) return false
-  return highlighted.id === item.id && highlighted.tab === item.tab
+  const highlighted = flatSelectableItems.value[highlightedIndex.value];
+  if (!highlighted) return false;
+  return highlighted.id === item.id && highlighted.tab === item.tab;
 }
 
 function handleClickOutside(event: MouseEvent) {
-  if (window.innerWidth < 768) return
+  if (window.innerWidth < 768) return;
   if (!rootRef.value?.contains(event.target as Node)) {
-    closeDropdown()
+    closeDropdown();
   }
 }
 
 function toggleBodyScroll(lock: boolean) {
-  if (!import.meta.client || window.innerWidth >= 768) return
-  document.body.style.overflow = lock ? 'hidden' : ''
+  if (!import.meta.client || window.innerWidth >= 768) return;
+  document.body.style.overflow = lock ? "hidden" : "";
 }
 
 watch(showDropdown, (open) => {
-  toggleBodyScroll(open)
+  toggleBodyScroll(open);
   if (open && import.meta.client && window.innerWidth < 768) {
-    nextTick(() => inputRef.value?.focus())
+    nextTick(() => inputRef.value?.focus());
   }
-})
+});
 
 onMounted(() => {
-  document.addEventListener('click', handleClickOutside)
-})
+  document.addEventListener("click", handleClickOutside);
+});
 
 onBeforeUnmount(() => {
-  document.removeEventListener('click', handleClickOutside)
-  toggleBodyScroll(false)
-})
+  document.removeEventListener("click", handleClickOutside);
+  toggleBodyScroll(false);
+});
 </script>

@@ -22,7 +22,7 @@
             class="flex h-5 w-5 items-center justify-center rounded-full p-0.5 sm:h-6 sm:w-6 sm:p-1"
             :class="
               activeTab === tab.id
-                ? 'bg-[#4864E114] text-primary-500'
+                ? 'bg-[#00b0e014] text-primary-500'
                 : 'bg-[#4A4A4A14] text-text-passive'
             "
           >

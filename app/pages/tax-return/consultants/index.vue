@@ -1,8 +1,6 @@
 <template>
   <div class="bg-surface-50">
-    <section
-      class="bg-[url('/images/bg-6.png')] bg-no-repeat bg-top pb-6 md:bg-[url('/images/bg-5.png')] md:bg-position-[center_-150px]"
-    >
+    <section class="pb-6 md:">
       <div class="custom-pad pt-6">
         <nav class="text-sm text-text-passive">
           <NuxtLink to="/" class="hover:text-primary-500 transition-colors">
@@ -22,7 +20,7 @@
         <!-- Section 1: selection mode -->
         <section id="consultant-selection" class="flex flex-col items-center">
           <span
-            class="inline-flex items-center rounded-xl bg-[#4864E114] px-4 py-2 text-sm font-semibold text-primary-500"
+            class="inline-flex items-center rounded-xl bg-[#00b0e014] px-4 py-2 text-sm font-semibold text-primary-500"
           >
             از بهترین‌ها مشاوره دریافت کنید
           </span>

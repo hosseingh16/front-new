@@ -104,7 +104,7 @@
               class="inline-flex h-8 items-center gap-1 rounded-md bg-[rgba(72,100,225,0.08)] px-3 text-sm font-semibold text-primary-500 transition-opacity hover:opacity-80"
               @click="emit('details', request)"
             >
-              <icons-chevron class="rotate-90" color="#4864e1" />
+              <icons-chevron class="rotate-90" color="#00115b" />
               جزئیات
             </button>
             <button

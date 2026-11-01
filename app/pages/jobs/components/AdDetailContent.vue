@@ -22,7 +22,7 @@
             class="flex h-5 w-5 items-center justify-center rounded-full p-0.5 sm:h-6 sm:w-6 sm:p-1"
             :class="
               activeTab === tab.id
-                ? 'bg-[#4864E114] text-primary-500'
+                ? 'bg-[#00b0e014] text-primary-500'
                 : 'bg-[#4A4A4A14] text-text-passive'
             "
           >
@@ -76,7 +76,7 @@
             class="mt-4 flex w-full flex-wrap items-center justify-start gap-3 text-sm text-text-secondary"
           >
             <div
-              class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#4864E114] p-2"
+              class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#00b0e014] p-2"
             >
               <img
                 :src="companyLogoSrc"
@@ -118,7 +118,7 @@
               class="flex w-full items-center justify-start gap-2 rounded-full px-1 py-1"
             >
               <span
-                class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#4864E114] text-primary-500"
+                class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#00b0e014] text-primary-500"
               >
                 <Icon :name="item.icon" size="20" />
               </span>

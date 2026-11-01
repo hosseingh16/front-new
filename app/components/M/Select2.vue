@@ -25,7 +25,7 @@
           </slot>
         </span>
         <icons-chevron-down
-          color="#4864E1"
+          color="#00115b"
           class="transition-transform duration-200"
           :class="{ 'rotate-180': open }"
         />

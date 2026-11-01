@@ -4,7 +4,7 @@
     :class="sectionClass"
   >
     <div
-      class="flex items-center justify-center rounded-full bg-[#4864E114] px-4 py-2 text-sm font-semibold text-primary-500"
+      class="flex items-center justify-center rounded-full bg-[#00b0e014] px-4 py-2 text-sm font-semibold text-primary-500"
       :class="badgeClass"
     >
       {{ badge }}

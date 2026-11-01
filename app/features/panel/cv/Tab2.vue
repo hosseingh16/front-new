@@ -148,7 +148,7 @@
           >
             <icons-check
               v-if="cvVisibility"
-              color="#4864E1"
+              color="#00115b"
             />
           </div>
         </button>

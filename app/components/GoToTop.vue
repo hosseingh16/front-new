@@ -63,7 +63,7 @@ onBeforeUnmount(() => {
   justify-content: center;
   border: none;
   border-radius: 1rem;
-  background: #4864e1;
+  background: #00115b;
   color: #fff;
   box-shadow: 0 10px 30px rgba(72, 100, 225, 0.28);
   opacity: 0;

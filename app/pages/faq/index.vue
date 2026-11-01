@@ -1,9 +1,7 @@
 <template>
   <div>
     <!-- Hero -->
-    <section
-      class="bg-[url('/images/bg-6.png')] md:bg-[url('/images/bg-6.png')] bg-no-repeat bg-top pb-8"
-    >
+    <section class="md: pb-8">
       <div class="custom-pad flex flex-col items-center pt-16 md:pt-24">
         <m-faq-divider class="mb-6" />
         <h1 class="text-2xl text-text-tertiary font-yb-bold text-center">

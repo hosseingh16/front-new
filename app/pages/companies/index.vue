@@ -1,8 +1,6 @@
 <template>
   <div class="bg-surface-50">
-    <section
-      class="bg-[url('/images/bg-6.png')] md:bg-[url('/images/bg-5.png')] bg-no-repeat bg-top md:bg-position-[center_-150px] pb-10"
-    >
+    <section class="md: pb-10">
       <div class="custom-pad pt-6">
         <nav class="text-sm text-text-passive">
           <NuxtLink to="/" class="hover:text-primary-500 transition-colors">
@@ -17,7 +15,7 @@
 
       <div class="custom-pad flex flex-col items-center gap-4 pt-8 md:pt-12">
         <span
-          class="inline-flex items-center rounded-xl bg-[#4864E114] px-4 py-2 text-sm font-semibold text-primary-500"
+          class="inline-flex items-center rounded-xl bg-[#00b0e014] px-4 py-2 text-sm font-semibold text-primary-500"
         >
           همکاری با سازمان‌های برتر
         </span>

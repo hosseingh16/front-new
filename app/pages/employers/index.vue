@@ -1,9 +1,7 @@
 <template>
   <div class="bg-surface-50">
     <!-- Hero -->
-    <section
-      class="bg-[url('/images/bg-5.png')] bg-no-repeat bg-top pb-10 md:pb-16"
-    >
+    <section class="pb-10 md:pb-16">
       <div class="custom-pad pt-6">
         <nav class="flex items-center text-sm text-text-passive">
           <NuxtLink
@@ -21,7 +19,7 @@
       </div>
       <div class="custom-pad flex flex-col items-center pt-6 md:pt-8">
         <span
-          class="inline-flex h-8 items-center rounded-lg bg-[#4864E114] px-3 text-[13px] font-semibold text-primary-500"
+          class="inline-flex h-8 items-center rounded-lg bg-[#00b0e014] px-3 text-[13px] font-semibold text-primary-500"
         >
           نشر تخصصی جذب و همکاری با حسابداران
         </span>
@@ -87,7 +85,7 @@
       <div class="custom-pad relative">
         <div class="mx-auto flex w-full max-w-[976px] flex-col items-center">
           <span
-            class="inline-flex h-8 items-center rounded-lg bg-[#4864E114] px-3 text-sm font-semibold text-primary-500"
+            class="inline-flex h-8 items-center rounded-lg bg-[#00b0e014] px-3 text-sm font-semibold text-primary-500"
           >
             ارزش ها
           </span>
@@ -224,7 +222,7 @@
     <section class="relative bg-surface-100 py-10 md:py-16">
       <div class="custom-pad relative z-10 flex flex-col items-center">
         <span
-          class="inline-flex items-center rounded-xl bg-[#4864E114] px-4 py-2 text-sm font-semibold text-primary-500"
+          class="inline-flex items-center rounded-xl bg-[#00b0e014] px-4 py-2 text-sm font-semibold text-primary-500"
         >
           فرآیندکار
         </span>
@@ -387,9 +385,9 @@ const serviceCards: ServiceCard[] = [
     boxClass:
       "bg-gradient-to-bl from-[#708FEA] to-[#fff] border-2 border-[#C6D2F7]",
     numberClass:
-      "text-[#4864e1] shrink-0 rounded-xl bg-[#EBF0FC] w-[28px] h-[32px] text-center leading-[32px]",
+      "text-[#00115b] shrink-0 rounded-xl bg-[#EBF0FC] w-[28px] h-[32px] text-center leading-[32px]",
     ctaClass: "bg-[#EBF0FC] text-primary-500",
-    ctaArrowColor: "#4864e1",
+    ctaArrowColor: "#00115b",
     btnText: "ایجاد آگهی استخدام",
     to: paths.employer.adsCreate,
     role: "employer" as const,

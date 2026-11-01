@@ -49,7 +49,7 @@
             class="flex items-center gap-1.5 text-sm font-semibold text-primary-500 transition-opacity hover:opacity-80"
           >
             مشاهده همه
-            <icons-arrow color="#4864e1" :size="15" class="mr-1" />
+            <icons-arrow color="#00115b" :size="15" class="mr-1" />
           </NuxtLink>
         </div>
 
@@ -71,7 +71,7 @@
             class="flex items-center gap-1.5 text-sm font-semibold text-primary-500 transition-opacity hover:opacity-80"
           >
             مشاهده همه
-            <icons-arrow color="#4864e1" :size="15" class="mr-1" />
+            <icons-arrow color="#00115b" :size="15" class="mr-1" />
           </NuxtLink>
         </div>
 

@@ -33,7 +33,7 @@
     <icons-chevron
       v-if="active"
       class="-rotate-90 shrink-0 max-md:hidden"
-      color="#4864e1"
+      color="#00115b"
       :size="14"
     />
   </button>

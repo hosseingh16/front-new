@@ -1,6 +1,6 @@
 <template>
   <div>
-    <section class="bg-[url('/images/bg-6.png')] bg-no-repeat bg-top pb-8">
+    <section class="pb-8">
       <div class="custom-pad flex flex-col items-center pt-16 md:pt-24">
         <h1 class="text-center text-2xl font-yb-bold text-text-tertiary">
           درباره ما
@@ -31,12 +31,15 @@
         </p>
         <p>
           برای آشنایی با خدمات،
-          <NuxtLink to="/jobs" class="text-primary-500">فرصت‌های شغلی</NuxtLink>،
+          <NuxtLink to="/jobs" class="text-primary-500">فرصت‌های شغلی</NuxtLink
+          >،
           <NuxtLink to="/resume-builder" class="text-primary-500"
             >رزومه‌ساز</NuxtLink
           >
           و
-          <NuxtLink to="/employers" class="text-primary-500">بخش کسب‌وکار</NuxtLink>
+          <NuxtLink to="/employers" class="text-primary-500"
+            >بخش کسب‌وکار</NuxtLink
+          >
           را ببینید. اگر پرسشی دارید، از
           <NuxtLink to="/faq" class="text-primary-500">سوالات متداول</NuxtLink>
           یا

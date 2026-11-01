@@ -378,7 +378,7 @@
           class="relative mx-auto flex w-full max-w-[944px] flex-col items-center"
         >
           <span
-            class="inline-flex h-8 items-center rounded-xl bg-[#4864E114] px-2 text-[14px] font-semibold text-primary-500"
+            class="inline-flex h-8 items-center rounded-xl bg-[#00b0e014] px-2 text-[14px] font-semibold text-primary-500"
           >
             رزومه‌ساز های‌حساب
           </span>
@@ -416,7 +416,7 @@
                   class="flex size-20 items-center justify-center rounded-[29px]"
                   :class="
                     index === 0
-                      ? 'bg-primary-500 shadow-[2px_-2px_0_#4864e1]'
+                      ? 'bg-primary-500 shadow-[2px_-2px_0_#00115b]'
                       : 'bg-[#ebebeb] shadow-[5px_-3px_0_#ebebeb]'
                   "
                 >
@@ -546,7 +546,7 @@
             class="flex w-[176px] shrink-0 flex-col items-start gap-2 xl:mr-4"
           >
             <span
-              class="inline-flex h-8 items-center rounded-xl bg-[#4864E114] px-2 text-[14px] font-semibold text-primary-500"
+              class="inline-flex h-8 items-center rounded-xl bg-[#00b0e014] px-2 text-[14px] font-semibold text-primary-500"
             >
               خدمات دیگر
             </span>
@@ -580,7 +580,7 @@
               v-if="service.to"
               :to="service.to"
               :role="service.role"
-              class="mt-auto flex h-[38px] items-center justify-center gap-1 rounded-lg bg-[#4864E114] text-[15px] font-semibold text-primary-500"
+              class="mt-auto flex h-[38px] items-center justify-center gap-1 rounded-lg bg-[#00b0e014] text-[15px] font-semibold text-primary-500"
             >
               {{ service.action }}
               <img :src="externalLink" alt="" class="size-[22px]" />
@@ -588,7 +588,7 @@
             <NuxtLink
               v-else
               :to="service.href"
-              class="mt-auto flex h-[38px] items-center justify-center gap-1 rounded-lg bg-[#4864E114] text-[15px] font-semibold text-primary-500"
+              class="mt-auto flex h-[38px] items-center justify-center gap-1 rounded-lg bg-[#00b0e014] text-[15px] font-semibold text-primary-500"
             >
               {{ service.action }}
               <img :src="externalLink" alt="" class="size-[22px]" />
@@ -801,7 +801,7 @@ const services: {
   },
   {
     badge: "استخدام نیرو",
-    badgeClass: "bg-[#4864E114] text-primary-500",
+    badgeClass: "bg-[#00b0e014] text-primary-500",
     title: "استخدام و جذب حسابدار",
     body: "برای استخدام حسابدار و جذب نیرو، آگهی استخدام ثبت کنید و رزومه حسابداران متخصص را بررسی کنید.",
     action: "استخدام حسابدار",

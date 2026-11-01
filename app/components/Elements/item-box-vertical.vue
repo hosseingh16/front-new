@@ -107,7 +107,7 @@
           :to="to"
           class="inline-flex items-center gap-1 rounded-md bg-[#EBEEFA] px-3 py-1.5 text-sm font-semibold text-primary-500 transition-opacity hover:opacity-90"
         >
-          <icons-chevron class="rotate-90" color="#4864e1" />
+          <icons-chevron class="rotate-90" color="#00115b" />
           مشاهده
         </NuxtLink>
         <NuxtLink
@@ -115,7 +115,7 @@
           to="#"
           class="pointer-events-none inline-flex items-center gap-1 rounded-md bg-[#EBEEFA] px-3 py-1.5 text-sm font-semibold text-primary-500"
         >
-          <icons-chevron class="rotate-90" color="#4864e1" />
+          <icons-chevron class="rotate-90" color="#00115b" />
           مشاهده
         </NuxtLink>
       </div>
