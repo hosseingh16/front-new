@@ -31,48 +31,55 @@
     </template>
 
     <template v-else>
-      <div class="flex items-start justify-between gap-4">
-        <div class="flex min-w-0 items-center gap-3">
-          <div
-            class="h-14 w-14 shrink-0 overflow-hidden rounded-xl bg-[#8EA0B5]"
-          >
-            <img
-              :src="avatarSrc"
-              :alt="consultant.name"
-              class="h-full w-full object-cover"
-            />
-          </div>
-
-          <div class="min-w-0">
-            <p class="truncate font-yb-bold text-base text-text-tertiary">
-              {{ consultant.name }}
-            </p>
-            <div
-              v-if="consultant.job_title"
-              class="mt-1 flex items-center gap-1.5 text-sm text-text-passive"
-            >
-              <Icon name="svg:people" size="16" class="shrink-0" />
-              <span class="truncate">سمت شغلی: {{ consultant.job_title }}</span>
-              <span class="truncate"> - {{ locationText }}</span>
-            </div>
-          </div>
+      <div class="flex items-start gap-3">
+        <div
+          class="h-14 w-14 shrink-0 overflow-hidden rounded-xl bg-[#8EA0B5]"
+        >
+          <img
+            :src="avatarSrc"
+            :alt="consultant.name"
+            class="h-full w-full object-cover"
+          />
         </div>
 
-        <NuxtLink
-          v-if="to"
-          :to="to"
-          class="relative z-10 flex shrink-0 items-center gap-1.5 text-sm text-text-passive"
-          @click.stop
-        >
-          <Icon name="lucide:eye" size="16" class="shrink-0" />
-          <span>مشاهده رزومه</span>
-        </NuxtLink>
-        <div
-          v-else
-          class="relative z-10 flex shrink-0 items-center gap-1.5 text-sm text-text-passive"
-        >
-          <Icon name="lucide:eye" size="16" class="shrink-0" />
-          <span>مشاهده رزومه</span>
+        <div class="min-w-0 flex-1">
+          <!-- Name + resume link share a row so the details below get the full width -->
+          <div class="flex items-center justify-between gap-3">
+            <p
+              class="min-w-0 truncate font-yb-bold text-base text-text-tertiary"
+            >
+              {{ consultant.name }}
+            </p>
+
+            <NuxtLink
+              v-if="to"
+              :to="to"
+              class="relative z-10 flex shrink-0 items-center gap-1.5 text-sm text-text-passive"
+              @click.stop
+            >
+              <Icon name="lucide:eye" size="16" class="shrink-0" />
+              <span>مشاهده رزومه</span>
+            </NuxtLink>
+            <div
+              v-else
+              class="relative z-10 flex shrink-0 items-center gap-1.5 text-sm text-text-passive"
+            >
+              <Icon name="lucide:eye" size="16" class="shrink-0" />
+              <span>مشاهده رزومه</span>
+            </div>
+          </div>
+
+          <!-- Allow wrapping instead of truncating so the job title is always readable -->
+          <div
+            v-if="consultant.job_title"
+            class="mt-1 flex items-start gap-1.5 text-sm leading-6 text-text-passive"
+          >
+            <Icon name="svg:people" size="16" class="mt-1 shrink-0" />
+            <p class="min-w-0 break-words">
+              سمت شغلی: {{ consultant.job_title
+              }}<template v-if="locationText"> - {{ locationText }}</template>
+            </p>
+          </div>
         </div>
       </div>
 
