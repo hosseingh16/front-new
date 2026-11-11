@@ -39,13 +39,19 @@
         <div class="flex items-center gap-12 max-lg:hidden">
           <NuxtLink
             v-for="link in navLinks"
-            :key="link.to"
+            :key="link.label"
             :to="link.to"
             :target="link.blank ? '_blank' : undefined"
             :rel="link.blank ? 'noopener noreferrer' : undefined"
-            class="text-sm hover:opacity-80"
+            class="relative whitespace-nowrap text-sm hover:opacity-80"
           >
             {{ link.label }}
+            <span
+              v-if="link.badge"
+              class="absolute -top-6 -left-4 z-10 -rotate-6 rounded-full bg-danger-100 px-1.5 py-0.5 text-[10px] font-semibold leading-4 text-danger-500"
+            >
+              {{ link.badge }}
+            </span>
           </NuxtLink>
           <!-- #future
           <NuxtLink to="/companies" class="text-sm hover:opacity-80"
@@ -135,11 +141,11 @@
           <nav class="flex flex-1 flex-col gap-1 overflow-y-auto px-3 py-4">
             <NuxtLink
               v-for="link in navLinks"
-              :key="link.to"
+              :key="link.label"
               :to="link.to"
               :target="link.blank ? '_blank' : undefined"
               :rel="link.blank ? 'noopener noreferrer' : undefined"
-              class="rounded-lg px-3 py-3 text-sm font-semibold transition-colors"
+              class="relative rounded-lg px-3 py-3 text-sm font-semibold transition-colors"
               :class="
                 isActive(link.to)
                   ? 'bg-primary-50 text-primary-500'
@@ -147,7 +153,15 @@
               "
               @click="closeDrawer"
             >
-              {{ link.label }}
+              <span class="relative">
+                {{ link.label }}
+                <span
+                  v-if="link.badge"
+                  class="absolute -top-6 left-0 z-10 -rotate-6 rounded-full bg-danger-100 px-1.5 py-0.5 text-[10px] font-semibold leading-4 text-danger-500"
+                >
+                  {{ link.badge }}
+                </span>
+              </span>
             </NuxtLink>
           </nav>
         </aside>
@@ -166,12 +180,18 @@ const { isAuthenticated } = useSanctumAuth();
 const { user } = useCurrentUser();
 const { needsRoleSelection } = useRoleGate();
 
-const navLinks = [
+const navLinks: {
+  label: string;
+  to: string;
+  blank: boolean;
+  badge?: string;
+}[] = [
   { label: "خانه", to: "/", blank: false },
   { label: "کارفرمایان", to: "/employers", blank: false },
   { label: "فرصت‌های شغلی", to: "/jobs", blank: false },
   { label: "مقالات", to: "/blog", blank: true },
-] as const;
+  { label: "مشاوره مالیاتی", to: "/tax-return", blank: true, badge: "جدید" },
+];
 
 const isDrawerOpen = ref(false);
 const isScrolled = ref(false);
