@@ -76,10 +76,12 @@ const copyrightYear = computed(() => {
 
 useSeoMeta({
   title: () =>
-    user.value?.name ? `رزومه | ${user.value.name}` : "رزومه کارجو",
+    user.value?.name
+      ? `رزومه مشاور مالی و مالیاتی ${user.value.name} | های‌حساب`
+      : "رزومه مشاور مالی و مالیاتی | های‌حساب",
   description: () =>
-    user.value?.resume_personal?.about ||
-    user.value?.description ||
-    "مشاهده رزومه از دید کارفرما",
+    user.value?.name
+      ? `مشاهده رزومه ${user.value.name}، مشاور مالی و مالیاتی تأییدشده های‌حساب، شامل سوابق کاری و تخصص‌های حرفه‌ای.`
+      : "مشاهده رزومه مشاور مالی و مالیاتی تأییدشده های‌حساب، شامل سوابق کاری و تخصص‌های حرفه‌ای.",
 });
 </script>

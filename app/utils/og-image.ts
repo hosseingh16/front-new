@@ -13,6 +13,7 @@ export const ogImages = {
   blog: "/images/og/blog.jpg",
   jobDetail: "/images/og/job-detail.jpg",
   projectDetail: "/images/og/project-detail.jpg",
+  consultantResume: "/images/og/consultant-resume.jpg",
 } as const;
 
 type OgImage = {
@@ -90,6 +91,13 @@ export function resolveOgImage(path: string): OgImage {
     return {
       image: ogImages.blog,
       alt: "وبلاگ حسابداری های‌حساب",
+    };
+  }
+
+  if (current.startsWith("/cv/")) {
+    return {
+      image: ogImages.consultantResume,
+      alt: "رزومه تخصصی مشاوران مالی و مالیاتی های‌حساب",
     };
   }
 
