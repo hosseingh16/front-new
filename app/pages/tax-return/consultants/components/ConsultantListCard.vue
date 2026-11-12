@@ -43,36 +43,46 @@
         </div>
 
         <div class="min-w-0 flex-1">
-          <!-- Name + resume link share a row so the details below get the full width -->
-          <div class="flex items-center justify-between gap-3">
+          <!-- Name stays readable; the two actions wrap under it when the row is narrow -->
+          <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
             <p
-              class="min-w-0 truncate font-yb-bold text-base text-text-tertiary"
+              class="min-w-0 max-w-full flex-1 basis-full truncate font-yb-bold text-base text-text-tertiary sm:basis-auto"
             >
               {{ consultant.name }}
             </p>
 
-            <NuxtLink
-              v-if="to"
-              :to="to"
-              class="relative z-10 flex shrink-0 items-center gap-1.5 text-sm text-text-passive"
-              @click.stop
-            >
-              <Icon name="lucide:eye" size="16" class="shrink-0" />
-              <span>مشاهده رزومه</span>
-            </NuxtLink>
-            <div
-              v-else
-              class="relative z-10 flex shrink-0 items-center gap-1.5 text-sm text-text-passive"
-            >
-              <Icon name="lucide:eye" size="16" class="shrink-0" />
-              <span>مشاهده رزومه</span>
+            <div class="ms-auto flex shrink-0 items-center gap-2">
+              <button
+                type="button"
+                class="btn btn-primary relative z-10 h-8 min-h-0 rounded-lg px-3 text-sm font-yb-bold"
+                @click.stop="onCardClick"
+              >
+                ثبت درخواست
+              </button>
+
+              <NuxtLink
+                v-if="to"
+                :to="to"
+                class="btn btn-outline relative z-10 h-8 min-h-0 gap-1.5 rounded-lg bg-white px-3 text-sm text-text-tertiary hover:bg-white"
+                @click.stop
+              >
+                <Icon name="lucide:eye" size="16" class="shrink-0" />
+                <span>مشاهده رزومه</span>
+              </NuxtLink>
+              <span
+                v-else
+                class="btn btn-outline relative z-10 h-8 min-h-0 gap-1.5 rounded-lg bg-white px-3 text-sm text-text-tertiary"
+              >
+                <Icon name="lucide:eye" size="16" class="shrink-0" />
+                <span>مشاهده رزومه</span>
+              </span>
             </div>
           </div>
 
           <!-- Allow wrapping instead of truncating so the job title is always readable -->
           <div
             v-if="consultant.job_title"
-            class="mt-1 flex items-start gap-1.5 text-sm leading-6 text-text-passive"
+            class="mt-3 flex items-start gap-1.5 text-sm leading-6 text-text-passive"
           >
             <Icon name="svg:people" size="16" class="mt-1 shrink-0" />
             <p class="min-w-0 break-words">
