@@ -55,11 +55,13 @@
                 <button
                   type="button"
                   class="flex h-9 items-center gap-1.5 rounded-lg border-2 border-gray-default bg-white px-3 text-sm text-text-tertiary transition-opacity hover:opacity-80 disabled:opacity-60"
-                  :disabled="!resumeFileUrl"
+                  :disabled="!userId || downloading"
                   @click="handleDownload"
                 >
                   <Icon name="lucide:download" size="16" />
-                  <span class="hidden sm:inline">دانلود رزومه</span>
+                  <span class="hidden sm:inline">
+                    {{ downloading ? "در حال آماده‌سازی..." : "دانلود رزومه" }}
+                  </span>
                 </button>
 
                 <BookmarkToggleButton
@@ -155,7 +157,6 @@ import BookmarkToggleButton from "~/components/Elements/BookmarkToggleButton.vue
 import UserResumeDetailContent from "./UserResumeDetailContent.vue";
 import type { EmployerAdRequest } from "~/types/employer-ad-request";
 import { resolveAdRequestStatusKey } from "~/pages/dashboard/employer/utils/employer-ad-request";
-import { resolveResumeAttachment } from "../utils/user-resume";
 
 const props = defineProps<{
   open: boolean;
@@ -172,8 +173,10 @@ const emit = defineEmits<{
 }>();
 
 const { $toast } = useNuxtApp();
+const api = useApi();
 
 const userId = computed(() => props.request?.user?.id ?? 0);
+const downloading = ref(false);
 const { user, loading: userLoading, error: userError } = useUser(userId);
 
 const currentIndex = computed(() => {
@@ -201,11 +204,6 @@ const statusKey = computed(() =>
 const isApproved = computed(() => statusKey.value === "approved");
 const isRejected = computed(() => statusKey.value === "rejected");
 
-const resumeFileUrl = computed(() => {
-  const attachment = resolveResumeAttachment(user.value);
-  return attachment?.url ?? null;
-});
-
 function handleClose() {
   emit("update:open", false);
 }
@@ -227,14 +225,55 @@ function onBookmarkChange(value: boolean) {
   props.request.is_bookmarked = value;
 }
 
-function handleDownload() {
-  if (!resumeFileUrl.value) {
-    $toast.error("فایل رزومه برای دانلود موجود نیست");
+async function handleDownload() {
+  if (downloading.value || !import.meta.client) return;
+
+  const jobseekerId = userId.value;
+  if (!jobseekerId) {
+    $toast.error("شناسه کارجو یافت نشد");
     return;
   }
 
-  if (!import.meta.client) return;
-  window.open(resumeFileUrl.value, "_blank", "noopener,noreferrer");
+  downloading.value = true;
+  try {
+    const blob = await api.get<Blob>(
+      `/employers/applicants/${jobseekerId}/resume-pdf`,
+      {
+        responseType: "blob",
+        headers: {
+          Accept: "application/pdf",
+        },
+      },
+    );
+
+    if (!(blob instanceof Blob) || blob.size === 0) {
+      $toast.error("دانلود رزومه ممکن نشد");
+      return;
+    }
+
+    if (
+      blob.type.includes("json") ||
+      blob.type.includes("text") ||
+      blob.type.includes("html")
+    ) {
+      $toast.error("دانلود رزومه ممکن نشد");
+      return;
+    }
+
+    const objectUrl = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = objectUrl;
+    link.download = "resume.pdf";
+    link.rel = "noopener";
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(objectUrl);
+  } catch (err: any) {
+    $toast.error(err?.message || "دانلود رزومه ممکن نشد");
+  } finally {
+    downloading.value = false;
+  }
 }
 
 watch(
