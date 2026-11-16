@@ -1,6 +1,7 @@
 import type { AccountRole } from "~/features/account/types";
 import { getApiErrorData } from "~/utils/api-error";
 import { resolvePostLoginLocation } from "~/utils/entering-route";
+import { pushGtmRegistrationEvent } from "~/utils/gtm";
 import { normalizeIranMobile } from "~/utils/iran-mobile";
 import { resolvePrimaryRole } from "~/utils/user-role";
 
@@ -248,6 +249,9 @@ export function useAccountAuth() {
         method: "PUT",
         body: { role },
       });
+      // Role assignment is the registration step that distinguishes employer
+      // from jobseeker. Login and failed requests never reach this line.
+      pushGtmRegistrationEvent(role, String(id));
       selectedRole.value = role;
       hasRole.value = true;
       await refreshIdentity();
