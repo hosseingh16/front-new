@@ -7,12 +7,15 @@
 
       <div class="mt-6 flex flex-col items-start text-sm">
         <span class="text-text-passive">هزینه قابل پرداخت:</span>
-        <div class="flex items-center">
+        <div v-if="taxReturnPayablePrice > 0" class="flex items-center">
           <span class="my-4 font-yb-bold text-2xl text-success-500">
             {{ formattedPrice }}
           </span>
           <small class="text-success-500 mx-1"> تومان </small>
         </div>
+        <span v-else class="my-4 font-yb-bold text-2xl text-success-500">
+          رایگان!
+        </span>
       </div>
 
       <div

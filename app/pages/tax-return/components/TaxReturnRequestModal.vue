@@ -241,9 +241,15 @@
           class="rounded-2xl border border-success-outline bg-success-soft p-4"
         >
           <p class="text-sm text-text-passive">هزینه رزرو وقت مشاور:</p>
-          <p class="mt-2 font-yb-bold text-xl text-success-500">
+          <p
+            v-if="taxReturnPayablePrice > 0"
+            class="mt-2 font-yb-bold text-xl text-success-500"
+          >
             {{ formattedPrice }}
             <span class="text-sm font-semibold">تومان</span>
+          </p>
+          <p v-else class="mt-2 font-yb-bold text-xl text-success-500">
+            رایگان!
           </p>
 
           <button
