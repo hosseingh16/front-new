@@ -259,7 +259,7 @@
           >
             <span v-if="submitting">در حال ثبت...</span>
             <template v-else>
-              <span>پرداخت و ثبت درخواست</span>
+              <span>ثبت درخواست</span>
               <Icon name="lucide:chevron-left" size="18" />
             </template>
           </button>
