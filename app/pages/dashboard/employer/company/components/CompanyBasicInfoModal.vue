@@ -98,6 +98,7 @@
           v-model="form.activity"
           label="نوع فعالیت:"
           search
+          required
           :options="activityOptions"
           placeholder="نوع فعالیت سازمان را انتخاب کنید"
         />
@@ -105,10 +106,11 @@
         <m-text-field
           v-model="form.tel"
           label="شماره تماس شرکت:"
+          required
           placeholder="شماره تماس شرکت را وارد کنید"
         />
 
-        <label
+        <!-- <label
           class="flex cursor-pointer items-center justify-end gap-2 text-sm text-text-secondary"
         >
           <span>نمایش شماره تماس در آگهی‌ها</span>
@@ -117,7 +119,7 @@
             type="checkbox"
             class="checkbox checkbox-primary checkbox-sm rounded"
           />
-        </label>
+        </label> -->
 
         <button
           type="submit"

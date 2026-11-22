@@ -39,7 +39,7 @@ export interface CreateAdFormModel {
   minimum_work_experience: string
   gender: string
   minimum_degree: string
-  resume_terms: string
+  job_description: string
   company_software: string[]
   company_advantages: string[]
   excel_skill: string | null
@@ -62,7 +62,7 @@ export interface CreateAdFormErrors {
   city?: string
   employment_type?: string
   salary_range?: string
-  resume_terms?: string
+  job_description?: string
   accounting_management?: string
   work_hours_type?: string
   floating_days?: string
@@ -83,7 +83,7 @@ export function createEmptyCreateAdForm(): CreateAdFormModel {
     minimum_work_experience: '',
     gender: '',
     minimum_degree: '',
-    resume_terms: '',
+    job_description: '',
     company_software: [],
     company_advantages: [],
     excel_skill: null,

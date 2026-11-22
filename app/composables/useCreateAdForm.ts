@@ -235,7 +235,7 @@ export function useCreateAdForm(
     )
     next.gender = reverseLookup(genders.value, ad.gender)
     next.minimum_degree = reverseLookup(educationLevels.value, ad.minimum_degree)
-    next.resume_terms = ad.resume_terms ?? ''
+    next.job_description = ad.job_description ?? ad.resume_terms ?? ''
     next.company_software = splitList(ad.company_software).map((item) =>
       reverseLookup(accountingPrograms.value, item),
     )
@@ -502,20 +502,20 @@ export function useCreateAdForm(
   }
 
   watch(
-    () => form.value.resume_terms,
+    () => form.value.job_description,
     (value) => {
-      if (!errors.value.resume_terms) return
+      if (!errors.value.job_description) return
 
       const nextError = getResumeTermsValidationError(value, {
         min: adsResumeTermsMinLength.value,
         max: adsResumeTermsMaxLength.value,
       })
       if (nextError) {
-        errors.value = { ...errors.value, resume_terms: nextError }
+        errors.value = { ...errors.value, job_description: nextError }
         return
       }
 
-      const { resume_terms: _removed, ...rest } = errors.value
+      const { job_description: _removed, ...rest } = errors.value
       errors.value = rest
     },
   )

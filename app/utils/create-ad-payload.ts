@@ -88,12 +88,12 @@ export function validateCreateAdForm(
     errors.salary_range = 'حقوق الزامی است'
   }
 
-  const resumeTermsError = getResumeTermsValidationError(form.resume_terms, {
+  const resumeTermsError = getResumeTermsValidationError(form.job_description, {
     min: options.resumeTermsMin,
     max: options.resumeTermsMax,
   })
   if (resumeTermsError) {
-    errors.resume_terms = resumeTermsError
+    errors.job_description = resumeTermsError
   }
 
   if (options.isPartTime) {
@@ -188,7 +188,9 @@ export function buildCreateAdPayload(
     resolveLabel(context.educationLevels, form.minimum_degree) ||
     form.minimum_degree.trim()
   if (minimumDegree) payload.minimum_degree = minimumDegree
-  if (form.resume_terms.trim()) payload.resume_terms = form.resume_terms.trim()
+  if (form.job_description.trim()) {
+    payload.job_description = form.job_description.trim()
+  }
 
   const companySoftware = resolveLabels(
     context.accountingPrograms,

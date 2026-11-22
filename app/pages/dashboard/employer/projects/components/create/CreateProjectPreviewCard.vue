@@ -56,14 +56,6 @@
             {{ budgetLabel || "بودجه توافقی" }}
           </p>
         </div>
-        <button
-          type="button"
-          class="btn btn-outline h-8 px-2 text-primary-500"
-          disabled
-        >
-          <span class="text-sm">مشاهده</span>
-          <Icon name="svg:arrow-left-circle" />
-        </button>
       </div>
     </div>
   </section>
