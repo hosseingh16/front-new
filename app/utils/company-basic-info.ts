@@ -64,13 +64,14 @@ export function needsCompanyBasicInfoModal(
   if (!form.id) return true
   if (!form.name.trim()) return true
   if (!form.logo?.url || isDefaultCompanyLogo(form.logo.url)) return true
+  if (!form.intro.trim()) return true
   return false
 }
 
 export function validateCompanyBasicInfoModal(
   form: CompanyProfileFormModel,
-): { name?: string; logo?: string } {
-  const errors: { name?: string; logo?: string } = {}
+): { name?: string; logo?: string; intro?: string } {
+  const errors: { name?: string; logo?: string; intro?: string } = {}
 
   if (!form.name.trim()) {
     errors.name = 'نام شرکت الزامی است'
@@ -78,6 +79,10 @@ export function validateCompanyBasicInfoModal(
 
   if (!form.logo?.url || isDefaultCompanyLogo(form.logo.url)) {
     errors.logo = 'لوگو سازمان الزامی است'
+  }
+
+  if (!form.intro.trim()) {
+    errors.intro = 'معرفی سازمان الزامی است'
   }
 
   return errors

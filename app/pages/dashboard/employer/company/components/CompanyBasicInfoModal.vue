@@ -21,7 +21,7 @@
           class="mt-0.5 shrink-0 text-warning-500"
         />
         <p class="flex-1 text-sm leading-7 text-text-secondary">
-          برای نمایش بهتر آگهی و جذب بیشتر حسابدار، تکمیل اطلاعات پایه
+          برای نمایش بهتر آگهی و جذب بیشتر حسابدار، اطلاعات پایه
           سازمان را وارد کنید
         </p>
         <button
@@ -110,6 +110,20 @@
           placeholder="شماره تماس شرکت را وارد کنید"
         />
 
+        <div>
+          <m-text-field
+            v-model="form.intro"
+            multiline
+            label="معرفی سازمان:"
+            required
+            placeholder="سازمان خود، حوزه فعالیت، فرهنگ سازمانی و افتخارات آن را بنویسید."
+            :error="Boolean(localErrors.intro)"
+          />
+          <p v-if="localErrors.intro" class="mt-1 text-xs text-danger-500">
+            {{ localErrors.intro }}
+          </p>
+        </div>
+
         <!-- <label
           class="flex cursor-pointer items-center justify-end gap-2 text-sm text-text-secondary"
         >
@@ -154,7 +168,7 @@ const dialogRef = ref<HTMLDialogElement | null>(null)
 const logoUpload = ref<{ open: () => void } | null>(null)
 const showAlert = ref(true)
 const saving = ref(false)
-const localErrors = ref<{ name?: string; logo?: string }>({})
+const localErrors = ref<{ name?: string; logo?: string; intro?: string }>({})
 
 const { $toast } = useNuxtApp()
 const api = useApi()
@@ -189,6 +203,7 @@ async function submit() {
       activity: form.value.activity || null,
       tel: form.value.tel.trim() || null,
       is_tell_public: form.value.is_tell_public,
+      intro: form.value.intro.trim() || null,
       logo: toMediaPayload(form.value.logo),
     }
 
