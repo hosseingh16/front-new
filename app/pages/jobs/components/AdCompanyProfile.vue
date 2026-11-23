@@ -10,6 +10,11 @@
         class="prose mt-4 max-w-none text-right text-base leading-[1.7] text-text-secondary prose-p:mb-5 prose-li:marker:text-text-secondary"
         v-html="company.intro"
       />
+      <div
+        v-else-if="company?.id == 1"
+        class="prose mt-4 max-w-none text-right text-base leading-[1.7] text-text-secondary prose-p:mb-5 prose-li:marker:text-text-secondary"
+        v-html="ad?.company_description"
+      />
       <p
         v-else-if="!company?.culture && !company?.advantages"
         class="mt-4 text-sm text-text-passive"
