@@ -56,6 +56,11 @@ export function getApiErrorData(
   return null;
 }
 
+function isTechnicalFetchMessage(message: string) {
+  // ofetch default: `[PUT] https://example.com/...`
+  return /^\[[A-Z]+\]\s/.test(message.trim())
+}
+
 export function getApiErrorMessage(
   error: unknown,
   fallback = "خطایی رخ داد",
@@ -63,6 +68,20 @@ export function getApiErrorMessage(
   if (!error || typeof error !== "object") return fallback;
 
   const apiError = error as ApiError;
+  const data = getApiErrorData(error);
+
+  if (data?.errors && typeof data.errors === "object") {
+    for (const value of Object.values(data.errors as Record<string, unknown>)) {
+      const message = Array.isArray(value) ? value[0] : value;
+      if (typeof message === "string" && message.trim()) {
+        return message;
+      }
+    }
+  }
+
+  if (typeof data?.message === "string" && data.message.trim()) {
+    return data.message;
+  }
 
   if (apiError.errors && typeof apiError.errors === "object") {
     for (const value of Object.values(apiError.errors)) {
@@ -73,7 +92,11 @@ export function getApiErrorMessage(
     }
   }
 
-  if (typeof apiError.message === "string" && apiError.message.trim()) {
+  if (
+    typeof apiError.message === "string" &&
+    apiError.message.trim() &&
+    !isTechnicalFetchMessage(apiError.message)
+  ) {
     return apiError.message;
   }
 

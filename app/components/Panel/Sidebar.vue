@@ -30,7 +30,7 @@
     <div class="flex flex-col gap-y-2 border-t border-gray-default">
       <NuxtLink
         :to="profileLink"
-        class="flex gap-2 rounded-lg px-4 pt-3 transition-colors hover:bg-surface-100"
+        class="flex gap-2 rounded-lg px-4 items-center py-1.5 transition-colors hover:bg-surface-100 mt-2"
         :aria-label="profileAriaLabel"
       >
         <Avatar class="h-10 w-10 shrink-0" />

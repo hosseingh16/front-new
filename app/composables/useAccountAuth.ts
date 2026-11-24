@@ -1,5 +1,5 @@
 import type { AccountRole } from "~/features/account/types";
-import { getApiErrorData } from "~/utils/api-error";
+import { getApiErrorData, getApiErrorMessage } from "~/utils/api-error";
 import { resolvePostLoginLocation } from "~/utils/entering-route";
 import { pushGtmRegistrationEvent } from "~/utils/gtm";
 import { normalizeIranMobile } from "~/utils/iran-mobile";
@@ -38,13 +38,8 @@ export interface VerifyOtpResponse {
   registration_token?: string;
 }
 
-function getErrorMessage(err: any, fallback: string) {
-  return (
-    err?.data?.message ||
-    err?.response?._data?.message ||
-    err?.message ||
-    fallback
-  );
+function getErrorMessage(err: unknown, fallback: string) {
+  return getApiErrorMessage(err, fallback);
 }
 
 function snapshotQuery(query: Record<string, unknown>) {
@@ -236,10 +231,13 @@ export function useAccountAuth() {
   /**
    * Assign role only via PUT users/{user}. Requires an active Sanctum session.
    */
-  async function updateUserRole(role: AccountRole) {
+  async function updateUserRole(
+    role: AccountRole,
+    options?: { silent?: boolean },
+  ) {
     const id = userId.value || useCurrentUser().user.value?.id;
     if (!id) {
-      $toast.error("شناسه کاربر یافت نشد");
+      if (!options?.silent) $toast.error("شناسه کاربر یافت نشد");
       throw new Error("user_id missing");
     }
 
@@ -257,7 +255,9 @@ export function useAccountAuth() {
       await refreshIdentity();
       return role;
     } catch (err: any) {
-      $toast.error(getErrorMessage(err, "ثبت نقش کاربری با خطا مواجه شد"));
+      if (!options?.silent) {
+        $toast.error(getErrorMessage(err, "ثبت نقش کاربری با خطا مواجه شد"));
+      }
       throw err;
     } finally {
       loading.value = false;

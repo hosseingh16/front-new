@@ -1,9 +1,9 @@
 <template>
   <DaisyCard class="w-full min-[560px]:w-140">
-    <div class="flex flex-col items-center">
+    <NuxtLink to="/" class="flex flex-col items-center">
       <NuxtImg src="/images/logo.png" class="w-10 h-10" />
       <p class="font-semibold text-caption">های‌حساب</p>
-    </div>
+    </NuxtLink>
     <p class="mt-6 text-2xl font-yb-bold">ورود یا ثبت نام</p>
 
     <form class="mt-3" @submit="onSubmit">
