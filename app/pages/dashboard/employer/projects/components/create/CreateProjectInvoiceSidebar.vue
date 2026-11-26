@@ -21,7 +21,7 @@
           type="button"
           class="btn btn-success mt-6 h-11 w-full rounded-lg font-yb-bold"
           :disabled="submitting"
-          @click="emit('publish')"
+          @click="onPublishClick"
         >
           <span v-if="submitting">در حال انتشار...</span>
           <span v-else>انتشار پروژه</span>
@@ -40,29 +40,70 @@
         </button>
       </div>
     </div>
+
+    <CreateAdOrderSummaryModal
+      ref="orderSummaryModalRef"
+      checkout-type="project"
+      subject-label="پروژه"
+      :ad-title="projectTitle"
+      :submitting="submitting"
+      @confirm="onOrderConfirm"
+    />
   </aside>
 </template>
 
 <script setup lang="ts">
 import Titr from "~/features/panel/cv/Titr.vue";
+import CreateAdOrderSummaryModal from "~/pages/dashboard/employer/ads/components/create/CreateAdOrderSummaryModal.vue";
+import type { ProjectCheckoutContext } from "~/composables/useCreateProjectForm";
 
 const props = withDefaults(
   defineProps<{
     submitting?: boolean;
     savingDraft?: boolean;
     payableAmount?: number;
+    projectTitle?: string;
+    prepareCheckout?: () => Promise<ProjectCheckoutContext | null>;
   }>(),
   {
     payableAmount: 0,
+    projectTitle: "پروژه",
   },
 );
 
 const emit = defineEmits<{
   publish: [];
   "save-draft": [];
+  "go-to-payment": [paymentId: number, free: boolean];
 }>();
+
+const orderSummaryModalRef =
+  ref<InstanceType<typeof CreateAdOrderSummaryModal> | null>(null);
 
 const formattedPayableAmount = computed(() =>
   props.payableAmount.toLocaleString("en-US"),
 );
+
+async function onPublishClick() {
+  if (props.submitting) return;
+
+  if (props.payableAmount <= 0) {
+    emit("publish");
+    return;
+  }
+
+  if (!props.prepareCheckout) {
+    emit("publish");
+    return;
+  }
+
+  const checkout = await props.prepareCheckout();
+  if (!checkout) return;
+
+  orderSummaryModalRef.value?.open(checkout);
+}
+
+function onOrderConfirm(paymentId: number, free = false) {
+  emit("go-to-payment", paymentId, free);
+}
 </script>

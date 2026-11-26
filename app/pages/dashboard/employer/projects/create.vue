@@ -29,8 +29,11 @@
         :submitting="submitting"
         :saving-draft="savingDraft"
         :payable-amount="payableAmount"
+        :project-title="projectTitle"
+        :prepare-checkout="preparePaidPublish"
         @publish="publish"
         @save-draft="saveDraft"
+        @go-to-payment="goToPayment"
       />
     </div>
   </div>
@@ -45,6 +48,7 @@ import CreateProjectDurationSection from "./components/create/CreateProjectDurat
 import CreateProjectInfoSection from "./components/create/CreateProjectInfoSection.vue";
 import CreateProjectMethodSection from "./components/create/CreateProjectMethodSection.vue";
 import CreateProjectPreviewCard from "./components/create/CreateProjectPreviewCard.vue";
+import { getProjectCategoryLabel } from "~/data/project-types";
 
 definePageMeta({
   layout: "dashboard",
@@ -67,7 +71,16 @@ const {
   loadCompanyPreview,
   saveDraft,
   publish,
+  preparePaidPublish,
+  goToPayment,
 } = useCreateProjectForm();
+
+const projectTitle = computed(
+  () =>
+    form.value.type ||
+    getProjectCategoryLabel(form.value.category) ||
+    "پروژه",
+);
 
 const companyBasicModalRef = ref<InstanceType<
   typeof CompanyBasicInfoModal

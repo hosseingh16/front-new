@@ -43,6 +43,12 @@ function splitList(raw: string | string[] | null | undefined) {
     .filter(Boolean)
 }
 
+export type AdCheckoutContext = {
+  adId: number | string
+  paymentId: number
+  price: number
+}
+
 export function useCreateAdForm(
   options: { adId?: MaybeRef<string | number | null> } = {},
 ) {
@@ -59,7 +65,13 @@ export function useCreateAdForm(
   } = useSettings()
 
   const adIdRef = toRef(options.adId ?? null)
+  const awaitingPaymentAdId = ref<number | string | null>(null)
   const isEdit = computed(() => adIdRef.value != null && adIdRef.value !== '')
+
+  function persistedAdId() {
+    const id = adIdRef.value || awaitingPaymentAdId.value
+    return id != null && id !== '' ? id : null
+  }
 
   const copyAdId = computed(() => {
     if (isEdit.value) return null
@@ -414,13 +426,20 @@ export function useCreateAdForm(
   )
   const canSaveDraft = computed(() => !isEdit.value || isEditingDraft.value)
 
+  type AdPaymentPayload = {
+    id?: number
+    payment_id?: number
+    price?: number | string
+    original_price?: number | string
+    discount?: number | string
+    model_id?: number
+    redirect_url?: string
+    action?: string
+  }
+
   type AdWriteResponse = ApiResponse<{
     ad?: Ad
-    payment?: {
-      redirect_url?: string
-      action?: string
-      payment_id?: number
-    } | null
+    payment?: AdPaymentPayload | null
   } & Partial<Ad>>
 
   function buildPayload(isDraft = false) {
@@ -448,12 +467,30 @@ export function useCreateAdForm(
     return fallback
   }
 
-  function getSavedAd(result: AdWriteResponse): Ad | null {
-    const data = result.data
-    if (!data) return null
-    if (data.ad && typeof data.ad === 'object' && 'id' in data.ad) {
-      return data.ad
+  function unwrapRecord(value: unknown): Record<string, unknown> | null {
+    if (!value || typeof value !== 'object' || Array.isArray(value)) return null
+    const record = value as Record<string, unknown>
+    if (
+      record.data &&
+      typeof record.data === 'object' &&
+      !Array.isArray(record.data)
+    ) {
+      return record.data as Record<string, unknown>
     }
+    return record
+  }
+
+  function getSavedAd(result: AdWriteResponse): Ad | null {
+    const data = result?.data
+    if (!data) return null
+
+    const nestedAd = unwrapRecord(
+      (data as { ad?: unknown }).ad ?? data,
+    )
+    if (nestedAd?.id != null) {
+      return nestedAd as unknown as Ad
+    }
+
     if ('id' in data && data.id != null) {
       return data as Ad
     }
@@ -462,12 +499,47 @@ export function useCreateAdForm(
 
   async function writeAd(isDraft: boolean) {
     const payload = buildPayload(isDraft)
-    return isEdit.value
-      ? await api.put<AdWriteResponse>(
-          `/employers/ads/${adIdRef.value}`,
-          payload,
-        )
+    const id = persistedAdId()
+    return id != null
+      ? await api.put<AdWriteResponse>(`/employers/ads/${id}`, payload)
       : await api.post<AdWriteResponse>('/employers/ads', payload)
+  }
+
+  function resolvePaymentPayload(
+    result: AdWriteResponse,
+  ): AdPaymentPayload | null {
+    const data = result?.data as Record<string, unknown> | undefined
+    if (!data) return null
+
+    const direct = unwrapRecord(data.payment)
+    if (direct && (direct.payment_id != null || direct.id != null)) {
+      return direct as unknown as AdPaymentPayload
+    }
+
+    // Some responses nest payment under data.data.payment
+    const nestedData = unwrapRecord(data)
+    const nestedPayment = unwrapRecord(nestedData?.payment)
+    if (
+      nestedPayment &&
+      (nestedPayment.payment_id != null || nestedPayment.id != null)
+    ) {
+      return nestedPayment as unknown as AdPaymentPayload
+    }
+
+    return null
+  }
+
+  function resolvePaymentId(payment: AdPaymentPayload | null | undefined) {
+    const id = payment?.payment_id ?? payment?.id
+    if (id == null || id === '') return null
+    const parsed = Number(id)
+    return Number.isFinite(parsed) ? parsed : null
+  }
+
+  function resolvePaymentPrice(payment: AdPaymentPayload | null | undefined) {
+    const raw = payment?.original_price ?? payment?.price
+    const value = raw != null ? Number(raw) : Number.NaN
+    return Number.isFinite(value) ? value : payableAmount.value
   }
 
   async function saveDraft() {
@@ -543,8 +615,9 @@ export function useCreateAdForm(
 
       if (!isEdit.value) markFirstAdCreated()
 
-      if (result.data?.payment?.payment_id) {
-        await navigateTo(`/r/${result.data.payment.payment_id}`)
+      const paymentId = resolvePaymentId(resolvePaymentPayload(result))
+      if (paymentId != null) {
+        await navigateTo(`/r/${paymentId}`)
         return true
       }
 
@@ -560,6 +633,92 @@ export function useCreateAdForm(
       return false
     } finally {
       submitting.value = false
+    }
+  }
+
+  /**
+   * Submit the ad as AWAITING_PAYMENT and return checkout ids for the coupon modal.
+   */
+  async function preparePaidPublish(): Promise<AdCheckoutContext | null> {
+    const validationErrors = validateCreateAdForm(form.value, {
+      isPartTime: isPartTime.value,
+      resumeTermsMin: adsResumeTermsMinLength.value,
+      resumeTermsMax: adsResumeTermsMaxLength.value,
+    })
+    errors.value = validationErrors
+
+    if (Object.keys(validationErrors).length) {
+      $toast.error('لطفا فیلدهای الزامی را تکمیل کنید')
+      return null
+    }
+
+    submitting.value = true
+    try {
+      const createdNew = persistedAdId() == null
+      const result = await writeAd(false)
+      const saved = getSavedAd(result)
+      const payment = resolvePaymentPayload(result)
+      const paymentId = resolvePaymentId(payment)
+      const adId = saved?.id ?? payment?.model_id ?? persistedAdId()
+
+      if (createdNew) markFirstAdCreated()
+      if (adId != null && adId !== '') awaitingPaymentAdId.value = adId
+
+      if (paymentId == null || adId == null || adId === '') {
+        $toast.error(
+          paymentId == null
+            ? 'پرداخت برای این آگهی ایجاد نشد. شهر یا تنظیمات درگاه را بررسی کنید.'
+            : 'شناسه آگهی یافت نشد',
+        )
+        return null
+      }
+
+      // Stay on this page so the order summary modal can open with the new ad id.
+      if (saved) {
+        editingAd.value = {
+          ...(editingAd.value ?? saved),
+          ...saved,
+          status: saved.status || 'در انتظار پرداخت',
+        }
+      }
+
+      return {
+        adId,
+        paymentId,
+        price: resolvePaymentPrice(payment),
+      }
+    } catch (err: unknown) {
+      $toast.error(
+        getWriteErrorMessage(
+          err,
+          isEdit.value ? 'ویرایش آگهی با خطا مواجه شد' : 'ثبت آگهی با خطا مواجه شد',
+        ),
+      )
+      return null
+    } finally {
+      submitting.value = false
+    }
+  }
+
+  async function goToPayment(paymentId: number, free = false) {
+    if (!free) {
+      await navigateTo(`/r/${paymentId}`)
+      return
+    }
+
+    const config = useRuntimeConfig()
+    const client = useSanctumClient()
+    const baseURL = String(config.public.apiBase).replace(/\/v1\/?$/, '')
+
+    try {
+      await client(`/payments/${paymentId}/pay`, {
+        baseURL,
+        method: 'GET',
+      })
+      $toast.success('آگهی با موفقیت ثبت شد')
+      await router.push('/dashboard/employer/ads')
+    } catch (err: unknown) {
+      $toast.error(getWriteErrorMessage(err, 'ثبت آگهی رایگان با خطا مواجه شد'))
     }
   }
 
@@ -605,6 +764,8 @@ export function useCreateAdForm(
     loadCities,
     saveDraft,
     publish,
+    preparePaidPublish,
+    goToPayment,
     loadCompanyPreview,
   }
 }

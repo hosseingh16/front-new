@@ -60,8 +60,11 @@
         :submitting="submitting"
         :saving-draft="savingDraft"
         :payable-amount="payableAmount"
+        :ad-title="adTitleLabel"
+        :prepare-checkout="preparePaidPublish"
         @publish="publish"
         @save-draft="saveDraft"
+        @go-to-payment="goToPayment"
       />
     </div>
   </div>
@@ -107,6 +110,8 @@ const {
   loadCities,
   saveDraft,
   publish,
+  preparePaidPublish,
+  goToPayment,
   loadCompanyPreview,
 } = useCreateAdForm();
 
@@ -144,6 +149,14 @@ const pageTitle = computed(() => {
     default:
       return "ایجاد آگهی";
   }
+});
+
+const adTitleLabel = computed(() => {
+  if (!form.value.title) return "آگهی استخدام";
+  const match = jobTitles.value.find(
+    (item) => String(item.value) === String(form.value.title),
+  );
+  return match?.label || form.value.title;
 });
 
 useSeoMeta({
