@@ -99,7 +99,7 @@
         </section>
 
         <section
-          v-if="company.address || company.static_map"
+          v-if="locationAddress || company.static_map"
           class="rounded-xl border border-surface-200 bg-white p-5"
         >
           <div class="flex w-full items-center gap-1">
@@ -112,10 +112,10 @@
             </h2>
           </div>
           <p
-            v-if="company.address"
+            v-if="locationAddress"
             class="mt-4 text-sm leading-7 text-text-secondary"
           >
-            {{ company.address }}
+            {{ locationAddress }}
           </p>
           <div
             class="mt-4 overflow-hidden rounded-lg border border-surface-200"
@@ -457,6 +457,23 @@ const locationLabel = computed(() => {
   const city = props.company?.city_name;
   if (province && city) return `${province}، ${city}`;
   return province || city || "";
+});
+
+const isProfilePublic = computed(() =>
+  Boolean(props.company?.is_profile_public),
+);
+
+const locationAddress = computed(() => {
+  const company = props.company;
+  if (!company) return "";
+
+  const adAddress = company.ads
+    ?.map((ad) => ad.company_address?.trim())
+    .find(Boolean);
+
+  if (adAddress) return adAddress;
+  if (isProfilePublic.value) return company.address?.trim() || "";
+  return "";
 });
 
 const isTelPublic = computed(() => Boolean(props.company?.is_tell_public));

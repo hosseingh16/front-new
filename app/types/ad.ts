@@ -8,6 +8,7 @@ export interface AdList {
     slug?: string | null
     company_logo: string
     company_name: string
+    company_address?: string
     category: string
     city_name: string
     province_name: string
